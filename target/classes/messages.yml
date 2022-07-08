@@ -1,0 +1,93 @@
+#        You can translate Whack Me messages here.
+#             Color codes (&) supported.
+#
+#              Use \n to make new line
+#
+#     Some messages support their own placeholders
+#                 like %player%
+
+# Whack Me Command Messages
+Commands:
+  Did-You-Mean: "&cDid you mean &7/%command%&c?"
+  Are-You-Sure: "&cAre you sure you want to do this action? Type the command again &6within 10 seconds &cto confirm!"
+  Removed-Game-Instance: "&aGame instance has been removed successfully."
+  No-Arena-Like-That: "&cWe couldn't find any arena with that name matching!"
+  Type-Arena-Name: "&cPlease type arena name to join!"
+  Arena-Not-Configured: "&cThis arena is not configured yet. If you think this is an issue contact staff!"
+  Only-By-Player: "&cYou can execute this command only as player!"
+  No-Permission: "&cYou don't have enough permission to use this command!"
+  Success-Reload: "&aSystem successfully reloaded all configurations and arenas!"
+  Player-Not-Found: "&cWe couldn't find any player with that name matching!"
+  Statistics:
+    Type-Name: "&cPlease type statistic name to view!"
+    Invalid-Name: "&cName of statistic is invalid! Type: record_score or tours_played"
+    Header: "&8&m-------------------[&6 Top 10 &8&m]-------------------"
+    Format: "&e#%position% %name% - %value% &7%statistic%"
+  Stats-Command:
+    Header: "&l[-----YOUR STATS-----]"
+    Header-Other: "&l[-----STATS FOR %player%-----]"
+    Footer: "&l[--------------------]"
+    Record-Score: "&aRecord Score: &e"
+    Tours-Played: "&aTours played: &e"
+  List-Command:
+    No-Arenas-Created: "&cThere aren't any game instances to show! What about creating one?"
+    Format: "&aExisting arenas: &7%list%"
+
+# Used in most game messages.
+In-Game:
+  Plugin-Prefix: "&8[&6Whack Me&8] "
+  Start-Message: "&a&lYou started playing Whack Me game!\n&a&lYou have 30s to punch as many whackies as possible!"
+  Finish-Message: "&a&lThe game has ended! You finished with &6&l%points% &a&lPoints!"
+  Finish-Record-Message: "&a&lThe game has ended! You have a new record with &6&l%points% &a&lPoints!"
+  Already-Playing: "&cYou are already playing Whack Me!"
+  Chat-Format: "&7%player%: &f%message%"
+  Only-Command-Is-Leave: "&cYou have to leave the game first to perform commands."
+
+# Has usage only when boss bar is enabled in config
+# Also not compatible with the versions before Minecraft 1.9
+# Color values: PINK, BLUE, RED, GREEN, YELLOW, PURPLE and WHITE
+# Style values: SOLID, SEGMENTED_6, SEGMENTED_10, SEGMENTED_12, SEGMENTED_20
+Boss-Bar:
+  Color: BLUE
+  Style: SOLID
+  Interval: 300 # 20 ticks = 1 second
+  Messages:
+    - "&e&lPLAYING &f&lKING OF THE LADDER &e&lby &b&lDESPICAL"
+    - "&e&lTHANK YOU FOR &b&lPURCHASING &e&lAND &b&lSUPPORTING &e&lUS!"
+    - "&e&lYOU LIKE THE PLUGIN? RATE US ON SPIGOT!"
+
+Signs:
+  Look-Sign: "&cYou have to look at a sign to perform this operation!"
+  Type-Arena-Name: "&cPlease type arena name in second line!"
+  Arena-Doesnt-Exists: "&cWe couldn't find any arena with that name matching!"
+  Doesnt-Have-Permission: "&cYou don't have enough permission to break this sign!"
+  Sign-Created: "&aYou have successfully created an game sign!"
+  Sign-Removed: "&aYou have successfully removed the game sign!"
+  Lines:
+    - "&c&lKOTL Premium"
+    - "&f&l%map_name%"
+    - "%players% online"
+    - "&aKing: &f%king_name%"
+
+# Don't use more than 48 characters if you use old versions of Minecraft.
+# Can be used up to 144 characters in 1.14 and higher versions.
+Scoreboard:
+  Title: "&e&lKOTL Premium"
+  Content:
+    # Can be find more information about placeholders on our wiki.
+    Playing:
+      - ""
+      - "Arena: &a%arena%"
+      - ""
+      - "Players: &a%players%"
+      - ""
+      - "King: &a%king%"
+      - ""
+      - "Score: &a%score%"
+      - ""
+      - "&ewww.github.com/Despical"
+
+Validator:
+  Invalid-Arena-Configuration: "[WhackMe] Arena %arena% has invalid configuration! Missing node: %error%"
+  Instance-Started: "[WhackMe] Arena %arena% instance successfully started!"
+  No-Instances-Created: "[WhackMe] There are no arena instances created in configuration!"

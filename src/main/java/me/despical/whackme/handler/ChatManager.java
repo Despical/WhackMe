@@ -1,0 +1,73 @@
+package me.despical.whackme.handler;
+
+import me.despical.commons.configuration.ConfigUtils;
+import me.despical.commons.util.Strings;
+import me.despical.whackme.Main;
+import org.apache.commons.lang.StringUtils;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+
+import java.util.List;
+
+/**
+ * @author Despical
+ * <p>
+ * Created at 18.06.2022
+ */
+public class ChatManager {
+
+	private final Main plugin;
+	private final String prefix;
+
+	private FileConfiguration config;
+
+	public ChatManager(Main plugin) {
+		this.plugin = plugin;
+		this.config = ConfigUtils.getConfig(plugin, "messages");
+		this.prefix = message("in_game.plugin_prefix");
+	}
+
+	public String coloredRawMessage(String message) {
+		return Strings.format(message);
+	}
+
+	public String prefixedRawMessage(String message) {
+		return prefix + coloredRawMessage(message);
+	}
+
+	public String message(String path) {
+		path = me.despical.commons.string.StringUtils.capitalize(path.replace('_', '-'), '-', '.');
+		return coloredRawMessage(config.getString(path));
+	}
+
+	public String prefixedMessage(String path) {
+		return prefix + message(path);
+	}
+
+	public String message(String path, Player player) {
+		String returnString = message(path);
+		returnString = formatPlaceholders(returnString, player);
+
+		return returnString;
+	}
+
+	public String formatPlaceholders(String message, Player player) {
+		String returnString = message;
+		returnString = StringUtils.replace(returnString, "%player%", player.getName());
+
+//		if (papiEnabled) {
+//			returnString = PlaceholderAPI.setPlaceholders(player, returnString);
+//		}
+
+		return coloredRawMessage(returnString);
+	}
+
+	public List<String> getStringList(String path) {
+		path = me.despical.commons.string.StringUtils.capitalize(path.replace('_', '-'), '-', '.');
+		return config.getStringList(path);
+	}
+
+	public void reloadConfig() {
+		config = ConfigUtils.getConfig(plugin, "messages");
+	}
+}

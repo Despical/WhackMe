@@ -1,0 +1,115 @@
+package me.despical.whackme.event;
+
+import me.despical.commons.serializer.InventorySerializer;
+import me.despical.whackme.ConfigPreferences;
+import me.despical.whackme.Main;
+import me.despical.whackme.arena.Arena;
+import me.despical.whackme.arena.ArenaRegistry;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.player.*;
+
+/**
+ * @author Despical
+ * <p>
+ * Created at 21.06.2022
+ */
+public class Events extends ListenerAdapter {
+
+	public Events(Main plugin) {
+		super (plugin);
+	}
+
+	@EventHandler
+	public void onDrop(PlayerDropItemEvent event) {
+		if (ArenaRegistry.isInArena(event.getPlayer())) {
+			event.setCancelled(true);
+		}
+	}
+
+	@EventHandler
+	public void onCommandExecute(PlayerCommandPreprocessEvent event) {
+		Player player = event.getPlayer();
+
+		if (!ArenaRegistry.isInArena(player)) {
+			return;
+		}
+
+		if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BLOCK_COMMANDS)) {
+			return;
+		}
+
+		String message = event.getMessage();
+
+		if (plugin.getConfig().getStringList("Whitelisted-Commands").contains(message)) {
+			return;
+		}
+
+		if (player.isOp() || player.hasPermission("wm.command.override")) {
+			return;
+		}
+
+		if (message.startsWith("/wm") || message.startsWith("/whackme") || message.contains("top") || message.contains("stats")) {
+			return;
+		}
+
+		event.setCancelled(true);
+		player.sendMessage(plugin.getChatManager().prefixedMessage("in_game.only_command_is_leave"));
+	}
+
+	@EventHandler
+	public void onFoodLevelChange(FoodLevelChangeEvent event) {
+		if (event.getEntity() instanceof Player && ArenaRegistry.isInArena((Player) event.getEntity())) {
+			event.setFoodLevel(20);
+			event.setCancelled(true);
+		}
+	}
+
+	@EventHandler
+	public void onBlockBreakEvent(BlockBreakEvent event) {
+		if (ArenaRegistry.isInArena(event.getPlayer())) {
+			event.setCancelled(true);
+		}
+	}
+
+	@EventHandler
+	public void onBuild(BlockPlaceEvent event) {
+		if (ArenaRegistry.isInArena(event.getPlayer())) {
+			event.setCancelled(true);
+		}
+	}
+
+	@EventHandler
+	public void onPickUpItem(PlayerPickupItemEvent event) {
+		if(ArenaRegistry.isInArena(event.getPlayer())) {
+			event.setCancelled(true);
+			event.getItem().remove();
+		}
+	}
+
+	@EventHandler
+	public void onJoin(PlayerJoinEvent event) {
+		Player player = event.getPlayer();
+
+		plugin.getUserManager().loadStatistics(player);
+
+		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
+			InventorySerializer.loadInventory(plugin, player);
+		}
+	}
+
+	@EventHandler
+	public void onQuit(PlayerQuitEvent event) {
+		Player player = event.getPlayer();
+		Arena arena = ArenaRegistry.getArena(player);
+
+		if (arena != null) {
+			arena.removePlayer();
+		}
+
+		plugin.getUserManager().removeUser(player);
+	}
+}

@@ -1,0 +1,12 @@
+name: WhackMe
+main: me.despical.whackme.Main
+author: Despical
+version: ${project.version}
+api-version: 1.13
+softdepend: [Multiverse-Core, PlaceholderAPI]
+
+commands:
+  whackme:
+    description: Whack Me Commands
+    aliases: [wm, whackm]
+
