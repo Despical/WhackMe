@@ -52,7 +52,7 @@ In-Game:
 Boss-Bar:
   Color: BLUE
   Style: SOLID
-  Interval: 300 # 20 ticks = 1 second
+  Interval: 120 # 20 ticks = 1 second
   Messages:
     - "&e&lPLAYING &f&lWhack Me &e&lby &b&lDESPICAL"
     - "&e&lTHANK YOU FOR &b&lPURCHASING &e&lAND &b&lSUPPORTING &e&lUS!"
