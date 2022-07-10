@@ -6,14 +6,6 @@
 # +---------------------------------------------------------+ #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-# If you want to translate for us check out: https://github.com/Despical/LocaleStorage#locale-storage
-# Select locale of Whack Me plugin, default is English.
-# Available locales:
-#    default - English
-#    de - Deutsche
-#    tr - Türkçe
-locale: default
-
 # Enable boss bar support?
 Boss-Bar-Enabled: true
 

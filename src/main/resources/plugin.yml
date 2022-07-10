@@ -10,3 +10,14 @@ commands:
     description: Whack Me Commands
     aliases: [wm, whackm]
 
+permissions:
+  wm.admin.*:
+    default: op
+    children:
+      wm.admin: true
+      wm.admin.create: true
+      wm.admin.delete: true
+      wm.admin.edit: true
+      wm.admin.list: true
+      wm.admin.help: true
+      wm.admin.reload: true
