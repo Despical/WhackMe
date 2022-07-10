@@ -116,6 +116,12 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
+                            <relocations>
+                                <relocation>
+                                    <pattern>org.bstats</pattern>
+                                    <shadedPattern>me.despical.whackme.util</shadedPattern>
+                                </relocation>
+                            </relocations>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
                             <minimizeJar>true</minimizeJar>
                         </configuration>
