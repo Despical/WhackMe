@@ -32,6 +32,7 @@ public class ReloadCommand extends SubCommand {
 
 	@Override
 	public void execute(CommandSender sender, String label, String[] args) {
+		LogUtils.sendConsoleMessage("[WhacKMe] Initialized plugin reload.");
 		LogUtils.log("Initialized plugin reload by {0}.", sender.getName());
 
 		long start = System.currentTimeMillis();

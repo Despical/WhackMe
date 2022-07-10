@@ -12,6 +12,8 @@ C:\Users\pc\Desktop\WhackMe\src\main\java\me\despical\whackme\command\admin\Help
 C:\Users\pc\Desktop\WhackMe\src\main\java\me\despical\whackme\handler\ChatManager.java
 C:\Users\pc\Desktop\WhackMe\src\main\java\me\despical\whackme\handler\setup\SetupInventory.java
 C:\Users\pc\Desktop\WhackMe\src\main\java\me\despical\whackme\user\data\UserDatabase.java
+C:\Users\pc\Desktop\WhackMe\src\main\java\me\despical\whackme\arena\managers\BossBarManager.java
+C:\Users\pc\Desktop\WhackMe\src\main\java\me\despical\whackme\handler\PlaceholderManager.java
 C:\Users\pc\Desktop\WhackMe\src\main\java\me\despical\whackme\command\SubCommand.java
 C:\Users\pc\Desktop\WhackMe\src\main\java\me\despical\whackme\user\User.java
 C:\Users\pc\Desktop\WhackMe\src\main\java\me\despical\whackme\api\event\WMEvent.java
@@ -33,4 +35,5 @@ C:\Users\pc\Desktop\WhackMe\src\main\java\me\despical\whackme\command\admin\List
 C:\Users\pc\Desktop\WhackMe\src\main\java\me\despical\whackme\api\StatsStorage.java
 C:\Users\pc\Desktop\WhackMe\src\main\java\me\despical\whackme\arena\blocks\PointBlock.java
 C:\Users\pc\Desktop\WhackMe\src\main\java\me\despical\whackme\arena\blocks\PointHandler.java
+C:\Users\pc\Desktop\WhackMe\src\main\java\me\despical\whackme\handler\SoundManager.java
 C:\Users\pc\Desktop\WhackMe\src\main\java\me\despical\whackme\user\data\MysqlManager.java

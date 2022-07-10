@@ -3,10 +3,10 @@ package me.despical.whackme.arena.blocks;
 import me.despical.whackme.Main;
 import me.despical.whackme.api.StatsStorage;
 import me.despical.whackme.arena.Arena;
+import me.despical.whackme.handler.SoundManager;
 import me.despical.whackme.user.User;
 import me.despical.whackme.util.Utils;
 import org.bukkit.Location;
-import org.bukkit.Sound;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -42,12 +42,18 @@ public class PointBlock extends BukkitRunnable {
 		stand.setCustomNameVisible(true);
 		stand.setGravity(false);
 		stand.setVisible(false);
-		stand.setShieldBlockingDelay(1);
+
+		Utils.trySilently(consumer -> stand.setShieldBlockingDelay(1));
 
 		arena.getPointBlocks().add(this);
 		arena.getLocations().remove(availableLocation);
 
 		registerEvent();
+	}
+
+	public void clear() {
+		this.cancel();
+		this.stand.remove();
 	}
 
 	private ItemStack getRandomItem() {
@@ -88,11 +94,11 @@ public class PointBlock extends BukkitRunnable {
 				if (stand.getHelmet().getType() == Utils.GREEN_TERRACOTTA.getType()) {
 					user.addStat(StatsStorage.StatisticType.LOCAL_SCORE, 1);
 
-					player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1F, 2F);
+					plugin.getSoundManager().playSound(player, SoundManager.GameSounds.POINT_SOUND);
 				} else if (stand.getHelmet().getType() == Utils.RED_TERRACOTTA.getType()) {
 					user.addStat(StatsStorage.StatisticType.LOCAL_SCORE, -1);
 
-					player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, 1F, 2F);
+					plugin.getSoundManager().playSound(player, SoundManager.GameSounds.MINUS_POINT_SOUND);
 				}
 
 				stand.setHelmet(Utils.CYAN_TERRACOTTA);

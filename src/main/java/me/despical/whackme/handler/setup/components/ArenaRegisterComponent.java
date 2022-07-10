@@ -62,17 +62,19 @@ public class ArenaRegisterComponent implements SetupComponent {
 
 			ArenaRegistry.unregisterArena(arena);
 
-			arena.setReady(true);
-			arena.setStartLocation(LocationSerializer.fromString(config.getString(path + "startLocation")));
-			arena.setEndLocation(LocationSerializer.fromString(config.getString(path + "endLocation")));
-			arena.start();
+			Arena newArena = new Arena(arena.getId());
 
-			player.sendMessage(chatManager.coloredRawMessage("&a&l✔ &aValidation succeeded! Registering new arena instance: " + arena.getId()));
+			newArena.setReady(true);
+			newArena.setStartLocation(LocationSerializer.fromString(config.getString(path + "startLocation")));
+			newArena.setEndLocation(LocationSerializer.fromString(config.getString(path + "endLocation")));
+			newArena.start();
+
+			player.sendMessage(chatManager.coloredRawMessage("&a&l✔ &aValidation succeeded! Registering new arena instance: " + newArena.getId()));
 
 			config.set(path + "ready", true);
 			ConfigUtils.saveConfig(plugin, config, "arenas");
 
-			ArenaRegistry.registerArena(arena);
+			ArenaRegistry.registerArena(newArena);
 		}), 8, 2);
 	}
 }

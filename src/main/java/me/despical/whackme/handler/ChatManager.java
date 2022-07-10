@@ -1,5 +1,6 @@
 package me.despical.whackme.handler;
 
+import me.clip.placeholderapi.PlaceholderAPI;
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.util.Strings;
 import me.despical.whackme.Main;
@@ -18,6 +19,7 @@ public class ChatManager {
 
 	private final Main plugin;
 	private final String prefix;
+	private final boolean papiEnabled;
 
 	private FileConfiguration config;
 
@@ -25,6 +27,11 @@ public class ChatManager {
 		this.plugin = plugin;
 		this.config = ConfigUtils.getConfig(plugin, "messages");
 		this.prefix = message("in_game.plugin_prefix");
+		this.papiEnabled = plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI");
+	}
+
+	public boolean isPapiEnabled() {
+		return papiEnabled;
 	}
 
 	public String coloredRawMessage(String message) {
@@ -55,9 +62,9 @@ public class ChatManager {
 		String returnString = message;
 		returnString = StringUtils.replace(returnString, "%player%", player.getName());
 
-//		if (papiEnabled) {
-//			returnString = PlaceholderAPI.setPlaceholders(player, returnString);
-//		}
+		if (papiEnabled) {
+			returnString = PlaceholderAPI.setPlaceholders(player, returnString);
+		}
 
 		return coloredRawMessage(returnString);
 	}

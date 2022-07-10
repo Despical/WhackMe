@@ -4,7 +4,7 @@ import me.despical.commons.string.StringFormatUtils;
 import me.despical.whackme.Main;
 import me.despical.whackme.api.StatsStorage;
 import me.despical.whackme.arena.Arena;
-import org.bukkit.Bukkit;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -31,13 +31,23 @@ public class PointHandler extends BukkitRunnable {
 
 		if (player == null) return;
 
-		player.sendActionBar(plugin.getChatManager().coloredRawMessage("&a&l" + StringFormatUtils.formatIntoMMSS(arena.getTimer()) + " &6- &a&l" + StatsStorage.getUserStats(player, StatsStorage.StatisticType.LOCAL_SCORE)));
+		sendActionBar();
 
 		int size = arena.getPointBlocks().size();
 
 		if (size <= arena.getMaximumPoints() && size < ThreadLocalRandom.current().nextInt(arena.getMinimumPoints(), arena.getMaximumPoints())) {
 			new PointBlock(plugin, arena).runTaskTimer(plugin, 1L, 1L);
 		}
+	}
+
+	private void sendActionBar() {
+		Player player = arena.getPlayer();
+		String message = plugin.getChatManager().message("in_game.action_bar");
+		message = StringUtils.replace(message, "%player%", player.getName());
+		message = StringUtils.replace(message, "%score%", Integer.toString(StatsStorage.getUserStats(player, StatsStorage.StatisticType.LOCAL_SCORE)));
+		message = StringUtils.replace(message, "%timer%", StringFormatUtils.formatIntoMMSS(arena.getTimer()));
+
+		player.sendActionBar(message);
 	}
 
 	public void handleTask() {

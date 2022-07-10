@@ -10,8 +10,6 @@ import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-
 /**
  * @author Despical
  * <p>
@@ -82,7 +80,6 @@ public class CreateCommand extends SubCommand {
 		config.set(path + "ready", false);
 		config.set(path + "endLocation", def);
 		config.set(path + "centerLocation", def);
-		config.set(path + "signs", new ArrayList<>());
 
 		ConfigUtils.saveConfig(plugin, config, "arenas");
 

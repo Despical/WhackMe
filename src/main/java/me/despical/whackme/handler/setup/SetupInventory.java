@@ -45,7 +45,7 @@ public class SetupInventory {
 		StaticPane pane = new StaticPane(9, 3);
 		ItemBuilder registeredItem = new ItemBuilder(XMaterial.GREEN_STAINED_GLASS_PANE).name("&aArena Validation Successful"),
 			notRegisteredItem = new ItemBuilder(XMaterial.BLACK_STAINED_GLASS_PANE).name("&cArena Validation Not Finished Yet");
-		pane.fillWith(new ItemBuilder(XMaterial.BLACK_STAINED_GLASS_PANE).build());
+		pane.fillWith(arena.isReady() ? registeredItem.build() : notRegisteredItem.build());
 		pane.fillProgressBorder(GuiItem.of(registeredItem.build()), GuiItem.of(notRegisteredItem.build()), arena.isReady() ? 100 : 0);
 
 		this.gui.addPane(pane);

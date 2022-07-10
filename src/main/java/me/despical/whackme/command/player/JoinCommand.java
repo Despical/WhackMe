@@ -41,6 +41,18 @@ public class JoinCommand extends SubCommand {
 			return;
 		}
 
+		Player player = (Player) sender;
+
+		if (arena.containPlayer(player)) {
+			player.sendMessage(chatManager.prefixedMessage("in_game.already_playing"));
+			return;
+		}
+
+		if (arena.getPlayer() != null) {
+			player.sendMessage(chatManager.prefixedMessage("in_game.someone_is_already_playing"));
+			return;
+		}
+
 		arena.addPlayer((Player) sender);
 	}
 

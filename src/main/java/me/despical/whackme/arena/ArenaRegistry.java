@@ -81,7 +81,6 @@ public class ArenaRegistry {
 			arena.setEndLocation(LocationSerializer.fromString(config.getString(path + "endLocation")));
 			arena.setMinimumPoints(plugin.getConfig().getInt("Minimum-Points"));
 			arena.setMaximumPoints(plugin.getConfig().getInt("Maximum-Points"));
-
 			arena.start();
 
 			registerArena(arena);
@@ -96,6 +95,7 @@ public class ArenaRegistry {
 				continue;
 			}
 
+
 			if (!config.getBoolean(path + "ready")) {
 				arena.setReady(false);
 
@@ -105,7 +105,6 @@ public class ArenaRegistry {
 				LogUtils.sendConsoleMessage(plugin.getChatManager().message("validator.invalid_arena_configuration").replace("%arena%", id).replace("%error%", "NOT VALIDATED"));
 				continue;
 			}
-
 
 			LogUtils.sendConsoleMessage(plugin.getChatManager().message("validator.instance_started").replace("%arena%", id));
 			ConfigUtils.saveConfig(plugin, config, "arenas");

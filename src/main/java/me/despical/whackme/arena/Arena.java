@@ -7,6 +7,7 @@ import me.despical.whackme.Main;
 import me.despical.whackme.api.StatsStorage;
 import me.despical.whackme.arena.blocks.PointBlock;
 import me.despical.whackme.arena.blocks.PointHandler;
+import me.despical.whackme.arena.managers.BossBarManager;
 import me.despical.whackme.arena.options.ArenaOption;
 import me.despical.whackme.user.User;
 import me.despical.whackme.util.Utils;
@@ -36,6 +37,7 @@ public class Arena extends BukkitRunnable {
 	private final String id;
 	private final Random random;
 	private final PointHandler pointHandler;
+	private final BossBarManager bossBarManager;
 	private final List<PointBlock> pointBlocks;
 	private final Map<ArenaOption, Integer> arenaOptions;
 	private final Map<GameLocation, Location> gameLocations;
@@ -44,6 +46,7 @@ public class Arena extends BukkitRunnable {
 		this.id = id;
 		this.random = new Random();
 		this.pointHandler = new PointHandler(plugin, this);
+		this.bossBarManager = new BossBarManager(plugin, this);
 		this.pointBlocks = new ArrayList<>();
 		this.locations = new ArrayList<>();
 		this.arenaOptions = new EnumMap<>(ArenaOption.class);
@@ -73,11 +76,6 @@ public class Arena extends BukkitRunnable {
 	public void addPlayer(Player player) {
 		if (player == null) return;
 
-		if (containPlayer(player)) {
-			player.sendMessage(plugin.getChatManager().prefixedMessage("in_game.already_playing"));
-			return;
-		}
-
 		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
 			InventorySerializer.saveInventoryToFile(plugin, player);
 		}
@@ -92,6 +90,8 @@ public class Arena extends BukkitRunnable {
 		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.CLEAR_EFFECTS)) {
 			player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
 		}
+
+		bossBarManager.addPlayer();
 
 		this.player = player;
 		this.setTimer(30);
@@ -130,9 +130,20 @@ public class Arena extends BukkitRunnable {
 
 		AttributeUtils.resetAttackCooldown(player);
 
+		bossBarManager.removePlayer();
+
 		teleportToEndLocation();
+		cleanGameArea();
 
 		player = null;
+	}
+
+	public void cleanGameArea() {
+		this.pointBlocks.forEach(PointBlock::clear);
+	}
+
+	public BossBarManager getBossBarManager() {
+		return bossBarManager;
 	}
 
 	public boolean containPlayer(Player player) {
@@ -145,7 +156,8 @@ public class Arena extends BukkitRunnable {
 
 	public void setStartLocation(Location location) {
 		gameLocations.put(GameLocation.START, location);
-		locations = Utils.getBlocksSurroundedBy(location).stream().map(Block::getLocation).collect(Collectors.toList());
+
+		if (Utils.isSurroundedBy(location)) locations = Utils.getBlocksSurroundedBy(location).stream().map(Block::getLocation).collect(Collectors.toList());
 	}
 
 	public Location getEndLocation() {
@@ -169,7 +181,7 @@ public class Arena extends BukkitRunnable {
 	}
 
 	public void setMinimumPoints(int minimumPoints) {
-		setOptionValue(ArenaOption.MINIMUM_POINTS, Math.min(1, minimumPoints));
+		setOptionValue(ArenaOption.MINIMUM_POINTS, Math.max(1, minimumPoints));
 	}
 
 	public int getMaximumPoints() {

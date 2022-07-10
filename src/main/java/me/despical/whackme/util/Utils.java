@@ -8,6 +8,7 @@ import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * @author Despical
@@ -44,5 +45,12 @@ public class Utils {
 		}
 
 		return blocks;
+	}
+
+	public static void trySilently(Consumer<?> consumer) {
+		try {
+			consumer.accept(null);
+		} catch (Exception ignored) {
+		}
 	}
 }

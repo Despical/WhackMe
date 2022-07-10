@@ -40,8 +40,10 @@ In-Game:
   Finish-Message: "&a&lThe game has ended! You finished with &6&l%points% &a&lPoints!"
   Finish-Record-Message: "&a&lThe game has ended! You have a new record with &6&l%points% &a&lPoints!"
   Already-Playing: "&cYou are already playing Whack Me!"
+  Someone-Is-Already-Playing: "&cSomeone is already playing at the moment!"
   Chat-Format: "&7%player%: &f%message%"
   Only-Command-Is-Leave: "&cYou have to leave the game first to perform commands."
+  Action-Bar: "&a&l%timer% &6- &a&l%score%"
 
 # Has usage only when boss bar is enabled in config
 # Also not compatible with the versions before Minecraft 1.9
@@ -52,42 +54,11 @@ Boss-Bar:
   Style: SOLID
   Interval: 300 # 20 ticks = 1 second
   Messages:
-    - "&e&lPLAYING &f&lKING OF THE LADDER &e&lby &b&lDESPICAL"
+    - "&e&lPLAYING &f&lWhack Me &e&lby &b&lDESPICAL"
     - "&e&lTHANK YOU FOR &b&lPURCHASING &e&lAND &b&lSUPPORTING &e&lUS!"
     - "&e&lYOU LIKE THE PLUGIN? RATE US ON SPIGOT!"
 
-Signs:
-  Look-Sign: "&cYou have to look at a sign to perform this operation!"
-  Type-Arena-Name: "&cPlease type arena name in second line!"
-  Arena-Doesnt-Exists: "&cWe couldn't find any arena with that name matching!"
-  Doesnt-Have-Permission: "&cYou don't have enough permission to break this sign!"
-  Sign-Created: "&aYou have successfully created an game sign!"
-  Sign-Removed: "&aYou have successfully removed the game sign!"
-  Lines:
-    - "&c&lKOTL Premium"
-    - "&f&l%map_name%"
-    - "%players% online"
-    - "&aKing: &f%king_name%"
-
-# Don't use more than 48 characters if you use old versions of Minecraft.
-# Can be used up to 144 characters in 1.14 and higher versions.
-Scoreboard:
-  Title: "&e&lKOTL Premium"
-  Content:
-    # Can be find more information about placeholders on our wiki.
-    Playing:
-      - ""
-      - "Arena: &a%arena%"
-      - ""
-      - "Players: &a%players%"
-      - ""
-      - "King: &a%king%"
-      - ""
-      - "Score: &a%score%"
-      - ""
-      - "&ewww.github.com/Despical"
-
 Validator:
-  Invalid-Arena-Configuration: "[WhackMe] Arena %arena% has invalid configuration! Missing node: %error%"
+  Invalid-Arena-Configuration: "[WhackMe] &cArena %arena% has invalid configuration! Missing node: %error%"
   Instance-Started: "[WhackMe] Arena %arena% instance successfully started!"
-  No-Instances-Created: "[WhackMe] There are no arena instances created in configuration!"
+  No-Instances-Created: "[WhackMe] &cThere are no arena instances created in configuration!"

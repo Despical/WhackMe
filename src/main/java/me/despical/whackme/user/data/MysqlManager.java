@@ -31,7 +31,7 @@ public class MysqlManager implements UserDatabase {
 				statement.executeUpdate("CREATE TABLE IF NOT EXISTS `" + tableName + "` (\n"
 					+ "  `UUID` char(36) NOT NULL PRIMARY KEY,\n"
 					+ "  `name` varchar(32) NOT NULL,\n"
-					+ "  `score` int(11) NOT NULL DEFAULT '0',\n"
+					+ "  `recordscore` int(11) NOT NULL DEFAULT '0',\n"
 					+ "  `toursplayed` int(11) NOT NULL DEFAULT '0'\n"
 					+ ");");
 			} catch (SQLException exception) {

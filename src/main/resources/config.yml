@@ -7,7 +7,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 # If you want to translate for us check out: https://github.com/Despical/LocaleStorage#locale-storage
-# Select locale of KOTL Premium, default is English.
+# Select locale of Whack Me plugin, default is English.
 # Available locales:
 #    default - English
 #    de - Deutsche
@@ -16,9 +16,6 @@ locale: default
 
 # Enable boss bar support?
 Boss-Bar-Enabled: true
-
-# Enable scoreboard support?
-Scoreboard-Enabled: true
 
 # Enable this option when you're using MySQL, otherwise it won't work.
 # Be careful when changing this because there is no migrator between
@@ -41,21 +38,21 @@ Clear-Effects: true
 # You can edit the formatting in messages.yml
 Chat-Format-Enabled: true
 
-# Should we disable all chat related stuff?
-# It will disable the separated chat.
-Disable-Separate-Chat: false
-
+# This value can not be less than 1 and can not be higher than 8.
+# Minimum value of the point blocks that will spawned around the player.
 Minimum-Points: 4
 
-MaximumPoints: 8
+# This value can not be less than 1 and can not be higher than 8.
+# Maximum value of the point blocks that will spawned around the player.
+Maximum-Points: 8
 
-# Should players get fall damage?
-Disable-Fall-Damage: true
+# The sound plays when player clicks the correct point block.
+Point-Sound: "BLOCK_NOTE_BLOCK_BELL"
 
-# Should we spawn some cool fireworks around the game area when someone becomes king?
-Fireworks-On-New-King: true
+# The sound plays when player clicks the incorrect point block.
+Minus-Point-Sound: "BLOCK_NOTE_BLOCK_BASS"
 
-# The delay between hitting players. ONLY EFFECTED in Minecraft 1.9+
+# The delay between hitting players.
 Hit-Cooldown-Delay: 16
 
 # Commands which can be used in game, remove all of them to disable
@@ -69,22 +66,13 @@ Rewards-Enabled: false
 # Should we block every not KOTL Premium associated commands in game?
 Block-Commands: true
 
-# When players click these blocks should we remove them from the game?
-Death-Blocks-Enabled: true
-
-# When player enters the game area should we notify players?
-Join-Notify: true
-
-# When player leaves the game area should we notify players?
-Leave-Notify: true
-
 # Should we send random pro tips when the setup menu opens.
 Send-Setup-Tips: true
 
 # Should we check for updates on plugin start/after admin join?
 Update-Notifier-Enabled: true
 
-# Should we send warning messages if server is running a old Java version such as JAVA 8?
+# Should we send warning messages if server is running an old Java version such as JAVA 8?
 Ignore-Warning-Messages: false
 
 # No way! You've reached the end! But... where's the dragon!?

@@ -57,7 +57,7 @@ public class User {
 	public void setStat(StatsStorage.StatisticType stat, int value) {
 		stats.put(stat, value);
 
-		plugin.getServer().getScheduler().runTask(plugin, () -> plugin.getServer().getPluginManager().callEvent(new WMPlayerStatisticChangeEvent(getArena(), player, stat, value)));
+		if (plugin.isEnabled()) plugin.getServer().getScheduler().runTask(plugin, () -> plugin.getServer().getPluginManager().callEvent(new WMPlayerStatisticChangeEvent(getArena(), player, stat, value)));
 	}
 
 	public void addStat(StatsStorage.StatisticType stat, int value) {
