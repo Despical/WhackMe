@@ -1,5 +1,8 @@
 package me.despical.whackme.arena.options;
 
+import me.despical.whackme.Main;
+import org.bukkit.plugin.java.JavaPlugin;
+
 /**
  * @author Despical
  * <p>
@@ -7,16 +10,18 @@ package me.despical.whackme.arena.options;
  */
 public enum ArenaOption {
 
-	TIMER(30),
+	TIMER("Gameplay-Time", 30),
 
-	MINIMUM_POINTS(4),
+	MINIMUM_POINTS("Minimum-Points", 4),
 
-	MAXIMUM_POINTS(8);
+	MAXIMUM_POINTS("Maximum-Points", 8);
 
 	int defaultValue;
 
-	ArenaOption(int defaultValue) {
-		this.defaultValue = defaultValue;
+	ArenaOption(String path, int defaultValue) {
+		Main plugin = JavaPlugin.getPlugin(Main.class);
+
+		this.defaultValue = plugin.getConfig().getInt(path, defaultValue);
 	}
 
 	public int getDefaultValue() {

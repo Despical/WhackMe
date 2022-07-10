@@ -79,8 +79,6 @@ public class ArenaRegistry {
 			arena.setReady(true);
 			arena.setStartLocation(LocationSerializer.fromString(config.getString(path + "startLocation")));
 			arena.setEndLocation(LocationSerializer.fromString(config.getString(path + "endLocation")));
-			arena.setMinimumPoints(plugin.getConfig().getInt("Minimum-Points"));
-			arena.setMaximumPoints(plugin.getConfig().getInt("Maximum-Points"));
 			arena.start();
 
 			registerArena(arena);

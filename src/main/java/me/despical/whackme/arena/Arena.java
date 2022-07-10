@@ -91,10 +91,10 @@ public class Arena extends BukkitRunnable {
 			player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
 		}
 
-		bossBarManager.addPlayer();
-
 		this.player = player;
-		this.setTimer(30);
+		this.setTimer(ArenaOption.TIMER.getDefaultValue());
+
+		bossBarManager.addPlayer();
 
 		plugin.getUserManager().getUser(player).setStat(StatsStorage.StatisticType.LOCAL_SCORE, 0);
 

@@ -19,6 +19,7 @@ import me.despical.whackme.handler.SoundManager;
 import me.despical.whackme.user.User;
 import me.despical.whackme.user.UserManager;
 import me.despical.whackme.user.data.MysqlManager;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -159,12 +160,23 @@ public class Main extends JavaPlugin {
 	private void registerSoftDependencies() {
 		LogUtils.log("Hooking into soft dependencies.");
 
+		startPluginMetrics();
+
 		if (chatManager.isPapiEnabled()) {
 			LogUtils.log("Hooking into PlaceholderAPI.");
 			new PlaceholderManager(this);
 		}
 
 		LogUtils.log("Hooked into soft dependencies.");
+	}
+
+	private void startPluginMetrics() {
+		Metrics metrics = new Metrics(this, 15722);
+
+		if (!metrics.isEnabled()) return;
+
+		metrics.addCustomChart(new Metrics.SimplePie("database_enabled", () -> configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED) ? "Enabled" : "Disabled"));
+		metrics.addCustomChart(new Metrics.SimplePie("update_notifier", () -> configPreferences.getOption(ConfigPreferences.Option.UPDATE_NOTIFIER_ENABLED) ? "Enabled" : "Disabled"));
 	}
 
 	private void saveAllUserStatistics() {

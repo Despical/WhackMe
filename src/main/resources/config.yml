@@ -38,6 +38,9 @@ Clear-Effects: true
 # You can edit the formatting in messages.yml
 Chat-Format-Enabled: true
 
+# The gameplay time for each arena. Default is 30 seconds.
+Gameplay-Time: 30
+
 # This value can not be less than 1 and can not be higher than 8.
 # Minimum value of the point blocks that will spawned around the player.
 Minimum-Points: 4
@@ -59,9 +62,6 @@ Hit-Cooldown-Delay: 16
 Whitelisted-Commands:
   - me
   - help
-
-# Enable in game rewards? See rewards.yml for more.
-Rewards-Enabled: false
 
 # Should we block every not KOTL Premium associated commands in game?
 Block-Commands: true
