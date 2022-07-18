@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -48,7 +49,7 @@ public class PointBlock extends BukkitRunnable {
 		arena.getPointBlocks().add(this);
 		arena.getLocations().remove(availableLocation);
 
-		registerEvent();
+		registerEvents();
 	}
 
 	public void clear() {
@@ -74,23 +75,36 @@ public class PointBlock extends BukkitRunnable {
 			plugin.getChatManager().message("point_blocks.dont_punch_me"));
 	}
 
-	private void registerEvent() {
+	private void registerEvents() {
 		plugin.getServer().getPluginManager().registerEvents(new Listener() {
 
 			@EventHandler
-			public void onArmorStandManipulate(EntityDamageByEntityEvent event) {
-				if (!(event.getDamager() instanceof Player)) return;
-				if (!(event.getEntity() instanceof ArmorStand)) return;
-
-				Player player = (Player) event.getDamager();
+			public void onArmorStandManipulate(PlayerArmorStandManipulateEvent event) {
+				final Player player = event.getPlayer();
 
 				if (!arena.containPlayer(player)) return;
 
-				ArmorStand armorStand = (ArmorStand) event.getEntity();
+				final ArmorStand armorStand = event.getRightClicked();
 
 				if (!armorStand.equals(stand)) return;
 
-				User user = plugin.getUserManager().getUser(player);
+				event.setCancelled(true);
+			}
+
+			@EventHandler
+			public void onArmorStandDamage(EntityDamageByEntityEvent event) {
+				if (!(event.getDamager() instanceof Player)) return;
+				if (!(event.getEntity() instanceof ArmorStand)) return;
+
+				final Player player = (Player) event.getDamager();
+
+				if (!arena.containPlayer(player)) return;
+
+				final ArmorStand armorStand = (ArmorStand) event.getEntity();
+
+				if (!armorStand.equals(stand)) return;
+
+				final User user = plugin.getUserManager().getUser(player);
 
 				if (stand.getHelmet().getType() == Utils.GREEN_TERRACOTTA.getType()) {
 					user.addStat(StatsStorage.StatisticType.LOCAL_SCORE, 1);

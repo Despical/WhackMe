@@ -68,6 +68,6 @@ public class JoinCommand extends SubCommand {
 
 	@Override
 	public int getSenderType() {
-		return BOTH;
+		return PLAYER;
 	}
 }
