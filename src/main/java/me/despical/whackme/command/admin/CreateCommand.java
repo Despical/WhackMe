@@ -6,7 +6,6 @@ import me.despical.commons.serializer.LocationSerializer;
 import me.despical.whackme.arena.Arena;
 import me.despical.whackme.arena.ArenaRegistry;
 import me.despical.whackme.command.SubCommand;
-import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -30,33 +29,49 @@ public class CreateCommand extends SubCommand {
 
 	@Override
 	public int getMinimumArguments() {
-		return 1;
+		return 0;
 	}
 
 	@Override
 	public void execute(CommandSender sender, String label, String[] args) {
-		Player player = (Player) sender;
+		final Player player = (Player) sender;
 
 		if (args.length == 0) {
 			player.sendMessage(chatManager.prefixedRawMessage("&cPlease enter an name to create an arena!"));
 			return;
 		}
 
-		String arg = args[0];
+		final String id = args[0];
 
-		if (ArenaRegistry.isArena(arg)) {
+		if (ArenaRegistry.isArena(id)) {
 			player.sendMessage(chatManager.prefixedRawMessage("&cArena with that ID already contains!"));
 			player.sendMessage(chatManager.prefixedRawMessage("&cTo check existing arenas use: /wm list"));
 			return;
 		}
 
-		setupDefaultConfiguration(arg);
-
 		player.sendMessage(chatManager.coloredRawMessage("&l--------------------------------------------"));
-		MiscUtils.sendCenteredMessage(player, "&eInstance &a&l" + arg + " &ecreated!");
+		MiscUtils.sendCenteredMessage(player, "&eInstance &a&l" + id + " &ecreated!");
 		player.sendMessage("");
-		MiscUtils.sendCenteredMessage(player, "&aEdit this arena via /wm edit &6" + arg + "&a!");
+		MiscUtils.sendCenteredMessage(player, "&aEdit this arena via /wm edit &6" + id + "&a!");
+		player.sendMessage("");
+		MiscUtils.sendCenteredMessage(player, "&6Don't know where to start? Check out our wiki:");
+		MiscUtils.sendCenteredMessage(player, "&7https://www.github.com/Despical/WhackMe/wiki");
 		player.sendMessage(chatManager.coloredRawMessage("&l--------------------------------------------"));
+
+		final String path = "instances." + id + ".";
+
+		config.set(path + "ready", false);
+		config.set(path + "endLocation", LocationSerializer.SERIALIZED_LOCATION);
+		config.set(path + "centerLocation", LocationSerializer.SERIALIZED_LOCATION);
+
+		ConfigUtils.saveConfig(plugin, config, "arenas");
+
+		Arena arena = new Arena(id);
+		arena.setReady(false);
+		arena.setEndLocation(LocationSerializer.DEFAULT_LOCATION);
+		arena.setStartLocation(LocationSerializer.DEFAULT_LOCATION);
+
+		ArenaRegistry.registerArena(arena);
 	}
 
 	@Override
@@ -65,30 +80,12 @@ public class CreateCommand extends SubCommand {
 	}
 
 	@Override
-	public CommandType getType() {
-		return CommandType.GENERIC;
+	public int getType() {
+		return GENERIC;
 	}
 
 	@Override
-	public SenderType getSenderType() {
-		return SenderType.PLAYER;
-	}
-
-	private void setupDefaultConfiguration(String id) {
-		String path = "instances." + id + ".", def = LocationSerializer.SERIALIZED_LOCATION;
-
-		config.set(path + "ready", false);
-		config.set(path + "endLocation", def);
-		config.set(path + "centerLocation", def);
-
-		ConfigUtils.saveConfig(plugin, config, "arenas");
-
-		Location defLoc = LocationSerializer.DEFAULT_LOCATION;
-		Arena arena = new Arena(id);
-		arena.setReady(false);
-		arena.setEndLocation(defLoc);
-		arena.setStartLocation(defLoc);
-
-		ArenaRegistry.registerArena(arena);
+	public int getSenderType() {
+		return PLAYER;
 	}
 }

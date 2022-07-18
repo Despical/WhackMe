@@ -30,8 +30,7 @@ public class CommandHandler implements CommandExecutor {
 		this.plugin = plugin;
 		this.subCommands = new HashSet<>();
 
-		SubCommand[] commands = {new CreateCommand(), new DeleteCommand(), new ListCommand(), new EditCommand(), new HelpCommand(), new ReloadCommand(),
-			new StatsCommand(), new LeaderboardCommand(), new JoinCommand()};
+		SubCommand[] commands = {new CreateCommand(), new DeleteCommand(), new ListCommand(), new EditCommand(), new HelpCommand(), new ReloadCommand(), new StatsCommand(), new LeaderboardCommand(), new JoinCommand()};
 
 		for (SubCommand command : commands) {
 			registerSubCommand(command);
@@ -71,7 +70,7 @@ public class CommandHandler implements CommandExecutor {
 					return true;
 				}
 
-				if (subCommand.getSenderType() == SubCommand.SenderType.PLAYER && !(sender instanceof Player)) {
+				if (subCommand.getSenderType() == 1 && !(sender instanceof Player)) {
 					sender.sendMessage(subCommand.chatManager.prefixedMessage("commands.only_by_player"));
 					return true;
 				}
@@ -82,7 +81,7 @@ public class CommandHandler implements CommandExecutor {
 					} catch (CommandException exception) {
 						sender.sendMessage(subCommand.chatManager.coloredRawMessage("&c" + exception.getMessage()));
 					}
-				} else if (subCommand.getType() == SubCommand.CommandType.GENERIC) {
+				} else if (subCommand.getType() == 0) {
 					sender.sendMessage(subCommand.chatManager.coloredRawMessage("&cUsage: /" + label + " " + subCommand.getName() + " " + (subCommand.getPossibleArguments().length() > 0 ? subCommand.getPossibleArguments() : "")));
 				}
 
@@ -90,7 +89,7 @@ public class CommandHandler implements CommandExecutor {
 			}
 		}
 
-		List<StringMatcher.Match> matches = StringMatcher.match(args[0], subCommands.stream().map(SubCommand::getName).collect(Collectors.toList()));
+		final List<StringMatcher.Match> matches = StringMatcher.match(args[0], subCommands.stream().map(SubCommand::getName).collect(Collectors.toList()));
 
 		if (!matches.isEmpty()) {
 			sender.sendMessage(plugin.getChatManager().prefixedMessage("commands.did_you_mean").replace("%command%", label + " " + matches.get(0).getMatch()));

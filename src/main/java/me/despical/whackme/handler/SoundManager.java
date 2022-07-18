@@ -1,9 +1,9 @@
 package me.despical.whackme.handler;
 
+import me.despical.commons.compat.XSound;
 import me.despical.commons.util.LogUtils;
 import me.despical.whackme.ConfigPreferences;
 import me.despical.whackme.Main;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 /**
@@ -13,14 +13,15 @@ import org.bukkit.entity.Player;
  */
 public class SoundManager {
 
-	private Sound pointSound, minusPointSound;
+	private XSound pointSound, minusPointSound;
 
 	public SoundManager(Main plugin) {
 		try {
-			this.pointSound = Sound.valueOf(plugin.getConfig().getString(GameSounds.POINT_SOUND.path));
-			this.minusPointSound = Sound.valueOf(plugin.getConfig().getString(GameSounds.MINUS_POINT_SOUND.path));
+			this.pointSound = XSound.matchXSound(plugin.getConfig().getString(GameSounds.POINT_SOUND.path)).orElse(XSound.BLOCK_NOTE_BLOCK_BELL);
+			this.minusPointSound = XSound.matchXSound(plugin.getConfig().getString(GameSounds.MINUS_POINT_SOUND.path)).orElse(XSound.BLOCK_NOTE_BLOCK_BASS);
 		} catch (Exception ignored) {
 			if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.IGNORE_WARNING_MESSAGES)) return;
+
 			LogUtils.sendConsoleMessage("[WhackMe] &cSystem could not load sounds. Look at the config file.");
 		}
 	}
@@ -29,8 +30,8 @@ public class SoundManager {
 		if (player == null) return;
 
 		if (sound == GameSounds.POINT_SOUND) {
-			if (pointSound != null) player.playSound(player.getLocation(), pointSound, 1F, 2F);
-		} else if (minusPointSound != null) player.playSound(player.getLocation(), minusPointSound, 1F, 2F);
+			if (pointSound != null) pointSound.play(player.getLocation(), 1F, 2F);
+		} else if (minusPointSound != null) minusPointSound.play(player.getLocation(), 1F, 2F);
 	}
 
 	public enum GameSounds {

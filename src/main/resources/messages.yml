@@ -45,10 +45,13 @@ In-Game:
   Only-Command-Is-Leave: "&cYou have to leave the game first to perform commands."
   Action-Bar: "&a&l%timer% &6- &a&l%score%"
 
-# Has usage only when boss bar is enabled in config
-# Also not compatible with the versions before Minecraft 1.9
-# Color values: PINK, BLUE, RED, GREEN, YELLOW, PURPLE and WHITE
-# Style values: SOLID, SEGMENTED_6, SEGMENTED_10, SEGMENTED_12, SEGMENTED_20
+Point-Blocks:
+  Punch-Me: "&aPunch Me!"
+  Dont-Punch-Me: "&cDont hit me!"
+  Ouch: "&cOuch!"
+
+# Has usage only when boss bar is enabled in config.
+# Only compatible with the versions Minecraft 1.9+
 Boss-Bar:
   Color: BLUE
   Style: SOLID

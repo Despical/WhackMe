@@ -12,8 +12,8 @@ public abstract class WMEvent extends Event {
 
 	protected final Arena arena;
 
-	public WMEvent(Arena eventArena) {
-		this.arena = eventArena;
+	public WMEvent(Arena arena) {
+		this.arena = arena;
 	}
 
 	public Arena getArena() {

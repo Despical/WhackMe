@@ -21,11 +21,11 @@ public class SpawnComponents implements SetupComponent {
 
 	@Override
 	public void injectComponents(SetupInventory setupInventory, StaticPane pane) {
-		Player player = setupInventory.getPlayer();
-		Arena arena = setupInventory.getArena();
-		String path = "instances." + arena.getId() + ".";
+		final Player player = setupInventory.getPlayer();
+		final Arena arena = setupInventory.getArena();
+		final String path = "instances." + arena.getId() + ".";
 
-		pane.addItem(new GuiItem(new ItemBuilder(XMaterial.IRON_BLOCK)
+		pane.addItem(GuiItem.of(new ItemBuilder(XMaterial.IRON_BLOCK)
 			.name("&e&lSet Start Location")
 			.lore("&7Click to set start location on")
 			.lore("&7the place where you are standing.")
@@ -36,7 +36,7 @@ public class SpawnComponents implements SetupComponent {
 
 			player.closeInventory();
 
-			Location location = player.getLocation();
+			final Location location = player.getLocation();
 
 			if (!Utils.isSurroundedBy(location)) {
 				player.sendMessage(chatManager.coloredRawMessage("&c&l✖ &cWarning | Blocks around the start location must be end portal frame!"));
@@ -51,7 +51,7 @@ public class SpawnComponents implements SetupComponent {
 			ConfigUtils.saveConfig(plugin, config, "arenas");
 		}), 3, 1);
 
-		pane.addItem(new GuiItem(new ItemBuilder(XMaterial.REDSTONE_BLOCK)
+		pane.addItem(GuiItem.of(new ItemBuilder(XMaterial.REDSTONE_BLOCK)
 			.name("&e&lSet Ending Location")
 			.lore("&7Click to set ending location on")
 			.lore("&7the place where you are standing.")
@@ -61,10 +61,9 @@ public class SpawnComponents implements SetupComponent {
 			.build(), e -> {
 
 			player.closeInventory();
-
-			Location location = player.getLocation().add(.5, 0, .5);
 			player.sendMessage(chatManager.coloredRawMessage("&e✔ Completed | &aEnding location for arena &e" + arena.getId() + " &aset at your location!"));
 
+			final Location location = player.getLocation().add(.5, 0, .5);
 			arena.setEndLocation(location);
 
 			config.set(path + "endLocation", LocationSerializer.toString(location));

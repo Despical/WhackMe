@@ -38,7 +38,7 @@ public class DeleteCommand extends SubCommand {
 
 	@Override
 	public void execute(CommandSender sender, String label, String[] args) {
-		Arena arena = ArenaRegistry.getArena(args[0]);
+		final Arena arena = ArenaRegistry.getArena(args[0]);
 
 		if (arena == null) {
 			sender.sendMessage(chatManager.prefixedMessage("commands.no_arena_like_that"));
@@ -54,12 +54,9 @@ public class DeleteCommand extends SubCommand {
 
 		confirmations.remove(sender);
 
-		Player player = arena.getPlayer();
+		final Player player = arena.getPlayer();
 
 		if (player != null) {
-			player.setFlySpeed(.1F);
-			player.setWalkSpeed(.2F);
-
 			arena.removePlayer();
 			arena.teleportToEndLocation();
 		}
@@ -78,12 +75,12 @@ public class DeleteCommand extends SubCommand {
 	}
 
 	@Override
-	public CommandType getType() {
-		return CommandType.GENERIC;
+	public int getType() {
+		return GENERIC;
 	}
 
 	@Override
-	public SenderType getSenderType() {
-		return SenderType.BOTH;
+	public int getSenderType() {
+		return BOTH;
 	}
 }

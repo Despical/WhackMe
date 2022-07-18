@@ -54,24 +54,30 @@ public class Main extends JavaPlugin {
 		if (configPreferences.getOption(ConfigPreferences.Option.DEBUG_MODE)) {
 			LogUtils.setLoggerName("WhackMe");
 			LogUtils.enableLogging();
-
-			getServer().getLogger().setParent(LogUtils.getLogger());
 		}
 
 		exceptionLogHandler = new ExceptionLogHandler(this);
 		exceptionLogHandler.setMainPackage("me.despical");
-		exceptionLogHandler.addBlacklistedClass("me.despical.commons.database.MysqlDatabase");
-		exceptionLogHandler.setRecordMessage("[WhackMe] We have found a problem in the code, create an issue on GitHub!");
+		exceptionLogHandler.addBlacklistedClass("me.despical.whackme.user.data.MysqlManager", "me.despical.commons.database.MysqlDatabase");
+		exceptionLogHandler.setRecordMessage("[WhacKMe] We have found a bug in the code. Use our issue tracker on our GitHub repo with the following error given above or you can join our Discord server (https://discord.gg/rVkaGmyszE)");
+
+		LogUtils.log("Initialization started!");
+		long start = System.currentTimeMillis();
 
 		setupFiles();
 		initClasses();
+
+		LogUtils.log("Initialization finished took {0} ms.", System.currentTimeMillis() - start);
 	}
 
 	@Override
 	public void onDisable() {
 		if (forceDisable) return;
 
-		getLogger().removeHandler(exceptionLogHandler);
+		LogUtils.log("System disable initialized.");
+		long start = System.currentTimeMillis();
+
+		getServer().getLogger().removeHandler(exceptionLogHandler);
 
 		for (Arena arena : ArenaRegistry.getArenas()) {
 			Player player = arena.getPlayer();
@@ -110,6 +116,7 @@ public class Main extends JavaPlugin {
 
 		saveAllUserStatistics();
 
+		LogUtils.log("System disable finished took {0} ms.", System.currentTimeMillis() - start);
 		LogUtils.disableLogging();
 	}
 
@@ -181,14 +188,15 @@ public class Main extends JavaPlugin {
 
 	private void saveAllUserStatistics() {
 		for (Player player : getServer().getOnlinePlayers()) {
-			User user = userManager.getUser(player);
+			final User user = userManager.getUser(player);
 
 			if (userManager.getDatabase() instanceof MysqlManager) {
-				StringBuilder update = new StringBuilder(" SET ");
+				final StringBuilder update = new StringBuilder(" SET ");
 
 				for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
 					if (!stat.isPersistent()) continue;
-					int val = user.getStat(stat);
+
+					final int val = user.getStat(stat);
 
 					if (update.toString().equalsIgnoreCase(" SET ")) {
 						update.append(stat.getName()).append("'='").append(val);
@@ -197,8 +205,8 @@ public class Main extends JavaPlugin {
 					update.append(", ").append(stat.getName()).append("'='").append(val);
 				}
 
-				String finalUpdate = update.toString();
-				MysqlManager database = ((MysqlManager) userManager.getDatabase());
+				final String finalUpdate = update.toString();
+				final MysqlManager database = ((MysqlManager) userManager.getDatabase());
 				database.getDatabase().executeUpdate("UPDATE " + database.getTableName() + finalUpdate + " WHERE UUID='" + user.getUniqueId().toString() + "';");
 				continue;
 			}

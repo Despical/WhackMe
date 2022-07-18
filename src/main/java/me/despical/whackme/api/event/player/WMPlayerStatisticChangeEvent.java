@@ -15,12 +15,13 @@ import org.jetbrains.annotations.NotNull;
 public class WMPlayerStatisticChangeEvent extends WMEvent {
 
 	private static final HandlerList handlers = new HandlerList();
+
 	private final Player player;
 	private final StatsStorage.StatisticType statisticType;
 	private final int value;
 
-	public WMPlayerStatisticChangeEvent(Arena eventArena, Player player, StatsStorage.StatisticType statisticType, int value) {
-		super(eventArena);
+	public WMPlayerStatisticChangeEvent(Arena arena, Player player, StatsStorage.StatisticType statisticType, int value) {
+		super (arena);
 		this.player = player;
 		this.statisticType = statisticType;
 		this.value = value;

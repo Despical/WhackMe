@@ -29,15 +29,15 @@ public class StatsCommand extends SubCommand {
 
 	@Override
 	public void execute(CommandSender sender, String label, String[] args) {
-		Player player = (Player) sender, target = args.length == 0 ? player : plugin.getServer().getPlayer(args[0]);
+		final Player player = (Player) sender, target = args.length == 0 ? player : plugin.getServer().getPlayer(args[0]);
 
 		if (target == null) {
 			player.sendMessage(chatManager.prefixedMessage("commands.player_not_found"));
 			return;
 		}
 
-		User user = plugin.getUserManager().getUser(target);
-		String path = "commands.stats_command.";
+		final User user = plugin.getUserManager().getUser(target);
+		final String path = "commands.stats_command.";
 
 		if (player.equals(target)) {
 			player.sendMessage(chatManager.message(path + "header", player));
@@ -56,12 +56,12 @@ public class StatsCommand extends SubCommand {
 	}
 
 	@Override
-	public CommandType getType() {
-		return CommandType.HIDDEN;
+	public int getType() {
+		return HIDDEN;
 	}
 
 	@Override
-	public SenderType getSenderType() {
-		return SenderType.PLAYER;
+	public int getSenderType() {
+		return PLAYER;
 	}
 }

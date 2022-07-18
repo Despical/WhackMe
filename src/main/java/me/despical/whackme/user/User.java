@@ -44,7 +44,7 @@ public class User {
 	}
 
 	public int getStat(StatsStorage.StatisticType statisticType) {
-		Integer statistic = stats.get(statisticType);
+		final Integer statistic = stats.get(statisticType);
 
 		if (statistic == null) {
 			stats.put(statisticType, 0);
@@ -57,6 +57,7 @@ public class User {
 	public void setStat(StatsStorage.StatisticType stat, int value) {
 		stats.put(stat, value);
 
+		// When the disable initialized you can not create a scheduler
 		if (plugin.isEnabled()) plugin.getServer().getScheduler().runTask(plugin, () -> plugin.getServer().getPluginManager().callEvent(new WMPlayerStatisticChangeEvent(getArena(), player, stat, value)));
 	}
 

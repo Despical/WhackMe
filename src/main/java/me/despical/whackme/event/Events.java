@@ -24,15 +24,8 @@ public class Events extends ListenerAdapter {
 	}
 
 	@EventHandler
-	public void onDrop(PlayerDropItemEvent event) {
-		if (ArenaRegistry.isInArena(event.getPlayer())) {
-			event.setCancelled(true);
-		}
-	}
-
-	@EventHandler
 	public void onCommandExecute(PlayerCommandPreprocessEvent event) {
-		Player player = event.getPlayer();
+		final Player player = event.getPlayer();
 
 		if (!ArenaRegistry.isInArena(player)) {
 			return;
@@ -42,7 +35,7 @@ public class Events extends ListenerAdapter {
 			return;
 		}
 
-		String message = event.getMessage();
+		final String message = event.getMessage();
 
 		if (plugin.getConfig().getStringList("Whitelisted-Commands").contains(message)) {
 			return;
@@ -57,7 +50,7 @@ public class Events extends ListenerAdapter {
 		}
 
 		event.setCancelled(true);
-		player.sendMessage(plugin.getChatManager().prefixedMessage("in_game.only_command_is_leave"));
+		player.sendMessage(chatManager.prefixedMessage("in_game.only_command_is_leave"));
 	}
 
 	@EventHandler
@@ -69,14 +62,14 @@ public class Events extends ListenerAdapter {
 	}
 
 	@EventHandler
-	public void onBlockBreakEvent(BlockBreakEvent event) {
+	public void onBreak(BlockBreakEvent event) {
 		if (ArenaRegistry.isInArena(event.getPlayer())) {
 			event.setCancelled(true);
 		}
 	}
 
 	@EventHandler
-	public void onBuild(BlockPlaceEvent event) {
+	public void onPlace(BlockPlaceEvent event) {
 		if (ArenaRegistry.isInArena(event.getPlayer())) {
 			event.setCancelled(true);
 		}
@@ -91,8 +84,15 @@ public class Events extends ListenerAdapter {
 	}
 
 	@EventHandler
+	public void onDrop(PlayerDropItemEvent event) {
+		if (ArenaRegistry.isInArena(event.getPlayer())) {
+			event.setCancelled(true);
+		}
+	}
+
+	@EventHandler
 	public void onJoin(PlayerJoinEvent event) {
-		Player player = event.getPlayer();
+		final Player player = event.getPlayer();
 
 		plugin.getUserManager().loadStatistics(player);
 
@@ -103,8 +103,8 @@ public class Events extends ListenerAdapter {
 
 	@EventHandler
 	public void onQuit(PlayerQuitEvent event) {
-		Player player = event.getPlayer();
-		Arena arena = ArenaRegistry.getArena(player);
+		final Player player = event.getPlayer();
+		final Arena arena = ArenaRegistry.getArena(player);
 
 		if (arena != null) {
 			arena.removePlayer();

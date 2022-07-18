@@ -20,8 +20,8 @@ public class BossBarManager extends BukkitRunnable {
 
 	private final Main plugin;
 	private final Arena arena;
-	private final BossBar bossBar;
 	private final boolean enabled;
+	private final BossBar bossBar;
 	private final List<String> messages;
 
 	private int queue = 0;

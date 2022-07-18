@@ -42,11 +42,11 @@ public class HelpCommand extends SubCommand {
 		sender.sendMessage("");
 
 		for (SubCommand subCommand : plugin.getCommandHandler().getSubCommands()) {
-			if (subCommand.getType() == SubCommand.CommandType.GENERIC) {
-				String usage = "/" + label + " " + subCommand.getName() + (subCommand.getPossibleArguments() != null ? " " + subCommand.getPossibleArguments() : "");
+			if (subCommand.getType() == 0) {
+				final String usage = "/" + label + " " + subCommand.getName() + (subCommand.getPossibleArguments() != null ? " " + subCommand.getPossibleArguments() : "");
 
 				if (sender instanceof Player) {
-					List<String> help = new ArrayList<>();
+					final List<String> help = new ArrayList<>();
 					help.add(ChatColor.DARK_AQUA + usage);
 
 					if (subCommand.getTutorial() != null) help.add(ChatColor.AQUA + subCommand.getTutorial());
@@ -63,7 +63,7 @@ public class HelpCommand extends SubCommand {
 		}
 
 		if (sender instanceof Player) {
-			Player player = (Player) sender;
+			final Player player = (Player) sender;
 			player.sendMessage("");
 			player.spigot().sendMessage(new ComponentBuilder("TIP:").color(ChatColor.YELLOW).bold(true)
 				.append(" Try to ", ComponentBuilder.FormatRetention.NONE).color(ChatColor.GRAY)
@@ -83,12 +83,12 @@ public class HelpCommand extends SubCommand {
 	}
 
 	@Override
-	public CommandType getType() {
-		return CommandType.HIDDEN;
+	public int getType() {
+		return HIDDEN;
 	}
 
 	@Override
-	public SenderType getSenderType() {
-		return SenderType.BOTH;
+	public int getSenderType() {
+		return BOTH;
 	}
 }

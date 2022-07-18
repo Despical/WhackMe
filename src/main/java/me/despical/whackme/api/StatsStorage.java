@@ -17,7 +17,6 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 /**
@@ -32,9 +31,9 @@ public class StatsStorage {
 	public static Map<UUID, Integer> getStats(StatisticType stat) {
 		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
 			try (Connection connection = plugin.getMysqlDatabase().getConnection()) {
-				Statement statement = connection.createStatement();
-				ResultSet set = statement.executeQuery("SELECT UUID, " + stat.name + " FROM " + ((MysqlManager) plugin.getUserManager().getDatabase()).getTableName() + " ORDER BY " + stat.name);
-				Map<UUID, Integer> column = new HashMap<>();
+				final Statement statement = connection.createStatement();
+				final ResultSet set = statement.executeQuery("SELECT UUID, " + stat.name + " FROM " + ((MysqlManager) plugin.getUserManager().getDatabase()).getTableName() + " ORDER BY " + stat.name);
+				final Map<UUID, Integer> column = new HashMap<>();
 
 				while (set.next()) {
 					column.put(UUID.fromString(set.getString("UUID")), set.getInt(stat.name));
@@ -42,7 +41,7 @@ public class StatsStorage {
 
 				return column;
 			} catch (SQLException exception) {
-				LogUtils.log(Level.WARNING, "SQL Exception occurred! " + exception.getSQLState() + " (" + exception.getErrorCode() + ")");
+				LogUtils.log("SQL Exception occurred! " + exception.getSQLState() + " (" + exception.getErrorCode() + ")");
 				LogUtils.sendConsoleMessage("&cCould not get contents from MySQL database!");
 				return null;
 			}
@@ -65,7 +64,7 @@ public class StatsStorage {
 		boolean persistent;
 
 		StatisticType(String name) {
-			this(name, true);
+			this (name, true);
 		}
 
 		StatisticType(String name, boolean persistent) {

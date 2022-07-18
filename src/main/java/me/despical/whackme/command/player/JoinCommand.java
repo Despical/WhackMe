@@ -34,14 +34,14 @@ public class JoinCommand extends SubCommand {
 			return;
 		}
 
-		Arena arena = ArenaRegistry.getArena(args[0]);
+		final Arena arena = ArenaRegistry.getArena(args[0]);
 
 		if (arena == null) {
 			sender.sendMessage(chatManager.prefixedMessage("commands.no_arena_like_that"));
 			return;
 		}
 
-		Player player = (Player) sender;
+		final Player player = (Player) sender;
 
 		if (arena.containPlayer(player)) {
 			player.sendMessage(chatManager.prefixedMessage("in_game.already_playing"));
@@ -53,7 +53,7 @@ public class JoinCommand extends SubCommand {
 			return;
 		}
 
-		arena.addPlayer((Player) sender);
+		arena.addPlayer(player);
 	}
 
 	@Override
@@ -62,12 +62,12 @@ public class JoinCommand extends SubCommand {
 	}
 
 	@Override
-	public CommandType getType() {
-		return CommandType.HIDDEN;
+	public int getType() {
+		return HIDDEN;
 	}
 
 	@Override
-	public SenderType getSenderType() {
-		return SenderType.BOTH;
+	public int getSenderType() {
+		return BOTH;
 	}
 }

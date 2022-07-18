@@ -32,10 +32,10 @@ public class ReloadCommand extends SubCommand {
 
 	@Override
 	public void execute(CommandSender sender, String label, String[] args) {
-		LogUtils.sendConsoleMessage("[WhacKMe] Initialized plugin reload.");
+		LogUtils.sendConsoleMessage("[WhackMe] Initialized plugin reload.");
 		LogUtils.log("Initialized plugin reload by {0}.", sender.getName());
 
-		long start = System.currentTimeMillis();
+		final long start = System.currentTimeMillis();
 
 		plugin.reloadConfig();
 		plugin.getChatManager().reloadConfig();
@@ -43,7 +43,7 @@ public class ReloadCommand extends SubCommand {
 		for (Arena arena : ArenaRegistry.getArenas()) {
 			LogUtils.log("Stopping arena called {0}.", arena.getId());
 
-			Player player = arena.getPlayer();
+			final Player player = arena.getPlayer();
 
 			if (player != null) {
 				player.setFlySpeed(.1F);
@@ -66,12 +66,12 @@ public class ReloadCommand extends SubCommand {
 	}
 
 	@Override
-	public CommandType getType() {
-		return CommandType.GENERIC;
+	public int getType() {
+		return GENERIC;
 	}
 
 	@Override
-	public SenderType getSenderType() {
-		return SenderType.BOTH;
+	public int getSenderType() {
+		return BOTH;
 	}
 }

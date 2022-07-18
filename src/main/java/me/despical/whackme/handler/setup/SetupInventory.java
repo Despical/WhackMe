@@ -42,8 +42,8 @@ public class SetupInventory {
 		this.gui = new Gui(plugin, 3, "Arena Setup Menu");
 		this.gui.setOnGlobalClick(e -> e.setCancelled(true));
 
-		StaticPane pane = new StaticPane(9, 3);
-		ItemBuilder registeredItem = new ItemBuilder(XMaterial.GREEN_STAINED_GLASS_PANE).name("&aArena Validation Successful"),
+		final StaticPane pane = new StaticPane(9, 3);
+		final ItemBuilder registeredItem = new ItemBuilder(XMaterial.GREEN_STAINED_GLASS_PANE).name("&aArena Validation Successful"),
 			notRegisteredItem = new ItemBuilder(XMaterial.BLACK_STAINED_GLASS_PANE).name("&cArena Validation Not Finished Yet");
 		pane.fillWith(arena.isReady() ? registeredItem.build() : notRegisteredItem.build());
 		pane.fillProgressBorder(GuiItem.of(registeredItem.build()), GuiItem.of(notRegisteredItem.build()), arena.isReady() ? 100 : 0);
@@ -64,12 +64,12 @@ public class SetupInventory {
 	private void sendProTip(Player player) {
 		if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.SEND_SETUP_TIPS)) return;
 
-		ChatManager chatManager = plugin.getChatManager();
+		final ChatManager chatManager = plugin.getChatManager();
 		String tip = "";
 
 		switch (ThreadLocalRandom.current().nextInt(12)) {
 			case 0:
-				tip = "Need help? You can join our small Discord community. Check out https://discord.gg/rVkaGmyszE";
+				tip = "Need help? You can join our Discord community. Check out https://discord.gg/rVkaGmyszE";
 				break;
 			case 1:
 				tip = "Need help? Check our wiki: https://github.com/Despical/WhackMe/wiki";

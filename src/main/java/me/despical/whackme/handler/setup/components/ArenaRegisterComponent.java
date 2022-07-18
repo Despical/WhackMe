@@ -23,9 +23,9 @@ public class ArenaRegisterComponent implements SetupComponent {
 
 	@Override
 	public void injectComponents(SetupInventory setupInventory, StaticPane pane) {
-		Player player = setupInventory.getPlayer();
-		Arena arena = setupInventory.getArena();
-		ItemBuilder registeredItem;
+		final Player player = setupInventory.getPlayer();
+		final Arena arena = setupInventory.getArena();
+		final ItemBuilder registeredItem;
 
 		if (!arena.isReady()) {
 			registeredItem = new ItemBuilder(XMaterial.FIREWORK_ROCKET)
@@ -42,7 +42,7 @@ public class ArenaRegisterComponent implements SetupComponent {
 		}
 
 		pane.addItem(GuiItem.of(registeredItem.build(), e -> {
-			String path = "instances." + arena.getId() + ".";
+			final String path = "instances." + arena.getId() + ".";
 
 			player.closeInventory();
 
@@ -51,7 +51,7 @@ public class ArenaRegisterComponent implements SetupComponent {
 				return;
 			}
 
-			String[] locations = {"startLocation", "endLocation"};
+			final String[] locations = {"startLocation", "endLocation"};
 
 			for (String loc : locations) {
 				if (!config.isSet(path + loc) || LocationSerializer.isDefaultLocation(config.getString(path + loc))) {
@@ -62,7 +62,7 @@ public class ArenaRegisterComponent implements SetupComponent {
 
 			ArenaRegistry.unregisterArena(arena);
 
-			Arena newArena = new Arena(arena.getId());
+			final Arena newArena = new Arena(arena.getId());
 
 			newArena.setReady(true);
 			newArena.setStartLocation(LocationSerializer.fromString(config.getString(path + "startLocation")));

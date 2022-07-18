@@ -70,7 +70,8 @@ public class PointBlock extends BukkitRunnable {
 	}
 
 	private String getCustomName() {
-		return plugin.getChatManager().coloredRawMessage(stand.getHelmet().getType() == Utils.GREEN_TERRACOTTA.getType() ? "&aPunch Me!" : "&cDont hit me!");
+		return plugin.getChatManager().coloredRawMessage(stand.getHelmet().getType() == Utils.GREEN_TERRACOTTA.getType() ? plugin.getChatManager().message("point_blocks.punch_me") :
+			plugin.getChatManager().message("point_blocks.dont_punch_me"));
 	}
 
 	private void registerEvent() {
@@ -102,7 +103,7 @@ public class PointBlock extends BukkitRunnable {
 				}
 
 				stand.setHelmet(Utils.CYAN_TERRACOTTA);
-				stand.setCustomName(plugin.getChatManager().coloredRawMessage("&cOuch!"));
+				stand.setCustomName(plugin.getChatManager().message("point_blocks.ouch"));
 			}
 		}, plugin);
 	}

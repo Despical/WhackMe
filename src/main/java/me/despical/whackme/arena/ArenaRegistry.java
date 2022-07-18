@@ -53,8 +53,9 @@ public class ArenaRegistry {
 
 	public static void registerArenas() {
 		LogUtils.log("Arena registration started.");
-		FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-		long start = System.currentTimeMillis();
+
+		final FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+		final long start = System.currentTimeMillis();
 
 		arenas.clear();
 
@@ -71,11 +72,11 @@ public class ArenaRegistry {
 		}
 
 		for (String id : section.getKeys(false)) {
-			String path = "instances." + id + ".";
+			final String path = "instances." + id + ".";
 
 			if (path.contains("default")) continue;
 
-			Arena arena = new Arena(id);
+			final Arena arena = new Arena(id);
 			arena.setReady(true);
 			arena.setStartLocation(LocationSerializer.fromString(config.getString(path + "startLocation")));
 			arena.setEndLocation(LocationSerializer.fromString(config.getString(path + "endLocation")));
@@ -93,7 +94,6 @@ public class ArenaRegistry {
 				continue;
 			}
 
-
 			if (!config.getBoolean(path + "ready")) {
 				arena.setReady(false);
 
@@ -104,8 +104,8 @@ public class ArenaRegistry {
 				continue;
 			}
 
-			LogUtils.sendConsoleMessage(plugin.getChatManager().message("validator.instance_started").replace("%arena%", id));
 			ConfigUtils.saveConfig(plugin, config, "arenas");
+			LogUtils.sendConsoleMessage(plugin.getChatManager().message("validator.instance_started").replace("%arena%", id));
 		}
 
 		LogUtils.log("Arenas registration completed, took {0} ms.", System.currentTimeMillis() - start);
