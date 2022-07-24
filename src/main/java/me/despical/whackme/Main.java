@@ -8,6 +8,7 @@ import me.despical.commons.serializer.InventorySerializer;
 import me.despical.commons.util.Collections;
 import me.despical.commons.util.JavaVersion;
 import me.despical.commons.util.LogUtils;
+import me.despical.commons.util.UpdateChecker;
 import me.despical.whackme.api.StatsStorage;
 import me.despical.whackme.arena.Arena;
 import me.despical.whackme.arena.ArenaRegistry;
@@ -85,17 +86,17 @@ public class Main extends JavaPlugin {
 			if (player == null) continue;
 			
 			User user = userManager.getUser(player);
+			user.addStat(StatsStorage.StatisticType.TOURS_PLAYED, 1);
+
 			int score = user.getStat(StatsStorage.StatisticType.LOCAL_SCORE);
 
 			if (score > user.getStat(StatsStorage.StatisticType.RECORD_SCORE)) {
 				user.setStat(StatsStorage.StatisticType.RECORD_SCORE, score);
 
-				player.sendMessage(chatManager.message("in_game.finish_record_message").replace("%points%", Integer.toString(userManager.getUser(player).getStat(StatsStorage.StatisticType.LOCAL_SCORE))));
+				player.sendMessage(chatManager.message("in_game.finish_record_message").replace("%points%", Integer.toString(user.getStat(StatsStorage.StatisticType.LOCAL_SCORE))));
 			} else {
-				player.sendMessage(chatManager.message("in_game.finish_message").replace("%points%", Integer.toString(userManager.getUser(player).getStat(StatsStorage.StatisticType.LOCAL_SCORE))));
+				player.sendMessage(chatManager.message("in_game.finish_message").replace("%points%", Integer.toString(user.getStat(StatsStorage.StatisticType.LOCAL_SCORE))));
 			}
-
-			user.addStat(StatsStorage.StatisticType.TOURS_PLAYED, 1);
 
 			userManager.getDatabase().saveAllStatistic(user);
 
@@ -164,6 +165,18 @@ public class Main extends JavaPlugin {
 		return true;
 	}
 
+	private void checkUpdate() {
+		if (!configPreferences.getOption(ConfigPreferences.Option.UPDATE_NOTIFIER_ENABLED)) return;
+
+		UpdateChecker.init(this, 103482).requestUpdateCheck().whenComplete((result, exception) -> {
+			if (result.requiresUpdate()) {
+				LogUtils.sendConsoleMessage("[WhackMe] Found a new version available: v" + result.getNewestVersion());
+				LogUtils.sendConsoleMessage("[WhackMe] Download it on SpigotMC:");
+				LogUtils.sendConsoleMessage("[WhackMe] https://www.spigotmc.org/resources/whack-me-1-9-1-19.103482/");
+			}
+		});
+	}
+
 	private void registerSoftDependencies() {
 		LogUtils.log("Hooking into soft dependencies.");
 
@@ -178,7 +191,7 @@ public class Main extends JavaPlugin {
 	}
 
 	private void startPluginMetrics() {
-		Metrics metrics = new Metrics(this, 15722);
+		final Metrics metrics = new Metrics(this, 15722);
 
 		if (!metrics.isEnabled()) return;
 

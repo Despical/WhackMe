@@ -1,6 +1,7 @@
 package me.despical.whackme.event;
 
 import me.despical.commons.serializer.InventorySerializer;
+import me.despical.commons.util.UpdateChecker;
 import me.despical.whackme.ConfigPreferences;
 import me.despical.whackme.Main;
 import me.despical.whackme.arena.Arena;
@@ -99,6 +100,17 @@ public class Events extends ListenerAdapter {
 		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
 			InventorySerializer.loadInventory(plugin, player);
 		}
+
+		if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.UPDATE_NOTIFIER_ENABLED) && !player.hasPermission("whackme.updatenotify")) {
+			return;
+		}
+
+		UpdateChecker.init(plugin, 103482).requestUpdateCheck().whenComplete((result, exception) -> {
+			if (result.requiresUpdate()) {
+				player.sendMessage(plugin.getChatManager().coloredRawMessage("&3[Whack Me] &bFound an update: v" + result.getNewestVersion()));
+				player.sendMessage(plugin.getChatManager().coloredRawMessage("&3>> &bhttps://www.spigotmc.org/resources/whack-me-1-9-1-19.103482/"));
+			}
+		});
 	}
 
 	@EventHandler
