@@ -67,6 +67,7 @@ public class Main extends JavaPlugin {
 
 		setupFiles();
 		initClasses();
+		checkUpdate();
 
 		LogUtils.log("Initialization finished took {0} ms.", System.currentTimeMillis() - start);
 	}
