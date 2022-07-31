@@ -26,7 +26,7 @@ public class MysqlManager implements UserDatabase {
 		this.database = plugin.getMysqlDatabase();
 
 		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
-			try (Connection connection = database.getConnection()) {
+			try (final Connection connection = database.getConnection()) {
 				final Statement statement = connection.createStatement();
 				statement.executeUpdate("CREATE TABLE IF NOT EXISTS `" + tableName + "` (\n"
 					+ "  `UUID` char(36) NOT NULL PRIMARY KEY,\n"
@@ -54,22 +54,22 @@ public class MysqlManager implements UserDatabase {
 
 	@Override
 	public void saveAllStatistic(User user) {
-		final StringBuilder update = new StringBuilder(" SET ");
+		final StringBuilder builder = new StringBuilder(" SET ");
 
 		for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
 			if (!stat.isPersistent()) continue;
 
-			final int val = user.getStat(stat);
+			final int value = user.getStat(stat);
 
-			if (update.toString().equalsIgnoreCase(" SET ")) {
-				update.append(stat.getName()).append("=").append(val);
+			if (builder.toString().equalsIgnoreCase(" SET ")) {
+				builder.append(stat.getName()).append("=").append(value);
 			}
 
-			update.append(", ").append(stat.getName()).append("=").append(val);
+			builder.append(", ").append(stat.getName()).append("=").append(value);
 		}
 
-		final String finalUpdate = update.toString();
-		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> database.executeUpdate("UPDATE " + tableName + finalUpdate + " WHERE UUID='" + user.getUniqueId().toString() + "';"));
+		final String update = builder.toString();
+		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> database.executeUpdate("UPDATE " + tableName + update + " WHERE UUID='" + user.getUniqueId().toString() + "';"));
 	}
 
 	@Override
@@ -99,8 +99,8 @@ public class MysqlManager implements UserDatabase {
 						user.setStat(stat, 0);
 					}
 				}
-			} catch (SQLException e) {
-				e.printStackTrace();
+			} catch (SQLException exception) {
+				exception.printStackTrace();
 			}
 		});
 	}

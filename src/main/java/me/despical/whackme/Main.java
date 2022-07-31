@@ -21,6 +21,7 @@ import me.despical.whackme.user.User;
 import me.despical.whackme.user.UserManager;
 import me.despical.whackme.user.data.MysqlManager;
 import org.bstats.bukkit.Metrics;
+import org.bstats.charts.SimplePie;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -55,6 +56,7 @@ public class Main extends JavaPlugin {
 		if (configPreferences.getOption(ConfigPreferences.Option.DEBUG_MODE)) {
 			LogUtils.setLoggerName("WhackMe");
 			LogUtils.enableLogging();
+			LogUtils.log("Initialization started!");
 		}
 
 		exceptionLogHandler = new ExceptionLogHandler(this);
@@ -62,7 +64,6 @@ public class Main extends JavaPlugin {
 		exceptionLogHandler.addBlacklistedClass("me.despical.whackme.user.data.MysqlManager", "me.despical.commons.database.MysqlDatabase");
 		exceptionLogHandler.setRecordMessage("[WhacKMe] We have found a bug in the code. Use our issue tracker on our GitHub repo with the following error given above or you can join our Discord server (https://discord.gg/rVkaGmyszE)");
 
-		LogUtils.log("Initialization started!");
 		long start = System.currentTimeMillis();
 
 		setupFiles();
@@ -86,7 +87,7 @@ public class Main extends JavaPlugin {
 			
 			if (player == null) continue;
 			
-			User user = userManager.getUser(player);
+			final User user = userManager.getUser(player);
 			user.addStat(StatsStorage.StatisticType.TOURS_PLAYED, 1);
 
 			int score = user.getStat(StatsStorage.StatisticType.LOCAL_SCORE);
@@ -145,8 +146,8 @@ public class Main extends JavaPlugin {
 
 	private boolean validateIfPluginShouldStart() {
 		if (!VersionResolver.isCurrentBetween(VersionResolver.ServerVersion.v1_9_R1, VersionResolver.ServerVersion.v1_19_R1)) {
-			LogUtils.sendConsoleMessage("&cYour server version is not supported by Whack Me!");
-			LogUtils.sendConsoleMessage("&cSadly, we must shut off. Maybe you consider changing your server version?");
+			LogUtils.sendConsoleMessage("[WhackMe] &cYour server version is not supported by Whack Me!");
+			LogUtils.sendConsoleMessage("[WhackMe] &cSadly, we must shut off. Maybe you consider changing your server version?");
 			return false;
 		}
 
@@ -158,8 +159,8 @@ public class Main extends JavaPlugin {
 		try {
 			Class.forName("org.spigotmc.SpigotConfig");
 		} catch (Exception e) {
-			LogUtils.sendConsoleMessage("&cYour server software is not supported by Whack Me!");
-			LogUtils.sendConsoleMessage("&cWe support only Spigot and its forks! Shutting off...");
+			LogUtils.sendConsoleMessage("[WhackMe] &cYour server software is not supported by Whack Me!");
+			LogUtils.sendConsoleMessage("[WhackMe] &cWe support only Spigot and its forks! Shutting off...");
 			return false;
 		}
 
@@ -194,10 +195,8 @@ public class Main extends JavaPlugin {
 	private void startPluginMetrics() {
 		final Metrics metrics = new Metrics(this, 15722);
 
-		if (!metrics.isEnabled()) return;
-
-		metrics.addCustomChart(new Metrics.SimplePie("database_enabled", () -> configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED) ? "Enabled" : "Disabled"));
-		metrics.addCustomChart(new Metrics.SimplePie("update_notifier", () -> configPreferences.getOption(ConfigPreferences.Option.UPDATE_NOTIFIER_ENABLED) ? "Enabled" : "Disabled"));
+		metrics.addCustomChart(new SimplePie("database_enabled", () -> configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED) ? "Enabled" : "Disabled"));
+		metrics.addCustomChart(new SimplePie("update_notifier", () -> configPreferences.getOption(ConfigPreferences.Option.UPDATE_NOTIFIER_ENABLED) ? "Enabled" : "Disabled"));
 	}
 
 	private void saveAllUserStatistics() {
@@ -205,23 +204,23 @@ public class Main extends JavaPlugin {
 			final User user = userManager.getUser(player);
 
 			if (userManager.getDatabase() instanceof MysqlManager) {
-				final StringBuilder update = new StringBuilder(" SET ");
+				final StringBuilder builder = new StringBuilder(" SET ");
 
 				for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
 					if (!stat.isPersistent()) continue;
 
-					final int val = user.getStat(stat);
+					final int value = user.getStat(stat);
 
-					if (update.toString().equalsIgnoreCase(" SET ")) {
-						update.append(stat.getName()).append("'='").append(val);
+					if (builder.toString().equalsIgnoreCase(" SET ")) {
+						builder.append(stat.getName()).append("'='").append(value);
 					}
 
-					update.append(", ").append(stat.getName()).append("'='").append(val);
+					builder.append(", ").append(stat.getName()).append("'='").append(value);
 				}
 
-				final String finalUpdate = update.toString();
+				final String update = builder.toString();
 				final MysqlManager database = ((MysqlManager) userManager.getDatabase());
-				database.getDatabase().executeUpdate("UPDATE " + database.getTableName() + finalUpdate + " WHERE UUID='" + user.getUniqueId().toString() + "';");
+				database.getDatabase().executeUpdate("UPDATE " + database.getTableName() + update + " WHERE UUID='" + user.getUniqueId().toString() + "';");
 				continue;
 			}
 

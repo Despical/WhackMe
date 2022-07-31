@@ -38,7 +38,7 @@ public class Utils {
 		final Set<Block> blocks = new HashSet<>();
 
 		for (int[] array : directions) {
-			Block block = center.clone().add(array[0], 0, array[1]).getBlock();
+			final Block block = center.clone().add(array[0], 0, array[1]).getBlock();
 
 			blocks.add(block);
 		}

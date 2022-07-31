@@ -7,6 +7,7 @@ import me.despical.whackme.arena.Arena;
 import me.despical.whackme.arena.ArenaRegistry;
 import me.despical.whackme.user.User;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Despical
@@ -23,21 +24,25 @@ public class PlaceholderManager extends PlaceholderExpansion {
 		register();
 	}
 
+	@NotNull
 	@Override
 	public boolean persist() {
 		return true;
 	}
 
+	@NotNull
 	@Override
 	public String getIdentifier() {
 		return "wm";
 	}
 
+	@NotNull
 	@Override
 	public String getAuthor() {
 		return "Despical";
 	}
 
+	@NotNull
 	@Override
 	public String getVersion() {
 		return plugin.getDescription().getVersion();

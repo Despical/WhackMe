@@ -47,8 +47,8 @@ public class StatsStorage {
 			}
 		}
 
-		FileConfiguration config = ConfigUtils.getConfig(plugin, "stats");
-		Map<UUID, Integer> stats = config.getKeys(false).stream().collect(Collectors.toMap(UUID::fromString, string -> config.getInt(string + "." + stat.name), (a, b) -> b));
+		final FileConfiguration config = ConfigUtils.getConfig(plugin, "stats");
+		final Map<UUID, Integer> stats = config.getKeys(false).stream().collect(Collectors.toMap(UUID::fromString, string -> config.getInt(string + "." + stat.name), (a, b) -> b));
 
 		return SortUtils.sortByValue(stats);
 	}
