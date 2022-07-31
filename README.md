@@ -29,14 +29,14 @@ Firstly, create a folder and put the plugin in that folder then follow the instr
     <artifactId>whack-me</artifactId>
     <version>${version-here}</version>
     <scope>system</scope>
-    <systemPath>${project.basedir}/libs/whack-me-1.0.1.jar</systemPath>
+    <systemPath>${project.basedir}/libs/whack-me-1.0.3.jar</systemPath>
 </dependency>
 ```
 
 ### Gradle dependency
 ```
 dependencies {
-    compile files('libs/whack-me-1.0.1.jar')
+    compile files('libs/whack-me-1.0.3.jar')
     // or include all the jars in the folder
     compile fileTree(dir: 'libs', include: '*.jar')
 }
