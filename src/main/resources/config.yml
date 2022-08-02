@@ -1,6 +1,6 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # +---------------------------------------------------------+ #
-# |          Whack me by Despical (Version 1.0.3)           | #
+# |          Whack me by Despical (Version 1.0.4)           | #
 # |                                                         | #
 # |   Thank you for purchasing this plugin and support us   | #
 # +---------------------------------------------------------+ #
@@ -55,7 +55,7 @@ Whitelisted-Commands:
   - me
   - help
 
-# Should we block every not KOTL Premium associated commands in game?
+# Should we block every not Whack Me associated commands in game?
 Block-Commands: true
 
 # Should we send random pro tips when the setup menu opens.

@@ -62,7 +62,7 @@ public class Main extends JavaPlugin {
 		exceptionLogHandler = new ExceptionLogHandler(this);
 		exceptionLogHandler.setMainPackage("me.despical");
 		exceptionLogHandler.addBlacklistedClass("me.despical.whackme.user.data.MysqlManager", "me.despical.commons.database.MysqlDatabase");
-		exceptionLogHandler.setRecordMessage("[WhacKMe] We have found a bug in the code. Use our issue tracker on our GitHub repo with the following error given above or you can join our Discord server (https://discord.gg/rVkaGmyszE)");
+		exceptionLogHandler.setRecordMessage("[WhackMe] We have found a bug in the code. Use our issue tracker on our GitHub repo with the following error given above or you can join our Discord server (https://discord.gg/rVkaGmyszE)");
 
 		long start = System.currentTimeMillis();
 
@@ -70,6 +70,8 @@ public class Main extends JavaPlugin {
 		initClasses();
 		checkUpdate();
 
+
+		LogUtils.sendConsoleMessage("[WhackMe] &aInitialization finished. Join our Discord server if you need any help. (https://discord.gg/rVkaGmyszE)");
 		LogUtils.log("Initialization finished took {0} ms.", System.currentTimeMillis() - start);
 	}
 
