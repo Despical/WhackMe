@@ -17,6 +17,7 @@ import me.despical.whackme.event.Events;
 import me.despical.whackme.handler.ChatManager;
 import me.despical.whackme.handler.PlaceholderManager;
 import me.despical.whackme.handler.SoundManager;
+import me.despical.whackme.handler.rewards.RewardsFactory;
 import me.despical.whackme.user.User;
 import me.despical.whackme.user.UserManager;
 import me.despical.whackme.user.data.MysqlManager;
@@ -43,6 +44,7 @@ public class Main extends JavaPlugin {
 	private MysqlDatabase database;
 	private SoundManager soundManager;
 	private UserManager userManager;
+	private RewardsFactory rewardsFactory;
 
 	@Override
 	public void onEnable() {
@@ -134,6 +136,7 @@ public class Main extends JavaPlugin {
 		this.commandHandler = new CommandHandler(this);
 		this.userManager = new UserManager(this);
 		this.soundManager = new SoundManager(this);
+		this.rewardsFactory = new RewardsFactory(this);
 
 		new Events(this);
 
@@ -143,7 +146,7 @@ public class Main extends JavaPlugin {
 	}
 
 	private void setupFiles() {
-		Collections.streamOf("arenas", "stats", "mysql", "messages").filter(name -> !new File(getDataFolder(),name + ".yml").exists()).forEach(name -> saveResource(name + ".yml", false));
+		Collections.streamOf("arenas", "stats", "mysql", "messages", "rewards").filter(name -> !new File(getDataFolder(),name + ".yml").exists()).forEach(name -> saveResource(name + ".yml", false));
 	}
 
 	private boolean validateIfPluginShouldStart() {
@@ -207,6 +210,7 @@ public class Main extends JavaPlugin {
 
 			if (userManager.getDatabase() instanceof MysqlManager) {
 				final StringBuilder builder = new StringBuilder(" SET ");
+				final MysqlManager database = ((MysqlManager) userManager.getDatabase());
 
 				for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
 					if (!stat.isPersistent()) continue;
@@ -221,7 +225,6 @@ public class Main extends JavaPlugin {
 				}
 
 				final String update = builder.toString();
-				final MysqlManager database = ((MysqlManager) userManager.getDatabase());
 				database.getDatabase().executeUpdate("UPDATE " + database.getTableName() + update + " WHERE UUID='" + user.getUniqueId().toString() + "';");
 				continue;
 			}
@@ -252,5 +255,9 @@ public class Main extends JavaPlugin {
 
 	public UserManager getUserManager() {
 		return userManager;
+	}
+
+	public RewardsFactory getRewardsFactory() {
+		return rewardsFactory;
 	}
 }

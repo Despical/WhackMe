@@ -9,6 +9,7 @@ import me.despical.whackme.arena.blocks.PointBlock;
 import me.despical.whackme.arena.blocks.PointHandler;
 import me.despical.whackme.arena.managers.BossBarManager;
 import me.despical.whackme.arena.options.ArenaOption;
+import me.despical.whackme.handler.rewards.Reward;
 import me.despical.whackme.user.User;
 import me.despical.whackme.util.Utils;
 import org.bukkit.GameMode;
@@ -233,6 +234,8 @@ public class Arena extends BukkitRunnable {
 		setTimer(timer);
 
 		if (timer == -1) {
+			plugin.getRewardsFactory().performReward(player, Reward.RewardType.END_GAME);
+
 			removePlayer();
 		}
 	}

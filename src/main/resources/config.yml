@@ -1,6 +1,6 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # +---------------------------------------------------------+ #
-# |          Whack me by Despical (Version 1.0.4)           | #
+# |          Whack me by Despical (Version ${project.version})           | #
 # |                                                         | #
 # |   Thank you for purchasing this plugin and support us   | #
 # +---------------------------------------------------------+ #
@@ -25,6 +25,11 @@ Clear-Inventory: true
 
 # Should we clear player's active potion effects when player join the arena.
 Clear-Effects: true
+
+# Should we register our rewards factory? This factory provides custom rewards
+# on a specific conditionals such as game end or when player clicks point blocks.
+# See rewards.yml file for more detailed information.
+Rewards-Enabled: false
 
 # Should in game chat format be enabled?
 # You can edit the formatting in messages.yml

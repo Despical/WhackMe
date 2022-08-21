@@ -4,6 +4,7 @@ import me.despical.whackme.Main;
 import me.despical.whackme.api.StatsStorage;
 import me.despical.whackme.arena.Arena;
 import me.despical.whackme.handler.SoundManager;
+import me.despical.whackme.handler.rewards.Reward;
 import me.despical.whackme.user.User;
 import me.despical.whackme.util.Utils;
 import org.bukkit.Location;
@@ -110,10 +111,12 @@ public class PointBlock extends BukkitRunnable {
 					user.addStat(StatsStorage.StatisticType.LOCAL_SCORE, 1);
 
 					plugin.getSoundManager().playSound(player, SoundManager.GameSounds.POINT_SOUND);
+					plugin.getRewardsFactory().performReward(player, Reward.RewardType.SUCCESSFUL_POINT);
 				} else if (stand.getHelmet().getType() == Utils.RED_TERRACOTTA.getType()) {
 					user.addStat(StatsStorage.StatisticType.LOCAL_SCORE, -1);
 
 					plugin.getSoundManager().playSound(player, SoundManager.GameSounds.MINUS_POINT_SOUND);
+					plugin.getRewardsFactory().performReward(player, Reward.RewardType.WRONG_POINT);
 				}
 
 				stand.setHelmet(Utils.CYAN_TERRACOTTA);
