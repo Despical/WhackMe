@@ -57,7 +57,6 @@ public class CommandHandler implements CommandExecutor {
 
 			if (sender.hasPermission("wm.admin")) {
 				sender.sendMessage(plugin.getChatManager().coloredRawMessage("&3Commands: &b/" + label + " help"));
-				sender.sendMessage(plugin.getChatManager().coloredRawMessage("&3Thank you for &bpurchasing &3our plugin and &bsupporting &3us! <3"));
 			}
 
 			return true;

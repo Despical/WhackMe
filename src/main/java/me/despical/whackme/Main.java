@@ -48,8 +48,6 @@ public class Main extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-		this.configPreferences = new ConfigPreferences(this);
-
 		if (forceDisable = !validateIfPluginShouldStart()) {
 			getServer().getPluginManager().disablePlugin(this);
 			return;
@@ -156,7 +154,7 @@ public class Main extends JavaPlugin {
 			return false;
 		}
 
-		if (!configPreferences.getOption(ConfigPreferences.Option.IGNORE_WARNING_MESSAGES) && JavaVersion.getCurrentVersion().isAt(JavaVersion.JAVA_8)) {
+		if (!(configPreferences = new ConfigPreferences(this)).getOption(ConfigPreferences.Option.IGNORE_WARNING_MESSAGES) && JavaVersion.getCurrentVersion().isAt(JavaVersion.JAVA_8)) {
 			LogUtils.sendConsoleMessage("[WhackMe] &cThis plugin won't support Java 8 in future updates.");
 			LogUtils.sendConsoleMessage("[WhackMe] &cSo, maybe consider to update your version, right?");
 		}
