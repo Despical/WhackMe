@@ -73,4 +73,8 @@ Update-Notifier-Enabled: true
 # Should we send warning messages if server is running an old Java version such as JAVA 8?
 Ignore-Warning-Messages: false
 
+# The permission that player needs to join to game.
+# Leave the section empty if you don't want to set.
+Join-Permission: ""
+
 # No way! You've reached the end! But... where's the dragon!?

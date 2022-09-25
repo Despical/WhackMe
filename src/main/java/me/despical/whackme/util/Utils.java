@@ -2,9 +2,12 @@ package me.despical.whackme.util;
 
 import me.despical.commons.compat.XMaterial;
 import me.despical.commons.item.ItemBuilder;
+import me.despical.whackme.Main;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -15,6 +18,8 @@ import java.util.function.Consumer;
  * Created at 20.06.2022
  */
 public class Utils {
+
+	private static final Main plugin = JavaPlugin.getPlugin(Main.class);
 
 	public static final ItemStack
 		GREEN_TERRACOTTA = new ItemBuilder(XMaterial.GREEN_TERRACOTTA).build(),
@@ -51,5 +56,11 @@ public class Utils {
 			consumer.accept(null);
 		} catch (Exception ignored) {
 		}
+	}
+
+	public static boolean hasJoinPermission(Player player) {
+		final String permission = plugin.getConfig().getString("Join-Permission");
+
+		return permission != null && (permission.isEmpty() || (player != null && player.hasPermission(permission)));
 	}
 }

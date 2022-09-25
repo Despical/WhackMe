@@ -3,6 +3,7 @@ package me.despical.whackme.command.player;
 import me.despical.whackme.arena.Arena;
 import me.despical.whackme.arena.ArenaRegistry;
 import me.despical.whackme.command.SubCommand;
+import me.despical.whackme.util.Utils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -50,6 +51,11 @@ public class JoinCommand extends SubCommand {
 
 		if (arena.getPlayer() != null) {
 			player.sendMessage(chatManager.prefixedMessage("in_game.someone_is_already_playing"));
+			return;
+		}
+
+		if (!Utils.hasJoinPermission(player)) {
+			player.sendMessage(chatManager.prefixedMessage("commands.no_permission"));
 			return;
 		}
 
