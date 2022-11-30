@@ -61,6 +61,6 @@ public class Utils {
 	public static boolean hasJoinPermission(Player player) {
 		final String permission = plugin.getConfig().getString("Join-Permission");
 
-		return permission != null && (permission.isEmpty() || (player != null && player.hasPermission(permission)));
+		return permission == null || permission.isEmpty() || player != null && player.hasPermission(permission);
 	}
 }
