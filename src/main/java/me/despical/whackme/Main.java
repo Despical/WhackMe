@@ -173,11 +173,11 @@ public class Main extends JavaPlugin {
 	private void checkUpdate() {
 		if (!configPreferences.getOption(ConfigPreferences.Option.UPDATE_NOTIFIER_ENABLED)) return;
 
-		UpdateChecker.init(this, 103482).requestUpdateCheck().whenComplete((result, exception) -> {
+		UpdateChecker.init(this, 104912).requestUpdateCheck().whenComplete((result, exception) -> {
 			if (result.requiresUpdate()) {
 				LogUtils.sendConsoleMessage("[WhackMe] Found a new version available: v" + result.getNewestVersion());
 				LogUtils.sendConsoleMessage("[WhackMe] Download it on SpigotMC:");
-				LogUtils.sendConsoleMessage("[WhackMe] https://www.spigotmc.org/resources/whack-me-1-9-1-19.103482/");
+				LogUtils.sendConsoleMessage("[WhackMe] https://www.spigotmc.org/resources/whack-me-1-9-1-19.104912/");
 			}
 		});
 	}

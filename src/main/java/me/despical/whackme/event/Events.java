@@ -105,10 +105,10 @@ public class Events extends ListenerAdapter {
 			return;
 		}
 
-		UpdateChecker.init(plugin, 103482).requestUpdateCheck().whenComplete((result, exception) -> {
+		UpdateChecker.init(plugin, 104912).requestUpdateCheck().whenComplete((result, exception) -> {
 			if (result.requiresUpdate()) {
 				player.sendMessage(plugin.getChatManager().coloredRawMessage("&3[Whack Me] &bFound an update: v" + result.getNewestVersion()));
-				player.sendMessage(plugin.getChatManager().coloredRawMessage("&3>> &bhttps://www.spigotmc.org/resources/whack-me-1-9-1-19.103482/"));
+				player.sendMessage(plugin.getChatManager().coloredRawMessage("&3>> &bhttps://www.spigotmc.org/resources/whack-me-1-9-1-19.104912"));
 			}
 		});
 	}
