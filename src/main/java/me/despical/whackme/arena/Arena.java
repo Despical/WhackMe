@@ -141,6 +141,7 @@ public class Arena extends BukkitRunnable {
 
 	public void cleanGameArea() {
 		this.pointBlocks.forEach(PointBlock::clear);
+		this.pointBlocks.clear();
 	}
 
 	public BossBarManager getBossBarManager() {

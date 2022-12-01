@@ -56,6 +56,7 @@ public class PointBlock extends BukkitRunnable {
 	public void clear() {
 		this.cancel();
 		this.stand.remove();
+		this.arena.getLocations().add(availableLocation);
 	}
 
 	private ItemStack getRandomItem() {

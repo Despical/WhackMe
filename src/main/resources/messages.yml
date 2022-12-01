@@ -59,7 +59,6 @@ Boss-Bar:
   Interval: 120 # 20 ticks = 1 second
   Messages:
     - "&e&lPLAYING &f&lWhack Me &e&lby &b&lDESPICAL"
-    - "&e&lTHANK YOU FOR &b&lPURCHASING &e&lAND &b&lSUPPORTING &e&lUS!"
     - "&e&lYOU LIKE THE PLUGIN? RATE US ON SPIGOT!"
 
 Validator:
