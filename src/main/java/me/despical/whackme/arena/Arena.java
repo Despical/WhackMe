@@ -82,7 +82,6 @@ public class Arena extends BukkitRunnable {
 		}
 
 		AttributeUtils.setAttackCooldown(player, plugin.getConfig().getDouble("Hit-Cooldown-Delay", 4));
-		AttributeUtils.healPlayer(player);
 
 		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.CLEAR_INVENTORY)) {
 			player.getInventory().clear();
