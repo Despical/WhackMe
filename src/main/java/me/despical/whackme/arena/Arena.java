@@ -99,7 +99,6 @@ public class Arena extends BukkitRunnable {
 
 		plugin.getUserManager().getUser(player).setStat(StatsStorage.StatisticType.LOCAL_SCORE, 0);
 
-		player.getInventory().clear();
 		player.setGameMode(GameMode.ADVENTURE);
 		player.teleport(getStartLocation());
 		player.sendMessage(plugin.getChatManager().message("in_game.start_message"));
@@ -127,6 +126,8 @@ public class Arena extends BukkitRunnable {
 
 		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
 			InventorySerializer.loadInventory(plugin, player);
+		} else {
+			player.setGameMode(GameMode.SURVIVAL);
 		}
 
 		AttributeUtils.resetAttackCooldown(player);

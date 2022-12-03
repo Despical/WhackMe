@@ -1,18 +1,11 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # +---------------------------------------------------------+ #
-# |          Whack me by Despical (Version 1.0.0)           | #
+# |          Whack me by Despical (Version 1.0.4)           | #
 # |                                                         | #
-# |   Thank you for purchasing this plugin and support us   | #
+# |             https://www.patreon.com/despical            | #
+# | Support us with becoming Patron and use Patron benefits | #
 # +---------------------------------------------------------+ #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-
-# If you want to translate for us check out: https://github.com/Despical/LocaleStorage#locale-storage
-# Select locale of Whack Me plugin, default is English.
-# Available locales:
-#    default - English
-#    de - Deutsche
-#    tr - Türkçe
-locale: default
 
 # Enable boss bar support?
 Boss-Bar-Enabled: true
@@ -33,6 +26,11 @@ Clear-Inventory: true
 
 # Should we clear player's active potion effects when player join the arena.
 Clear-Effects: true
+
+# Should we register our rewards factory? This factory provides custom rewards
+# on a specific conditionals such as game end or when player clicks point blocks.
+# See rewards.yml file for more detailed information.
+Rewards-Enabled: false
 
 # Should in game chat format be enabled?
 # You can edit the formatting in messages.yml
@@ -63,7 +61,7 @@ Whitelisted-Commands:
   - me
   - help
 
-# Should we block every not KOTL Premium associated commands in game?
+# Should we block every not Whack Me associated commands in game?
 Block-Commands: true
 
 # Should we send random pro tips when the setup menu opens.
@@ -74,5 +72,9 @@ Update-Notifier-Enabled: true
 
 # Should we send warning messages if server is running an old Java version such as JAVA 8?
 Ignore-Warning-Messages: false
+
+# The permission that player needs to join to game.
+# Leave the section empty if you don't want to set.
+Join-Permission: ""
 
 # No way! You've reached the end! But... where's the dragon!?

@@ -13,6 +13,7 @@ me\despical\whackme\command\TabCompletion.class
 me\despical\whackme\command\admin\ReloadCommand.class
 me\despical\whackme\command\CommandHandler.class
 me\despical\whackme\ConfigPreferences.class
+me\despical\whackme\handler\rewards\RewardsFactory.class
 me\despical\whackme\handler\setup\components\SetupComponent.class
 me\despical\whackme\user\User.class
 me\despical\whackme\command\admin\HelpCommand.class
@@ -22,6 +23,7 @@ me\despical\whackme\Main.class
 me\despical\whackme\event\Events.class
 me\despical\whackme\user\data\UserDatabase.class
 me\despical\whackme\arena\Arena$GameLocation.class
+me\despical\whackme\handler\rewards\Reward$RewardExecutor.class
 me\despical\whackme\handler\ChatManager.class
 me\despical\whackme\api\StatsStorage.class
 me\despical\whackme\api\event\WMEvent.class
@@ -29,18 +31,19 @@ me\despical\whackme\api\StatsStorage$StatisticType.class
 me\despical\whackme\command\player\JoinCommand.class
 me\despical\whackme\user\UserManager.class
 me\despical\whackme\arena\managers\BossBarManager.class
+me\despical\whackme\handler\rewards\RewardsFactory$1.class
 me\despical\whackme\arena\blocks\PointBlock.class
 me\despical\whackme\arena\blocks\PointBlock$1.class
 me\despical\whackme\handler\setup\components\ArenaRegisterComponent.class
 me\despical\whackme\user\data\FileStats.class
 me\despical\whackme\util\Utils.class
+me\despical\whackme\handler\rewards\Reward.class
 me\despical\whackme\command\admin\CreateCommand.class
 me\despical\whackme\command\admin\EditCommand.class
-me\despical\whackme\command\SubCommand$SenderType.class
 me\despical\whackme\command\SubCommand.class
 me\despical\whackme\command\admin\DeleteCommand.class
-me\despical\whackme\command\SubCommand$CommandType.class
 me\despical\whackme\arena\ArenaRegistry.class
 me\despical\whackme\handler\SoundManager.class
 me\despical\whackme\event\ListenerAdapter.class
+me\despical\whackme\handler\rewards\Reward$RewardType.class
 me\despical\whackme\handler\PlaceholderManager.class
