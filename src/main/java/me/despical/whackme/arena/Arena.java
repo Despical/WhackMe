@@ -99,6 +99,7 @@ public class Arena extends BukkitRunnable {
 
 		plugin.getUserManager().getUser(player).setStat(StatsStorage.StatisticType.LOCAL_SCORE, 0);
 
+		player.setFoodLevel(20);
 		player.setGameMode(GameMode.ADVENTURE);
 		player.teleport(getStartLocation());
 		player.sendMessage(plugin.getChatManager().message("in_game.start_message"));
