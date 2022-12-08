@@ -13,6 +13,7 @@ import java.util.Map;
  */
 public class ConfigPreferences {
 
+	private final double pointBlockMultiplier;
 	private final Map<Option, Boolean> options;
 
 	public ConfigPreferences(Main plugin) {
@@ -20,9 +21,15 @@ public class ConfigPreferences {
 
 		plugin.saveDefaultConfig();
 
+		this.pointBlockMultiplier = Math.min(plugin.getConfig().getDouble("Point-Block-Y-Multiplier"), .64);
+
 		for (Option option : Option.values()) {
 			options.put(option, plugin.getConfig().getBoolean(option.path, option.def));
 		}
+	}
+
+	public double getPointBlockMultiplier() {
+		return pointBlockMultiplier;
 	}
 
 	public boolean getOption(Option option) {

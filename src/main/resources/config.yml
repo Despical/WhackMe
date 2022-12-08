@@ -36,6 +36,9 @@ Rewards-Enabled: false
 # You can edit the formatting in messages.yml
 Chat-Format-Enabled: true
 
+# Point blocks are maximum raised by total of 0.65 in Y axis.
+Point-Block-Y-Multiplier: 0.04
+
 # The gameplay time for each arena. Default is 30 seconds.
 Gameplay-Time: 30
 

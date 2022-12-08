@@ -32,10 +32,12 @@ public class PointBlock extends BukkitRunnable {
 	private final Main plugin;
 	private final Arena arena;
 	private final Location availableLocation;
+	private final double multiplier;
 
 	public PointBlock(Main plugin, Arena arena) {
 		this.plugin = plugin;
 		this.arena = arena;
+		this.multiplier = plugin.getConfigPreferences().getPointBlockMultiplier();
 		this.availableLocation = arena.getAvailableLocation();
 
 		stand = (ArmorStand) availableLocation.getWorld().spawnEntity(availableLocation.clone().add(.5, -1.2, .5), EntityType.ARMOR_STAND);
@@ -129,16 +131,16 @@ public class PointBlock extends BukkitRunnable {
 	@Override
 	public void run() {
 		if (forward) {
-			y += 0.04;
+			y += multiplier;
 
 			if (y > .65) {
 				forward = false;
 				return;
 			}
 
-			stand.teleport(stand.getLocation().clone().add(0, 0.04, 0));
+			stand.teleport(stand.getLocation().clone().add(0, multiplier, 0));
 		} else {
-			y -= 0.04;
+			y -= multiplier;
 
 			if (y < -0.6) {
 				forward = true;
@@ -150,7 +152,7 @@ public class PointBlock extends BukkitRunnable {
 				return;
 			}
 
-			stand.teleport(stand.getLocation().clone().subtract(0, 0.04, 0));
+			stand.teleport(stand.getLocation().clone().subtract(0, multiplier, 0));
 		}
 	}
 }
