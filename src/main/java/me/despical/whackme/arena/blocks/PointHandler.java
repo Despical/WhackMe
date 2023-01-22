@@ -4,6 +4,7 @@ import me.despical.commons.string.StringFormatUtils;
 import me.despical.whackme.Main;
 import me.despical.whackme.api.StatsStorage;
 import me.despical.whackme.arena.Arena;
+import me.despical.whackme.util.ActionBar;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -47,7 +48,7 @@ public class PointHandler extends BukkitRunnable {
 		message = StringUtils.replace(message, "%score%", Integer.toString(StatsStorage.getUserStats(player, StatsStorage.StatisticType.LOCAL_SCORE)));
 		message = StringUtils.replace(message, "%timer%", StringFormatUtils.formatIntoMMSS(arena.getTimer()));
 
-		player.sendActionBar(message);
+		ActionBar.sendActionBar(player, message);
 	}
 
 	public void handleTask() {
