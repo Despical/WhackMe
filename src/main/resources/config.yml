@@ -1,11 +1,17 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # +---------------------------------------------------------+ #
-# |          Whack me by Despical (Version ${project.version})           | #
+# |          Whack Me by Despical (Version ${project.version})           | #
 # |                                                         | #
 # |             https://www.patreon.com/despical            | #
 # | Support us with becoming Patron and use Patron benefits | #
 # +---------------------------------------------------------+ #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+# In-game blocks.
+Point-Blocks:
+  Punch-Me: GREEN_TERRACOTTA
+  Dont-Punch-Me: RED_TERRACOTTA
+  Ouch: CYAN_TERRACOTTA
 
 # Enable boss bar support?
 Boss-Bar-Enabled: true
@@ -27,6 +33,9 @@ Clear-Inventory: true
 # Should we clear player's active potion effects when player join the arena.
 Clear-Effects: true
 
+# Should we block the in-game leave command?
+Block-Leave-Command: false
+
 # Should we register our rewards factory? This factory provides custom rewards
 # on a specific conditionals such as game end or when player clicks point blocks.
 # See rewards.yml file for more detailed information.
@@ -37,24 +46,24 @@ Rewards-Enabled: false
 Chat-Format-Enabled: true
 
 # Point blocks are maximum raised by total of 0.65 in Y axis.
-Point-Block-Y-Multiplier: 0.04
+Point-Block-Y-Multiplier: 0.05
 
 # The gameplay time for each arena. Default is 30 seconds.
 Gameplay-Time: 30
 
 # This value can not be less than 1 and can not be higher than 8.
-# Minimum value of the point blocks that will spawned around the player.
+# Minimum value of the point blocks that will be spawned around the player.
 Minimum-Points: 4
 
 # This value can not be less than 1 and can not be higher than 8.
-# Maximum value of the point blocks that will spawned around the player.
+# Maximum value of the point blocks that will be spawned around the player.
 Maximum-Points: 8
 
 # The sound plays when player clicks the correct point block.
-Point-Sound: "BLOCK_NOTE_BLOCK_BELL"
+Point-Sound: "ORB_PICKUP"
 
 # The sound plays when player clicks the incorrect point block.
-Minus-Point-Sound: "BLOCK_NOTE_BLOCK_BASS"
+Minus-Point-Sound: "NOTE_BASS"
 
 # The delay between hitting players.
 Hit-Cooldown-Delay: 16
@@ -72,9 +81,6 @@ Send-Setup-Tips: true
 
 # Should we check for updates on plugin start/after admin join?
 Update-Notifier-Enabled: true
-
-# Should we send warning messages if server is running an old Java version such as JAVA 8?
-Ignore-Warning-Messages: false
 
 # The permission that player needs to join to game.
 # Leave the section empty if you don't want to set.

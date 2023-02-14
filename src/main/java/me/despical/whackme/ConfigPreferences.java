@@ -1,6 +1,8 @@
 package me.despical.whackme;
 
+import me.despical.commons.compat.XMaterial;
 import me.despical.commons.string.StringUtils;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -14,6 +16,7 @@ import java.util.Map;
 public class ConfigPreferences {
 
 	private final double pointBlockMultiplier;
+	private final ItemStack redBlock, greenBlock, cyanBlock;
 	private final Map<Option, Boolean> options;
 
 	public ConfigPreferences(Main plugin) {
@@ -21,11 +24,26 @@ public class ConfigPreferences {
 
 		plugin.saveDefaultConfig();
 
+		this.greenBlock = XMaterial.valueOf(plugin.getConfig().getString("Point-Blocks.Punch-Me")).parseItem();
+		this.redBlock = XMaterial.valueOf(plugin.getConfig().getString("Point-Blocks.Dont-Punch-Me")).parseItem();
+		this.cyanBlock = XMaterial.valueOf(plugin.getConfig().getString("Point-Blocks.Ouch")).parseItem();
 		this.pointBlockMultiplier = Math.min(plugin.getConfig().getDouble("Point-Block-Y-Multiplier"), .64);
 
 		for (Option option : Option.values()) {
 			options.put(option, plugin.getConfig().getBoolean(option.path, option.def));
 		}
+	}
+
+	public ItemStack getGreenBlock() {
+		return greenBlock;
+	}
+
+	public ItemStack getRedBlock() {
+		return redBlock;
+	}
+
+	public ItemStack getCyanBlock() {
+		return cyanBlock;
 	}
 
 	public double getPointBlockMultiplier() {
@@ -38,12 +56,12 @@ public class ConfigPreferences {
 
 	public enum Option {
 
-		BLOCK_COMMANDS(false), BOSS_BAR_ENABLED, CHAT_FORMAT_ENABLED, CLEAR_EFFECTS, CLEAR_INVENTORY,
-		DATABASE_ENABLED(false), IGNORE_WARNING_MESSAGES(false), INVENTORY_MANAGER_ENABLED,
-		REWARDS_ENABLED(false),	UPDATE_NOTIFIER_ENABLED(false), SEND_SETUP_TIPS, DEBUG_MODE(false);
+		BLOCK_COMMANDS(false), BOSS_BAR_ENABLED, CHAT_FORMAT_ENABLED, CLEAR_EFFECTS,
+		CLEAR_INVENTORY, DATABASE_ENABLED(false), INVENTORY_MANAGER_ENABLED, BLOCK_LEAVE_COMMAND(false),
+		REWARDS_ENABLED(false), UPDATE_NOTIFIER_ENABLED, SEND_SETUP_TIPS, DEBUG_MODE(false);
 
-		String path;
-		boolean def;
+		final String path;
+		final boolean def;
 
 		Option() {
 			this (true);

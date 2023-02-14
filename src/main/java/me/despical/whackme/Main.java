@@ -6,7 +6,6 @@ import me.despical.commons.exception.ExceptionLogHandler;
 import me.despical.commons.miscellaneous.AttributeUtils;
 import me.despical.commons.serializer.InventorySerializer;
 import me.despical.commons.util.Collections;
-import me.despical.commons.util.JavaVersion;
 import me.despical.commons.util.LogUtils;
 import me.despical.commons.util.UpdateChecker;
 import me.despical.whackme.api.StatsStorage;
@@ -53,14 +52,15 @@ public class Main extends JavaPlugin {
 			return;
 		}
 
+		this.configPreferences = new ConfigPreferences(this);
+
 		if (configPreferences.getOption(ConfigPreferences.Option.DEBUG_MODE)) {
-			LogUtils.setLoggerName("WhackMe");
-			LogUtils.enableLogging();
+			LogUtils.enableLogging("WhackMe");
 			LogUtils.log("Initialization started!");
 		}
 
 		exceptionLogHandler = new ExceptionLogHandler(this);
-		exceptionLogHandler.setMainPackage("me.despical");
+		exceptionLogHandler.setMainPackage("me.despical.whackme");
 		exceptionLogHandler.addBlacklistedClass("me.despical.whackme.user.data.MysqlManager", "me.despical.commons.database.MysqlDatabase");
 		exceptionLogHandler.setRecordMessage("[WhackMe] We have found a bug in the code. Use our issue tracker on our GitHub repo with the following error given above or you can join our Discord server (https://discord.gg/rVkaGmyszE)");
 
@@ -69,7 +69,6 @@ public class Main extends JavaPlugin {
 		setupFiles();
 		initClasses();
 		checkUpdate();
-
 
 		LogUtils.sendConsoleMessage("[WhackMe] &aInitialization finished. Join our Discord server if you need any help. (https://discord.gg/rVkaGmyszE)");
 		LogUtils.log("Initialization finished took {0} ms.", System.currentTimeMillis() - start);
@@ -148,15 +147,10 @@ public class Main extends JavaPlugin {
 	}
 
 	private boolean validateIfPluginShouldStart() {
-		if (!VersionResolver.isCurrentBetween(VersionResolver.ServerVersion.v1_9_R1, VersionResolver.ServerVersion.v1_19_R1)) {
+		if (!VersionResolver.isCurrentBetween(VersionResolver.ServerVersion.v1_8_R3, VersionResolver.ServerVersion.v1_19_R2)) {
 			LogUtils.sendConsoleMessage("[WhackMe] &cYour server version is not supported by Whack Me!");
 			LogUtils.sendConsoleMessage("[WhackMe] &cSadly, we must shut off. Maybe you consider changing your server version?");
 			return false;
-		}
-
-		if (!(configPreferences = new ConfigPreferences(this)).getOption(ConfigPreferences.Option.IGNORE_WARNING_MESSAGES) && JavaVersion.getCurrentVersion().isAt(JavaVersion.JAVA_8)) {
-			LogUtils.sendConsoleMessage("[WhackMe] &cThis plugin won't support Java 8 in future updates.");
-			LogUtils.sendConsoleMessage("[WhackMe] &cSo, maybe consider to update your version, right?");
 		}
 
 		try {
@@ -177,7 +171,7 @@ public class Main extends JavaPlugin {
 			if (result.requiresUpdate()) {
 				LogUtils.sendConsoleMessage("[WhackMe] Found a new version available: v" + result.getNewestVersion());
 				LogUtils.sendConsoleMessage("[WhackMe] Download it on SpigotMC:");
-				LogUtils.sendConsoleMessage("[WhackMe] https://www.spigotmc.org/resources/whack-me-1-9-1-19.104912/");
+				LogUtils.sendConsoleMessage("[WhackMe] https://www.spigotmc.org/resources/whack-me-1-8-1-19.104912/");
 			}
 		});
 	}

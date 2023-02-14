@@ -21,11 +21,7 @@ public class Utils {
 
 	private static final Main plugin = JavaPlugin.getPlugin(Main.class);
 
-	public static final ItemStack
-		GREEN_TERRACOTTA = new ItemBuilder(XMaterial.GREEN_TERRACOTTA).build(),
-		RED_TERRACOTTA = new ItemBuilder(XMaterial.RED_TERRACOTTA).build(),
-		CYAN_TERRACOTTA = new ItemBuilder(XMaterial.CYAN_TERRACOTTA).build(),
-		END_PORTAL_FRAME = new ItemBuilder(XMaterial.END_PORTAL_FRAME).build();
+	public static final ItemStack END_PORTAL_FRAME = new ItemBuilder(XMaterial.END_PORTAL_FRAME).build();
 
 	private static final int[][] directions = {{1, 0}, {-1, 0}, {1, 1}, {-1, 1}, {1, -1}, {-1, -1}, {0, 1}, {0, -1}};
 
@@ -54,7 +50,7 @@ public class Utils {
 	public static void trySilently(Consumer<?> consumer) {
 		try {
 			consumer.accept(null);
-		} catch (Exception ignored) {
+		} catch (NoSuchMethodError ignored) {
 		}
 	}
 

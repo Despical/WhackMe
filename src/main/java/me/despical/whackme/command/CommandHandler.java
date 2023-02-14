@@ -3,9 +3,7 @@ package me.despical.whackme.command;
 import me.despical.commons.string.StringMatcher;
 import me.despical.whackme.Main;
 import me.despical.whackme.command.admin.*;
-import me.despical.whackme.command.player.JoinCommand;
-import me.despical.whackme.command.player.LeaderboardCommand;
-import me.despical.whackme.command.player.StatsCommand;
+import me.despical.whackme.command.player.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandExecutor;
@@ -30,7 +28,7 @@ public class CommandHandler implements CommandExecutor {
 		this.plugin = plugin;
 		this.subCommands = new HashSet<>();
 
-		SubCommand[] commands = {new CreateCommand(), new DeleteCommand(), new ListCommand(), new EditCommand(), new HelpCommand(), new ReloadCommand(), new StatsCommand(), new LeaderboardCommand(), new JoinCommand()};
+		SubCommand[] commands = {new CreateCommand(), new DeleteCommand(), new ListCommand(), new EditCommand(), new HelpCommand(), new ReloadCommand(), new StatsCommand(), new LeaderboardCommand(), new JoinCommand(), new LeaveCommand(), new RandomJoinCommand()};
 
 		for (SubCommand command : commands) {
 			registerSubCommand(command);

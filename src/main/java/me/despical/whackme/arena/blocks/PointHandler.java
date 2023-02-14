@@ -37,7 +37,7 @@ public class PointHandler extends BukkitRunnable {
 		int size = arena.getPointBlocks().size();
 
 		if (size <= arena.getMaximumPoints() && size < ThreadLocalRandom.current().nextInt(arena.getMinimumPoints(), arena.getMaximumPoints())) {
-			new PointBlock(plugin, arena).runTaskTimer(plugin, 1L, 1L);
+			new PointBlock(arena).runTaskTimer(plugin, 1L, 1L);
 		}
 	}
 

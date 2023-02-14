@@ -1,5 +1,6 @@
 package me.despical.whackme.arena.managers;
 
+import me.despical.commons.compat.VersionResolver;
 import me.despical.commons.number.NumberUtils;
 import me.despical.whackme.ConfigPreferences;
 import me.despical.whackme.Main;
@@ -21,19 +22,22 @@ public class BossBarManager extends BukkitRunnable {
 	private final Main plugin;
 	private final Arena arena;
 	private final boolean enabled;
-	private final BossBar bossBar;
-	private final List<String> messages;
+
+	private BossBar bossBar;
+	private List<String> messages;
 
 	private int queue = 0;
 
 	public BossBarManager(Main plugin, Arena arena) {
 		this.plugin = plugin;
 		this.arena = arena;
-		this.enabled = plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSS_BAR_ENABLED);
-		this.bossBar = plugin.getServer().createBossBar(plugin.getChatManager().message("boss_bar.game_info"), BarColor.valueOf(plugin.getChatManager().message("boss_bar.color")), BarStyle.valueOf(plugin.getChatManager().message("boss_bar.style")));
-		this.messages = plugin.getChatManager().getStringList("boss_bar.messages");
+		this.enabled = plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSS_BAR_ENABLED) && VersionResolver.isCurrentHigher(VersionResolver.ServerVersion.v1_8_R3);
 
-		if (enabled) this.runTaskTimer(plugin, 20, NumberUtils.getInt(plugin.getChatManager().message("boss_bar.interval"), 300));
+		if (enabled) {
+			this.bossBar = plugin.getServer().createBossBar(plugin.getChatManager().message("boss_bar.game_info"), BarColor.valueOf(plugin.getChatManager().message("boss_bar.color")), BarStyle.valueOf(plugin.getChatManager().message("boss_bar.style")));
+			this.messages = plugin.getChatManager().getStringList("boss_bar.messages");
+			this.runTaskTimer(plugin, 20, NumberUtils.getInt(plugin.getChatManager().message("boss_bar.interval"), 300));
+		}
 	}
 
 	public void addPlayer() {
@@ -48,10 +52,6 @@ public class BossBarManager extends BukkitRunnable {
 		if (arena.getPlayer() == null) return;
 
 		this.bossBar.removePlayer(arena.getPlayer());
-	}
-
-	public boolean isEnabled() {
-		return enabled;
 	}
 
 	@Override

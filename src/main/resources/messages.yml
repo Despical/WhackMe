@@ -13,6 +13,8 @@ Commands:
   Are-You-Sure: "&cAre you sure you want to do this action? Type the command again &6within 10 seconds &cto confirm!"
   Removed-Game-Instance: "&aGame instance has been removed successfully."
   No-Arena-Like-That: "&cWe couldn't find any arena with that name matching!"
+  No-Free-Arenas: "&cThere aren't any available arena to play!"
+  Not-Playing: "&cYou must be in an arena to leave!"
   Type-Arena-Name: "&cPlease type arena name to join!"
   Arena-Not-Configured: "&cThis arena is not configured yet. If you think this is an issue contact staff!"
   Only-By-Player: "&cYou can execute this command only as player!"
