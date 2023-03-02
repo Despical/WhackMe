@@ -103,13 +103,8 @@ public class Main extends JavaPlugin {
 
 			userManager.getDatabase().saveAllStatistic(user);
 
-			if (configPreferences.getOption(ConfigPreferences.Option.CLEAR_INVENTORY)) {
-				player.getInventory().clear();
-			}
-
-			if (configPreferences.getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
-				InventorySerializer.loadInventory(this, player);
-			}
+			if (configPreferences.getOption(ConfigPreferences.Option.CLEAR_INVENTORY)) player.getInventory().clear();
+			if (configPreferences.getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) InventorySerializer.loadInventory(this, player);
 
 			AttributeUtils.resetAttackCooldown(player);
 
@@ -125,9 +120,7 @@ public class Main extends JavaPlugin {
 	}
 
 	private void initClasses() {
-		if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-			database = new MysqlDatabase(this, "mysql");
-		}
+		if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) database = new MysqlDatabase(this, "mysql");
 
 		this.chatManager = new ChatManager(this);
 		this.commandHandler = new CommandHandler(this);
