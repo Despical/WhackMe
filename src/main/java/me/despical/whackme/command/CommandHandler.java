@@ -28,7 +28,7 @@ public class CommandHandler implements CommandExecutor {
 		this.plugin = plugin;
 		this.subCommands = new HashSet<>();
 
-		SubCommand[] commands = {new CreateCommand(), new DeleteCommand(), new ListCommand(), new EditCommand(), new HelpCommand(), new ReloadCommand(), new StatsCommand(), new LeaderboardCommand(), new JoinCommand(), new LeaveCommand(), new RandomJoinCommand()};
+		SubCommand[] commands = {new CreateCommand(), new DeleteCommand(), new ListCommand(), new EditCommand(), new HelpCommand(), new ReloadCommand(), new StatsCommand(), new LeaderboardCommand(), new JoinCommand(), new LeaveCommand(), new RandomJoinCommand(), new KickCommand()};
 
 		for (SubCommand command : commands) {
 			registerSubCommand(command);

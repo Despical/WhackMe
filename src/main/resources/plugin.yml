@@ -8,7 +8,7 @@ softdepend: [Multiverse-Core, PlaceholderAPI]
 commands:
   whackme:
     description: Whack Me Commands
-    aliases: [wm, whackm]
+    aliases: [wm]
 
 permissions:
   wm.admin.*:
@@ -21,3 +21,4 @@ permissions:
       wm.admin.list: true
       wm.admin.help: true
       wm.admin.reload: true
+      wm.admin.kick: true

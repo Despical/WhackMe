@@ -1,24 +1,27 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# +---------------------------------------------------------+ #
-# |          Whack Me by Despical (Version ${project.version})           | #
-# |                                                         | #
-# |             https://www.patreon.com/despical            | #
-# | Support us with becoming Patron and use Patron benefits | #
-# +---------------------------------------------------------+ #
+#                                                             #
+#                          Whack Me                           #
+#                          Despical                           #
+#                                                             #
+#              https://www.patreon.com/despical               #
+#            https://www.buymeacoffee.com/despical            #
+#                                                             #
+#            Donations are really appreciated!  <3            #
+#                                                             #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 # In-game blocks.
 Point-Blocks:
   Punch-Me: GREEN_TERRACOTTA
-  Dont-Punch-Me: RED_TERRACOTTA
+  Don't-Punch-Me: RED_TERRACOTTA
   Ouch: CYAN_TERRACOTTA
 
-# Enable boss bar support?
+# Should we create a game bar for in-game player?
+# See messages.yml for game bar messages.
 Boss-Bar-Enabled: true
 
-# Enable this option when you're using MySQL, otherwise it won't work.
-# Be careful when changing this because there is no migrator between
-# flat file and MySQL for statistics.
+# Should we enable our MySQL support?
+# See mysql.yml for detailed information.
 Database-Enabled: false
 
 # Enable inventory manager for your games? (Very useful feature for MULTI ARENA)
@@ -26,11 +29,11 @@ Database-Enabled: false
 # Saved elements: max health, health, food, experience, full inventory, armor contents, and more.
 Inventory-Manager-Enabled: true
 
-# Should we clear player's inventory on join and after leaving the game area.
+# Should we clear player's inventory on join and after leaving the game area?
 # Also disable inventory manager option above before enabling this option.
 Clear-Inventory: true
 
-# Should we clear player's active potion effects when player join the arena.
+# Should we clear player's active potion effects when player join the arena?
 Clear-Effects: true
 
 # Should we block the in-game leave command?
@@ -41,8 +44,8 @@ Block-Leave-Command: false
 # See rewards.yml file for more detailed information.
 Rewards-Enabled: false
 
-# Should in game chat format be enabled?
-# You can edit the formatting in messages.yml
+# Should we format the chat messages?
+# See messages.yml to change format.
 Chat-Format-Enabled: true
 
 # Point blocks are maximum raised by total of 0.65 in Y axis.
@@ -68,7 +71,7 @@ Minus-Point-Sound: "NOTE_BASS"
 # The delay between hitting players.
 Hit-Cooldown-Delay: 16
 
-# Commands which can be used in game, remove all of them to disable
+# Commands which can be used in game, remove all of them to disable.
 Whitelisted-Commands:
   - me
   - help
@@ -76,10 +79,10 @@ Whitelisted-Commands:
 # Should we block every not Whack Me associated commands in game?
 Block-Commands: true
 
-# Should we send random pro tips when the setup menu opens.
+# Should we send any random tip when the setup menu opens?
 Send-Setup-Tips: true
 
-# Should we check for updates on plugin start/after admin join?
+# Should we check for updates on plugin start and after any admin join?
 Update-Notifier-Enabled: true
 
 # The permission that player needs to join to game.
