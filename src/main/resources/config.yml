@@ -12,8 +12,11 @@
 
 # In-game blocks.
 Point-Blocks:
+  # Enable this option if you want textured skull item instead.
+  # Then you can be able to replace item names with skull URLs.
+  Skulls-Enabled: false
   Punch-Me: GREEN_TERRACOTTA
-  Don't-Punch-Me: RED_TERRACOTTA
+  Dont-Punch-Me: RED_TERRACOTTA
   Ouch: CYAN_TERRACOTTA
 
 # Should we create a game bar for in-game player?

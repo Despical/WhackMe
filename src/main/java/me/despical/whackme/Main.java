@@ -140,7 +140,7 @@ public class Main extends JavaPlugin {
 	}
 
 	private boolean validateIfPluginShouldStart() {
-		if (!VersionResolver.isCurrentBetween(VersionResolver.ServerVersion.v1_8_R3, VersionResolver.ServerVersion.v1_19_R2)) {
+		if (!VersionResolver.isCurrentBetween(VersionResolver.ServerVersion.v1_8_R3, VersionResolver.ServerVersion.v1_19_R3)) {
 			LogUtils.sendConsoleMessage("[WhackMe] &cYour server version is not supported by Whack Me!");
 			LogUtils.sendConsoleMessage("[WhackMe] &cSadly, we must shut off. Maybe you consider changing your server version?");
 			return false;

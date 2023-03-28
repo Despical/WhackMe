@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>me.despical</groupId>
     <artifactId>whack-me</artifactId>
-    <version>1.0.7</version>
+    <version>1.0.8</version>
 
     <properties>
         <java.version>1.8</java.version>
@@ -56,7 +56,7 @@
         <dependency>
             <groupId>com.github.Despical</groupId>
             <artifactId>Commons</artifactId>
-            <version>1.6.0</version>
+            <version>1.6.1</version>
         </dependency>
         <dependency>
             <groupId>com.github.Despical</groupId>
@@ -72,7 +72,7 @@
         <dependency>
             <groupId>org.bstats</groupId>
             <artifactId>bstats-bukkit</artifactId>
-            <version>3.0.0</version>
+            <version>3.0.1</version>
         </dependency>
     </dependencies>
 

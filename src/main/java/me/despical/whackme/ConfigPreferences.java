@@ -1,6 +1,7 @@
 package me.despical.whackme;
 
 import me.despical.commons.compat.XMaterial;
+import me.despical.commons.item.ItemUtils;
 import me.despical.commons.string.StringUtils;
 import org.bukkit.inventory.ItemStack;
 
@@ -15,8 +16,9 @@ import java.util.Map;
  */
 public class ConfigPreferences {
 
+	private ItemStack redBlock, greenBlock, cyanBlock;
+
 	private final double pointBlockMultiplier;
-	private final ItemStack redBlock, greenBlock, cyanBlock;
 	private final Map<Option, Boolean> options;
 
 	public ConfigPreferences(Main plugin) {
@@ -24,9 +26,7 @@ public class ConfigPreferences {
 
 		plugin.saveDefaultConfig();
 
-		this.greenBlock = XMaterial.valueOf(plugin.getConfig().getString("Point-Blocks.Punch-Me")).parseItem();
-		this.redBlock = XMaterial.valueOf(plugin.getConfig().getString("Point-Blocks.Dont-Punch-Me")).parseItem();
-		this.cyanBlock = XMaterial.valueOf(plugin.getConfig().getString("Point-Blocks.Ouch")).parseItem();
+		this.initializeItems(plugin);
 		this.pointBlockMultiplier = Math.min(plugin.getConfig().getDouble("Point-Block-Y-Multiplier"), .64);
 
 		for (Option option : Option.values()) {
@@ -70,6 +70,22 @@ public class ConfigPreferences {
 		Option(boolean def) {
 			this.def = def;
 			this.path = StringUtils.capitalize(name().replace('_', '-').toLowerCase(Locale.ENGLISH), '-', '.');
+		}
+	}
+
+	private void initializeItems(final Main plugin) {
+		final String greenBlock = plugin.getConfig().getString("Point-Blocks.Punch-Me");
+		final String redBlock = plugin.getConfig().getString("Point-Blocks.Dont-Punch-Me");
+		final String cyanBlock = plugin.getConfig().getString("Point-Blocks.Ouch");
+
+		if (!plugin.getConfig().getBoolean("Point-Blocks.Skulls-Enabled")) {
+			this.greenBlock = XMaterial.valueOf(greenBlock).parseItem();
+			this.redBlock = XMaterial.valueOf(redBlock).parseItem();
+			this.cyanBlock = XMaterial.valueOf(cyanBlock).parseItem();
+		} else {
+			this.greenBlock = ItemUtils.getSkull(greenBlock);
+			this.redBlock = ItemUtils.getSkull(redBlock);
+			this.cyanBlock = ItemUtils.getSkull(cyanBlock);
 		}
 	}
 }
