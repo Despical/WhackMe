@@ -1,4 +1,4 @@
-package me.despical.whackme.util;
+package me.despical.whackme.utils;
 
 import me.despical.commons.compat.XMaterial;
 import me.despical.commons.item.ItemBuilder;

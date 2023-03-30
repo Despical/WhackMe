@@ -1,5 +1,6 @@
 package me.despical.whackme;
 
+import me.despical.commandframework.CommandFramework;
 import me.despical.commons.compat.VersionResolver;
 import me.despical.commons.database.MysqlDatabase;
 import me.despical.commons.exception.ExceptionLogHandler;
@@ -11,12 +12,12 @@ import me.despical.commons.util.UpdateChecker;
 import me.despical.whackme.api.StatsStorage;
 import me.despical.whackme.arena.Arena;
 import me.despical.whackme.arena.ArenaRegistry;
-import me.despical.whackme.command.CommandHandler;
-import me.despical.whackme.event.Events;
-import me.despical.whackme.handler.ChatManager;
-import me.despical.whackme.handler.PlaceholderManager;
-import me.despical.whackme.handler.SoundManager;
-import me.despical.whackme.handler.rewards.RewardsFactory;
+import me.despical.whackme.commands.AbstractCommand;
+import me.despical.whackme.events.ListenerAdapter;
+import me.despical.whackme.handlers.ChatManager;
+import me.despical.whackme.handlers.PlaceholderManager;
+import me.despical.whackme.handlers.SoundManager;
+import me.despical.whackme.handlers.rewards.RewardsFactory;
 import me.despical.whackme.user.User;
 import me.despical.whackme.user.UserManager;
 import me.despical.whackme.user.data.MysqlManager;
@@ -37,7 +38,7 @@ public class Main extends JavaPlugin {
 	private boolean forceDisable;
 
 	private ChatManager chatManager;
-	private CommandHandler commandHandler;
+	private CommandFramework commandFramework;
 	private ConfigPreferences configPreferences;
 	private ExceptionLogHandler exceptionLogHandler;
 	private MysqlDatabase database;
@@ -47,7 +48,9 @@ public class Main extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-		if (forceDisable = !validateIfPluginShouldStart()) {
+		forceDisable = validateIfPluginShouldStart();
+
+		if (!forceDisable) {
 			getServer().getPluginManager().disablePlugin(this);
 			return;
 		}
@@ -123,14 +126,14 @@ public class Main extends JavaPlugin {
 		if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) database = new MysqlDatabase(this, "mysql");
 
 		this.chatManager = new ChatManager(this);
-		this.commandHandler = new CommandHandler(this);
+		this.commandFramework = new CommandFramework(this);
 		this.userManager = new UserManager(this);
 		this.soundManager = new SoundManager(this);
 		this.rewardsFactory = new RewardsFactory(this);
 
-		new Events(this);
-
 		ArenaRegistry.registerArenas();
+		ListenerAdapter.registerEvents(this);
+		AbstractCommand.registerCommands(this);
 
 		registerSoftDependencies();
 	}
@@ -143,7 +146,7 @@ public class Main extends JavaPlugin {
 		if (!VersionResolver.isCurrentBetween(VersionResolver.ServerVersion.v1_8_R3, VersionResolver.ServerVersion.v1_19_R3)) {
 			LogUtils.sendConsoleMessage("[WhackMe] &cYour server version is not supported by Whack Me!");
 			LogUtils.sendConsoleMessage("[WhackMe] &cSadly, we must shut off. Maybe you consider changing your server version?");
-			return false;
+			return true;
 		}
 
 		try {
@@ -151,10 +154,10 @@ public class Main extends JavaPlugin {
 		} catch (Exception e) {
 			LogUtils.sendConsoleMessage("[WhackMe] &cYour server software is not supported by Whack Me!");
 			LogUtils.sendConsoleMessage("[WhackMe] &cWe support only Spigot and its forks! Shutting off...");
-			return false;
+			return true;
 		}
 
-		return true;
+		return false;
 	}
 
 	private void checkUpdate() {
@@ -164,7 +167,7 @@ public class Main extends JavaPlugin {
 			if (result.requiresUpdate()) {
 				LogUtils.sendConsoleMessage("[WhackMe] Found a new version available: v" + result.getNewestVersion());
 				LogUtils.sendConsoleMessage("[WhackMe] Download it on SpigotMC:");
-				LogUtils.sendConsoleMessage("[WhackMe] https://www.spigotmc.org/resources/whack-me-1-8-1-19.104912/");
+				LogUtils.sendConsoleMessage("[WhackMe] https://www.spigotmc.org/resources/whack-me-1-8-1-19-4.104912/");
 			}
 		});
 	}
@@ -190,7 +193,7 @@ public class Main extends JavaPlugin {
 	}
 
 	private void saveAllUserStatistics() {
-		for (Player player : getServer().getOnlinePlayers()) {
+		for (final Player player : getServer().getOnlinePlayers()) {
 			final User user = userManager.getUser(player);
 
 			if (userManager.getDatabase() instanceof MysqlManager) {
@@ -222,8 +225,8 @@ public class Main extends JavaPlugin {
 		return chatManager;
 	}
 
-	public CommandHandler getCommandHandler() {
-		return commandHandler;
+	public CommandFramework getCommandFramework() {
+		return commandFramework;
 	}
 
 	public ConfigPreferences getConfigPreferences() {

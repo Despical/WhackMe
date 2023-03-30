@@ -1,4 +1,4 @@
-package me.despical.whackme.handler.setup.components;
+package me.despical.whackme.handlers.setup.components;
 
 import me.despical.commons.compat.XMaterial;
 import me.despical.commons.configuration.ConfigUtils;
@@ -7,8 +7,8 @@ import me.despical.commons.serializer.LocationSerializer;
 import me.despical.inventoryframework.GuiItem;
 import me.despical.inventoryframework.pane.StaticPane;
 import me.despical.whackme.arena.Arena;
-import me.despical.whackme.handler.setup.SetupInventory;
-import me.despical.whackme.util.Utils;
+import me.despical.whackme.handlers.setup.SetupInventory;
+import me.despical.whackme.utils.Utils;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 

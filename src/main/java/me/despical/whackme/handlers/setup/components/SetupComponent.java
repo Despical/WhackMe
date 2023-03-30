@@ -1,10 +1,10 @@
-package me.despical.whackme.handler.setup.components;
+package me.despical.whackme.handlers.setup.components;
 
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.inventoryframework.pane.StaticPane;
 import me.despical.whackme.Main;
-import me.despical.whackme.handler.ChatManager;
-import me.despical.whackme.handler.setup.SetupInventory;
+import me.despical.whackme.handlers.ChatManager;
+import me.despical.whackme.handlers.setup.SetupInventory;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 

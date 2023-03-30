@@ -1,4 +1,4 @@
-package me.despical.whackme.handler;
+package me.despical.whackme.handlers;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.despical.commons.configuration.ConfigUtils;

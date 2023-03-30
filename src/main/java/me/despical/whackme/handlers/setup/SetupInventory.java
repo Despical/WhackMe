@@ -1,4 +1,4 @@
-package me.despical.whackme.handler.setup;
+package me.despical.whackme.handlers.setup;
 
 import me.despical.commons.compat.XMaterial;
 import me.despical.commons.item.ItemBuilder;
@@ -8,9 +8,9 @@ import me.despical.inventoryframework.pane.StaticPane;
 import me.despical.whackme.ConfigPreferences;
 import me.despical.whackme.Main;
 import me.despical.whackme.arena.Arena;
-import me.despical.whackme.handler.ChatManager;
-import me.despical.whackme.handler.setup.components.ArenaRegisterComponent;
-import me.despical.whackme.handler.setup.components.SpawnComponents;
+import me.despical.whackme.handlers.ChatManager;
+import me.despical.whackme.handlers.setup.components.ArenaRegisterComponent;
+import me.despical.whackme.handlers.setup.components.SpawnComponents;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 

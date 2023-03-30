@@ -1,4 +1,4 @@
-package me.despical.whackme.handler.rewards;
+package me.despical.whackme.handlers.rewards;
 
 import me.despical.commons.util.LogUtils;
 import org.apache.commons.lang.StringUtils;

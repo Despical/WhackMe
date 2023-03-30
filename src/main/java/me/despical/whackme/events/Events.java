@@ -1,4 +1,4 @@
-package me.despical.whackme.event;
+package me.despical.whackme.events;
 
 import me.despical.commons.serializer.InventorySerializer;
 import me.despical.commons.util.UpdateChecker;
@@ -78,7 +78,7 @@ public class Events extends ListenerAdapter {
 
 	@EventHandler
 	public void onPickUpItem(PlayerPickupItemEvent event) {
-		if(ArenaRegistry.isInArena(event.getPlayer())) {
+		if (ArenaRegistry.isInArena(event.getPlayer())) {
 			event.setCancelled(true);
 			event.getItem().remove();
 		}
@@ -108,7 +108,7 @@ public class Events extends ListenerAdapter {
 		UpdateChecker.init(plugin, 104912).requestUpdateCheck().whenComplete((result, exception) -> {
 			if (result.requiresUpdate()) {
 				player.sendMessage(plugin.getChatManager().coloredRawMessage("&3[Whack Me] &bFound an update: v" + result.getNewestVersion()));
-				player.sendMessage(plugin.getChatManager().coloredRawMessage("&3>> &bhttps://www.spigotmc.org/resources/whack-me-1-8-1-19.104912"));
+				player.sendMessage(plugin.getChatManager().coloredRawMessage("&3>> &bhttps://www.spigotmc.org/resources/whack-me-1-8-1-19-4.104912"));
 			}
 		});
 	}

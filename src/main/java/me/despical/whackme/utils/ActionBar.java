@@ -1,4 +1,4 @@
-package me.despical.whackme.util;
+package me.despical.whackme.utils;
 
 import me.despical.commons.ReflectionUtils;
 import net.md_5.bungee.api.ChatMessageType;

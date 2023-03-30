@@ -1,4 +1,4 @@
-package me.despical.whackme.handler;
+package me.despical.whackme.handlers;
 
 import me.despical.commons.compat.XSound;
 import me.despical.commons.util.LogUtils;

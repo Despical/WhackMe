@@ -18,10 +18,12 @@ public class ConfigPreferences {
 
 	private ItemStack redBlock, greenBlock, cyanBlock;
 
+	private final Main plugin;
 	private final double pointBlockMultiplier;
 	private final Map<Option, Boolean> options;
 
 	public ConfigPreferences(Main plugin) {
+		this.plugin = plugin;
 		this.options = new HashMap<>();
 
 		plugin.saveDefaultConfig();
@@ -29,9 +31,7 @@ public class ConfigPreferences {
 		this.initializeItems(plugin);
 		this.pointBlockMultiplier = Math.min(plugin.getConfig().getDouble("Point-Block-Y-Multiplier"), .64);
 
-		for (Option option : Option.values()) {
-			options.put(option, plugin.getConfig().getBoolean(option.path, option.def));
-		}
+		this.loadOptions();
 	}
 
 	public ItemStack getGreenBlock() {
@@ -52,6 +52,14 @@ public class ConfigPreferences {
 
 	public boolean getOption(Option option) {
 		return options.get(option);
+	}
+
+	public void loadOptions() {
+		this.options.clear();
+
+		for (Option option : Option.values()) {
+			options.put(option, plugin.getConfig().getBoolean(option.path, option.def));
+		}
 	}
 
 	public enum Option {

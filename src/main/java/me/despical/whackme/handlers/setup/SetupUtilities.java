@@ -1,4 +1,4 @@
-package me.despical.whackme.handler.setup;
+package me.despical.whackme.handlers.setup;
 
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.serializer.LocationSerializer;

@@ -1,15 +1,13 @@
-package me.despical.whackme.command;
+package me.despical.whackme.commands;
 
+import me.despical.commandframework.CommandArguments;
+import me.despical.commandframework.Completer;
 import me.despical.commons.util.Collections;
 import me.despical.whackme.Main;
 import me.despical.whackme.arena.Arena;
 import me.despical.whackme.arena.ArenaRegistry;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,18 +18,20 @@ import java.util.stream.Collectors;
  * <p>
  * Created at 20.06.2022
  */
-public class TabCompletion implements TabCompleter {
+public class TabCompleter extends AbstractCommand {
 
-	private final Main plugin;
-
-	public TabCompletion(Main plugin) {
-		this.plugin = plugin;
+	public TabCompleter(Main plugin) {
+		super(plugin);
 	}
 
-	@Override
-	public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
-		List<String> completions = new ArrayList<>(), commands = plugin.getCommandHandler().getSubCommands().stream().map(SubCommand::getName).collect(Collectors.toList());
-		String arg = args[0];
+	@Completer(
+		name = "wm"
+	)
+	public List<String> onTabComplete(CommandArguments arguments) {
+		final List<String> completions = new ArrayList<>(), commands = plugin.getCommandFramework().getCommands().stream().map(cmd -> cmd.name().replace(arguments.getLabel() + '.', "")).collect(Collectors.toList());
+		final String args[] = arguments.getArguments(), arg = args[0];
+
+		commands.remove("wm");
 
 		if (args.length == 1) {
 			StringUtil.copyPartialMatches(arg, commands, completions);

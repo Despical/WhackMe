@@ -1,4 +1,4 @@
-package me.despical.whackme.handler.rewards;
+package me.despical.whackme.handlers.rewards;
 
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.engine.ScriptEngine;

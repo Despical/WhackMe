@@ -4,7 +4,7 @@ import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.serializer.LocationSerializer;
 import me.despical.commons.util.LogUtils;
 import me.despical.whackme.Main;
-import me.despical.whackme.util.Utils;
+import me.despical.whackme.utils.Utils;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
