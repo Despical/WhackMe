@@ -50,7 +50,7 @@ public class TabCompleter extends AbstractCommand {
 				return null;
 			}
 
-			List<String> arenas = ArenaRegistry.getArenas().stream().map(Arena::getId).collect(Collectors.toList());
+			List<String> arenas = plugin.getArenaRegistry().getArenas().stream().map(Arena::getId).collect(Collectors.toList());
 			StringUtil.copyPartialMatches(args[1], arenas, completions);
 
 			arenas.sort(null);

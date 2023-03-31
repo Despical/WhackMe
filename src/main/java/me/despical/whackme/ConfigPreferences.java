@@ -86,14 +86,10 @@ public class ConfigPreferences {
 		final String redBlock = plugin.getConfig().getString("Point-Blocks.Dont-Punch-Me");
 		final String cyanBlock = plugin.getConfig().getString("Point-Blocks.Ouch");
 
-		if (!plugin.getConfig().getBoolean("Point-Blocks.Skulls-Enabled")) {
-			this.greenBlock = XMaterial.valueOf(greenBlock).parseItem();
-			this.redBlock = XMaterial.valueOf(redBlock).parseItem();
-			this.cyanBlock = XMaterial.valueOf(cyanBlock).parseItem();
-		} else {
-			this.greenBlock = ItemUtils.getSkull(greenBlock);
-			this.redBlock = ItemUtils.getSkull(redBlock);
-			this.cyanBlock = ItemUtils.getSkull(cyanBlock);
-		}
+		assert greenBlock != null && redBlock != null && cyanBlock != null : "Something is null, hmm... (assertion failed)";
+
+		this.greenBlock = greenBlock.startsWith("skull:") ? ItemUtils.getSkull(greenBlock.substring(5)) : XMaterial.valueOf(greenBlock).parseItem();
+		this.redBlock = redBlock.startsWith("skull:") ? ItemUtils.getSkull(redBlock.substring(5)) : XMaterial.valueOf(redBlock).parseItem();
+		this.cyanBlock = cyanBlock.startsWith("skull:") ? ItemUtils.getSkull(cyanBlock.substring(5)) : XMaterial.valueOf(cyanBlock).parseItem();
 	}
 }

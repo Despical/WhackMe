@@ -8,7 +8,6 @@ import me.despical.commons.serializer.LocationSerializer;
 import me.despical.commons.util.LogUtils;
 import me.despical.whackme.Main;
 import me.despical.whackme.arena.Arena;
-import me.despical.whackme.arena.ArenaRegistry;
 import me.despical.whackme.handlers.setup.SetupInventory;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -50,7 +49,7 @@ public class AdminCommands extends AbstractCommand {
 
 		final String id = arguments.getArgument(0);
 
-		if (ArenaRegistry.isArena(id)) {
+		if (plugin.getArenaRegistry().isArena(id)) {
 			player.sendMessage(chatManager.prefixedRawMessage("&cArena with that ID already contains!"));
 			player.sendMessage(chatManager.prefixedRawMessage("&cTo check existing arenas use: /wm list"));
 			return;
@@ -78,7 +77,7 @@ public class AdminCommands extends AbstractCommand {
 		arena.setEndLocation(LocationSerializer.DEFAULT_LOCATION);
 		arena.setStartLocation(LocationSerializer.DEFAULT_LOCATION);
 
-		ArenaRegistry.registerArena(arena);
+		plugin.getArenaRegistry().registerArena(arena);
 	}
 
 	@Command(
@@ -90,7 +89,7 @@ public class AdminCommands extends AbstractCommand {
 	)
 	public void deleteCommand(CommandArguments arguments) {
 		final String arenaId = arguments.getArgument(0);
-		final Arena arena = ArenaRegistry.getArena(arenaId);
+		final Arena arena = plugin.getArenaRegistry().getArena(arenaId);
 		final CommandSender sender = arguments.getSender();
 
 		if (arena == null) {
@@ -114,7 +113,7 @@ public class AdminCommands extends AbstractCommand {
 			arena.teleportToEndLocation();
 		}
 
-		ArenaRegistry.unregisterArena(arena);
+		plugin.getArenaRegistry().unregisterArena(arena);
 
 		arenaConfig.set("instances." + arenaId, null);
 		ConfigUtils.saveConfig(plugin, arenaConfig, "arenas");
@@ -132,7 +131,7 @@ public class AdminCommands extends AbstractCommand {
 	)
 	public void editCommand(CommandArguments arguments) {
 		final Player player = arguments.getSender();
-		final Arena arena = ArenaRegistry.getArena(arguments.getArgument(0));
+		final Arena arena = plugin.getArenaRegistry().getArena(arguments.getArgument(0));
 
 		if (arena == null) {
 			player.sendMessage(chatManager.prefixedMessage("commands.no_arena_like_that"));
@@ -192,7 +191,7 @@ public class AdminCommands extends AbstractCommand {
 		desc = "Shows all of the existing arenas"
 	)
 	public void listCommand(CommandArguments arguments) {
-		final Set<Arena> arenas = ArenaRegistry.getArenas();
+		final Set<Arena> arenas = plugin.getArenaRegistry().getArenas();
 
 		if (arenas.isEmpty()) {
 			arguments.sendMessage(chatManager.prefixedMessage("commands.list_command.no_arenas_created"));
@@ -210,7 +209,7 @@ public class AdminCommands extends AbstractCommand {
 		min = 1
 	)
 	public void kickCommand(CommandArguments arguments) {
-		final Arena arena = ArenaRegistry.getArena(arguments.getArgument(0));
+		final Arena arena = plugin.getArenaRegistry().getArena(arguments.getArgument(0));
 
 		if (arena == null) {
 			arguments.sendMessage(chatManager.prefixedMessage("commands.no_arena_like_that"));
@@ -236,7 +235,7 @@ public class AdminCommands extends AbstractCommand {
 		plugin.getChatManager().reloadConfig();
 		plugin.getConfigPreferences().loadOptions();
 
-		for (Arena arena : ArenaRegistry.getArenas()) {
+		for (Arena arena : plugin.getArenaRegistry().getArenas()) {
 			LogUtils.log("Stopping arena called {0}.", arena.getId());
 
 			final Player player = arena.getPlayer();
@@ -250,7 +249,7 @@ public class AdminCommands extends AbstractCommand {
 			}
 		}
 
-		ArenaRegistry.registerArenas();
+		plugin.getArenaRegistry().registerArenas();
 		arguments.sendMessage(chatManager.prefixedMessage("commands.success_reload"));
 
 		LogUtils.log("Finished reloading took {0} ms", System.currentTimeMillis() - start);

@@ -35,8 +35,12 @@ import java.io.File;
  */
 public class Main extends JavaPlugin {
 
+	// TODO: Remove config option for skulls just and skull:
+	// Test this version, see y'all!
+
 	private boolean forceDisable;
 
+	private ArenaRegistry arenaRegistry;
 	private ChatManager chatManager;
 	private CommandFramework commandFramework;
 	private ConfigPreferences configPreferences;
@@ -50,7 +54,7 @@ public class Main extends JavaPlugin {
 	public void onEnable() {
 		forceDisable = validateIfPluginShouldStart();
 
-		if (!forceDisable) {
+		if (forceDisable) {
 			getServer().getPluginManager().disablePlugin(this);
 			return;
 		}
@@ -86,7 +90,7 @@ public class Main extends JavaPlugin {
 
 		getServer().getLogger().removeHandler(exceptionLogHandler);
 
-		for (Arena arena : ArenaRegistry.getArenas()) {
+		for (Arena arena : arenaRegistry.getArenas()) {
 			Player player = arena.getPlayer();
 			
 			if (player == null) continue;
@@ -130,8 +134,8 @@ public class Main extends JavaPlugin {
 		this.userManager = new UserManager(this);
 		this.soundManager = new SoundManager(this);
 		this.rewardsFactory = new RewardsFactory(this);
+		this.arenaRegistry = new ArenaRegistry(this);
 
-		ArenaRegistry.registerArenas();
 		ListenerAdapter.registerEvents(this);
 		AbstractCommand.registerCommands(this);
 
@@ -219,6 +223,10 @@ public class Main extends JavaPlugin {
 
 			userManager.getDatabase().saveAllStatistic(user);
 		}
+	}
+
+	public ArenaRegistry getArenaRegistry() {
+		return arenaRegistry;
 	}
 
 	public ChatManager getChatManager() {

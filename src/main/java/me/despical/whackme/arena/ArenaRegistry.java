@@ -8,7 +8,6 @@ import me.despical.whackme.utils.Utils;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -20,38 +19,44 @@ import java.util.Set;
  */
 public class ArenaRegistry {
 
-	private static final Main plugin = JavaPlugin.getPlugin(Main.class);
-	private static final Set<Arena> arenas = new HashSet<>();
+	private final Main plugin;
+	private final Set<Arena> arenas;
 
-	public static Set<Arena> getArenas() {
+	public ArenaRegistry(final Main plugin) {
+		this.plugin = plugin;
+		this.arenas = new HashSet<>();
+		this.registerArenas();
+	}
+
+	public Set<Arena> getArenas() {
 		return new HashSet<>(arenas);
 	}
 
-	public static boolean isInArena(Player player) {
+	public boolean isInArena(Player player) {
 		return getArena(player) != null;
 	}
 
-	public static boolean isArena(String id) {
+	public boolean isArena(String id) {
 		return getArena(id) != null;
 	}
 
-	public static Arena getArena(String id) {
+	public Arena getArena(String id) {
 		return arenas.stream().filter(arena -> arena.getId().equals(id)).findFirst().orElse(null);
 	}
 
-	public static Arena getArena(Player player) {
+	public Arena getArena(Player player) {
 		return arenas.stream().filter(arena -> arena.containPlayer(player)).findFirst().orElse(null);
 	}
 
-	public static void registerArena(Arena arena) {
+	public void registerArena(Arena arena) {
 		arenas.add(arena);
 	}
 
-	public static void unregisterArena(Arena arena) {
+	public void unregisterArena(Arena arena) {
 		arenas.remove(arena);
 	}
 
-	public static void registerArenas() {
+	public void registerArenas() {
 		LogUtils.log("Arena registration started.");
 
 		final FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");

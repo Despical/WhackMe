@@ -5,7 +5,6 @@ import me.despical.commons.util.UpdateChecker;
 import me.despical.whackme.ConfigPreferences;
 import me.despical.whackme.Main;
 import me.despical.whackme.arena.Arena;
-import me.despical.whackme.arena.ArenaRegistry;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -28,7 +27,7 @@ public class Events extends ListenerAdapter {
 	public void onCommandExecute(PlayerCommandPreprocessEvent event) {
 		final Player player = event.getPlayer();
 
-		if (!ArenaRegistry.isInArena(player)) {
+		if (!plugin.getArenaRegistry().isInArena(player)) {
 			return;
 		}
 
@@ -56,7 +55,7 @@ public class Events extends ListenerAdapter {
 
 	@EventHandler
 	public void onFoodLevelChange(FoodLevelChangeEvent event) {
-		if (event.getEntity() instanceof Player && ArenaRegistry.isInArena((Player) event.getEntity())) {
+		if (event.getEntity() instanceof Player && plugin.getArenaRegistry().isInArena((Player) event.getEntity())) {
 			event.setFoodLevel(20);
 			event.setCancelled(true);
 		}
@@ -64,29 +63,21 @@ public class Events extends ListenerAdapter {
 
 	@EventHandler
 	public void onBreak(BlockBreakEvent event) {
-		if (ArenaRegistry.isInArena(event.getPlayer())) {
+		if (plugin.getArenaRegistry().isInArena(event.getPlayer())) {
 			event.setCancelled(true);
 		}
 	}
 
 	@EventHandler
 	public void onPlace(BlockPlaceEvent event) {
-		if (ArenaRegistry.isInArena(event.getPlayer())) {
+		if (plugin.getArenaRegistry().isInArena(event.getPlayer())) {
 			event.setCancelled(true);
-		}
-	}
-
-	@EventHandler
-	public void onPickUpItem(PlayerPickupItemEvent event) {
-		if (ArenaRegistry.isInArena(event.getPlayer())) {
-			event.setCancelled(true);
-			event.getItem().remove();
 		}
 	}
 
 	@EventHandler
 	public void onDrop(PlayerDropItemEvent event) {
-		if (ArenaRegistry.isInArena(event.getPlayer())) {
+		if (plugin.getArenaRegistry().isInArena(event.getPlayer())) {
 			event.setCancelled(true);
 		}
 	}
@@ -116,7 +107,7 @@ public class Events extends ListenerAdapter {
 	@EventHandler
 	public void onQuit(PlayerQuitEvent event) {
 		final Player player = event.getPlayer();
-		final Arena arena = ArenaRegistry.getArena(player);
+		final Arena arena = plugin.getArenaRegistry().getArena(player);
 
 		if (arena != null) {
 			arena.removePlayer();

@@ -7,7 +7,6 @@ import me.despical.whackme.ConfigPreferences;
 import me.despical.whackme.Main;
 import me.despical.whackme.api.StatsStorage;
 import me.despical.whackme.arena.Arena;
-import me.despical.whackme.arena.ArenaRegistry;
 import me.despical.whackme.user.User;
 import me.despical.whackme.user.data.MysqlManager;
 import me.despical.whackme.utils.Utils;
@@ -68,7 +67,7 @@ public class PlayerCommands extends AbstractCommand {
 			return;
 		}
 
-		final Arena arena = ArenaRegistry.getArena(arguments.getArgument(0));
+		final Arena arena = plugin.getArenaRegistry().getArena(arguments.getArgument(0));
 
 		if (arena == null) {
 			arguments.sendMessage(chatManager.prefixedMessage("commands.no_arena_like_that"));
@@ -101,7 +100,7 @@ public class PlayerCommands extends AbstractCommand {
 	)
 	public void leaveCommand(CommandArguments arguments) {
 		final Player player = arguments.getSender();
-		final Arena arena = ArenaRegistry.getArena(player);
+		final Arena arena = plugin.getArenaRegistry().getArena(player);
 
 		if (arena == null) {
 			player.sendMessage(chatManager.prefixedMessage("commands.not_playing"));
@@ -120,12 +119,12 @@ public class PlayerCommands extends AbstractCommand {
 
 		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BLOCK_LEAVE_COMMAND)) return;
 
-		if (ArenaRegistry.isInArena(player)) {
+		if (plugin.getArenaRegistry().isInArena(player)) {
 			player.sendMessage(chatManager.prefixedMessage("in_game.already_playing"));
 			return;
 		}
 
-		final List<Arena> arenas = ArenaRegistry.getArenas().stream().filter(arena -> arena.getPlayer() == null).collect(Collectors.toList());
+		final List<Arena> arenas = plugin.getArenaRegistry().getArenas().stream().filter(arena -> arena.getPlayer() == null).collect(Collectors.toList());
 
 		if (!arenas.isEmpty()) {
 			Arena arena = arenas.get(0);

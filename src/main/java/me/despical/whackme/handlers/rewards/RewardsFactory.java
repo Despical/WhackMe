@@ -36,7 +36,7 @@ public class RewardsFactory {
 	public void performReward(Player player, Reward.RewardType type) {
 		if (rewards.isEmpty()) return;
 
-		Arena arena = ArenaRegistry.getArena(player);
+		Arena arena = plugin.getArenaRegistry().getArena(player);
 
 		for (Reward reward : rewards) {
 			if (reward.getType() == type) {

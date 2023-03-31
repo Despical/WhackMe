@@ -30,9 +30,7 @@ public class PointBlock extends BukkitRunnable {
 
 	private final static Main plugin = JavaPlugin.getPlugin(Main.class);
 	private final static ChatManager chatManager = plugin.getChatManager();
-	private final static ItemStack RED_BLOCK = plugin.getConfigPreferences().getRedBlock(),
-								   GREEN_BLOCK = plugin.getConfigPreferences().getGreenBlock(),
-								   CYAN_BLOCK = plugin.getConfigPreferences().getCyanBlock();
+	private final static ItemStack RED_BLOCK = plugin.getConfigPreferences().getRedBlock(), GREEN_BLOCK = plugin.getConfigPreferences().getGreenBlock(), CYAN_BLOCK = plugin.getConfigPreferences().getCyanBlock();
 
 	private double y;
 	private boolean forward = true;
@@ -72,8 +70,8 @@ public class PointBlock extends BukkitRunnable {
 	}
 
 	private ItemStack getRandomItem() {
-		final int greenSize = (int) arena.getPointBlocks().stream().filter(pointBlock -> pointBlock.stand.getHelmet().equals(GREEN_BLOCK)).count(),
-			redSize = (int) arena.getPointBlocks().stream().filter(pointBlock -> pointBlock.stand.getHelmet().equals(RED_BLOCK)).count();
+		final int greenSize = (int) arena.getPointBlocks().stream().filter(pointBlock -> pointBlock.stand.getHelmet().getData().equals(GREEN_BLOCK.getData())).count(),
+			redSize = (int) arena.getPointBlocks().stream().filter(pointBlock -> pointBlock.stand.getHelmet().getData().equals(RED_BLOCK.getData())).count();
 
 		if (greenSize > redSize) {
 			return RED_BLOCK;
@@ -85,7 +83,7 @@ public class PointBlock extends BukkitRunnable {
 	}
 
 	private String getCustomName() {
-		return chatManager.coloredRawMessage(stand.getHelmet().equals(GREEN_BLOCK) ? chatManager.message("point_blocks.punch_me") :
+		return chatManager.coloredRawMessage(stand.getHelmet().getType() == GREEN_BLOCK.getType() ? chatManager.message("point_blocks.punch_me") :
 			chatManager.message("point_blocks.dont_punch_me"));
 	}
 
@@ -119,14 +117,17 @@ public class PointBlock extends BukkitRunnable {
 				if (!armorStand.equals(stand)) return;
 
 				final User user = plugin.getUserManager().getUser(player);
-				final ItemStack helmet = stand.getHelmet();
+				final String name = stand.getCustomName();
 
-				if (helmet.equals(GREEN_BLOCK)) {
+				if (name == null) return;
+				if (stand.getCustomName().equals(chatManager.message("point_blocks.ouch"))) return;
+
+				if (name.equalsIgnoreCase(chatManager.message("point_blocks.punch_me"))) {
 					user.addStat(StatsStorage.StatisticType.LOCAL_SCORE, 1);
 
 					plugin.getSoundManager().playSound(player, SoundManager.GameSounds.POINT_SOUND);
 					plugin.getRewardsFactory().performReward(player, Reward.RewardType.SUCCESSFUL_POINT);
-				} else if (helmet.equals(RED_BLOCK)) {
+				} else if (name.equalsIgnoreCase(chatManager.message("point_blocks.dont_punch_me"))) {
 					user.addStat(StatsStorage.StatisticType.LOCAL_SCORE, -1);
 
 					plugin.getSoundManager().playSound(player, SoundManager.GameSounds.MINUS_POINT_SOUND);

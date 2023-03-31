@@ -4,7 +4,6 @@ import me.despical.whackme.Main;
 import me.despical.whackme.api.StatsStorage;
 import me.despical.whackme.api.event.player.WMPlayerStatisticChangeEvent;
 import me.despical.whackme.arena.Arena;
-import me.despical.whackme.arena.ArenaRegistry;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -32,7 +31,7 @@ public class User {
 	}
 
 	public Arena getArena() {
-		return ArenaRegistry.getArena(player);
+		return plugin.getArenaRegistry().getArena(player);
 	}
 
 	public Player getPlayer() {

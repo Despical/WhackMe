@@ -12,9 +12,7 @@
 
 # In-game blocks.
 Point-Blocks:
-  # Enable this option if you want textured skull item instead.
-  # Then you can be able to replace item names with skull URLs.
-  Skulls-Enabled: false
+  # For custom skulls: "skull:URL"
   Punch-Me: GREEN_TERRACOTTA
   Dont-Punch-Me: RED_TERRACOTTA
   Ouch: CYAN_TERRACOTTA

@@ -60,7 +60,7 @@ public class ArenaRegisterComponent implements SetupComponent {
 				}
 			}
 
-			ArenaRegistry.unregisterArena(arena);
+			plugin.getArenaRegistry().unregisterArena(arena);
 
 			final Arena newArena = new Arena(arena.getId());
 
@@ -74,7 +74,7 @@ public class ArenaRegisterComponent implements SetupComponent {
 			config.set(path + "ready", true);
 			ConfigUtils.saveConfig(plugin, config, "arenas");
 
-			ArenaRegistry.registerArena(newArena);
+			plugin.getArenaRegistry().registerArena(newArena);
 		}), 8, 2);
 	}
 }
