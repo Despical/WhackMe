@@ -35,9 +35,6 @@ import java.io.File;
  */
 public class Main extends JavaPlugin {
 
-	// TODO: Remove config option for skulls just and skull:
-	// Test this version, see y'all!
-
 	private boolean forceDisable;
 
 	private ArenaRegistry arenaRegistry;
