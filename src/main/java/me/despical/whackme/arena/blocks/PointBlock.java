@@ -1,5 +1,6 @@
 package me.despical.whackme.arena.blocks;
 
+import me.despical.commons.compat.VersionResolver;
 import me.despical.whackme.Main;
 import me.despical.whackme.api.StatsStorage;
 import me.despical.whackme.arena.Arena;
@@ -21,6 +22,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+
+import static me.despical.whackme.ConfigPreferences.*;
+
 /**
  * @author Despical
  * <p>
@@ -30,7 +34,8 @@ public class PointBlock extends BukkitRunnable {
 
 	private final static Main plugin = JavaPlugin.getPlugin(Main.class);
 	private final static ChatManager chatManager = plugin.getChatManager();
-	private final static ItemStack RED_BLOCK = plugin.getConfigPreferences().getRedBlock(), GREEN_BLOCK = plugin.getConfigPreferences().getGreenBlock(), CYAN_BLOCK = plugin.getConfigPreferences().getCyanBlock();
+	private final static String PUNCH_ME = chatManager.message("point_blocks.punch_me"), DONT_PUNCH_ME = chatManager.message("point_blocks.dont_punch_me"), OUCH = chatManager.message("point_blocks.ouch");
+	private final static boolean async = plugin.getConfigPreferences().isAsync();
 
 	private double y;
 	private boolean forward = true;
@@ -69,9 +74,17 @@ public class PointBlock extends BukkitRunnable {
 		HandlerList.unregisterAll(listener);
 	}
 
+	public void handleItself() {
+		if (async) {
+			this.runTaskTimerAsynchronously(plugin, 1L, 1L);
+		} else {
+			this.runTaskTimer(plugin, 1L, 1L);
+		}
+	}
+
 	private ItemStack getRandomItem() {
-		final int greenSize = (int) arena.getPointBlocks().stream().filter(pointBlock -> pointBlock.stand.getHelmet().getData().equals(GREEN_BLOCK.getData())).count(),
-			redSize = (int) arena.getPointBlocks().stream().filter(pointBlock -> pointBlock.stand.getHelmet().getData().equals(RED_BLOCK.getData())).count();
+		final int greenSize = (int) arena.getPointBlocks().stream().filter(pointBlock -> pointBlock.stand.getCustomName().equalsIgnoreCase(PUNCH_ME)).count(),
+			redSize = (int) arena.getPointBlocks().stream().filter(pointBlock -> pointBlock.stand.getCustomName().equalsIgnoreCase(DONT_PUNCH_ME)).count();
 
 		if (greenSize > redSize) {
 			return RED_BLOCK;
@@ -83,8 +96,7 @@ public class PointBlock extends BukkitRunnable {
 	}
 
 	private String getCustomName() {
-		return chatManager.coloredRawMessage(stand.getHelmet().getType() == GREEN_BLOCK.getType() ? chatManager.message("point_blocks.punch_me") :
-			chatManager.message("point_blocks.dont_punch_me"));
+		return stand.getHelmet().getItemMeta().getLore().contains("greenBlock")  ? PUNCH_ME : DONT_PUNCH_ME;
 	}
 
 	private void registerEvents() {
@@ -120,14 +132,14 @@ public class PointBlock extends BukkitRunnable {
 				final String name = stand.getCustomName();
 
 				if (name == null) return;
-				if (stand.getCustomName().equals(chatManager.message("point_blocks.ouch"))) return;
+				if (stand.getCustomName().equals(OUCH)) return;
 
-				if (name.equalsIgnoreCase(chatManager.message("point_blocks.punch_me"))) {
+				if (name.equalsIgnoreCase(PUNCH_ME)) {
 					user.addStat(StatsStorage.StatisticType.LOCAL_SCORE, 1);
 
 					plugin.getSoundManager().playSound(player, SoundManager.GameSounds.POINT_SOUND);
 					plugin.getRewardsFactory().performReward(player, Reward.RewardType.SUCCESSFUL_POINT);
-				} else if (name.equalsIgnoreCase(chatManager.message("point_blocks.dont_punch_me"))) {
+				} else if (name.equalsIgnoreCase(DONT_PUNCH_ME)) {
 					user.addStat(StatsStorage.StatisticType.LOCAL_SCORE, -1);
 
 					plugin.getSoundManager().playSound(player, SoundManager.GameSounds.MINUS_POINT_SOUND);
@@ -135,7 +147,7 @@ public class PointBlock extends BukkitRunnable {
 				}
 
 				stand.setHelmet(CYAN_BLOCK);
-				stand.setCustomName(chatManager.message("point_blocks.ouch"));
+				stand.setCustomName(OUCH);
 			}
 		}, plugin);
 	}
@@ -150,7 +162,7 @@ public class PointBlock extends BukkitRunnable {
 				return;
 			}
 
-			stand.teleport(stand.getLocation().clone().add(0, multiplier, 0));
+			handleEntityTeleportation(stand.getLocation().clone().add(0, multiplier, 0));
 		} else {
 			y -= multiplier;
 
@@ -158,13 +170,33 @@ public class PointBlock extends BukkitRunnable {
 				forward = true;
 
 				cancel();
-				stand.remove();
+				handleEntityRemoval();
 				arena.getPointBlocks().remove(this);
 				arena.getLocations().add(availableLocation);
 				return;
 			}
 
-			stand.teleport(stand.getLocation().clone().subtract(0, multiplier, 0));
+			handleEntityTeleportation(stand.getLocation().clone().subtract(0, multiplier, 0));
+		}
+	}
+
+	private void handleEntityRemoval() {
+		if (async) {
+			plugin.getServer().getScheduler().runTask(plugin, stand::remove);
+		} else {
+			stand.remove();
+		}
+	}
+
+	private void handleEntityTeleportation(final Location destination) {
+		if (async) {
+			if (VersionResolver.isCurrentEqualOrHigher(VersionResolver.ServerVersion.v1_16_R1)) {
+				stand.teleportAsync(destination);
+			} else {
+				plugin.getServer().getScheduler().runTask(plugin, () -> stand.teleport(destination));
+			}
+		} else {
+			stand.teleport(destination);
 		}
 	}
 }

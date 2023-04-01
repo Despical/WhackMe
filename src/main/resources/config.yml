@@ -10,8 +10,12 @@
 #                                                             #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-# In-game blocks.
+# In-game point blocks.
 Point-Blocks:
+  # Entity removal is still going to be executed in main thread.
+  # This option may decrease the amount of lag if there are multiple
+  # instances running at the same time.
+  Run-Async: false
   # For custom skulls: "skull:URL"
   Punch-Me: GREEN_TERRACOTTA
   Dont-Punch-Me: RED_TERRACOTTA

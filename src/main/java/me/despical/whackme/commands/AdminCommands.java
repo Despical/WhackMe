@@ -233,7 +233,7 @@ public class AdminCommands extends AbstractCommand {
 
 		plugin.reloadConfig();
 		plugin.getChatManager().reloadConfig();
-		plugin.getConfigPreferences().loadOptions();
+		plugin.getConfigPreferences().reload();
 
 		for (Arena arena : plugin.getArenaRegistry().getArenas()) {
 			LogUtils.log("Stopping arena called {0}.", arena.getId());

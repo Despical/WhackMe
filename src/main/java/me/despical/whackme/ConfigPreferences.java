@@ -1,6 +1,7 @@
 package me.despical.whackme;
 
 import me.despical.commons.compat.XMaterial;
+import me.despical.commons.item.ItemBuilder;
 import me.despical.commons.item.ItemUtils;
 import me.despical.commons.string.StringUtils;
 import org.bukkit.inventory.ItemStack;
@@ -16,11 +17,13 @@ import java.util.Map;
  */
 public class ConfigPreferences {
 
-	private ItemStack redBlock, greenBlock, cyanBlock;
+	public static ItemStack RED_BLOCK, GREEN_BLOCK, CYAN_BLOCK;
 
 	private final Main plugin;
-	private final double pointBlockMultiplier;
 	private final Map<Option, Boolean> options;
+
+	private double pointBlockMultiplier;
+	private boolean isAsync;
 
 	public ConfigPreferences(Main plugin) {
 		this.plugin = plugin;
@@ -29,21 +32,12 @@ public class ConfigPreferences {
 		plugin.saveDefaultConfig();
 
 		this.initializeItems(plugin);
-		this.pointBlockMultiplier = Math.min(plugin.getConfig().getDouble("Point-Block-Y-Multiplier"), .64);
-
 		this.loadOptions();
 	}
 
-	public ItemStack getGreenBlock() {
-		return greenBlock;
-	}
-
-	public ItemStack getRedBlock() {
-		return redBlock;
-	}
-
-	public ItemStack getCyanBlock() {
-		return cyanBlock;
+	public void reload() {
+		this.loadOptions();
+		this.initializeItems(plugin);
 	}
 
 	public double getPointBlockMultiplier() {
@@ -54,12 +48,19 @@ public class ConfigPreferences {
 		return options.get(option);
 	}
 
-	public void loadOptions() {
+	private void loadOptions() {
 		this.options.clear();
 
 		for (Option option : Option.values()) {
 			options.put(option, plugin.getConfig().getBoolean(option.path, option.def));
 		}
+
+		this.pointBlockMultiplier = Math.min(plugin.getConfig().getDouble("Point-Block-Y-Multiplier"), .64);
+		this.isAsync = plugin.getConfig().getBoolean("Point-Blocks.Run-Async");
+	}
+
+	public boolean isAsync() {
+		return isAsync;
 	}
 
 	public enum Option {
@@ -82,14 +83,18 @@ public class ConfigPreferences {
 	}
 
 	private void initializeItems(final Main plugin) {
-		final String greenBlock = plugin.getConfig().getString("Point-Blocks.Punch-Me");
-		final String redBlock = plugin.getConfig().getString("Point-Blocks.Dont-Punch-Me");
-		final String cyanBlock = plugin.getConfig().getString("Point-Blocks.Ouch");
+		final String greenBlockMsg = plugin.getConfig().getString("Point-Blocks.Punch-Me");
+		final String redBlockMsg = plugin.getConfig().getString("Point-Blocks.Dont-Punch-Me");
+		final String cyanBlockMsg = plugin.getConfig().getString("Point-Blocks.Ouch");
 
-		assert greenBlock != null && redBlock != null && cyanBlock != null : "Something is null, hmm... (assertion failed)";
+		assert greenBlockMsg != null && redBlockMsg != null && cyanBlockMsg != null : "Something is null, hmm... (assertion failed)";
 
-		this.greenBlock = greenBlock.startsWith("skull:") ? ItemUtils.getSkull(greenBlock.substring(5)) : XMaterial.valueOf(greenBlock).parseItem();
-		this.redBlock = redBlock.startsWith("skull:") ? ItemUtils.getSkull(redBlock.substring(5)) : XMaterial.valueOf(redBlock).parseItem();
-		this.cyanBlock = cyanBlock.startsWith("skull:") ? ItemUtils.getSkull(cyanBlock.substring(5)) : XMaterial.valueOf(cyanBlock).parseItem();
+		GREEN_BLOCK = greenBlockMsg.startsWith("skull:") ? ItemUtils.getSkull(greenBlockMsg.substring(5)) : XMaterial.valueOf(greenBlockMsg).parseItem();
+		RED_BLOCK = redBlockMsg.startsWith("skull:") ? ItemUtils.getSkull(redBlockMsg.substring(5)) : XMaterial.valueOf(redBlockMsg).parseItem();
+		CYAN_BLOCK = cyanBlockMsg.startsWith("skull:") ? ItemUtils.getSkull(cyanBlockMsg.substring(5)) : XMaterial.valueOf(cyanBlockMsg).parseItem();
+
+		GREEN_BLOCK = new ItemBuilder(GREEN_BLOCK).lore("greenBlock").build();
+		RED_BLOCK = new ItemBuilder(RED_BLOCK).lore("redBlock").build();
+		CYAN_BLOCK = new ItemBuilder(CYAN_BLOCK).lore("cyanBlock").build();
 	}
 }
