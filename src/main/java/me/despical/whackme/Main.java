@@ -75,7 +75,7 @@ public class Main extends JavaPlugin {
 		checkUpdate();
 
 		LogUtils.sendConsoleMessage("[WhackMe] &aInitialization finished. Join our Discord server if you need any help. (https://discord.gg/rVkaGmyszE)");
-		LogUtils.log("Initialization finished took {0} ms.", System.currentTimeMillis() - start);
+		LogUtils.log("Initialization finished, took {0} ms.", System.currentTimeMillis() - start);
 	}
 
 	@Override

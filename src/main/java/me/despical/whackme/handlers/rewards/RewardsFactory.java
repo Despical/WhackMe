@@ -7,7 +7,6 @@ import me.despical.whackme.ConfigPreferences;
 import me.despical.whackme.Main;
 import me.despical.whackme.api.StatsStorage;
 import me.despical.whackme.arena.Arena;
-import me.despical.whackme.arena.ArenaRegistry;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -36,13 +35,11 @@ public class RewardsFactory {
 	public void performReward(Player player, Reward.RewardType type) {
 		if (rewards.isEmpty()) return;
 
-		Arena arena = plugin.getArenaRegistry().getArena(player);
+		final Arena arena = plugin.getArenaRegistry().getArena(player);
 
 		for (Reward reward : rewards) {
 			if (reward.getType() == type) {
-				if (ThreadLocalRandom.current().nextInt(0, 100) > reward.getChance()) {
-					continue;
-				}
+				if (ThreadLocalRandom.current().nextInt(0, 100) > reward.getChance()) continue;
 
 				String command = reward.getExecutableCode();
 				command = formatCommandPlaceholders(command, arena, player);
@@ -83,17 +80,17 @@ public class RewardsFactory {
 			return;
 		}
 
-		LogUtils.log("[Rewards Factory] Starting rewards registration");
+		LogUtils.log("[Rewards Factory] Starting rewards registration.");
 
-		long start = System.currentTimeMillis();
-		FileConfiguration config = ConfigUtils.getConfig(plugin, "rewards");
+		final long start = System.currentTimeMillis();
+		final FileConfiguration config = ConfigUtils.getConfig(plugin, "rewards");
 
-		for (Reward.RewardType rewardType : Reward.RewardType.values()) {
-			for (String reward : config.getStringList(rewardType.getPath())) {
+		for (final Reward.RewardType rewardType : Reward.RewardType.values()) {
+			for (final String reward : config.getStringList(rewardType.getPath())) {
 				rewards.add(new Reward(rewardType, reward));
 			}
 		}
 
-		LogUtils.log("[Rewards Factory] Registered all rewards took {0} ms", System.currentTimeMillis() - start);
+		LogUtils.log("[Rewards Factory] Registered all rewards took {0} ms.", System.currentTimeMillis() - start);
 	}
 }
