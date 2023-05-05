@@ -2,7 +2,6 @@ package me.despical.whackme.arena;
 
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.serializer.LocationSerializer;
-import me.despical.commons.util.LogUtils;
 import me.despical.whackme.Main;
 import me.despical.whackme.utils.Utils;
 import org.bukkit.configuration.ConfigurationSection;
@@ -57,22 +56,19 @@ public class ArenaRegistry {
 	}
 
 	public void registerArenas() {
-		LogUtils.log("Arena registration started.");
-
-		final FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-		final long start = System.currentTimeMillis();
-
 		arenas.clear();
+		
+		final FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
 
 		if (!config.contains("instances")) {
-			LogUtils.sendConsoleMessage(plugin.getChatManager().message("validator.no_instances_created"));
+			plugin.getLogger().info(plugin.getChatManager().message("validator.no_instances_created"));
 			return;
 		}
 
 		ConfigurationSection section = config.getConfigurationSection("instances");
 
 		if (section == null) {
-			LogUtils.sendConsoleMessage(plugin.getChatManager().message("validator.no_instances_created"));
+			plugin.getLogger().info(plugin.getChatManager().message("validator.no_instances_created"));
 			return;
 		}
 
@@ -90,7 +86,7 @@ public class ArenaRegistry {
 			registerArena(arena);
 
 			if (!Utils.isSurroundedBy(arena.getStartLocation())) {
-				LogUtils.sendConsoleMessage(plugin.getChatManager().message("validator.invalid_arena_configuration").replace("%arena%", id).replace("%error%", "INVALID GAME AREA"));
+				plugin.getLogger().info(plugin.getChatManager().message("validator.invalid_arena_configuration").replace("%arena%", id).replace("%error%", "INVALID GAME AREA"));
 
 				arena.setReady(false);
 
@@ -105,14 +101,12 @@ public class ArenaRegistry {
 				config.set(path + "ready", false);
 				ConfigUtils.saveConfig(plugin, config, "arenas");
 
-				LogUtils.sendConsoleMessage(plugin.getChatManager().message("validator.invalid_arena_configuration").replace("%arena%", id).replace("%error%", "NOT VALIDATED"));
+				plugin.getLogger().info(plugin.getChatManager().message("validator.invalid_arena_configuration").replace("%arena%", id).replace("%error%", "NOT VALIDATED"));
 				continue;
 			}
 
 			ConfigUtils.saveConfig(plugin, config, "arenas");
-			LogUtils.sendConsoleMessage(plugin.getChatManager().message("validator.instance_started").replace("%arena%", id));
+			plugin.getLogger().info(plugin.getChatManager().message("validator.instance_started").replace("%arena%", id));
 		}
-
-		LogUtils.log("Arenas registration completed, took {0} ms.", System.currentTimeMillis() - start);
 	}
 }

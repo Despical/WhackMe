@@ -39,7 +39,7 @@ public class SetupInventory {
 	}
 
 	private void prepareGui() {
-		this.gui = new Gui(plugin, 3, "Arena Setup Menu");
+		this.gui = new Gui(plugin, 3, "       Whack Me Arena Editor");
 		this.gui.setOnGlobalClick(e -> e.setCancelled(true));
 
 		final StaticPane pane = new StaticPane(9, 3);
@@ -75,10 +75,13 @@ public class SetupInventory {
 				tip = "Need help? Check our wiki: https://github.com/Despical/WhackMe/wiki";
 				break;
 			case 2:
-				tip = "Help us translating our plugin to your language here: https://github.com/Despical/LocaleStorage/";
+				tip = "Help us translating our plugin to your language here: https://github.com/Despical/LocaleStorage";
 				break;
 			case 3:
 				tip = "You have suggestions to improve the plugin? Use our issue tracker or join our Discord server.";
+				break;
+			case 4:
+				tip = "You can donate us at: https://www.buymeacoffee.com/despical";
 				break;
 			default:
 				break;

@@ -47,7 +47,7 @@ public class PlayerCommands extends AbstractCommand {
 	@Command(
 		name = "wm",
 		usage = "/wm help",
-		desc = "Main commands of Whack Me plugin."
+		desc = "Main command of Whack Me plugin."
 	)
 	public void mainCommand(CommandArguments arguments) {
 		arguments.sendMessage(chatManager.coloredRawMessage("&3This server is running &bWhack Me &3v" + plugin.getDescription().getVersion() + " by &bDespical"));
@@ -138,7 +138,7 @@ public class PlayerCommands extends AbstractCommand {
 			return;
 		}
 
-		player.sendMessage(plugin.getChatManager().message("commands.no_free_arenas"));
+		player.sendMessage(plugin.getChatManager().prefixedMessage("commands.no_free_arenas"));
 	}
 
 	@Command(

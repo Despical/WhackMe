@@ -7,7 +7,6 @@ import me.despical.commons.exception.ExceptionLogHandler;
 import me.despical.commons.miscellaneous.AttributeUtils;
 import me.despical.commons.serializer.InventorySerializer;
 import me.despical.commons.util.Collections;
-import me.despical.commons.util.LogUtils;
 import me.despical.commons.util.UpdateChecker;
 import me.despical.whackme.api.StatsStorage;
 import me.despical.whackme.arena.Arena;
@@ -58,32 +57,21 @@ public class Main extends JavaPlugin {
 
 		this.configPreferences = new ConfigPreferences(this);
 
-		if (configPreferences.getOption(ConfigPreferences.Option.DEBUG_MODE)) {
-			LogUtils.enableLogging("WhackMe");
-			LogUtils.log("Initialization started!");
-		}
-
 		exceptionLogHandler = new ExceptionLogHandler(this);
 		exceptionLogHandler.setMainPackage("me.despical.whackme");
 		exceptionLogHandler.addBlacklistedClass("me.despical.whackme.user.data.MysqlManager", "me.despical.commons.database.MysqlDatabase");
 		exceptionLogHandler.setRecordMessage("[WhackMe] We have found a bug in the code. Use our issue tracker on our GitHub repo with the following error given above or you can join our Discord server (https://discord.gg/rVkaGmyszE)");
 
-		long start = System.currentTimeMillis();
-
 		setupFiles();
 		initClasses();
 		checkUpdate();
 
-		LogUtils.sendConsoleMessage("[WhackMe] &aInitialization finished. Join our Discord server if you need any help. (https://discord.gg/rVkaGmyszE)");
-		LogUtils.log("Initialization finished, took {0} ms.", System.currentTimeMillis() - start);
+		getLogger().info("Initialization finished. Join our Discord server if you need any help. (https://discord.gg/rVkaGmyszE)");
 	}
 
 	@Override
 	public void onDisable() {
 		if (forceDisable) return;
-
-		LogUtils.log("System disable initialized.");
-		long start = System.currentTimeMillis();
 
 		getServer().getLogger().removeHandler(exceptionLogHandler);
 
@@ -118,9 +106,6 @@ public class Main extends JavaPlugin {
 		}
 
 		saveAllUserStatistics();
-
-		LogUtils.log("System disable finished took {0} ms.", System.currentTimeMillis() - start);
-		LogUtils.disableLogging();
 	}
 
 	private void initClasses() {
@@ -145,16 +130,16 @@ public class Main extends JavaPlugin {
 
 	private boolean validateIfPluginShouldStart() {
 		if (!VersionResolver.isCurrentBetween(VersionResolver.ServerVersion.v1_8_R3, VersionResolver.ServerVersion.v1_19_R3)) {
-			LogUtils.sendConsoleMessage("[WhackMe] &cYour server version is not supported by Whack Me!");
-			LogUtils.sendConsoleMessage("[WhackMe] &cSadly, we must shut off. Maybe you consider changing your server version?");
+			getLogger().info("Your server version is not supported by Whack Me!");
+			getLogger().info("Sadly, we must shut off. Maybe you consider changing your server version?");
 			return true;
 		}
 
 		try {
 			Class.forName("org.spigotmc.SpigotConfig");
 		} catch (Exception e) {
-			LogUtils.sendConsoleMessage("[WhackMe] &cYour server software is not supported by Whack Me!");
-			LogUtils.sendConsoleMessage("[WhackMe] &cWe support only Spigot and its forks! Shutting off...");
+			getLogger().info("Your server software is not supported by Whack Me!");
+			getLogger().info("We support only Spigot and its forks! Shutting off...");
 			return true;
 		}
 
@@ -166,24 +151,19 @@ public class Main extends JavaPlugin {
 
 		UpdateChecker.init(this, 104912).requestUpdateCheck().whenComplete((result, exception) -> {
 			if (result.requiresUpdate()) {
-				LogUtils.sendConsoleMessage("[WhackMe] Found a new version available: v" + result.getNewestVersion());
-				LogUtils.sendConsoleMessage("[WhackMe] Download it on SpigotMC:");
-				LogUtils.sendConsoleMessage("[WhackMe] https://www.spigotmc.org/resources/whack-me-1-8-1-19-4.104912/");
+				getLogger().info("Found a new version available: v" + result.getNewestVersion());
+				getLogger().info("Download it on SpigotMC:");
+				getLogger().info("https://www.spigotmc.org/resources/whack-me-1-8-1-19-4.104912/");
 			}
 		});
 	}
 
 	private void registerSoftDependencies() {
-		LogUtils.log("Hooking into soft dependencies.");
-
 		startPluginMetrics();
 
 		if (chatManager.isPapiEnabled()) {
-			LogUtils.log("Hooking into PlaceholderAPI.");
 			new PlaceholderManager(this);
 		}
-
-		LogUtils.log("Hooked into soft dependencies.");
 	}
 
 	private void startPluginMetrics() {

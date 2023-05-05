@@ -1,6 +1,5 @@
 package me.despical.whackme.user;
 
-import me.despical.commons.util.LogUtils;
 import me.despical.whackme.ConfigPreferences;
 import me.despical.whackme.Main;
 import me.despical.whackme.user.data.FileStats;
@@ -37,8 +36,6 @@ public class UserManager {
 				return user;
 			}
 		}
-
-		LogUtils.log("Registering new user {0} ({1})", uuid, player.getName());
 
 		final User user = new User(uuid);
 		users.add(user);

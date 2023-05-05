@@ -2,7 +2,6 @@ package me.despical.whackme.api;
 
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.sorter.SortUtils;
-import me.despical.commons.util.LogUtils;
 import me.despical.whackme.ConfigPreferences;
 import me.despical.whackme.Main;
 import me.despical.whackme.user.data.MysqlManager;
@@ -41,8 +40,9 @@ public class StatsStorage {
 
 				return column;
 			} catch (SQLException exception) {
-				LogUtils.log("SQL Exception occurred! " + exception.getSQLState() + " (" + exception.getErrorCode() + ")");
-				LogUtils.sendConsoleMessage("&cCould not get contents from MySQL database!");
+				exception.printStackTrace();
+
+				plugin.getLogger().warning("Could not get contents from MySQL database!");
 				return null;
 			}
 		}
@@ -58,10 +58,13 @@ public class StatsStorage {
 	}
 
 	public enum StatisticType {
-		TOURS_PLAYED("toursplayed"), RECORD_SCORE("recordscore"), LOCAL_SCORE("local_score", false);
 
-		String name;
-		boolean persistent;
+		TOURS_PLAYED("toursplayed"),
+		RECORD_SCORE("recordscore"),
+		LOCAL_SCORE("local_score", false);
+
+		final String name;
+		final boolean persistent;
 
 		StatisticType(String name) {
 			this (name, true);

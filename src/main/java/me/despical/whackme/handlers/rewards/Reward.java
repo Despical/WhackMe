@@ -1,7 +1,7 @@
 package me.despical.whackme.handlers.rewards;
 
-import me.despical.commons.util.LogUtils;
 import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
 
 /**
  * @author Despical
@@ -34,7 +34,7 @@ public class Reward {
 			final int loc = processedCode.indexOf(")");
 
 			if (loc == -1) {
-				LogUtils.sendConsoleMessage("&cRewards configuration is broken! Make sure you don't forget using ')' character in chance condition! Command: " + rawCode);
+				Bukkit.getConsoleSender().sendMessage(String.format("&cRewards configuration is broken! Make sure you don't forget using ')' character in chance condition! Command: " + rawCode));
 				this.chance = 101;
 				return;
 			}

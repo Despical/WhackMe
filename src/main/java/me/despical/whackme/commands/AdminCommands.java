@@ -5,7 +5,6 @@ import me.despical.commandframework.CommandArguments;
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.miscellaneous.MiscUtils;
 import me.despical.commons.serializer.LocationSerializer;
-import me.despical.commons.util.LogUtils;
 import me.despical.whackme.Main;
 import me.despical.whackme.arena.Arena;
 import me.despical.whackme.handlers.setup.SetupInventory;
@@ -227,17 +226,11 @@ public class AdminCommands extends AbstractCommand {
 		min = 1
 	)
 	public void reloadCommand(CommandArguments arguments) {
-		LogUtils.log("Initialized plugin reload by {0}.", arguments.getSender().getName());
-
-		final long start = System.currentTimeMillis();
-
 		plugin.reloadConfig();
 		plugin.getChatManager().reloadConfig();
 		plugin.getConfigPreferences().reload();
 
 		for (Arena arena : plugin.getArenaRegistry().getArenas()) {
-			LogUtils.log("Stopping arena called {0}.", arena.getId());
-
 			final Player player = arena.getPlayer();
 
 			if (player != null) {
@@ -251,7 +244,5 @@ public class AdminCommands extends AbstractCommand {
 
 		plugin.getArenaRegistry().registerArenas();
 		arguments.sendMessage(chatManager.prefixedMessage("commands.success_reload"));
-
-		LogUtils.log("Finished reloading took {0} ms", System.currentTimeMillis() - start);
 	}
 }

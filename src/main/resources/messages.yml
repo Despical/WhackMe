@@ -64,6 +64,6 @@ Boss-Bar:
     - "&e&lYOU LIKE THE PLUGIN? RATE US ON SPIGOT!"
 
 Validator:
-  Invalid-Arena-Configuration: "[WhackMe] &cArena %arena% has invalid configuration! Missing node: %error%"
-  Instance-Started: "[WhackMe] Arena %arena% instance successfully started!"
-  No-Instances-Created: "[WhackMe] &cThere are no arena instances created in configuration!"
+  Invalid-Arena-Configuration: "Arena %arena% has invalid configuration! Missing node: %error%"
+  Instance-Started: "Arena %arena% instance successfully started!"
+  No-Instances-Created: "There are no arena instances created in configuration!"

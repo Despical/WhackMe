@@ -1,7 +1,6 @@
 package me.despical.whackme.handlers;
 
 import me.despical.commons.compat.XSound;
-import me.despical.commons.util.LogUtils;
 import me.despical.whackme.Main;
 import org.bukkit.entity.Player;
 
@@ -19,7 +18,7 @@ public class SoundManager {
 			this.pointSound = XSound.matchXSound(plugin.getConfig().getString(GameSounds.POINT_SOUND.path)).orElse(XSound.ENTITY_EXPERIENCE_BOTTLE_THROW);
 			this.minusPointSound = XSound.matchXSound(plugin.getConfig().getString(GameSounds.MINUS_POINT_SOUND.path)).orElse(XSound.BLOCK_NOTE_BLOCK_BASS);
 		} catch (Exception ignored) {
-			LogUtils.sendConsoleMessage("[WhackMe] &cSystem could not load sounds. Look at the config file.");
+			plugin.getLogger().warning("System could not load sounds. Check out the config file.");
 		}
 	}
 

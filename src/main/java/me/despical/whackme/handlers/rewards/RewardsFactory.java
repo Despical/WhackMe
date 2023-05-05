@@ -2,7 +2,6 @@ package me.despical.whackme.handlers.rewards;
 
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.engine.ScriptEngine;
-import me.despical.commons.util.LogUtils;
 import me.despical.whackme.ConfigPreferences;
 import me.despical.whackme.Main;
 import me.despical.whackme.api.StatsStorage;
@@ -80,9 +79,6 @@ public class RewardsFactory {
 			return;
 		}
 
-		LogUtils.log("[Rewards Factory] Starting rewards registration.");
-
-		final long start = System.currentTimeMillis();
 		final FileConfiguration config = ConfigUtils.getConfig(plugin, "rewards");
 
 		for (final Reward.RewardType rewardType : Reward.RewardType.values()) {
@@ -90,7 +86,5 @@ public class RewardsFactory {
 				rewards.add(new Reward(rewardType, reward));
 			}
 		}
-
-		LogUtils.log("[Rewards Factory] Registered all rewards took {0} ms.", System.currentTimeMillis() - start);
 	}
 }
