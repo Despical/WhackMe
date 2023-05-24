@@ -32,7 +32,7 @@ public class PointHandler extends BukkitRunnable {
 
 		if (player == null) return;
 
-		sendActionBar();
+		sendActionBar(player);
 
 		int size = arena.getPointBlocks().size();
 
@@ -41,9 +41,9 @@ public class PointHandler extends BukkitRunnable {
 		}
 	}
 
-	private void sendActionBar() {
-		Player player = arena.getPlayer();
+	private void sendActionBar(final Player player) {
 		String message = plugin.getChatManager().message("in_game.action_bar");
+
 		message = StringUtils.replace(message, "%player%", player.getName());
 		message = StringUtils.replace(message, "%score%", Integer.toString(StatsStorage.getUserStats(player, StatsStorage.StatisticType.LOCAL_SCORE)));
 		message = StringUtils.replace(message, "%timer%", StringFormatUtils.formatIntoMMSS(arena.getTimer()));

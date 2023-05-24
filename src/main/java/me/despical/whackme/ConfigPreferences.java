@@ -51,7 +51,7 @@ public class ConfigPreferences {
 	private void loadOptions() {
 		this.options.clear();
 
-		for (Option option : Option.values()) {
+		for (final Option option : Option.values()) {
 			options.put(option, plugin.getConfig().getBoolean(option.path, option.def));
 		}
 
@@ -67,7 +67,7 @@ public class ConfigPreferences {
 
 		BLOCK_COMMANDS(false), BOSS_BAR_ENABLED, CHAT_FORMAT_ENABLED, CLEAR_EFFECTS,
 		CLEAR_INVENTORY, DATABASE_ENABLED(false), INVENTORY_MANAGER_ENABLED, BLOCK_LEAVE_COMMAND(false),
-		REWARDS_ENABLED(false), UPDATE_NOTIFIER_ENABLED, SEND_SETUP_TIPS;
+		REWARDS_ENABLED(false), UPDATE_NOTIFIER_ENABLED;
 
 		final String path;
 		final boolean def;

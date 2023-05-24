@@ -58,12 +58,13 @@ public class MysqlManager implements UserDatabase {
 			if (!stat.isPersistent()) continue;
 
 			final int value = user.getStat(stat);
+			final String name = stat.getName();
 
 			if (builder.toString().equalsIgnoreCase(" SET ")) {
-				builder.append(stat.getName()).append("=").append(value);
+				builder.append(name).append("=").append(value);
 			}
 
-			builder.append(", ").append(stat.getName()).append("=").append(value);
+			builder.append(", ").append(name).append("=").append(value);
 		}
 
 		final String update = builder.toString();
@@ -80,7 +81,7 @@ public class MysqlManager implements UserDatabase {
 				final ResultSet resultSet = statement.executeQuery("SELECT * from " + tableName + " WHERE UUID='" + uuid + "';");
 
 				if (resultSet.next()) {
-					for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+					for (final StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
 						if (!stat.isPersistent()) continue;
 
 						user.setStat(stat, resultSet.getInt(stat.getName()));

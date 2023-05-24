@@ -56,6 +56,9 @@ Chat-Format-Enabled: true
 # Point blocks are maximum raised by total of 0.65 in Y axis.
 Point-Block-Y-Multiplier: 0.05
 
+# How many milliseconds should any point block wait in the air?
+Wait-Ms: 12
+
 # The gameplay time for each arena. Default is 30 seconds.
 Gameplay-Time: 30
 
@@ -83,9 +86,6 @@ Whitelisted-Commands:
 
 # Should we block every not Whack Me associated commands in game?
 Block-Commands: true
-
-# Should we send any random tip when the setup menu opens?
-Send-Setup-Tips: true
 
 # Should we check for updates on plugin start and after any admin join?
 Update-Notifier-Enabled: true

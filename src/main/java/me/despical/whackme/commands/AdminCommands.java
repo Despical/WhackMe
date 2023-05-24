@@ -125,7 +125,6 @@ public class AdminCommands extends AbstractCommand {
 		permission = "wm.admin.edit",
 		usage = "/wm edit <arena>",
 		desc = "Opens the arena editor",
-		min = 1,
 		senderType = PLAYER
 	)
 	public void editCommand(CommandArguments arguments) {
@@ -204,8 +203,7 @@ public class AdminCommands extends AbstractCommand {
 		name = "wm.kick",
 		permission = "wm.admin.kick",
 		usage = "/wm kick <player>",
-		desc = "Kicks specified player if they're playing",
-		min = 1
+		desc = "Kicks specified player if they're playing"
 	)
 	public void kickCommand(CommandArguments arguments) {
 		final Arena arena = plugin.getArenaRegistry().getArena(arguments.getArgument(0));
@@ -222,8 +220,7 @@ public class AdminCommands extends AbstractCommand {
 		name = "wm.reload",
 		permission = "wm.admin.reload",
 		usage = "/wm reload",
-		desc = "Kicks specified player if they're playing",
-		min = 1
+		desc = "Kicks specified player if they're playing"
 	)
 	public void reloadCommand(CommandArguments arguments) {
 		plugin.reloadConfig();

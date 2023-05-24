@@ -31,7 +31,7 @@ public class SpawnComponents implements SetupComponent {
 			.lore("&7the place where you are standing.")
 			.lore("&8(location where players will be")
 			.lore("&8teleported to join game)")
-			.lore("", setupInventory.getSetupUtilities().isOptionDoneBool(path + "startLocation"))
+			.lore("", isOptionDoneBool(path + "startLocation"))
 			.build(), e -> {
 
 			player.closeInventory();
@@ -57,7 +57,7 @@ public class SpawnComponents implements SetupComponent {
 			.lore("&7the place where you are standing.")
 			.lore("&8(location where players will be")
 			.lore("&8teleported after the reloading)")
-			.lore("", setupInventory.getSetupUtilities().isOptionDoneBool(path + "endLocation"))
+			.lore("", isOptionDoneBool(path + "endLocation"))
 			.build(), e -> {
 
 			player.closeInventory();

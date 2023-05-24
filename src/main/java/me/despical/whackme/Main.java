@@ -1,9 +1,7 @@
 package me.despical.whackme;
 
 import me.despical.commandframework.CommandFramework;
-import me.despical.commons.compat.VersionResolver;
 import me.despical.commons.database.MysqlDatabase;
-import me.despical.commons.exception.ExceptionLogHandler;
 import me.despical.commons.miscellaneous.AttributeUtils;
 import me.despical.commons.serializer.InventorySerializer;
 import me.despical.commons.util.Collections;
@@ -24,8 +22,10 @@ import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.util.logging.Logger;
 
 /**
  * @author Despical
@@ -34,13 +34,10 @@ import java.io.File;
  */
 public class Main extends JavaPlugin {
 
-	private boolean forceDisable;
-
 	private ArenaRegistry arenaRegistry;
 	private ChatManager chatManager;
 	private CommandFramework commandFramework;
 	private ConfigPreferences configPreferences;
-	private ExceptionLogHandler exceptionLogHandler;
 	private MysqlDatabase database;
 	private SoundManager soundManager;
 	private UserManager userManager;
@@ -48,22 +45,7 @@ public class Main extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-		forceDisable = validateIfPluginShouldStart();
-
-		if (forceDisable) {
-			getServer().getPluginManager().disablePlugin(this);
-			return;
-		}
-
-		this.configPreferences = new ConfigPreferences(this);
-
-		exceptionLogHandler = new ExceptionLogHandler(this);
-		exceptionLogHandler.setMainPackage("me.despical.whackme");
-		exceptionLogHandler.addBlacklistedClass("me.despical.whackme.user.data.MysqlManager", "me.despical.commons.database.MysqlDatabase");
-		exceptionLogHandler.setRecordMessage("[WhackMe] We have found a bug in the code. Use our issue tracker on our GitHub repo with the following error given above or you can join our Discord server (https://discord.gg/rVkaGmyszE)");
-
-		setupFiles();
-		initClasses();
+		initializeClasses();
 		checkUpdate();
 
 		getLogger().info("Initialization finished. Join our Discord server if you need any help. (https://discord.gg/rVkaGmyszE)");
@@ -71,19 +53,15 @@ public class Main extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
-		if (forceDisable) return;
-
-		getServer().getLogger().removeHandler(exceptionLogHandler);
-
-		for (Arena arena : arenaRegistry.getArenas()) {
-			Player player = arena.getPlayer();
+		for (final Arena arena : arenaRegistry.getArenas()) {
+			final Player player = arena.getPlayer();
 			
 			if (player == null) continue;
 			
 			final User user = userManager.getUser(player);
 			user.addStat(StatsStorage.StatisticType.TOURS_PLAYED, 1);
 
-			int score = user.getStat(StatsStorage.StatisticType.LOCAL_SCORE);
+			final int score = user.getStat(StatsStorage.StatisticType.LOCAL_SCORE);
 
 			if (score > user.getStat(StatsStorage.StatisticType.RECORD_SCORE)) {
 				user.setStat(StatsStorage.StatisticType.RECORD_SCORE, score);
@@ -108,9 +86,10 @@ public class Main extends JavaPlugin {
 		saveAllUserStatistics();
 	}
 
-	private void initClasses() {
-		if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) database = new MysqlDatabase(this, "mysql");
+	private void initializeClasses() {
+		this.setupConfigurationFiles();
 
+		this.configPreferences = new ConfigPreferences(this);
 		this.chatManager = new ChatManager(this);
 		this.commandFramework = new CommandFramework(this);
 		this.userManager = new UserManager(this);
@@ -118,32 +97,19 @@ public class Main extends JavaPlugin {
 		this.rewardsFactory = new RewardsFactory(this);
 		this.arenaRegistry = new ArenaRegistry(this);
 
+		if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) database = new MysqlDatabase(this, "mysql");
+		if (chatManager.isPapiEnabled()) new PlaceholderManager(this);
+
 		ListenerAdapter.registerEvents(this);
 		AbstractCommand.registerCommands(this);
 
-		registerSoftDependencies();
+		final Metrics metrics = new Metrics(this, 15722);
+		metrics.addCustomChart(new SimplePie("database_enabled", () -> configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED) ? "Enabled" : "Disabled"));
+		metrics.addCustomChart(new SimplePie("update_notifier", () -> configPreferences.getOption(ConfigPreferences.Option.UPDATE_NOTIFIER_ENABLED) ? "Enabled" : "Disabled"));
 	}
 
-	private void setupFiles() {
+	private void setupConfigurationFiles() {
 		Collections.streamOf("arenas", "stats", "mysql", "messages", "rewards").filter(name -> !new File(getDataFolder(),name + ".yml").exists()).forEach(name -> saveResource(name + ".yml", false));
-	}
-
-	private boolean validateIfPluginShouldStart() {
-		if (!VersionResolver.isCurrentBetween(VersionResolver.ServerVersion.v1_8_R3, VersionResolver.ServerVersion.v1_19_R3)) {
-			getLogger().info("Your server version is not supported by Whack Me!");
-			getLogger().info("Sadly, we must shut off. Maybe you consider changing your server version?");
-			return true;
-		}
-
-		try {
-			Class.forName("org.spigotmc.SpigotConfig");
-		} catch (Exception e) {
-			getLogger().info("Your server software is not supported by Whack Me!");
-			getLogger().info("We support only Spigot and its forks! Shutting off...");
-			return true;
-		}
-
-		return false;
 	}
 
 	private void checkUpdate() {
@@ -151,26 +117,13 @@ public class Main extends JavaPlugin {
 
 		UpdateChecker.init(this, 104912).requestUpdateCheck().whenComplete((result, exception) -> {
 			if (result.requiresUpdate()) {
-				getLogger().info("Found a new version available: v" + result.getNewestVersion());
-				getLogger().info("Download it on SpigotMC:");
-				getLogger().info("https://www.spigotmc.org/resources/whack-me-1-8-1-19-4.104912/");
+				final Logger logger = getLogger();
+
+				logger.info("Found a new version available: v" + result.getNewestVersion());
+				logger.info("Download it on SpigotMC:");
+				logger.info("https://www.spigotmc.org/resources/whack-me.104912");
 			}
 		});
-	}
-
-	private void registerSoftDependencies() {
-		startPluginMetrics();
-
-		if (chatManager.isPapiEnabled()) {
-			new PlaceholderManager(this);
-		}
-	}
-
-	private void startPluginMetrics() {
-		final Metrics metrics = new Metrics(this, 15722);
-
-		metrics.addCustomChart(new SimplePie("database_enabled", () -> configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED) ? "Enabled" : "Disabled"));
-		metrics.addCustomChart(new SimplePie("update_notifier", () -> configPreferences.getOption(ConfigPreferences.Option.UPDATE_NOTIFIER_ENABLED) ? "Enabled" : "Disabled"));
 	}
 
 	private void saveAllUserStatistics() {
@@ -185,12 +138,13 @@ public class Main extends JavaPlugin {
 					if (!stat.isPersistent()) continue;
 
 					final int value = user.getStat(stat);
+					final String name = stat.getName();
 
 					if (builder.toString().equalsIgnoreCase(" SET ")) {
-						builder.append(stat.getName()).append("'='").append(value);
+						builder.append(name).append("'='").append(value);
 					}
 
-					builder.append(", ").append(stat.getName()).append("'='").append(value);
+					builder.append(", ").append(name).append("'='").append(value);
 				}
 
 				final String update = builder.toString();
@@ -202,34 +156,42 @@ public class Main extends JavaPlugin {
 		}
 	}
 
+	@NotNull
 	public ArenaRegistry getArenaRegistry() {
 		return arenaRegistry;
 	}
 
+	@NotNull
 	public ChatManager getChatManager() {
 		return chatManager;
 	}
 
+	@NotNull
 	public CommandFramework getCommandFramework() {
 		return commandFramework;
 	}
 
+	@NotNull
 	public ConfigPreferences getConfigPreferences() {
 		return configPreferences;
 	}
 
+	@NotNull
 	public MysqlDatabase getMysqlDatabase() {
 		return database;
 	}
 
+	@NotNull
 	public SoundManager getSoundManager() {
 		return soundManager;
 	}
 
+	@NotNull
 	public UserManager getUserManager() {
 		return userManager;
 	}
 
+	@NotNull
 	public RewardsFactory getRewardsFactory() {
 		return rewardsFactory;
 	}

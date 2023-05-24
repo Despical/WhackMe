@@ -28,7 +28,7 @@ public class Utils {
 	public static boolean isSurroundedBy(Location center) {
 		if (center == null) return false;
 
-		for (Block block : Objects.requireNonNull(getBlocksSurroundedBy(center))) {
+		for (final Block block : Objects.requireNonNull(getBlocksSurroundedBy(center))) {
 			if (block.getType() != END_PORTAL_FRAME.getType()) return false;
 		}
 

@@ -4,6 +4,7 @@ import me.despical.commons.compat.VersionResolver;
 import me.despical.whackme.Main;
 import me.despical.whackme.api.StatsStorage;
 import me.despical.whackme.arena.Arena;
+import me.despical.whackme.arena.options.ArenaOption;
 import me.despical.whackme.handlers.ChatManager;
 import me.despical.whackme.handlers.SoundManager;
 import me.despical.whackme.handlers.rewards.Reward;
@@ -38,7 +39,8 @@ public class PointBlock extends BukkitRunnable {
 	private final static boolean async = plugin.getConfigPreferences().isAsync();
 
 	private double y;
-	private boolean forward = true;
+	private int waitedMs = ArenaOption.WAIT_MILLISECONDS.getDefaultValue();
+	private boolean forward = true, waitedAbove = true;
 	private Listener listener;
 
 	final ArmorStand stand;
@@ -146,6 +148,8 @@ public class PointBlock extends BukkitRunnable {
 					plugin.getRewardsFactory().performReward(player, Reward.RewardType.WRONG_POINT);
 				}
 
+				event.setCancelled(true);
+
 				stand.setHelmet(CYAN_BLOCK);
 				stand.setCustomName(OUCH);
 			}
@@ -157,13 +161,22 @@ public class PointBlock extends BukkitRunnable {
 		if (forward) {
 			y += multiplier;
 
-			if (y > .75) {
+			if (y > .85) {
 				forward = false;
+				waitedAbove = false;
 				return;
 			}
 
 			handleEntityTeleportation(stand.getLocation().clone().add(0, multiplier, 0));
 		} else {
+			if (!waitedAbove) {
+				waitedMs--;
+
+				if (waitedMs == 0) waitedAbove = true;
+			}
+
+			if (waitedMs != 0) return;
+
 			y -= multiplier;
 
 			if (y < -0.6) {

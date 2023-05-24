@@ -31,7 +31,7 @@ public class UserManager {
 	public User getUser(Player player) {
 		final UUID uuid = player.getUniqueId();
 
-		for (User user : users) {
+		for (final User user : users) {
 			if (user.getUniqueId().equals(uuid)) {
 				return user;
 			}

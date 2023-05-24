@@ -1,6 +1,7 @@
 package me.despical.whackme.handlers.setup.components;
 
 import me.despical.commons.configuration.ConfigUtils;
+import me.despical.commons.serializer.LocationSerializer;
 import me.despical.inventoryframework.pane.StaticPane;
 import me.despical.whackme.Main;
 import me.despical.whackme.handlers.ChatManager;
@@ -20,4 +21,8 @@ public interface SetupComponent {
 	FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
 
 	void injectComponents(SetupInventory setupInventory, StaticPane pane);
+
+	default String isOptionDoneBool(String path) {
+		return config.isSet(path) ? LocationSerializer.isDefaultLocation(config.getString(path)) ? "&c&l✘ Not Completed" : "&a&l✔ Completed" : "&c&l✘ Not Completed";
+	}
 }

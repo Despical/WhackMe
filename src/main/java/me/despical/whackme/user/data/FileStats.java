@@ -29,7 +29,7 @@ public class FileStats implements UserDatabase {
 	public void saveAllStatistic(User user) {
 		final String uuid = user.getUniqueId().toString();
 
-		for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+		for (final StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
 			if (!stat.isPersistent()) continue;
 
 			config.set(uuid + "." + stat.getName(), user.getStat(stat));
@@ -42,7 +42,7 @@ public class FileStats implements UserDatabase {
 	public void loadStatistics(User user) {
 		final String uuid = user.getUniqueId().toString();
 
-		for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+		for (final StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
 			user.setStat(stat, config.getInt(uuid + "." + stat.getName()));
 		}
 	}

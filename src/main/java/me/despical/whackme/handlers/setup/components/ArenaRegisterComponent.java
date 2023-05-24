@@ -7,7 +7,6 @@ import me.despical.commons.serializer.LocationSerializer;
 import me.despical.inventoryframework.GuiItem;
 import me.despical.inventoryframework.pane.StaticPane;
 import me.despical.whackme.arena.Arena;
-import me.despical.whackme.arena.ArenaRegistry;
 import me.despical.whackme.handlers.setup.SetupInventory;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -53,7 +52,7 @@ public class ArenaRegisterComponent implements SetupComponent {
 
 			final String[] locations = {"startLocation", "endLocation"};
 
-			for (String loc : locations) {
+			for (final String loc : locations) {
 				if (!config.isSet(path + loc) || LocationSerializer.isDefaultLocation(config.getString(path + loc))) {
 					player.sendMessage(chatManager.coloredRawMessage("&c&l✘ &cArena validation failed! Please configure following spawn properly: " + loc + " (cannot be world spawn location)"));
 					return;

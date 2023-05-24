@@ -70,6 +70,12 @@ public class Arena extends BukkitRunnable {
 		this.ready = ready;
 	}
 
+	public int getProgress() {
+		final boolean isLobbySet = getStartLocation() != null, isEndSet = getEndLocation() != null;
+
+		return isLobbySet ? isEndSet ? 100 : 50 : isEndSet ? 50 : 0;
+	}
+
 	public Player getPlayer() {
 		return player;
 	}
@@ -105,8 +111,8 @@ public class Arena extends BukkitRunnable {
 	}
 
 	public void removePlayer() {
-		User user = plugin.getUserManager().getUser(player);
-		int score = user.getStat(StatsStorage.StatisticType.LOCAL_SCORE);
+		final User user = plugin.getUserManager().getUser(player);
+		final int score = user.getStat(StatsStorage.StatisticType.LOCAL_SCORE);
 
 		if (score > user.getStat(StatsStorage.StatisticType.RECORD_SCORE)) {
 			user.setStat(StatsStorage.StatisticType.RECORD_SCORE, score);

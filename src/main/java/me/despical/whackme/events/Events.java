@@ -20,7 +20,7 @@ import org.bukkit.event.player.*;
 public class Events extends ListenerAdapter {
 
 	public Events(Main plugin) {
-		super (plugin);
+		super(plugin);
 	}
 
 	@EventHandler
@@ -99,7 +99,7 @@ public class Events extends ListenerAdapter {
 		UpdateChecker.init(plugin, 104912).requestUpdateCheck().whenComplete((result, exception) -> {
 			if (result.requiresUpdate()) {
 				player.sendMessage(plugin.getChatManager().coloredRawMessage("&3[Whack Me] &bFound an update: v" + result.getNewestVersion()));
-				player.sendMessage(plugin.getChatManager().coloredRawMessage("&3>> &bhttps://www.spigotmc.org/resources/whack-me-1-8-1-19-4.104912"));
+				player.sendMessage(plugin.getChatManager().coloredRawMessage("&3>> &bhttps://www.spigotmc.org/resources/whack-me.104912"));
 			}
 		});
 	}

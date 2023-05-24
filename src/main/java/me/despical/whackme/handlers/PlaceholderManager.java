@@ -4,7 +4,6 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.despical.whackme.Main;
 import me.despical.whackme.api.StatsStorage;
 import me.despical.whackme.arena.Arena;
-import me.despical.whackme.arena.ArenaRegistry;
 import me.despical.whackme.user.User;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -24,7 +23,6 @@ public class PlaceholderManager extends PlaceholderExpansion {
 		register();
 	}
 
-	@NotNull
 	@Override
 	public boolean persist() {
 		return true;
@@ -49,7 +47,7 @@ public class PlaceholderManager extends PlaceholderExpansion {
 	}
 
 	@Override
-	public String onPlaceholderRequest(Player player, String id) {
+	public String onPlaceholderRequest(Player player, @NotNull String id) {
 		if (player == null) return null;
 
 		final User user = plugin.getUserManager().getUser(player);
