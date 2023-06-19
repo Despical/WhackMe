@@ -34,7 +34,7 @@ public final class ActionBar {
 				chatComp = lookup.findStatic(ChatSerializerClass, "a", MethodType.methodType(iChatBaseComponentClass, String.class));
 
 				Class<?> chatMessageTypeClass = Class.forName(
-					NMS + v(17, "network.chat").orElse("") + "ChatMessageType"
+					NMS_VERSION + v(17, "network.chat").orElse("") + "ChatMessageType"
 				);
 
 				MethodType type = MethodType.methodType(void.class, iChatBaseComponentClass, chatMessageTypeClass);

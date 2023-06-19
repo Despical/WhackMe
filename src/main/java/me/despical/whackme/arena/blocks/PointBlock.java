@@ -1,6 +1,6 @@
 package me.despical.whackme.arena.blocks;
 
-import me.despical.commons.compat.VersionResolver;
+import me.despical.commons.ReflectionUtils;
 import me.despical.whackme.Main;
 import me.despical.whackme.api.StatsStorage;
 import me.despical.whackme.arena.Arena;
@@ -203,7 +203,7 @@ public class PointBlock extends BukkitRunnable {
 
 	private void handleEntityTeleportation(final Location destination) {
 		if (async) {
-			if (VersionResolver.isCurrentEqualOrHigher(VersionResolver.ServerVersion.v1_16_R1)) {
+			if (ReflectionUtils.supports(16)) {
 				stand.teleportAsync(destination);
 			} else {
 				plugin.getServer().getScheduler().runTask(plugin, () -> stand.teleport(destination));

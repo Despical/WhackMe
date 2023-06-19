@@ -1,6 +1,6 @@
 package me.despical.whackme.arena.managers;
 
-import me.despical.commons.compat.VersionResolver;
+import me.despical.commons.ReflectionUtils;
 import me.despical.commons.number.NumberUtils;
 import me.despical.whackme.ConfigPreferences;
 import me.despical.whackme.Main;
@@ -31,7 +31,7 @@ public class BossBarManager extends BukkitRunnable {
 	public BossBarManager(Main plugin, Arena arena) {
 		this.plugin = plugin;
 		this.arena = arena;
-		this.enabled = plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSS_BAR_ENABLED) && VersionResolver.isCurrentHigher(VersionResolver.ServerVersion.v1_8_R3);
+		this.enabled = plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSS_BAR_ENABLED) && ReflectionUtils.supports(13);
 
 		if (enabled) {
 			this.bossBar = plugin.getServer().createBossBar(plugin.getChatManager().message("boss_bar.game_info"), BarColor.valueOf(plugin.getChatManager().message("boss_bar.color")), BarStyle.valueOf(plugin.getChatManager().message("boss_bar.style")));
