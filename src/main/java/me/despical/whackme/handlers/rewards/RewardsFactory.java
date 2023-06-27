@@ -2,17 +2,18 @@ package me.despical.whackme.handlers.rewards;
 
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.engine.ScriptEngine;
-import me.despical.whackme.ConfigPreferences;
 import me.despical.whackme.Main;
 import me.despical.whackme.api.StatsStorage;
 import me.despical.whackme.arena.Arena;
-import org.apache.commons.lang.StringUtils;
+import me.despical.whackme.user.User;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 /**
  * @author Despical
@@ -24,67 +25,60 @@ public class RewardsFactory {
 	private final Main plugin;
 	private final Set<Reward> rewards;
 
-	public RewardsFactory(Main plugin) {
+	public RewardsFactory(final Main plugin) {
 		this.plugin = plugin;
 		this.rewards = new HashSet<>();
 
 		registerRewards();
 	}
 
-	public void performReward(Player player, Reward.RewardType type) {
-		if (rewards.isEmpty()) return;
+	public void performReward(final Player player, final Reward.RewardType type) {
+		final List<Reward> rewardList = rewards.stream().filter(rew -> rew.getType() == type).collect(Collectors.toList());
 
-		final Arena arena = plugin.getArenaRegistry().getArena(player);
+		if (rewardList.isEmpty()) return;
 
-		for (Reward reward : rewards) {
-			if (reward.getType() == type) {
+		for (final Reward mainRewards : rewardList) {
+			for (final Reward.SubReward reward : mainRewards.getRewards()){
 				if (ThreadLocalRandom.current().nextInt(0, 100) > reward.getChance()) continue;
 
-				String command = reward.getExecutableCode();
-				command = formatCommandPlaceholders(command, arena, player);
+				final Arena arena = plugin.getArenaRegistry().getArena(player);
+				final String command = formatCommandPlaceholders(reward, plugin.getUserManager().getUser(player));
 
 				switch (reward.getExecutor()) {
-					case CONSOLE:
+					case 1:
 						plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), command);
 						break;
-					case PLAYER:
+					case 2:
 						player.performCommand(command);
 						break;
-					case SCRIPT:
-						ScriptEngine engine = new ScriptEngine();
-
-						engine.setValue("arena", arena);
+					case 3:
+						final ScriptEngine engine = new ScriptEngine();
 						engine.setValue("player", player);
 						engine.setValue("server", plugin.getServer());
+						engine.setValue("arena", arena);
 						engine.execute(command);
-						break;
-					default:
-						break;
 				}
 			}
 		}
 	}
 
-	private String formatCommandPlaceholders(String command, Arena arena, Player player) {
-		String formatted = command;
+	private String formatCommandPlaceholders(final Reward.SubReward reward, final User user) {
+		Arena arena = user.getArena();
+		String formatted = reward.getExecutableCode();
 
-		formatted = StringUtils.replace(formatted, "%arena%", arena.getId());
-		formatted = StringUtils.replace(formatted, "%player%", player.getName());
-		formatted = StringUtils.replace(formatted, "%points%", Integer.toString(plugin.getUserManager().getUser(player).getStat(StatsStorage.StatisticType.LOCAL_SCORE)));
+		formatted = formatted.replace("%arena%", arena.getId());
+		formatted = formatted.replace("%player%", user.getPlayer().getName());
+		formatted = formatted.replace("%points%", Integer.toString(user.getStat(StatsStorage.StatisticType.LOCAL_SCORE)));
 		return formatted;
 	}
 
 	private void registerRewards() {
-		if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.REWARDS_ENABLED)) {
-			return;
-		}
-
 		final FileConfiguration config = ConfigUtils.getConfig(plugin, "rewards");
 
+		if (!config.getBoolean("rewards-enabled")) return;
+
 		for (final Reward.RewardType rewardType : Reward.RewardType.values()) {
-			for (final String reward : config.getStringList(rewardType.getPath())) {
-				rewards.add(new Reward(rewardType, reward));
-			}
+			rewards.add(new Reward(plugin, rewardType, config.getStringList(rewardType.path)));
 		}
 	}
 }

@@ -41,7 +41,7 @@ public class Events extends ListenerAdapter {
 			return;
 		}
 
-		if (player.isOp() || player.hasPermission("wm.command.override")) {
+		if (player.isOp() || player.hasPermission("wm.admin")) {
 			return;
 		}
 
@@ -92,14 +92,14 @@ public class Events extends ListenerAdapter {
 			InventorySerializer.loadInventory(plugin, player);
 		}
 
-		if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.UPDATE_NOTIFIER_ENABLED) && !player.hasPermission("whackme.updatenotify")) {
+		if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.UPDATE_NOTIFIER_ENABLED) && !player.hasPermission("wm.update")) {
 			return;
 		}
 
 		UpdateChecker.init(plugin, 104912).requestUpdateCheck().whenComplete((result, exception) -> {
 			if (result.requiresUpdate()) {
 				player.sendMessage(plugin.getChatManager().coloredRawMessage("&3[Whack Me] &bFound an update: v" + result.getNewestVersion()));
-				player.sendMessage(plugin.getChatManager().coloredRawMessage("&3>> &bhttps://www.spigotmc.org/resources/whack-me.104912"));
+				player.sendMessage(plugin.getChatManager().coloredRawMessage("&3>> &bhttps://spigotmc.org/resources/104912"));
 			}
 		});
 	}

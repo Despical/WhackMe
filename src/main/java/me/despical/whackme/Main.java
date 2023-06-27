@@ -121,7 +121,7 @@ public class Main extends JavaPlugin {
 
 				logger.info("Found a new version available: v" + result.getNewestVersion());
 				logger.info("Download it on SpigotMC:");
-				logger.info("https://www.spigotmc.org/resources/whack-me.104912");
+				logger.info("https://spigotmc.org/resources/104912");
 			}
 		});
 	}
