@@ -5,7 +5,6 @@ import me.despical.whackme.Main;
 import me.despical.whackme.api.StatsStorage;
 import me.despical.whackme.arena.Arena;
 import me.despical.whackme.utils.ActionBar;
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -44,9 +43,9 @@ public class PointHandler extends BukkitRunnable {
 	private void sendActionBar(final Player player) {
 		String message = plugin.getChatManager().message("in_game.action_bar");
 
-		message = StringUtils.replace(message, "%player%", player.getName());
-		message = StringUtils.replace(message, "%score%", Integer.toString(StatsStorage.getUserStats(player, StatsStorage.StatisticType.LOCAL_SCORE)));
-		message = StringUtils.replace(message, "%timer%", StringFormatUtils.formatIntoMMSS(arena.getTimer()));
+		message = message.replace("%player%", player.getName());
+		message = message.replace("%score%", Integer.toString(StatsStorage.getUserStats(player, StatsStorage.StatisticType.LOCAL_SCORE)));
+		message = message.replace("%timer%", StringFormatUtils.formatIntoMMSS(arena.getTimer()));
 
 		ActionBar.sendActionBar(player, message);
 	}

@@ -70,12 +70,6 @@ public class Arena extends BukkitRunnable {
 		this.ready = ready;
 	}
 
-	public int getProgress() {
-		final boolean isLobbySet = getStartLocation() != null, isEndSet = getEndLocation() != null;
-
-		return isLobbySet ? isEndSet ? 100 : 50 : isEndSet ? 50 : 0;
-	}
-
 	public Player getPlayer() {
 		return player;
 	}
@@ -189,16 +183,8 @@ public class Arena extends BukkitRunnable {
 		return getOption(ArenaOption.MINIMUM_POINTS);
 	}
 
-	public void setMinimumPoints(int minimumPoints) {
-		setOptionValue(ArenaOption.MINIMUM_POINTS, Math.max(1, minimumPoints));
-	}
-
 	public int getMaximumPoints() {
 		return getOption(ArenaOption.MAXIMUM_POINTS);
-	}
-
-	public void setMaximumPoints(int maximumPoints) {
-		setOptionValue(ArenaOption.MAXIMUM_POINTS, Math.max(maximumPoints, 8));
 	}
 
 	private int getOption(ArenaOption option) {

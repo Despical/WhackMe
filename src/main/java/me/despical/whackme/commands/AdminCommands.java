@@ -46,7 +46,7 @@ public class AdminCommands extends AbstractCommand {
 			return;
 		}
 
-		final String id = arguments.getArgument(0);
+		final var id = arguments.getArgument(0);
 
 		if (plugin.getArenaRegistry().isArena(id)) {
 			player.sendMessage(chatManager.prefixedRawMessage("&cArena with that ID already contains!"));
@@ -63,7 +63,7 @@ public class AdminCommands extends AbstractCommand {
 		MiscUtils.sendCenteredMessage(player, "&7https://www.github.com/Despical/WhackMe/wiki");
 		player.sendMessage(chatManager.coloredRawMessage("&l--------------------------------------------"));
 
-		final String path = "instances." + id + ".";
+		final var path = "instances." + id + ".";
 
 		arenaConfig.set(path + "ready", false);
 		arenaConfig.set(path + "endLocation", LocationSerializer.SERIALIZED_LOCATION);
@@ -71,7 +71,7 @@ public class AdminCommands extends AbstractCommand {
 
 		ConfigUtils.saveConfig(plugin, arenaConfig, "arenas");
 
-		Arena arena = new Arena(id);
+		var arena = new Arena(id);
 		arena.setReady(false);
 		arena.setEndLocation(LocationSerializer.DEFAULT_LOCATION);
 		arena.setStartLocation(LocationSerializer.DEFAULT_LOCATION);
@@ -87,9 +87,9 @@ public class AdminCommands extends AbstractCommand {
 		min = 1
 	)
 	public void deleteCommand(CommandArguments arguments) {
-		final String arenaId = arguments.getArgument(0);
-		final Arena arena = plugin.getArenaRegistry().getArena(arenaId);
-		final CommandSender sender = arguments.getSender();
+		final var arenaId = arguments.getArgument(0);
+		final var arena = plugin.getArenaRegistry().getArena(arenaId);
+		final var sender = arguments.getSender();
 
 		if (arena == null) {
 			arguments.sendMessage(chatManager.prefixedMessage("commands.no_arena_like_that"));
@@ -105,7 +105,7 @@ public class AdminCommands extends AbstractCommand {
 
 		confirmations.remove(sender);
 
-		final Player player = arena.getPlayer();
+		final var player = arena.getPlayer();
 
 		if (player != null) {
 			arena.removePlayer();
@@ -129,7 +129,7 @@ public class AdminCommands extends AbstractCommand {
 	)
 	public void editCommand(CommandArguments arguments) {
 		final Player player = arguments.getSender();
-		final Arena arena = plugin.getArenaRegistry().getArena(arguments.getArgument(0));
+		final var arena = plugin.getArenaRegistry().getArena(arguments.getArgument(0));
 
 		if (arena == null) {
 			player.sendMessage(chatManager.prefixedMessage("commands.no_arena_like_that"));
@@ -150,7 +150,7 @@ public class AdminCommands extends AbstractCommand {
 		final CommandSender sender = arguments.getSender();
 		final boolean isPlayer = arguments.isSenderPlayer();
 
-		for (final Command command : plugin.getCommandFramework().getCommands()) {
+		for (final var command : plugin.getCommandFramework().getCommands()) {
 			final String usage = command.usage(), desc = command.desc();
 
 			if (usage.isEmpty()) continue;
@@ -189,7 +189,7 @@ public class AdminCommands extends AbstractCommand {
 		desc = "Shows all of the existing arenas"
 	)
 	public void listCommand(CommandArguments arguments) {
-		final Set<Arena> arenas = plugin.getArenaRegistry().getArenas();
+		final var arenas = plugin.getArenaRegistry().getArenas();
 
 		if (arenas.isEmpty()) {
 			arguments.sendMessage(chatManager.prefixedMessage("commands.list_command.no_arenas_created"));
@@ -206,7 +206,7 @@ public class AdminCommands extends AbstractCommand {
 		desc = "Kicks specified player if they're playing"
 	)
 	public void kickCommand(CommandArguments arguments) {
-		final Arena arena = plugin.getArenaRegistry().getArena(arguments.getArgument(0));
+		final var arena = plugin.getArenaRegistry().getArena(arguments.getArgument(0));
 
 		if (arena == null) {
 			arguments.sendMessage(chatManager.prefixedMessage("commands.no_arena_like_that"));
@@ -227,8 +227,8 @@ public class AdminCommands extends AbstractCommand {
 		plugin.getChatManager().reloadConfig();
 		plugin.getConfigPreferences().reload();
 
-		for (Arena arena : plugin.getArenaRegistry().getArenas()) {
-			final Player player = arena.getPlayer();
+		for (var arena : plugin.getArenaRegistry().getArenas()) {
+			final var player = arena.getPlayer();
 
 			if (player != null) {
 				player.setFlySpeed(.1F);

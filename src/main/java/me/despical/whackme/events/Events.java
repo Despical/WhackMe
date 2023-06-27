@@ -4,7 +4,6 @@ import me.despical.commons.serializer.InventorySerializer;
 import me.despical.commons.util.UpdateChecker;
 import me.despical.whackme.ConfigPreferences;
 import me.despical.whackme.Main;
-import me.despical.whackme.arena.Arena;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -35,7 +34,7 @@ public class Events extends ListenerAdapter {
 			return;
 		}
 
-		final String message = event.getMessage();
+		final var message = event.getMessage();
 
 		if (plugin.getConfig().getStringList("Whitelisted-Commands").contains(message)) {
 			return;
@@ -84,7 +83,7 @@ public class Events extends ListenerAdapter {
 
 	@EventHandler
 	public void onJoin(PlayerJoinEvent event) {
-		final Player player = event.getPlayer();
+		final var player = event.getPlayer();
 
 		plugin.getUserManager().loadStatistics(player);
 
@@ -106,8 +105,8 @@ public class Events extends ListenerAdapter {
 
 	@EventHandler
 	public void onQuit(PlayerQuitEvent event) {
-		final Player player = event.getPlayer();
-		final Arena arena = plugin.getArenaRegistry().getArena(player);
+		final var player = event.getPlayer();
+		final var arena = plugin.getArenaRegistry().getArena(player);
 
 		if (arena != null) {
 			arena.removePlayer();

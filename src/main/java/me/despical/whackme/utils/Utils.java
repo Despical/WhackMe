@@ -28,7 +28,7 @@ public class Utils {
 	public static boolean isSurroundedBy(Location center) {
 		if (center == null) return false;
 
-		for (final Block block : Objects.requireNonNull(getBlocksSurroundedBy(center))) {
+		for (final var block : Objects.requireNonNull(getBlocksSurroundedBy(center))) {
 			if (block.getType() != END_PORTAL_FRAME.getType()) return false;
 		}
 
@@ -39,7 +39,7 @@ public class Utils {
 		final Set<Block> blocks = new HashSet<>();
 
 		for (int[] array : directions) {
-			final Block block = center.clone().add(array[0], 0, array[1]).getBlock();
+			final var block = center.clone().add(array[0], 0, array[1]).getBlock();
 
 			blocks.add(block);
 		}
@@ -55,7 +55,7 @@ public class Utils {
 	}
 
 	public static boolean hasJoinPermission(Player player) {
-		final String permission = plugin.getConfig().getString("Join-Permission");
+		final var permission = plugin.getConfig().getString("Join-Permission");
 
 		return permission == null || permission.isEmpty() || player != null && player.hasPermission(permission);
 	}

@@ -5,10 +5,7 @@ import me.despical.commons.database.MysqlDatabase;
 import me.despical.whackme.api.StatsStorage;
 import me.despical.whackme.user.User;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 /**
  * @author Despical
@@ -25,8 +22,8 @@ public class MysqlManager implements UserDatabase {
 		this.database = plugin.getMysqlDatabase();
 
 		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
-			try (final Connection connection = database.getConnection()) {
-				final Statement statement = connection.createStatement();
+			try (final var connection = database.getConnection()) {
+				final var statement = connection.createStatement();
 				statement.executeUpdate("CREATE TABLE IF NOT EXISTS `" + tableName + "` (\n"
 					+ "  `UUID` char(36) NOT NULL PRIMARY KEY,\n"
 					+ "  `name` varchar(32) NOT NULL,\n"
@@ -44,7 +41,7 @@ public class MysqlManager implements UserDatabase {
 	@Override
 	public void saveStatistic(User user, StatsStorage.StatisticType stat) {
 		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
-			final String query = "UPDATE " + tableName + " SET " + stat.getName() + "=" + user.getStat(stat)+ " WHERE UUID='" + user.getUniqueId().toString() + "';";
+			final var query = "UPDATE " + tableName + " SET " + stat.getName() + "=" + user.getStat(stat)+ " WHERE UUID='" + user.getUniqueId().toString() + "';";
 
 			database.executeUpdate(query);
 		});
@@ -52,13 +49,13 @@ public class MysqlManager implements UserDatabase {
 
 	@Override
 	public void saveAllStatistic(User user) {
-		final StringBuilder builder = new StringBuilder(" SET ");
+		final var builder = new StringBuilder(" SET ");
 
-		for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+		for (final var stat : StatsStorage.StatisticType.values()) {
 			if (!stat.isPersistent()) continue;
 
-			final int value = user.getStat(stat);
-			final String name = stat.getName();
+			final var value = user.getStat(stat);
+			final var name = stat.getName();
 
 			if (builder.toString().equalsIgnoreCase(" SET ")) {
 				builder.append(name).append("=").append(value);
@@ -67,7 +64,7 @@ public class MysqlManager implements UserDatabase {
 			builder.append(", ").append(name).append("=").append(value);
 		}
 
-		final String update = builder.toString();
+		final var update = builder.toString();
 		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> database.executeUpdate("UPDATE " + tableName + update + " WHERE UUID='" + user.getUniqueId().toString() + "';"));
 	}
 
@@ -76,12 +73,12 @@ public class MysqlManager implements UserDatabase {
 		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
 			final String uuid = user.getUniqueId().toString(), name = user.getPlayer().getName();
 
-			try (Connection connection = database.getConnection()) {
-				final Statement statement = connection.createStatement();
-				final ResultSet resultSet = statement.executeQuery("SELECT * from " + tableName + " WHERE UUID='" + uuid + "';");
+			try (final var connection = database.getConnection()) {
+				final var statement = connection.createStatement();
+				final var resultSet = statement.executeQuery("SELECT * from " + tableName + " WHERE UUID='" + uuid + "';");
 
 				if (resultSet.next()) {
-					for (final StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+					for (final var stat : StatsStorage.StatisticType.values()) {
 						if (!stat.isPersistent()) continue;
 
 						user.setStat(stat, resultSet.getInt(stat.getName()));
@@ -89,7 +86,7 @@ public class MysqlManager implements UserDatabase {
 				} else {
 					statement.executeUpdate("INSERT INTO " + tableName + " (UUID,name) VALUES ('" + uuid + "','" + name + "');");
 
-					for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+					for (final var stat : StatsStorage.StatisticType.values()) {
 						if (!stat.isPersistent()) continue;
 
 						user.setStat(stat, 0);

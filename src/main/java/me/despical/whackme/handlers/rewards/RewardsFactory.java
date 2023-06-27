@@ -4,16 +4,12 @@ import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.engine.ScriptEngine;
 import me.despical.whackme.Main;
 import me.despical.whackme.api.StatsStorage;
-import me.despical.whackme.arena.Arena;
 import me.despical.whackme.user.User;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
 
 /**
  * @author Despical
@@ -33,38 +29,35 @@ public class RewardsFactory {
 	}
 
 	public void performReward(final Player player, final Reward.RewardType type) {
-		final List<Reward> rewardList = rewards.stream().filter(rew -> rew.getType() == type).collect(Collectors.toList());
+		final var rewardList = rewards.stream().filter(rew -> rew.getType() == type).toList();
 
 		if (rewardList.isEmpty()) return;
 
-		for (final Reward mainRewards : rewardList) {
-			for (final Reward.SubReward reward : mainRewards.getRewards()){
+		for (final var mainRewards : rewardList) {
+			for (final var reward : mainRewards.getRewards()){
 				if (ThreadLocalRandom.current().nextInt(0, 100) > reward.getChance()) continue;
 
-				final Arena arena = plugin.getArenaRegistry().getArena(player);
-				final String command = formatCommandPlaceholders(reward, plugin.getUserManager().getUser(player));
+				final var arena = plugin.getArenaRegistry().getArena(player);
+				final var command = formatCommandPlaceholders(reward, plugin.getUserManager().getUser(player));
 
 				switch (reward.getExecutor()) {
-					case 1:
-						plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), command);
-						break;
-					case 2:
-						player.performCommand(command);
-						break;
-					case 3:
-						final ScriptEngine engine = new ScriptEngine();
+					case 1 -> plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), command);
+					case 2 -> player.performCommand(command);
+					case 3 -> {
+						final var engine = new ScriptEngine();
 						engine.setValue("player", player);
 						engine.setValue("server", plugin.getServer());
 						engine.setValue("arena", arena);
 						engine.execute(command);
+					}
 				}
 			}
 		}
 	}
 
 	private String formatCommandPlaceholders(final Reward.SubReward reward, final User user) {
-		Arena arena = user.getArena();
-		String formatted = reward.getExecutableCode();
+		var arena = user.getArena();
+		var formatted = reward.getExecutableCode();
 
 		formatted = formatted.replace("%arena%", arena.getId());
 		formatted = formatted.replace("%player%", user.getPlayer().getName());
@@ -73,11 +66,11 @@ public class RewardsFactory {
 	}
 
 	private void registerRewards() {
-		final FileConfiguration config = ConfigUtils.getConfig(plugin, "rewards");
+		final var config = ConfigUtils.getConfig(plugin, "rewards");
 
 		if (!config.getBoolean("rewards-enabled")) return;
 
-		for (final Reward.RewardType rewardType : Reward.RewardType.values()) {
+		for (final var rewardType : Reward.RewardType.values()) {
 			rewards.add(new Reward(plugin, rewardType, config.getStringList(rewardType.path)));
 		}
 	}

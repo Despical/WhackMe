@@ -7,7 +7,6 @@ import me.despical.commons.serializer.InventorySerializer;
 import me.despical.commons.util.Collections;
 import me.despical.commons.util.UpdateChecker;
 import me.despical.whackme.api.StatsStorage;
-import me.despical.whackme.arena.Arena;
 import me.despical.whackme.arena.ArenaRegistry;
 import me.despical.whackme.commands.AbstractCommand;
 import me.despical.whackme.events.ListenerAdapter;
@@ -15,17 +14,14 @@ import me.despical.whackme.handlers.ChatManager;
 import me.despical.whackme.handlers.PlaceholderManager;
 import me.despical.whackme.handlers.SoundManager;
 import me.despical.whackme.handlers.rewards.RewardsFactory;
-import me.despical.whackme.user.User;
 import me.despical.whackme.user.UserManager;
 import me.despical.whackme.user.data.MysqlManager;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.util.logging.Logger;
 
 /**
  * @author Despical
@@ -53,15 +49,15 @@ public class Main extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
-		for (final Arena arena : arenaRegistry.getArenas()) {
-			final Player player = arena.getPlayer();
+		for (final var arena : arenaRegistry.getArenas()) {
+			final var player = arena.getPlayer();
 			
 			if (player == null) continue;
 			
-			final User user = userManager.getUser(player);
+			final var user = userManager.getUser(player);
 			user.addStat(StatsStorage.StatisticType.TOURS_PLAYED, 1);
 
-			final int score = user.getStat(StatsStorage.StatisticType.LOCAL_SCORE);
+			final var score = user.getStat(StatsStorage.StatisticType.LOCAL_SCORE);
 
 			if (score > user.getStat(StatsStorage.StatisticType.RECORD_SCORE)) {
 				user.setStat(StatsStorage.StatisticType.RECORD_SCORE, score);
@@ -103,7 +99,7 @@ public class Main extends JavaPlugin {
 		ListenerAdapter.registerEvents(this);
 		AbstractCommand.registerCommands(this);
 
-		final Metrics metrics = new Metrics(this, 15722);
+		final var metrics = new Metrics(this, 15722);
 		metrics.addCustomChart(new SimplePie("database_enabled", () -> configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED) ? "Enabled" : "Disabled"));
 		metrics.addCustomChart(new SimplePie("update_notifier", () -> configPreferences.getOption(ConfigPreferences.Option.UPDATE_NOTIFIER_ENABLED) ? "Enabled" : "Disabled"));
 	}
@@ -117,7 +113,7 @@ public class Main extends JavaPlugin {
 
 		UpdateChecker.init(this, 104912).requestUpdateCheck().whenComplete((result, exception) -> {
 			if (result.requiresUpdate()) {
-				final Logger logger = getLogger();
+				final var logger = getLogger();
 
 				logger.info("Found a new version available: v" + result.getNewestVersion());
 				logger.info("Download it on SpigotMC:");
@@ -127,18 +123,17 @@ public class Main extends JavaPlugin {
 	}
 
 	private void saveAllUserStatistics() {
-		for (final Player player : getServer().getOnlinePlayers()) {
-			final User user = userManager.getUser(player);
+		for (final var player : getServer().getOnlinePlayers()) {
+			final var user = userManager.getUser(player);
 
-			if (userManager.getDatabase() instanceof MysqlManager) {
-				final StringBuilder builder = new StringBuilder(" SET ");
-				final MysqlManager database = ((MysqlManager) userManager.getDatabase());
+			if (userManager.getDatabase() instanceof MysqlManager mysqlDatabase) {
+				final var builder = new StringBuilder(" SET ");
 
-				for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+				for (final var stat : StatsStorage.StatisticType.values()) {
 					if (!stat.isPersistent()) continue;
 
-					final int value = user.getStat(stat);
-					final String name = stat.getName();
+					final var value = user.getStat(stat);
+					final var name = stat.getName();
 
 					if (builder.toString().equalsIgnoreCase(" SET ")) {
 						builder.append(name).append("'='").append(value);
@@ -147,8 +142,8 @@ public class Main extends JavaPlugin {
 					builder.append(", ").append(name).append("'='").append(value);
 				}
 
-				final String update = builder.toString();
-				database.getDatabase().executeUpdate("UPDATE " + database.getTableName() + update + " WHERE UUID='" + user.getUniqueId().toString() + "';");
+				final var update = builder.toString();
+				mysqlDatabase.getDatabase().executeUpdate("UPDATE " + mysqlDatabase.getTableName() + update + " WHERE UUID='" + user.getUniqueId().toString() + "';");
 				continue;
 			}
 

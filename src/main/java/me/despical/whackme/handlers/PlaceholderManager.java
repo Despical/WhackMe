@@ -3,8 +3,6 @@ package me.despical.whackme.handlers;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.despical.whackme.Main;
 import me.despical.whackme.api.StatsStorage;
-import me.despical.whackme.arena.Arena;
-import me.despical.whackme.user.User;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -50,31 +48,25 @@ public class PlaceholderManager extends PlaceholderExpansion {
 	public String onPlaceholderRequest(Player player, @NotNull String id) {
 		if (player == null) return null;
 
-		final User user = plugin.getUserManager().getUser(player);
+		final var user = plugin.getUserManager().getUser(player);
 
-		switch (id.toLowerCase()) {
-			case "record_score":
-				return Integer.toString(user.getStat(StatsStorage.StatisticType.RECORD_SCORE));
-			case "tours_played":
-				return Integer.toString(user.getStat(StatsStorage.StatisticType.TOURS_PLAYED));
-			default:
-				return handleArenaPlaceholderRequest(id);
-		}
+		return switch (id.toLowerCase()) {
+			case "record_score" -> Integer.toString(user.getStat(StatsStorage.StatisticType.RECORD_SCORE));
+			case "tours_played" -> Integer.toString(user.getStat(StatsStorage.StatisticType.TOURS_PLAYED));
+			default -> handleArenaPlaceholderRequest(id);
+		};
 	}
 
 	private String handleArenaPlaceholderRequest(String id) {
-		final String[] data = id.split(":");
-		final Arena arena = plugin.getArenaRegistry().getArena(data[0]);
+		final var data = id.split(":");
+		final var arena = plugin.getArenaRegistry().getArena(data[0]);
 
 		if (arena == null) return null;
 
-		switch (data[1].toLowerCase()) {
-			case "player_name":
-				return arena.getPlayer() == null ? "Unknown" : arena.getPlayer().getName();
-			case "point_blocks":
-				return Integer.toString(arena.getPointBlocks().size());
-			default:
-				return null;
-		}
+		return switch (data[1].toLowerCase()) {
+			case "player_name" -> arena.getPlayer() == null ? "Unknown" : arena.getPlayer().getName();
+			case "point_blocks" -> Integer.toString(arena.getPointBlocks().size());
+			default -> null;
+		};
 	}
 }

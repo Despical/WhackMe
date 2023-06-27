@@ -43,7 +43,7 @@ public class User {
 	}
 
 	public int getStat(StatsStorage.StatisticType statisticType) {
-		final Integer statistic = stats.get(statisticType);
+		final var statistic = stats.get(statisticType);
 
 		if (statistic == null) {
 			stats.put(statisticType, 0);

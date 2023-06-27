@@ -38,7 +38,7 @@ public class Reward {
 		private final int chance, executor;
 
 		public SubReward(final Main plugin, final String rawCode) {
-			String processedCode = rawCode;
+			var processedCode = rawCode;
 
 			if (rawCode.contains("p:")) {
 				this.executor = 2;

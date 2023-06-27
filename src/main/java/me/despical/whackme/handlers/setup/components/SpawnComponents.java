@@ -6,11 +6,8 @@ import me.despical.commons.item.ItemBuilder;
 import me.despical.commons.serializer.LocationSerializer;
 import me.despical.inventoryframework.GuiItem;
 import me.despical.inventoryframework.pane.StaticPane;
-import me.despical.whackme.arena.Arena;
 import me.despical.whackme.handlers.setup.SetupInventory;
 import me.despical.whackme.utils.Utils;
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
 
 /**
  * @author Despical
@@ -21,9 +18,9 @@ public class SpawnComponents implements SetupComponent {
 
 	@Override
 	public void injectComponents(SetupInventory setupInventory, StaticPane pane) {
-		final Player player = setupInventory.getPlayer();
-		final Arena arena = setupInventory.getArena();
-		final String path = "instances." + arena.getId() + ".";
+		final var player = setupInventory.getPlayer();
+		final var arena = setupInventory.getArena();
+		final var path = "instances." + arena.getId() + ".";
 
 		pane.addItem(GuiItem.of(new ItemBuilder(XMaterial.IRON_BLOCK)
 			.name("&e&lSet Start Location")
@@ -36,7 +33,7 @@ public class SpawnComponents implements SetupComponent {
 
 			player.closeInventory();
 
-			final Location location = player.getLocation();
+			final var location = player.getLocation();
 
 			if (!Utils.isSurroundedBy(location)) {
 				player.sendMessage(chatManager.coloredRawMessage("&c&l✖ &cWarning | Blocks around the start location must be end portal frame!"));
@@ -63,7 +60,7 @@ public class SpawnComponents implements SetupComponent {
 			player.closeInventory();
 			player.sendMessage(chatManager.coloredRawMessage("&e✔ Completed | &aEnding location for arena &e" + arena.getId() + " &aset at your location!"));
 
-			final Location location = player.getLocation().add(.5, 0, .5);
+			final var location = player.getLocation().add(.5, 0, .5);
 			arena.setEndLocation(location);
 
 			config.set(path + "endLocation", LocationSerializer.toString(location));

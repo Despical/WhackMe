@@ -118,15 +118,10 @@ public class PointBlock extends BukkitRunnable {
 
 			@EventHandler
 			public void onArmorStandDamage(EntityDamageByEntityEvent event) {
-				if (!(event.getDamager() instanceof Player)) return;
-				if (!(event.getEntity() instanceof ArmorStand)) return;
-
-				final Player player = (Player) event.getDamager();
+				if (!(event.getDamager() instanceof Player player)) return;
+				if (!(event.getEntity() instanceof ArmorStand armorStand)) return;
 
 				if (!arena.containPlayer(player)) return;
-
-				final ArmorStand armorStand = (ArmorStand) event.getEntity();
-
 				if (!armorStand.equals(stand)) return;
 
 				final User user = plugin.getUserManager().getUser(player);

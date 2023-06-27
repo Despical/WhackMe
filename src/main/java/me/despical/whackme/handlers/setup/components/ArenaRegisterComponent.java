@@ -10,7 +10,6 @@ import me.despical.whackme.arena.Arena;
 import me.despical.whackme.handlers.setup.SetupInventory;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 
 /**
@@ -22,8 +21,8 @@ public class ArenaRegisterComponent implements SetupComponent {
 
 	@Override
 	public void injectComponents(SetupInventory setupInventory, StaticPane pane) {
-		final Player player = setupInventory.getPlayer();
-		final Arena arena = setupInventory.getArena();
+		final var player = setupInventory.getPlayer();
+		final var arena = setupInventory.getArena();
 		final ItemBuilder registeredItem;
 
 		if (!arena.isReady()) {
@@ -52,7 +51,7 @@ public class ArenaRegisterComponent implements SetupComponent {
 
 			final String[] locations = {"startLocation", "endLocation"};
 
-			for (final String loc : locations) {
+			for (final var loc : locations) {
 				if (!config.isSet(path + loc) || LocationSerializer.isDefaultLocation(config.getString(path + loc))) {
 					player.sendMessage(chatManager.coloredRawMessage("&c&l✘ &cArena validation failed! Please configure following spawn properly: " + loc + " (cannot be world spawn location)"));
 					return;
@@ -61,7 +60,7 @@ public class ArenaRegisterComponent implements SetupComponent {
 
 			plugin.getArenaRegistry().unregisterArena(arena);
 
-			final Arena newArena = new Arena(arena.getId());
+			final var newArena = new Arena(arena.getId());
 
 			newArena.setReady(true);
 			newArena.setStartLocation(LocationSerializer.fromString(config.getString(path + "startLocation")));

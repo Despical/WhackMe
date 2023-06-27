@@ -24,7 +24,7 @@ public abstract class ListenerAdapter implements Listener {
 		final Class<?>[] listenerAdapters = {Events.class};
 
 		try {
-			for (Class<?> listenerAdapter : listenerAdapters) {
+			for (final var listenerAdapter : listenerAdapters) {
 				listenerAdapter.getConstructor(Main.class).newInstance(plugin);
 			}
 		} catch (Exception ignored) {

@@ -21,7 +21,7 @@ public abstract class AbstractCommand {
 	public static void registerCommands(final Main plugin) {
 		final Class<?>[] commandClasses = new Class[] {AdminCommands.class, PlayerCommands.class, TabCompleter.class};
 
-		for (Class<?> clazz : commandClasses) {
+		for (final var clazz : commandClasses) {
 			try {
 				clazz.getConstructor(Main.class).newInstance(plugin);
 			} catch (Exception exception) {

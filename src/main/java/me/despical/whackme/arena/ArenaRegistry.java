@@ -4,8 +4,6 @@ import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.serializer.LocationSerializer;
 import me.despical.whackme.Main;
 import me.despical.whackme.utils.Utils;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.HashSet;
@@ -58,22 +56,22 @@ public class ArenaRegistry {
 	public void registerArenas() {
 		arenas.clear();
 		
-		final FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+		final var config = ConfigUtils.getConfig(plugin, "arenas");
 
 		if (!config.contains("instances")) {
 			plugin.getLogger().info(plugin.getChatManager().message("validator.no_instances_created"));
 			return;
 		}
 
-		ConfigurationSection section = config.getConfigurationSection("instances");
+		final var section = config.getConfigurationSection("instances");
 
 		if (section == null) {
 			plugin.getLogger().info(plugin.getChatManager().message("validator.no_instances_created"));
 			return;
 		}
 
-		for (String id : section.getKeys(false)) {
-			final String path = "instances." + id + ".";
+		for (var id : section.getKeys(false)) {
+			final var path = "instances.%s.".formatted(id);
 
 			if (path.contains("default")) continue;
 

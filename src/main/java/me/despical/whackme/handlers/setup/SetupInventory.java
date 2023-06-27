@@ -36,7 +36,7 @@ public class SetupInventory {
 		this.gui = new Gui(plugin, 3, "       Whack Me Arena Editor");
 		this.gui.setOnGlobalClick(e -> e.setCancelled(true));
 
-		final StaticPane pane = new StaticPane(9, 3);
+		final var pane = new StaticPane(9, 3);
 		final ItemBuilder registeredItem = new ItemBuilder(XMaterial.GREEN_STAINED_GLASS_PANE).name("&aArena Validation Successful"), notRegisteredItem = new ItemBuilder(XMaterial.BLACK_STAINED_GLASS_PANE).name("&cArena Validation Not Finished Yet");
 		pane.fillWith(arena.isReady() ? registeredItem.build() : notRegisteredItem.build());
 		pane.fillProgressBorder(GuiItem.of(registeredItem.build()), GuiItem.of(notRegisteredItem.build()), arena.isReady() ? 100 : 0);
@@ -47,10 +47,10 @@ public class SetupInventory {
 	}
 
 	private void prepareComponents(StaticPane pane) {
-		final SpawnComponents spawnComponents = new SpawnComponents();
+		final var spawnComponents = new SpawnComponents();
 		spawnComponents.injectComponents(this, pane);
 
-		final ArenaRegisterComponent arenaRegistryComponents = new ArenaRegisterComponent();
+		final var arenaRegistryComponents = new ArenaRegisterComponent();
 		arenaRegistryComponents.injectComponents(this, pane);
 	}
 

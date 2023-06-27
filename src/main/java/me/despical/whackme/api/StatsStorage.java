@@ -5,14 +5,10 @@ import me.despical.commons.sorter.SortUtils;
 import me.despical.whackme.ConfigPreferences;
 import me.despical.whackme.Main;
 import me.despical.whackme.user.data.MysqlManager;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -29,10 +25,10 @@ public class StatsStorage {
 
 	public static Map<UUID, Integer> getStats(StatisticType stat) {
 		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-			try (Connection connection = plugin.getMysqlDatabase().getConnection()) {
-				final Statement statement = connection.createStatement();
-				final ResultSet set = statement.executeQuery("SELECT UUID, " + stat.name + " FROM " + ((MysqlManager) plugin.getUserManager().getDatabase()).getTableName() + " ORDER BY " + stat.name);
-				final Map<UUID, Integer> column = new HashMap<>();
+			try (final var connection = plugin.getMysqlDatabase().getConnection()) {
+				final var statement = connection.createStatement();
+				final var set = statement.executeQuery("SELECT UUID, " + stat.name + " FROM " + ((MysqlManager) plugin.getUserManager().getDatabase()).getTableName() + " ORDER BY " + stat.name);
+				final var column = new HashMap<UUID, Integer>();
 
 				while (set.next()) {
 					column.put(UUID.fromString(set.getString("UUID")), set.getInt(stat.name));
@@ -47,8 +43,8 @@ public class StatsStorage {
 			}
 		}
 
-		final FileConfiguration config = ConfigUtils.getConfig(plugin, "stats");
-		final Map<UUID, Integer> stats = config.getKeys(false).stream().collect(Collectors.toMap(UUID::fromString, string -> config.getInt(string + "." + stat.name), (a, b) -> b));
+		final var config = ConfigUtils.getConfig(plugin, "stats");
+		final var stats = config.getKeys(false).stream().collect(Collectors.toMap(UUID::fromString, string -> config.getInt(string + "." + stat.name), (a, b) -> b));
 
 		return SortUtils.sortByValue(stats);
 	}

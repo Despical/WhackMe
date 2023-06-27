@@ -51,7 +51,7 @@ public class ConfigPreferences {
 	private void loadOptions() {
 		this.options.clear();
 
-		for (final Option option : Option.values()) {
+		for (final var option : Option.values()) {
 			options.put(option, plugin.getConfig().getBoolean(option.path, option.def));
 		}
 
@@ -83,9 +83,9 @@ public class ConfigPreferences {
 	}
 
 	private void initializeItems(final Main plugin) {
-		final String greenBlockMsg = plugin.getConfig().getString("Point-Blocks.Punch-Me");
-		final String redBlockMsg = plugin.getConfig().getString("Point-Blocks.Dont-Punch-Me");
-		final String cyanBlockMsg = plugin.getConfig().getString("Point-Blocks.Ouch");
+		final var greenBlockMsg = plugin.getConfig().getString("Point-Blocks.Punch-Me");
+		final var redBlockMsg = plugin.getConfig().getString("Point-Blocks.Dont-Punch-Me");
+		final var cyanBlockMsg = plugin.getConfig().getString("Point-Blocks.Ouch");
 
 		assert greenBlockMsg != null && redBlockMsg != null && cyanBlockMsg != null : "Something is null, hmm... (assertion failed)";
 

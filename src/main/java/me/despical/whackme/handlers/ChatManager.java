@@ -4,7 +4,6 @@ import me.clip.placeholderapi.PlaceholderAPI;
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.util.Strings;
 import me.despical.whackme.Main;
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -52,15 +51,15 @@ public class ChatManager {
 	}
 
 	public String message(String path, Player player) {
-		String returnString = message(path);
+		var returnString = message(path);
 		returnString = formatPlaceholders(returnString, player);
 
 		return returnString;
 	}
 
 	public String formatPlaceholders(String message, Player player) {
-		String returnString = message;
-		returnString = StringUtils.replace(returnString, "%player%", player.getName());
+		var returnString = message;
+		returnString = returnString.replace("%player%", player.getName());
 
 		if (papiEnabled) {
 			returnString = PlaceholderAPI.setPlaceholders(player, returnString);
