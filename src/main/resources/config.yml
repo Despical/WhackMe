@@ -16,6 +16,21 @@ Point-Blocks:
   # This option may decrease the amount of lag if there are multiple
   # instances running at the same time.
   Run-Async: false
+  # Period of point handler thread. If you decrease that value the blocks
+  # will move faster and if you increase the period then they'll move slower.
+  # This option should be edited considering Y multiplier.
+  # Best way to make blocks move faster is increasing multiplier below.
+  Ticks: 8
+  # Point blocks are maximum raised by total of 0.65 in Y axis.
+  Y-Multiplier: 0.05
+  # How many milliseconds should any point block wait in the air?
+  Wait-Ms: 12
+  # These values can not be less than 1 and can not be higher than 8.
+  Points:
+    # Minimum amount of the point blocks that will be spawned around the player.
+    Min: 4
+    # Maximum amount of the point blocks that will be spawned around the player.
+    Max: 8
   # For custom skulls: "skull:URL"
   Punch-Me: GREEN_TERRACOTTA
   Dont-Punch-Me: RED_TERRACOTTA
@@ -53,22 +68,8 @@ Rewards-Enabled: false
 # See messages.yml to change format.
 Chat-Format-Enabled: true
 
-# Point blocks are maximum raised by total of 0.65 in Y axis.
-Point-Block-Y-Multiplier: 0.05
-
-# How many milliseconds should any point block wait in the air?
-Wait-Ms: 12
-
 # The gameplay time for each arena. Default is 30 seconds.
 Gameplay-Time: 30
-
-# This value can not be less than 1 and can not be higher than 8.
-# Minimum value of the point blocks that will be spawned around the player.
-Minimum-Points: 4
-
-# This value can not be less than 1 and can not be higher than 8.
-# Maximum value of the point blocks that will be spawned around the player.
-Maximum-Points: 8
 
 # The sound plays when player clicks the correct point block.
 Point-Sound: "ORB_PICKUP"

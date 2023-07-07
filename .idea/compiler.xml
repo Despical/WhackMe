@@ -10,5 +10,8 @@
         <module name="whack-me" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="client-checker" target="17" />
+    </bytecodeTargetLevel>
   </component>
 </project>

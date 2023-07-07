@@ -12,11 +12,11 @@ public enum ArenaOption {
 
 	TIMER("Gameplay-Time", 30),
 
-	MINIMUM_POINTS("Minimum-Points", 4),
+	MINIMUM_POINTS("Point-Blocks.Minimum-Points", 4),
 
-	MAXIMUM_POINTS("Maximum-Points", 8),
+	MAXIMUM_POINTS("Point-Blocks.Maximum-Points", 8),
 
-	WAIT_MILLISECONDS("Wait-Ms", 12);
+	WAIT_MILLISECONDS("Point-Blocks.Wait-Ms", 12);
 
 	int defaultValue;
 

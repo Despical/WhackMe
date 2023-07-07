@@ -5,7 +5,7 @@
 #                 Placeholders list:                                                                                          #
 #                                                                                                                             #
 #             %player% - Current player name                                                                                  #
-#             %arena% -  Arena identifier                                                                                     #
+#             %arena%  - Arena identifier                                                                                     #
 #             %points% - Number of player's score                                                                             #
 #                                                                                                                             #
 #      Commands are executed by default by CONSOLE, use "p:" to preform command by player                                     #
@@ -39,10 +39,10 @@ rewards-enabled: true
 rewards:
   # Rewards performed when player clicked on right point block.
   successful-point:
-    - eco give %player% 2
+    - p:say yey, +1 point!
   # Rewards performed when player clicked on wrong point block.
   wrong-point:
-    - say I shouldn't click this one!
+    - p:say I shouldn't click this one!
   # Rewards performed on a successful game end (when the timer reaches 0).
   end-game:
-    - chance(10):eco give %player% 8
+    - p:say I whacked %points% blocks!

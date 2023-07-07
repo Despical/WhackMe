@@ -23,6 +23,7 @@ public class ConfigPreferences {
 	private final Map<Option, Boolean> options;
 
 	private double pointBlockMultiplier;
+	private long ticks;
 	private boolean isAsync;
 
 	public ConfigPreferences(Main plugin) {
@@ -44,6 +45,10 @@ public class ConfigPreferences {
 		return pointBlockMultiplier;
 	}
 
+	public long getTicks() {
+		return ticks;
+	}
+
 	public boolean getOption(Option option) {
 		return options.get(option);
 	}
@@ -51,12 +56,15 @@ public class ConfigPreferences {
 	private void loadOptions() {
 		this.options.clear();
 
+		final var config = plugin.getConfig();
+
 		for (final var option : Option.values()) {
-			options.put(option, plugin.getConfig().getBoolean(option.path, option.def));
+			options.put(option, config.getBoolean(option.path, option.def));
 		}
 
-		this.pointBlockMultiplier = Math.min(plugin.getConfig().getDouble("Point-Block-Y-Multiplier"), .64);
-		this.isAsync = plugin.getConfig().getBoolean("Point-Blocks.Run-Async");
+		this.pointBlockMultiplier = Math.min(config.getDouble("Point-Blocks.Y-Multiplier"), .64);
+		this.ticks = config.getLong("Point-Blocks.Ticks", 8);
+		this.isAsync = config.getBoolean("Point-Blocks.Run-Async");
 	}
 
 	public boolean isAsync() {
@@ -83,15 +91,15 @@ public class ConfigPreferences {
 	}
 
 	private void initializeItems(final Main plugin) {
-		final var greenBlockMsg = plugin.getConfig().getString("Point-Blocks.Punch-Me");
-		final var redBlockMsg = plugin.getConfig().getString("Point-Blocks.Dont-Punch-Me");
-		final var cyanBlockMsg = plugin.getConfig().getString("Point-Blocks.Ouch");
+		final var config = plugin.getConfig();
+		final var greenBlockMsg = config.getString("Point-Blocks.Punch-Me");
+		final var redBlockMsg = config.getString("Point-Blocks.Dont-Punch-Me");
+		final var cyanBlockMsg = config.getString("Point-Blocks.Ouch");
 
-		assert greenBlockMsg != null && redBlockMsg != null && cyanBlockMsg != null : "Something is null, hmm... (assertion failed)";
 
-		GREEN_BLOCK = greenBlockMsg.startsWith("skull:") ? ItemUtils.getSkull(greenBlockMsg.substring(5)) : XMaterial.valueOf(greenBlockMsg).parseItem();
-		RED_BLOCK = redBlockMsg.startsWith("skull:") ? ItemUtils.getSkull(redBlockMsg.substring(5)) : XMaterial.valueOf(redBlockMsg).parseItem();
-		CYAN_BLOCK = cyanBlockMsg.startsWith("skull:") ? ItemUtils.getSkull(cyanBlockMsg.substring(5)) : XMaterial.valueOf(cyanBlockMsg).parseItem();
+		GREEN_BLOCK = greenBlockMsg.startsWith("skull:") ? ItemUtils.getSkull(greenBlockMsg.substring(6)) : XMaterial.valueOf(greenBlockMsg).parseItem();
+		RED_BLOCK = redBlockMsg.startsWith("skull:") ? ItemUtils.getSkull(redBlockMsg.substring(6)) : XMaterial.valueOf(redBlockMsg).parseItem();
+		CYAN_BLOCK = cyanBlockMsg.startsWith("skull:") ? ItemUtils.getSkull(cyanBlockMsg.substring(6)) : XMaterial.valueOf(cyanBlockMsg).parseItem();
 
 		GREEN_BLOCK = new ItemBuilder(GREEN_BLOCK).lore("greenBlock").build();
 		RED_BLOCK = new ItemBuilder(RED_BLOCK).lore("redBlock").build();

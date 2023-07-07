@@ -86,6 +86,9 @@ public class Main extends JavaPlugin {
 		this.setupConfigurationFiles();
 
 		this.configPreferences = new ConfigPreferences(this);
+
+		if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) database = new MysqlDatabase(this, "mysql");
+
 		this.chatManager = new ChatManager(this);
 		this.commandFramework = new CommandFramework(this);
 		this.userManager = new UserManager(this);
@@ -93,13 +96,12 @@ public class Main extends JavaPlugin {
 		this.rewardsFactory = new RewardsFactory(this);
 		this.arenaRegistry = new ArenaRegistry(this);
 
-		if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) database = new MysqlDatabase(this, "mysql");
 		if (chatManager.isPapiEnabled()) new PlaceholderManager(this);
 
 		ListenerAdapter.registerEvents(this);
 		AbstractCommand.registerCommands(this);
 
-		final var metrics = new Metrics(this, 15722);
+		final Metrics metrics = new Metrics(this, 15722);
 		metrics.addCustomChart(new SimplePie("database_enabled", () -> configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED) ? "Enabled" : "Disabled"));
 		metrics.addCustomChart(new SimplePie("update_notifier", () -> configPreferences.getOption(ConfigPreferences.Option.UPDATE_NOTIFIER_ENABLED) ? "Enabled" : "Disabled"));
 	}

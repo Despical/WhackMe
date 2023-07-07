@@ -51,6 +51,6 @@ public class PointHandler extends BukkitRunnable {
 	}
 
 	public void handleTask() {
-		runTaskTimer(plugin, 8L, 8L);
+		runTaskTimer(plugin, 8L, plugin.getConfigPreferences().getTicks());
 	}
 }
