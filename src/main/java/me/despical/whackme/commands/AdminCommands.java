@@ -7,7 +7,6 @@ import me.despical.commons.miscellaneous.MiscUtils;
 import me.despical.commons.serializer.LocationSerializer;
 import me.despical.whackme.Main;
 import me.despical.whackme.arena.Arena;
-import me.despical.whackme.arena.options.ArenaOption;
 import me.despical.whackme.handlers.setup.SetupInventory;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -30,22 +29,6 @@ public class AdminCommands extends AbstractCommand {
 	public AdminCommands(Main plugin) {
 		super(plugin);
 		this.confirmations = new HashSet<>();
-	}
-
-	@Command(
-		name = "wm.debug"
-	)
-	public void test(CommandArguments arguments) {
-		var pref = plugin.getConfigPreferences();
-
-		var arena = plugin.getArenaRegistry().getArena("test");
-
-		arguments.sendMessage("Wait-Ms: " + arena.getOption(ArenaOption.WAIT_MILLISECONDS));
-		arguments.sendMessage("MinBlocks: " + arena.getOption(ArenaOption.MINIMUM_POINTS));
-		arguments.sendMessage("MaxBlocks: " + arena.getOption(ArenaOption.MAXIMUM_POINTS));
-		arguments.sendMessage("Ticks: " + pref.getTicks());
-		arguments.sendMessage("Async: " + pref.isAsync());
-		arguments.sendMessage("Multiplier: " + pref.getPointBlockMultiplier());
 	}
 
 	@Command(

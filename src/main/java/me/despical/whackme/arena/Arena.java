@@ -187,7 +187,7 @@ public class Arena extends BukkitRunnable {
 		return getOption(ArenaOption.MAXIMUM_POINTS);
 	}
 
-	public int getOption(ArenaOption option) {
+	private int getOption(ArenaOption option) {
 		return arenaOptions.get(option);
 	}
 
