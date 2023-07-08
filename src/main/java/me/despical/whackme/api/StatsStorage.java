@@ -4,15 +4,15 @@ import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.sorter.SortUtils;
 import me.despical.whackme.ConfigPreferences;
 import me.despical.whackme.Main;
-import me.despical.whackme.user.data.MysqlManager;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 /**
  * @author Despical
@@ -23,28 +23,32 @@ public class StatsStorage {
 
 	private static final Main plugin = JavaPlugin.getPlugin(Main.class);
 
+	@NotNull
+	@Contract("null -> fail")
 	public static Map<UUID, Integer> getStats(StatisticType stat) {
 		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
 			try (final var connection = plugin.getMysqlDatabase().getConnection()) {
 				final var statement = connection.createStatement();
-				final var set = statement.executeQuery("SELECT UUID, " + stat.name + " FROM " + ((MysqlManager) plugin.getUserManager().getDatabase()).getTableName() + " ORDER BY " + stat.name);
+				final var set = statement.executeQuery("SELECT UUID, " + stat.getName() + " FROM playerstats ORDER BY " + stat.getName());
 				final var column = new HashMap<UUID, Integer>();
 
 				while (set.next()) {
-					column.put(UUID.fromString(set.getString("UUID")), set.getInt(stat.name));
+					column.put(UUID.fromString(set.getString("UUID")), set.getInt(stat.getName()));
 				}
 
 				return column;
-			} catch (SQLException exception) {
-				exception.printStackTrace();
-
-				plugin.getLogger().warning("Could not get contents from MySQL database!");
-				return null;
+			} catch (SQLException e) {
+				plugin.getLogger().warning("SQLException occurred during getting statistics from database!");
+				return new HashMap<>();
 			}
 		}
 
 		final var config = ConfigUtils.getConfig(plugin, "stats");
-		final var stats = config.getKeys(false).stream().collect(Collectors.toMap(UUID::fromString, string -> config.getInt(string + "." + stat.name), (a, b) -> b));
+		final var stats = new HashMap<UUID, Integer>();
+
+		for (final String string : config.getKeys(false)) {
+			stats.put(UUID.fromString(string), config.getInt(string + "." + stat.getName()));
+		}
 
 		return SortUtils.sortByValue(stats);
 	}
