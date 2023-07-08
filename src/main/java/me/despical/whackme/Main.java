@@ -128,7 +128,7 @@ public class Main extends JavaPlugin {
 		for (final var player : getServer().getOnlinePlayers()) {
 			final var user = userManager.getUser(player);
 
-			if (userManager.getDatabase() instanceof MysqlManager mysqlDatabase) {
+			if (userManager.getDatabase() instanceof MysqlManager mysqlManager) {
 				final var builder = new StringBuilder(" SET ");
 
 				for (final var stat : StatsStorage.StatisticType.values()) {
@@ -145,7 +145,7 @@ public class Main extends JavaPlugin {
 				}
 
 				final var update = builder.toString();
-				mysqlDatabase.getDatabase().executeUpdate("UPDATE " + mysqlDatabase.getTableName() + update + " WHERE UUID='" + user.getUniqueId().toString() + "';");
+				mysqlManager.getDatabase().executeUpdate("UPDATE playerstats" + update + " WHERE UUID='" + user.getUniqueId().toString() + "';");
 				continue;
 			}
 
