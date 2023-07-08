@@ -7,12 +7,11 @@ import me.despical.commons.string.StringUtils;
 import me.despical.whackme.ConfigPreferences;
 import me.despical.whackme.Main;
 import me.despical.whackme.api.StatsStorage;
-import me.despical.whackme.user.data.MysqlManager;
 import me.despical.whackme.utils.Utils;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
@@ -179,25 +178,25 @@ public class PlayerCommands extends AbstractCommand {
 	}
 
 	private void printLeaderboard(CommandSender sender, StatsStorage.StatisticType statisticType) {
-		final var stats = StatsStorage.getStats(statisticType);
 		sender.sendMessage(plugin.getChatManager().message("commands.statistics.header"));
 
+		final var stats = StatsStorage.getStats(statisticType);
 		final var statistic = StringUtils.capitalize(statisticType.name().toLowerCase(java.util.Locale.ENGLISH).replace("_", " "));
 
-		for (int i = 0; i < 10; i++) {
+		for (var i = 0; i < 10; i++) {
 			try {
-				final var current = (UUID) stats.keySet().toArray()[stats.keySet().toArray().length - 1];
-				sender.sendMessage(formatMessage(statistic, Bukkit.getOfflinePlayer(current).getName(), i + 1, stats.get(current)));
+				var current = (UUID) stats.keySet().toArray()[stats.keySet().toArray().length - 1];
+				sender.sendMessage(formatMessage(statistic, plugin.getServer().getOfflinePlayer(current).getName(), i + 1, stats.get(current)));
 				stats.remove(current);
 			} catch (IndexOutOfBoundsException ex) {
 				sender.sendMessage(formatMessage(statistic, "Empty", i + 1, 0));
 			} catch (NullPointerException ex) {
-				final var current = (UUID) stats.keySet().toArray()[stats.keySet().toArray().length - 1];
+				var current = (UUID) stats.keySet().toArray()[stats.keySet().toArray().length - 1];
 
 				if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-					try (final var connection = plugin.getMysqlDatabase().getConnection()) {
-						final var statement = connection.createStatement();
-						final var set = statement.executeQuery("SELECT name FROM " + ((MysqlManager) plugin.getUserManager().getDatabase()).getTableName() + " WHERE UUID='" + current.toString() + "'");
+					try (Connection connection = plugin.getMysqlDatabase().getConnection()) {
+						var statement = connection.createStatement();
+						var set = statement.executeQuery("SELECT name FROM playerstats WHERE UUID='" + current.toString() + "'");
 
 						if (set.next()) {
 							sender.sendMessage(formatMessage(statistic, set.getString(1), i + 1, stats.get(current)));
