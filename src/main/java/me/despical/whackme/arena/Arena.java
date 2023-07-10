@@ -10,7 +10,6 @@ import me.despical.whackme.arena.blocks.PointHandler;
 import me.despical.whackme.arena.managers.BossBarManager;
 import me.despical.whackme.arena.options.ArenaOption;
 import me.despical.whackme.handlers.rewards.Reward;
-import me.despical.whackme.user.User;
 import me.despical.whackme.utils.Utils;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -77,17 +76,19 @@ public class Arena extends BukkitRunnable {
 	public void addPlayer(Player player) {
 		if (player == null) return;
 
-		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
+		final var preferences = plugin.getConfigPreferences();
+
+		if (preferences.getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
 			InventorySerializer.saveInventoryToFile(plugin, player);
 		}
 
 		AttributeUtils.setAttackCooldown(player, plugin.getConfig().getDouble("Hit-Cooldown-Delay", 4));
 
-		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.CLEAR_INVENTORY)) {
+		if (preferences.getOption(ConfigPreferences.Option.CLEAR_INVENTORY)) {
 			player.getInventory().clear();
 		}
 
-		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.CLEAR_EFFECTS)) {
+		if (preferences.getOption(ConfigPreferences.Option.CLEAR_EFFECTS)) {
 			player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
 		}
 
@@ -105,15 +106,16 @@ public class Arena extends BukkitRunnable {
 	}
 
 	public void removePlayer() {
-		final User user = plugin.getUserManager().getUser(player);
+		final var user = plugin.getUserManager().getUser(player);
+		final var chatManager = plugin.getChatManager();
 		final int score = user.getStat(StatsStorage.StatisticType.LOCAL_SCORE);
 
 		if (score > user.getStat(StatsStorage.StatisticType.RECORD_SCORE)) {
 			user.setStat(StatsStorage.StatisticType.RECORD_SCORE, score);
 
-			player.sendMessage(plugin.getChatManager().message("in_game.finish_record_message").replace("%points%", Integer.toString(plugin.getUserManager().getUser(player).getStat(StatsStorage.StatisticType.LOCAL_SCORE))));
+			player.sendMessage(chatManager.message("in_game.finish_record_message").replace("%points%", Integer.toString(user.getStat(StatsStorage.StatisticType.LOCAL_SCORE))));
 		} else {
-			player.sendMessage(plugin.getChatManager().message("in_game.finish_message").replace("%points%", Integer.toString(plugin.getUserManager().getUser(player).getStat(StatsStorage.StatisticType.LOCAL_SCORE))));
+			player.sendMessage(chatManager.message("in_game.finish_message").replace("%points%", Integer.toString(user.getStat(StatsStorage.StatisticType.LOCAL_SCORE))));
 		}
 
 		user.addStat(StatsStorage.StatisticType.TOURS_PLAYED, 1);

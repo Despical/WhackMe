@@ -85,7 +85,7 @@ public class Main extends JavaPlugin {
 	private void initializeClasses() {
 		this.setupConfigurationFiles();
 
-		this.configPreferences = new ConfigPreferences(this);
+		this.configPreferences = new ConfigPreferences();
 
 		if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) database = new MysqlDatabase(this, "mysql");
 

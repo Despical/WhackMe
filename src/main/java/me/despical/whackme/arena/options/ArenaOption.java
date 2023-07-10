@@ -18,7 +18,7 @@ public enum ArenaOption {
 
 	WAIT_MILLISECONDS("Point-Blocks.Wait-Ms", 12);
 
-	int defaultValue;
+	final int defaultValue;
 
 	ArenaOption(String path, int defaultValue) {
 		Main plugin = JavaPlugin.getPlugin(Main.class);

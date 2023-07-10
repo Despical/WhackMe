@@ -3,8 +3,12 @@ package me.despical.whackme;
 import me.despical.commons.compat.XMaterial;
 import me.despical.commons.item.ItemBuilder;
 import me.despical.commons.item.ItemUtils;
+import me.despical.commons.serializer.InventorySerializer;
 import me.despical.commons.string.StringUtils;
+import me.despical.commons.util.function.DoubleSupplier;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -18,27 +22,26 @@ import java.util.Map;
 public class ConfigPreferences {
 
 	public static ItemStack RED_BLOCK, GREEN_BLOCK, CYAN_BLOCK;
+	private static final Main plugin = JavaPlugin.getPlugin(Main.class);
 
-	private final Main plugin;
 	private final Map<Option, Boolean> options;
 
 	private double pointBlockMultiplier;
 	private long ticks;
 	private boolean isAsync;
 
-	public ConfigPreferences(Main plugin) {
-		this.plugin = plugin;
+	public ConfigPreferences() {
 		this.options = new HashMap<>();
 
 		plugin.saveDefaultConfig();
 
-		this.initializeItems(plugin);
+		this.initializeItems();
 		this.loadOptions();
 	}
 
 	public void reload() {
 		this.loadOptions();
-		this.initializeItems(plugin);
+		this.initializeItems();
 	}
 
 	public double getPointBlockMultiplier() {
@@ -74,8 +77,13 @@ public class ConfigPreferences {
 	public enum Option {
 
 		BLOCK_COMMANDS(false), BOSS_BAR_ENABLED, CHAT_FORMAT_ENABLED, CLEAR_EFFECTS,
-		CLEAR_INVENTORY, DATABASE_ENABLED(false), INVENTORY_MANAGER_ENABLED, BLOCK_LEAVE_COMMAND(false),
-		UPDATE_NOTIFIER_ENABLED;
+		CLEAR_INVENTORY, DATABASE_ENABLED(false), BLOCK_LEAVE_COMMAND(false),
+		UPDATE_NOTIFIER_ENABLED, INVENTORY_MANAGER_ENABLED((config) -> {
+			final var list = config.getStringList("Inventory-Manager.Do-Not-Restore");
+			list.forEach(InventorySerializer::addNonSerializableElements);
+
+			return config.getBoolean("Inventory-Manager.Enabled");
+		});
 
 		final String path;
 		final boolean def;
@@ -88,9 +96,14 @@ public class ConfigPreferences {
 			this.def = def;
 			this.path = StringUtils.capitalize(name().replace('_', '-').toLowerCase(Locale.ENGLISH), '-', '.');
 		}
+
+		Option(DoubleSupplier<FileConfiguration, Boolean> supplier) {
+			this.path = "";
+			this.def = supplier.accept(plugin.getConfig());
+		}
 	}
 
-	private void initializeItems(final Main plugin) {
+	private void initializeItems() {
 		final var config = plugin.getConfig();
 		final var greenBlockMsg = config.getString("Point-Blocks.Punch-Me");
 		final var redBlockMsg = config.getString("Point-Blocks.Dont-Punch-Me");
