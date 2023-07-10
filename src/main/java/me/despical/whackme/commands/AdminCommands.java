@@ -16,6 +16,8 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -34,7 +36,7 @@ public class AdminCommands extends AbstractCommand {
 	@Command(
 		name = "wm.create",
 		permission = "wm.admin.create",
-		usage = "/wm create <id>",
+		usage = "/wm create <arena name>",
 		desc = "Creates a new arena with default configuration",
 		senderType = PLAYER
 	)
@@ -82,7 +84,7 @@ public class AdminCommands extends AbstractCommand {
 	@Command(
 		name = "wm.delete",
 		permission = "wm.admin.delete",
-		usage = "/wm delete <arena>",
+		usage = "/wm delete <arena name>",
 		desc = "Deletes arena with the current configuration",
 		min = 1
 	)
@@ -123,7 +125,7 @@ public class AdminCommands extends AbstractCommand {
 	@Command(
 		name = "wm.edit",
 		permission = "wm.admin.edit",
-		usage = "/wm edit <arena>",
+		usage = "/wm edit <arena name>",
 		desc = "Opens the arena editor",
 		senderType = PLAYER
 	)
@@ -152,19 +154,23 @@ public class AdminCommands extends AbstractCommand {
 		final CommandSender sender = arguments.getSender();
 		final boolean isPlayer = arguments.isSenderPlayer();
 
-		for (final var command : plugin.getCommandFramework().getCommands()) {
+		for (final var command : plugin.getCommandFramework().getCommands().stream().sorted(Collections
+			.reverseOrder(Comparator.comparingInt(cmd -> cmd.usage().length()))).toList()) {
 			final String usage = command.usage(), desc = command.desc();
 
 			if (usage.isEmpty()) continue;
 
 			if (isPlayer) {
-				((Player) sender).spigot().sendMessage(new ComponentBuilder(usage)
+				((Player) sender).spigot().sendMessage(new ComponentBuilder()
+					.color(ChatColor.DARK_GRAY)
+					.append(" • ")
+					.append(usage)
 					.color(ChatColor.AQUA)
 					.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, usage))
 					.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(desc)))
 					.create());
 			} else {
-				sender.sendMessage(chatManager.coloredRawMessage("&b" + usage + " &3- &b" + desc));
+				sender.sendMessage(chatManager.coloredRawMessage(" &8• &b" + usage + " &3- &b" + desc));
 			}
 		}
 
