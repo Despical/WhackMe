@@ -117,7 +117,7 @@ public class PlayerCommands extends AbstractCommand {
 			return;
 		}
 
-		final var arenas = plugin.getArenaRegistry().getArenas().stream().filter(arena -> arena.getPlayer() == null).toList();
+		final var arenas = plugin.getArenaRegistry().getArenas().stream().filter(arena -> arena.getPlayer() == null && arena.isReady()).toList();
 
 		if (!arenas.isEmpty()) {
 			var arena = arenas.get(0);
