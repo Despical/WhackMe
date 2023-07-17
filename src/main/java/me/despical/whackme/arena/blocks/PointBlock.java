@@ -8,7 +8,6 @@ import me.despical.whackme.arena.options.ArenaOption;
 import me.despical.whackme.handlers.ChatManager;
 import me.despical.whackme.handlers.SoundManager;
 import me.despical.whackme.handlers.rewards.Reward;
-import me.despical.whackme.user.User;
 import me.despical.whackme.utils.Utils;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
@@ -59,7 +58,7 @@ public class PointBlock extends BukkitRunnable {
 		stand.setGravity(false);
 		stand.setVisible(false);
 
-		Utils.trySilently(consumer -> stand.setShieldBlockingDelay(1));
+		Utils.trySilently(() -> stand.setShieldBlockingDelay(1));
 
 		arena.getPointBlocks().add(this);
 		arena.getLocations().remove(availableLocation);
@@ -109,7 +108,7 @@ public class PointBlock extends BukkitRunnable {
 
 				if (!arena.containPlayer(player)) return;
 
-				final ArmorStand armorStand = event.getRightClicked();
+				final var armorStand = event.getRightClicked();
 
 				if (!armorStand.equals(stand)) return;
 
@@ -124,8 +123,8 @@ public class PointBlock extends BukkitRunnable {
 				if (!arena.containPlayer(player)) return;
 				if (!armorStand.equals(stand)) return;
 
-				final User user = plugin.getUserManager().getUser(player);
-				final String name = stand.getCustomName();
+				final var user = plugin.getUserManager().getUser(player);
+				final var name = stand.getCustomName();
 
 				if (name == null) return;
 				if (stand.getCustomName().equals(OUCH)) return;
