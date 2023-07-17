@@ -28,12 +28,22 @@ public class SpawnComponents implements SetupComponent {
 			.lore("&7the place where you are standing.")
 			.lore("&8(location where players will be")
 			.lore("&8teleported to join game)")
-			.lore("", isOptionDoneBool(path + "startLocation"))
+			.lore("", isOptionDoneBool(path + "startLocation"), "")
+			.lore("&cShift Click to spawn end portals")
+			.lore("&caround you without placing manually.")
 			.build(), e -> {
 
 			player.closeInventory();
 
 			final var location = player.getLocation();
+
+			if (e.isShiftClick()) {
+				final var portal = Utils.END_PORTAL_FRAME.getType();
+
+				for (int[] array : Utils.DIRECTIONS) {
+					location.clone().add(array[0], 0, array[1]).getBlock().setType(portal);
+				}
+			}
 
 			if (!Utils.isSurroundedBy(location)) {
 				player.sendMessage(chatManager.coloredRawMessage("&c&l✖ &cWarning | Blocks around the start location must be end portal frame!"));
