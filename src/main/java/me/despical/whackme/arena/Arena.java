@@ -5,6 +5,7 @@ import me.despical.commons.serializer.InventorySerializer;
 import me.despical.whackme.ConfigPreferences;
 import me.despical.whackme.Main;
 import me.despical.whackme.api.StatsStorage;
+import me.despical.whackme.api.event.arena.WMJoinEvent;
 import me.despical.whackme.arena.blocks.PointBlock;
 import me.despical.whackme.arena.blocks.PointHandler;
 import me.despical.whackme.arena.managers.BossBarManager;
@@ -75,6 +76,12 @@ public class Arena extends BukkitRunnable {
 
 	public void addPlayer(Player player) {
 		if (player == null) return;
+
+		final var event = new WMJoinEvent(player, this);
+
+		plugin.getServer().getPluginManager().callEvent(event);
+
+		if (event.isCancelled()) return;
 
 		final var preferences = plugin.getConfigPreferences();
 

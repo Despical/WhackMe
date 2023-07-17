@@ -21,7 +21,7 @@ public class WMPlayerStatisticChangeEvent extends WMEvent {
 	private final int value;
 
 	public WMPlayerStatisticChangeEvent(Arena arena, Player player, StatsStorage.StatisticType statisticType, int value) {
-		super (arena);
+		super(arena);
 		this.player = player;
 		this.statisticType = statisticType;
 		this.value = value;
