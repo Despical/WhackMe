@@ -1,7 +1,6 @@
 package me.despical.whackme.handlers.rewards;
 
 import me.despical.commons.configuration.ConfigUtils;
-import me.despical.commons.engine.ScriptEngine;
 import me.despical.whackme.Main;
 import me.despical.whackme.api.StatsStorage;
 import me.despical.whackme.user.User;
@@ -37,19 +36,11 @@ public class RewardsFactory {
 			for (final var reward : mainRewards.getRewards()){
 				if (ThreadLocalRandom.current().nextInt(0, 100) > reward.getChance()) continue;
 
-				final var arena = plugin.getArenaRegistry().getArena(player);
 				final var command = formatCommandPlaceholders(reward, plugin.getUserManager().getUser(player));
 
 				switch (reward.getExecutor()) {
 					case 1 -> plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), command);
 					case 2 -> player.performCommand(command);
-					case 3 -> {
-						final var engine = new ScriptEngine();
-						engine.setValue("player", player);
-						engine.setValue("server", plugin.getServer());
-						engine.setValue("arena", arena);
-						engine.execute(command);
-					}
 				}
 			}
 		}
