@@ -57,16 +57,18 @@ public class ArenaRegistry {
 		arenas.clear();
 		
 		final var config = ConfigUtils.getConfig(plugin, "arenas");
+		final var chatManager = plugin.getChatManager();
+		final var logger = plugin.getLogger();
 
 		if (!config.contains("instances")) {
-			plugin.getLogger().info(plugin.getChatManager().message("validator.no_instances_created"));
+			logger.info(chatManager.message("validator.no_instances_created"));
 			return;
 		}
 
 		final var section = config.getConfigurationSection("instances");
 
 		if (section == null) {
-			plugin.getLogger().info(plugin.getChatManager().message("validator.no_instances_created"));
+			logger.info(chatManager.message("validator.no_instances_created"));
 			return;
 		}
 
@@ -75,7 +77,7 @@ public class ArenaRegistry {
 
 			if (path.contains("default")) continue;
 
-			final Arena arena = new Arena(id);
+			final var arena = new Arena(id);
 			arena.setReady(true);
 			arena.setStartLocation(LocationSerializer.fromString(config.getString(path + "startLocation")));
 			arena.setEndLocation(LocationSerializer.fromString(config.getString(path + "endLocation")));
@@ -84,12 +86,9 @@ public class ArenaRegistry {
 			registerArena(arena);
 
 			if (!Utils.isSurroundedBy(arena.getStartLocation())) {
-				plugin.getLogger().info(plugin.getChatManager().message("validator.invalid_arena_configuration").replace("%arena%", id).replace("%error%", "INVALID GAME AREA"));
-
 				arena.setReady(false);
 
-				config.set(path + "ready", false);
-				ConfigUtils.saveConfig(plugin, config, "arenas");
+				logger.info(chatManager.message("validator.invalid_arena_configuration").replace("%arena%", id).replace("%error%", "INVALID GAME AREA"));
 				continue;
 			}
 
@@ -99,12 +98,12 @@ public class ArenaRegistry {
 				config.set(path + "ready", false);
 				ConfigUtils.saveConfig(plugin, config, "arenas");
 
-				plugin.getLogger().info(plugin.getChatManager().message("validator.invalid_arena_configuration").replace("%arena%", id).replace("%error%", "NOT VALIDATED"));
+				logger.info(chatManager.message("validator.invalid_arena_configuration").replace("%arena%", id).replace("%error%", "NOT VALIDATED"));
 				continue;
 			}
 
 			ConfigUtils.saveConfig(plugin, config, "arenas");
-			plugin.getLogger().info(plugin.getChatManager().message("validator.instance_started").replace("%arena%", id));
+			logger.info(chatManager.message("validator.instance_started").replace("%arena%", id));
 		}
 	}
 }

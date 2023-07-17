@@ -10,7 +10,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.*;
-import java.util.function.Consumer;
 
 /**
  * @author Despical
@@ -22,11 +21,12 @@ public class Utils {
 	private static final Main plugin = JavaPlugin.getPlugin(Main.class);
 
 	public static final ItemStack END_PORTAL_FRAME = new ItemBuilder(XMaterial.END_PORTAL_FRAME).build();
-
-	private static final int[][] directions = {{1, 0}, {-1, 0}, {1, 1}, {-1, 1}, {1, -1}, {-1, -1}, {0, 1}, {0, -1}};
+	public static final int[][] DIRECTIONS = {{1, 0}, {-1, 0}, {1, 1}, {-1, 1}, {1, -1}, {-1, -1}, {0, 1}, {0, -1}};
 
 	public static boolean isSurroundedBy(Location center) {
 		if (center == null) return false;
+
+		center = new Location(center.getWorld(), center.getX(), center.getY(), center.getZ());
 
 		for (final var block : Objects.requireNonNull(getBlocksSurroundedBy(center))) {
 			if (block.getType() != END_PORTAL_FRAME.getType()) return false;
@@ -38,7 +38,7 @@ public class Utils {
 	public static Set<Block> getBlocksSurroundedBy(Location center) {
 		final Set<Block> blocks = new HashSet<>();
 
-		for (int[] array : directions) {
+		for (int[] array : DIRECTIONS) {
 			final var block = center.clone().add(array[0], 0, array[1]).getBlock();
 
 			blocks.add(block);
@@ -47,10 +47,10 @@ public class Utils {
 		return blocks;
 	}
 
-	public static void trySilently(Consumer<?> consumer) {
+	public static void trySilently(Runnable consumer) {
 		try {
-			consumer.accept(null);
-		} catch (NoSuchMethodError ignored) {
+			consumer.run();
+		} catch (Exception ignored) {
 		}
 	}
 

@@ -40,7 +40,7 @@ public class ArenaRegisterComponent implements SetupComponent {
 		}
 
 		pane.addItem(GuiItem.of(registeredItem.build(), e -> {
-			final String path = "instances." + arena.getId() + ".";
+			final String path = "instances.%s.".formatted(arena.getId());
 
 			player.closeInventory();
 
