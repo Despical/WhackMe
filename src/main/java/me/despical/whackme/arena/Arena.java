@@ -5,7 +5,7 @@ import me.despical.commons.serializer.InventorySerializer;
 import me.despical.whackme.ConfigPreferences;
 import me.despical.whackme.Main;
 import me.despical.whackme.api.StatsStorage;
-import me.despical.whackme.api.event.arena.WMJoinEvent;
+import me.despical.whackme.api.event.arena.*;
 import me.despical.whackme.arena.blocks.PointBlock;
 import me.despical.whackme.arena.blocks.PointHandler;
 import me.despical.whackme.arena.managers.BossBarManager;
@@ -113,6 +113,12 @@ public class Arena extends BukkitRunnable {
 	}
 
 	public void removePlayer() {
+		this.removePlayer(true);
+	}
+
+	public void removePlayer(boolean flag) {
+		plugin.getServer().getPluginManager().callEvent(new WMLeaveEvent(player, this));
+
 		final var user = plugin.getUserManager().getUser(player);
 		final var chatManager = plugin.getChatManager();
 		final int score = user.getStat(StatsStorage.StatisticType.LOCAL_SCORE);
@@ -120,9 +126,9 @@ public class Arena extends BukkitRunnable {
 		if (score > user.getStat(StatsStorage.StatisticType.RECORD_SCORE)) {
 			user.setStat(StatsStorage.StatisticType.RECORD_SCORE, score);
 
-			player.sendMessage(chatManager.message("in_game.finish_record_message").replace("%points%", Integer.toString(user.getStat(StatsStorage.StatisticType.LOCAL_SCORE))));
+			if (flag) player.sendMessage(chatManager.message("in_game.finish_record_message").replace("%points%", Integer.toString(user.getStat(StatsStorage.StatisticType.LOCAL_SCORE))));
 		} else {
-			player.sendMessage(chatManager.message("in_game.finish_message").replace("%points%", Integer.toString(user.getStat(StatsStorage.StatisticType.LOCAL_SCORE))));
+			if (flag) player.sendMessage(chatManager.message("in_game.finish_message").replace("%points%", Integer.toString(user.getStat(StatsStorage.StatisticType.LOCAL_SCORE))));
 		}
 
 		user.addStat(StatsStorage.StatisticType.TOURS_PLAYED, 1);
@@ -143,7 +149,7 @@ public class Arena extends BukkitRunnable {
 
 		bossBarManager.removePlayer();
 
-		teleportToEndLocation();
+		if (flag) teleportToEndLocation();
 		cleanGameArea();
 
 		player = null;
