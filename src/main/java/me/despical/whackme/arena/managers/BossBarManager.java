@@ -34,9 +34,11 @@ public class BossBarManager extends BukkitRunnable {
 		this.enabled = plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSS_BAR_ENABLED) && ReflectionUtils.supports(13);
 
 		if (enabled) {
-			this.bossBar = plugin.getServer().createBossBar(plugin.getChatManager().message("boss_bar.game_info"), BarColor.valueOf(plugin.getChatManager().message("boss_bar.color")), BarStyle.valueOf(plugin.getChatManager().message("boss_bar.style")));
-			this.messages = plugin.getChatManager().getStringList("boss_bar.messages");
-			this.runTaskTimer(plugin, 20, NumberUtils.getInt(plugin.getChatManager().message("boss_bar.interval"), 300));
+			final var chatManager = plugin.getChatManager();
+
+			this.bossBar = plugin.getServer().createBossBar(chatManager.message("boss_bar.game_info"), BarColor.valueOf(chatManager.message("boss_bar.color")), BarStyle.valueOf(chatManager.message("boss_bar.style")));
+			this.messages = chatManager.getStringList("boss_bar.messages");
+			this.runTaskTimer(plugin, 20, NumberUtils.getInt(chatManager.message("boss_bar.interval"), 300));
 		}
 	}
 

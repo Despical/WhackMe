@@ -53,7 +53,7 @@ public class Arena extends BukkitRunnable {
 		this.arenaOptions = new EnumMap<>(ArenaOption.class);
 		this.gameLocations = new EnumMap<>(GameLocation.class);
 
-		for (ArenaOption option : ArenaOption.values()) {
+		for (final var option : ArenaOption.values()) {
 			arenaOptions.put(option, option.getDefaultValue());
 		}
 	}

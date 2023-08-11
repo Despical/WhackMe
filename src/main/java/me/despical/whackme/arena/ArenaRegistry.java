@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
 
 /**
  * @author Despical
@@ -26,7 +27,7 @@ public class ArenaRegistry {
 	}
 
 	public Set<Arena> getArenas() {
-		return new HashSet<>(arenas);
+		return Set.copyOf(arenas);
 	}
 
 	public boolean isInArena(Player player) {
@@ -54,29 +55,20 @@ public class ArenaRegistry {
 	}
 
 	public void registerArenas() {
-		arenas.clear();
+		this.arenas.clear();
 		
 		final var config = ConfigUtils.getConfig(plugin, "arenas");
-		final var chatManager = plugin.getChatManager();
-		final var logger = plugin.getLogger();
-
-		if (!config.contains("instances")) {
-			logger.info(chatManager.message("validator.no_instances_created"));
-			return;
-		}
-
 		final var section = config.getConfigurationSection("instances");
 
 		if (section == null) {
-			logger.info(chatManager.message("validator.no_instances_created"));
+			plugin.getLogger().warning("Couldn't find 'instance' section in arena.yml, delete the file to regenerate it!");
 			return;
 		}
 
 		for (var id : section.getKeys(false)) {
+			if (id.equals("default")) continue;
+
 			final var path = "instances.%s.".formatted(id);
-
-			if (path.contains("default")) continue;
-
 			final var arena = new Arena(id);
 			arena.setReady(true);
 			arena.setStartLocation(LocationSerializer.fromString(config.getString(path + "startLocation")));
@@ -88,7 +80,7 @@ public class ArenaRegistry {
 			if (!Utils.isSurroundedBy(arena.getStartLocation())) {
 				arena.setReady(false);
 
-				logger.info(chatManager.message("validator.invalid_arena_configuration").replace("%arena%", id).replace("%error%", "INVALID GAME AREA"));
+				plugin.getLogger().log(Level.WARNING, "Arena ''{0}'' has invalid configuration! (Missing node: INVALID GAME ARENA)");
 				continue;
 			}
 
@@ -98,12 +90,11 @@ public class ArenaRegistry {
 				config.set(path + "ready", false);
 				ConfigUtils.saveConfig(plugin, config, "arenas");
 
-				logger.info(chatManager.message("validator.invalid_arena_configuration").replace("%arena%", id).replace("%error%", "NOT VALIDATED"));
+				plugin.getLogger().log(Level.WARNING, "Setup of arena ''{0}'' is not finished yet!", id);
 				continue;
 			}
 
 			ConfigUtils.saveConfig(plugin, config, "arenas");
-			logger.info(chatManager.message("validator.instance_started").replace("%arena%", id));
 		}
 	}
 }

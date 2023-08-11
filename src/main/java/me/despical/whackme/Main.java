@@ -44,7 +44,7 @@ public class Main extends JavaPlugin {
 		initializeClasses();
 		checkUpdate();
 
-		getLogger().info("Initialization finished. Join our Discord server: https://discord.gg/rVkaGmyszE");
+		getLogger().info("Initialization finished. Consider donating: https://buymeacoffee.com/despical");
 	}
 
 	@Override
@@ -145,7 +145,7 @@ public class Main extends JavaPlugin {
 				}
 
 				final var update = builder.toString();
-				mysqlManager.getDatabase().executeUpdate("UPDATE playerstats" + update + " WHERE UUID='" + user.getUniqueId().toString() + "';");
+				mysqlManager.getDatabase().executeUpdate("UPDATE playerstats%s WHERE UUID='%s';".formatted(update, user.getUniqueId().toString()));
 				continue;
 			}
 

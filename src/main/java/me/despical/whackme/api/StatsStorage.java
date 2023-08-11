@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.SQLException;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -28,9 +28,8 @@ public class StatsStorage {
 	public static Map<UUID, Integer> getStats(StatisticType stat) {
 		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
 			try (final var connection = plugin.getMysqlDatabase().getConnection()) {
-				final var statement = connection.createStatement();
-				final var set = statement.executeQuery("SELECT UUID, " + stat.getName() + " FROM playerstats ORDER BY " + stat.getName());
-				final var column = new HashMap<UUID, Integer>();
+				final var set = connection.createStatement().executeQuery("SELECT UUID, " + stat.getName() + " FROM playerstats ORDER BY " + stat.getName());
+				final var column = new LinkedHashMap<UUID, Integer>();
 
 				while (set.next()) {
 					column.put(UUID.fromString(set.getString("UUID")), set.getInt(stat.getName()));
@@ -39,14 +38,14 @@ public class StatsStorage {
 				return column;
 			} catch (SQLException e) {
 				plugin.getLogger().warning("SQLException occurred during getting statistics from database!");
-				return new HashMap<>();
+				return new LinkedHashMap<>();
 			}
 		}
 
 		final var config = ConfigUtils.getConfig(plugin, "stats");
-		final var stats = new HashMap<UUID, Integer>();
+		final var stats = new LinkedHashMap<UUID, Integer>();
 
-		for (final String string : config.getKeys(false)) {
+		for (final var string : config.getKeys(false)) {
 			stats.put(UUID.fromString(string), config.getInt(string + "." + stat.getName()));
 		}
 

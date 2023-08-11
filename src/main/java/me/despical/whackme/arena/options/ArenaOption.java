@@ -21,7 +21,7 @@ public enum ArenaOption {
 	final int defaultValue;
 
 	ArenaOption(String path, int defaultValue) {
-		Main plugin = JavaPlugin.getPlugin(Main.class);
+		final var plugin = JavaPlugin.getPlugin(Main.class);
 
 		this.defaultValue = plugin.getConfig().getInt(path, defaultValue);
 	}

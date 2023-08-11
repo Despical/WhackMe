@@ -104,7 +104,7 @@ public class PointBlock extends BukkitRunnable {
 
 			@EventHandler
 			public void onArmorStandManipulate(PlayerArmorStandManipulateEvent event) {
-				final Player player = event.getPlayer();
+				final var player = event.getPlayer();
 
 				if (!arena.containPlayer(player)) return;
 
