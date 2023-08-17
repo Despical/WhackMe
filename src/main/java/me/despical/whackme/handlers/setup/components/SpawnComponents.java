@@ -59,7 +59,7 @@ public class SpawnComponents implements SetupComponent {
 		}), 3, 1);
 
 		pane.addItem(GuiItem.of(new ItemBuilder(XMaterial.REDSTONE_BLOCK)
-			.name("      &e&lSet Ending Location      ")
+			.name("        &e&lSet Ending Location        ")
 			.lore("&7Click to set ending location on")
 			.lore("&7the place where you are standing.")
 			.lore("&8(location where players will be")
