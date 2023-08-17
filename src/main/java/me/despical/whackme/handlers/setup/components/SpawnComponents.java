@@ -23,13 +23,13 @@ public class SpawnComponents implements SetupComponent {
 		final var path = "instances." + arena.getId() + ".";
 
 		pane.addItem(GuiItem.of(new ItemBuilder(XMaterial.IRON_BLOCK)
-			.name("&e&lSet Start Location")
+			.name("&e&l        Set Start Location        ")
 			.lore("&7Click to set start location on")
 			.lore("&7the place where you are standing.")
 			.lore("&8(location where players will be")
 			.lore("&8teleported to join game)")
 			.lore("", isOptionDoneBool(path + "startLocation"), "")
-			.lore("&cShift Click to spawn end portals")
+			.lore("&8• &cShift Click to spawn end portals")
 			.lore("&caround you without placing manually.")
 			.build(), e -> {
 
@@ -59,7 +59,7 @@ public class SpawnComponents implements SetupComponent {
 		}), 3, 1);
 
 		pane.addItem(GuiItem.of(new ItemBuilder(XMaterial.REDSTONE_BLOCK)
-			.name("&e&lSet Ending Location")
+			.name("      &e&lSet Ending Location      ")
 			.lore("&7Click to set ending location on")
 			.lore("&7the place where you are standing.")
 			.lore("&8(location where players will be")
