@@ -64,11 +64,6 @@ Clear-Effects: true
 # Should we block the in-game leave command?
 Block-Leave-Command: false
 
-# Should we register our rewards factory? This factory provides custom rewards
-# on a specific conditionals such as game end or when player clicks point blocks.
-# See rewards.yml file for more detailed information.
-Rewards-Enabled: false
-
 # Should we format the chat messages?
 # See messages.yml to change format.
 Chat-Format-Enabled: true
