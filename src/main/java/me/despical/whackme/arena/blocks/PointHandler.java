@@ -1,7 +1,7 @@
 package me.despical.whackme.arena.blocks;
 
 import me.despical.commons.string.StringFormatUtils;
-import me.despical.whackme.Main;
+import me.despical.whackme.WhackMe;
 import me.despical.whackme.api.StatsStorage;
 import me.despical.whackme.arena.Arena;
 import me.despical.whackme.utils.ActionBar;
@@ -17,10 +17,10 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class PointHandler extends BukkitRunnable {
 
-	private final Main plugin;
+	private final WhackMe plugin;
 	private final Arena arena;
 
-	public PointHandler(Main plugin, Arena arena) {
+	public PointHandler(WhackMe plugin, Arena arena) {
 		this.plugin = plugin;
 		this.arena = arena;
 	}

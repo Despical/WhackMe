@@ -3,7 +3,7 @@ package me.despical.whackme.handlers.setup.components;
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.serializer.LocationSerializer;
 import me.despical.inventoryframework.pane.StaticPane;
-import me.despical.whackme.Main;
+import me.despical.whackme.WhackMe;
 import me.despical.whackme.handlers.ChatManager;
 import me.despical.whackme.handlers.setup.SetupInventory;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -16,7 +16,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public interface SetupComponent {
 
-	Main plugin = JavaPlugin.getPlugin(Main.class);
+	WhackMe plugin = JavaPlugin.getPlugin(WhackMe.class);
 	ChatManager chatManager = plugin.getChatManager();
 	FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
 

@@ -5,7 +5,7 @@ import me.despical.commandframework.CommandArguments;
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.miscellaneous.MiscUtils;
 import me.despical.commons.serializer.LocationSerializer;
-import me.despical.whackme.Main;
+import me.despical.whackme.WhackMe;
 import me.despical.whackme.arena.Arena;
 import me.despical.whackme.handlers.setup.SetupInventory;
 import net.md_5.bungee.api.ChatColor;
@@ -28,7 +28,7 @@ public class AdminCommands extends AbstractCommand {
 
 	private final Set<CommandSender> confirmations;
 
-	public AdminCommands(Main plugin) {
+	public AdminCommands(WhackMe plugin) {
 		super(plugin);
 		this.confirmations = new HashSet<>();
 	}

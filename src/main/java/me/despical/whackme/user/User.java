@@ -1,6 +1,6 @@
 package me.despical.whackme.user;
 
-import me.despical.whackme.Main;
+import me.despical.whackme.WhackMe;
 import me.despical.whackme.api.StatsStorage;
 import me.despical.whackme.api.event.player.WMPlayerStatisticChangeEvent;
 import me.despical.whackme.arena.Arena;
@@ -18,15 +18,15 @@ import java.util.UUID;
  */
 public class User {
 
-	private static final Main plugin = JavaPlugin.getPlugin(Main.class);
+	private static final WhackMe plugin = JavaPlugin.getPlugin(WhackMe.class);
 
 	private final UUID uuid;
 	private final Player player;
 	private final Map<StatsStorage.StatisticType, Integer> stats;
 
-	public User(UUID uuid) {
-		this.uuid = uuid;
-		this.player = plugin.getServer().getPlayer(uuid);
+	public User(Player player) {
+		this.player = player;
+		this.uuid = player.getUniqueId();
 		this.stats = new EnumMap<>(StatsStorage.StatisticType.class);
 	}
 
@@ -40,6 +40,10 @@ public class User {
 
 	public UUID getUniqueId() {
 		return uuid;
+	}
+
+	public Object getName() {
+		return player.getName();
 	}
 
 	public int getStat(StatsStorage.StatisticType statisticType) {

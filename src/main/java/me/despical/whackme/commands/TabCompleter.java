@@ -3,9 +3,8 @@ package me.despical.whackme.commands;
 import me.despical.commandframework.CommandArguments;
 import me.despical.commandframework.Completer;
 import me.despical.commons.util.Collections;
-import me.despical.whackme.Main;
+import me.despical.whackme.WhackMe;
 import me.despical.whackme.arena.Arena;
-import me.despical.whackme.arena.ArenaRegistry;
 import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
 
@@ -20,7 +19,7 @@ import java.util.stream.Collectors;
  */
 public class TabCompleter extends AbstractCommand {
 
-	public TabCompleter(Main plugin) {
+	public TabCompleter(WhackMe plugin) {
 		super(plugin);
 	}
 

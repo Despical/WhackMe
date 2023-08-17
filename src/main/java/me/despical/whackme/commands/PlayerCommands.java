@@ -5,7 +5,7 @@ import me.despical.commandframework.CommandArguments;
 import me.despical.commons.string.StringMatcher;
 import me.despical.commons.string.StringUtils;
 import me.despical.whackme.ConfigPreferences;
-import me.despical.whackme.Main;
+import me.despical.whackme.WhackMe;
 import me.despical.whackme.api.StatsStorage;
 import me.despical.whackme.utils.Utils;
 import org.bukkit.command.CommandSender;
@@ -13,7 +13,6 @@ import org.bukkit.entity.Player;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -21,19 +20,22 @@ import static me.despical.commandframework.Command.SenderType.PLAYER;
 
 public class PlayerCommands extends AbstractCommand {
 
-	public PlayerCommands(Main plugin) {
+	public PlayerCommands(WhackMe plugin) {
 		super(plugin);
 
-		plugin.getCommandFramework().setAnyMatch(arguments -> {
-			if (arguments.isArgumentsEmpty()) return;
+		plugin.getCommandFramework().setMatchFunction(arguments -> {
+			if (arguments.isArgumentsEmpty()) return false;
 
 			String label = arguments.getLabel(), arg = arguments.getArgument(0);
 
-			List<StringMatcher.Match> matches = StringMatcher.match(arg, plugin.getCommandFramework().getCommands().stream().map(cmd -> cmd.name().replace(label + ".", "")).collect(Collectors.toList()));
+			final var matches = StringMatcher.match(arg, plugin.getCommandFramework().getCommands().stream().map(cmd -> cmd.name().replace(label + ".", "")).collect(Collectors.toList()));
 
 			if (!matches.isEmpty()) {
 				arguments.sendMessage(chatManager.prefixedMessage("commands.did_you_mean").replace("%command%", label + " " + matches.get(0).getMatch()));
+				return true;
 			}
+
+			return false;
 		});
 	}
 
@@ -48,6 +50,9 @@ public class PlayerCommands extends AbstractCommand {
 		if (arguments.hasPermission("wm.admin")) {
 			arguments.sendMessage(chatManager.coloredRawMessage("&3Commands: &b/" + arguments.getLabel() + " help"));
 		}
+
+		plugin.getUserManager().getUser(arguments.getSender()).addStat(StatsStorage.StatisticType.RECORD_SCORE, 31);
+		plugin.getUserManager().getUser(arguments.getSender()).addStat(StatsStorage.StatisticType.TOURS_PLAYED, 62);
 	}
 
 	@Command(
@@ -205,7 +210,7 @@ public class PlayerCommands extends AbstractCommand {
 					} catch (SQLException ignored) {}
 				}
 
-				sender.sendMessage(formatMessage(statistic, "Unknown Player", i + 1, stats.get(current)));
+				sender.sendMessage(formatMessage(statistic, chatManager.message("commands.statistics.unknown_player"), i + 1, stats.get(current)));
 			}
 		}
 	}

@@ -3,7 +3,7 @@ package me.despical.whackme.events;
 import me.despical.commons.serializer.InventorySerializer;
 import me.despical.commons.util.UpdateChecker;
 import me.despical.whackme.ConfigPreferences;
-import me.despical.whackme.Main;
+import me.despical.whackme.WhackMe;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -18,7 +18,7 @@ import org.bukkit.event.player.*;
  */
 public class Events extends ListenerAdapter {
 
-	public Events(Main plugin) {
+	public Events(WhackMe plugin) {
 		super(plugin);
 	}
 
@@ -84,8 +84,9 @@ public class Events extends ListenerAdapter {
 	@EventHandler
 	public void onJoin(PlayerJoinEvent event) {
 		final var player = event.getPlayer();
+		final var user = plugin.getUserManager().getUser(player);
 
-		plugin.getUserManager().loadStatistics(player);
+		plugin.getUserManager().loadStatistics(user);
 
 		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
 			InventorySerializer.loadInventory(plugin, player);

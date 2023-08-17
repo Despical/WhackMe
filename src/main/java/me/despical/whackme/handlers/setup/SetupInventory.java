@@ -5,7 +5,7 @@ import me.despical.commons.item.ItemBuilder;
 import me.despical.inventoryframework.Gui;
 import me.despical.inventoryframework.GuiItem;
 import me.despical.inventoryframework.pane.StaticPane;
-import me.despical.whackme.Main;
+import me.despical.whackme.WhackMe;
 import me.despical.whackme.arena.Arena;
 import me.despical.whackme.handlers.setup.components.ArenaRegisterComponent;
 import me.despical.whackme.handlers.setup.components.SpawnComponents;
@@ -20,14 +20,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class SetupInventory {
 
 	private Gui gui;
-	private final Main plugin;
+	private final WhackMe plugin;
 	private final Arena arena;
 	private final Player player;
 
 	public SetupInventory(Arena arena, Player player) {
 		this.arena = arena;
 		this.player = player;
-		this.plugin = JavaPlugin.getPlugin(Main.class);
+		this.plugin = JavaPlugin.getPlugin(WhackMe.class);
 
 		prepareGui();
 	}
@@ -58,7 +58,7 @@ public class SetupInventory {
 		gui.show(player);
 	}
 
-	public Main getPlugin() {
+	public WhackMe getPlugin() {
 		return plugin;
 	}
 

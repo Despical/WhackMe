@@ -2,8 +2,8 @@ package me.despical.whackme.api;
 
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.sorter.SortUtils;
-import me.despical.whackme.ConfigPreferences;
-import me.despical.whackme.Main;
+import me.despical.whackme.WhackMe;
+import me.despical.whackme.user.data.MysqlManager;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Contract;
@@ -21,14 +21,15 @@ import java.util.UUID;
  */
 public class StatsStorage {
 
-	private static final Main plugin = JavaPlugin.getPlugin(Main.class);
+	private static final WhackMe plugin = JavaPlugin.getPlugin(WhackMe.class);
 
 	@NotNull
 	@Contract("null -> fail")
 	public static Map<UUID, Integer> getStats(StatisticType stat) {
-		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
+		if (plugin.getUserManager().getUserDatabase() instanceof MysqlManager mysqlManager) {
 			try (final var connection = plugin.getMysqlDatabase().getConnection()) {
-				final var set = connection.createStatement().executeQuery("SELECT UUID, " + stat.getName() + " FROM playerstats ORDER BY " + stat.getName());
+				final var statement = connection.createStatement();
+				final var set = statement.executeQuery("SELECT UUID, %s FROM %s ORDER BY %s".formatted(stat.getName(), mysqlManager.getTable(), stat.getName()));
 				final var column = new LinkedHashMap<UUID, Integer>();
 
 				while (set.next()) {
@@ -45,7 +46,7 @@ public class StatsStorage {
 		final var config = ConfigUtils.getConfig(plugin, "stats");
 		final var stats = new LinkedHashMap<UUID, Integer>();
 
-		for (final var string : config.getKeys(false)) {
+		for (var string : config.getKeys(false)) {
 			stats.put(UUID.fromString(string), config.getInt(string + "." + stat.getName()));
 		}
 

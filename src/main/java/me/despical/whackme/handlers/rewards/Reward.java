@@ -1,6 +1,6 @@
 package me.despical.whackme.handlers.rewards;
 
-import me.despical.whackme.Main;
+import me.despical.whackme.WhackMe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +15,7 @@ public class Reward {
 	private final RewardType type;
 	private final List<SubReward> rewards;
 
-	public Reward(final Main plugin, final RewardType type, final List<String> rawCodes) {
+	public Reward(final WhackMe plugin, final RewardType type, final List<String> rawCodes) {
 		this.type = type;
 		this.rewards = new ArrayList<>();
 
@@ -37,7 +37,7 @@ public class Reward {
 		private String executableCode;
 		private final int chance, executor;
 
-		public SubReward(final Main plugin, final String rawCode) {
+		public SubReward(final WhackMe plugin, final String rawCode) {
 			var processedCode = rawCode;
 
 			if (rawCode.contains("p:")) {

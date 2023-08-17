@@ -2,7 +2,7 @@ package me.despical.whackme.arena;
 
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.serializer.LocationSerializer;
-import me.despical.whackme.Main;
+import me.despical.whackme.WhackMe;
 import me.despical.whackme.utils.Utils;
 import org.bukkit.entity.Player;
 
@@ -17,10 +17,10 @@ import java.util.logging.Level;
  */
 public class ArenaRegistry {
 
-	private final Main plugin;
+	private final WhackMe plugin;
 	private final Set<Arena> arenas;
 
-	public ArenaRegistry(final Main plugin) {
+	public ArenaRegistry(final WhackMe plugin) {
 		this.plugin = plugin;
 		this.arenas = new HashSet<>();
 		this.registerArenas();

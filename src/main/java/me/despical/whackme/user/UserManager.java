@@ -1,11 +1,13 @@
 package me.despical.whackme.user;
 
 import me.despical.whackme.ConfigPreferences;
-import me.despical.whackme.Main;
-import me.despical.whackme.user.data.FileStats;
+import me.despical.whackme.WhackMe;
+import me.despical.whackme.api.StatsStorage;
+import me.despical.whackme.user.data.FileStatistics;
+import me.despical.whackme.user.data.IUserDatabase;
 import me.despical.whackme.user.data.MysqlManager;
-import me.despical.whackme.user.data.UserDatabase;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -17,41 +19,65 @@ import java.util.Set;
  */
 public class UserManager {
 
+	@NotNull
 	private final Set<User> users;
-	private final UserDatabase database;
 
-	public UserManager(Main plugin) {
+	@NotNull
+	private final IUserDatabase userDatabase;
+
+	public UserManager(WhackMe plugin) {
 		this.users = new HashSet<>();
-		this.database = plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED) ? new MysqlManager() : new FileStats();
+		this.userDatabase = plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED) ? new MysqlManager(plugin) : new FileStatistics(plugin);
 
-		plugin.getServer().getOnlinePlayers().forEach(this::loadStatistics);
+		plugin.getServer().getOnlinePlayers().stream().map(this::getUser).forEach(this::loadStatistics);
 	}
 
-	public User getUser(Player player) {
+	@NotNull
+	public User addUser(final Player player) {
+		final var user = new User(player);
+
+		this.users.add(user);
+		return user;
+	}
+
+	public void removeUser(final Player player) {
+		this.users.remove(this.getUser(player));
+	}
+
+	@NotNull
+	public User getUser(final Player player) {
 		final var uuid = player.getUniqueId();
 
-		for (final var user : users) {
-			if (user.getUniqueId().equals(uuid)) {
+		for (final var user : this.users) {
+			if (uuid.equals(user.getUniqueId())) {
 				return user;
 			}
 		}
 
-		final var user = new User(uuid);
-		users.add(user);
-
-		database.loadStatistics(user);
-		return user;
+        return this.addUser(player);
 	}
 
-	public void loadStatistics(Player player) {
-		database.loadStatistics(getUser(player));
+	@NotNull
+	public Set<User> getUsers() {
+		return Set.copyOf(users);
 	}
 
-	public void removeUser(Player player) {
-		users.remove(getUser(player));
+	@NotNull
+	public IUserDatabase getUserDatabase() {
+		return this.userDatabase;
 	}
 
-	public UserDatabase getDatabase() {
-		return database;
+	public void saveStatistic(final User user, final StatsStorage.StatisticType statisticType) {
+		if (!statisticType.isPersistent()) return;
+
+		this.userDatabase.saveStatistics(user);
+	}
+
+	public void saveStatistics(final User user) {
+		this.userDatabase.saveStatistics(user);
+	}
+
+	public void loadStatistics(final User user) {
+		this.userDatabase.loadStatistics(user);
 	}
 }

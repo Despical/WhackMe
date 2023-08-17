@@ -22,7 +22,7 @@ import java.util.Map;
 public class ConfigPreferences {
 
 	public static ItemStack RED_BLOCK, GREEN_BLOCK, CYAN_BLOCK;
-	private static final Main plugin = JavaPlugin.getPlugin(Main.class);
+	private static final WhackMe plugin = JavaPlugin.getPlugin(WhackMe.class);
 
 	private final Map<Option, Boolean> options;
 

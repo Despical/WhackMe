@@ -1,5 +1,5 @@
 name: WhackMe
-main: me.despical.whackme.Main
+main: me.despical.whackme.WhackMe
 author: Despical
 version: ${project.version}
 api-version: 1.13

@@ -1,7 +1,7 @@
 package me.despical.whackme.handlers.rewards;
 
 import me.despical.commons.configuration.ConfigUtils;
-import me.despical.whackme.Main;
+import me.despical.whackme.WhackMe;
 import me.despical.whackme.api.StatsStorage;
 import me.despical.whackme.user.User;
 import org.bukkit.entity.Player;
@@ -17,10 +17,10 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class RewardsFactory {
 
-	private final Main plugin;
+	private final WhackMe plugin;
 	private final Set<Reward> rewards;
 
-	public RewardsFactory(final Main plugin) {
+	public RewardsFactory(final WhackMe plugin) {
 		this.plugin = plugin;
 		this.rewards = new HashSet<>();
 

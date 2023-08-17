@@ -28,7 +28,7 @@ import java.io.File;
  * <p>
  * Created at 18.06.2022
  */
-public class Main extends JavaPlugin {
+public class WhackMe extends JavaPlugin {
 
 	private ArenaRegistry arenaRegistry;
 	private ChatManager chatManager;
@@ -67,7 +67,7 @@ public class Main extends JavaPlugin {
 				player.sendMessage(chatManager.message("in_game.finish_message").replace("%points%", Integer.toString(user.getStat(StatsStorage.StatisticType.LOCAL_SCORE))));
 			}
 
-			userManager.getDatabase().saveAllStatistic(user);
+			userManager.getUserDatabase().saveStatistics(user);
 
 			if (configPreferences.getOption(ConfigPreferences.Option.CLEAR_INVENTORY)) player.getInventory().clear();
 			if (configPreferences.getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) InventorySerializer.loadInventory(this, player);
@@ -85,9 +85,7 @@ public class Main extends JavaPlugin {
 	private void initializeClasses() {
 		this.setupConfigurationFiles();
 
-		this.configPreferences = new ConfigPreferences();
-
-		if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) database = new MysqlDatabase(this, "mysql");
+		if ((this.configPreferences = new ConfigPreferences()).getOption(ConfigPreferences.Option.DATABASE_ENABLED)) database = new MysqlDatabase(this, "mysql");
 
 		this.chatManager = new ChatManager(this);
 		this.commandFramework = new CommandFramework(this);
@@ -122,35 +120,6 @@ public class Main extends JavaPlugin {
 				logger.info("https://spigotmc.org/resources/104912");
 			}
 		});
-	}
-
-	private void saveAllUserStatistics() {
-		for (final var player : getServer().getOnlinePlayers()) {
-			final var user = userManager.getUser(player);
-
-			if (userManager.getDatabase() instanceof MysqlManager mysqlManager) {
-				final var builder = new StringBuilder(" SET ");
-
-				for (final var stat : StatsStorage.StatisticType.values()) {
-					if (!stat.isPersistent()) continue;
-
-					final var value = user.getStat(stat);
-					final var name = stat.getName();
-
-					if (builder.toString().equalsIgnoreCase(" SET ")) {
-						builder.append(name).append("'='").append(value);
-					}
-
-					builder.append(", ").append(name).append("'='").append(value);
-				}
-
-				final var update = builder.toString();
-				mysqlManager.getDatabase().executeUpdate("UPDATE playerstats%s WHERE UUID='%s';".formatted(update, user.getUniqueId().toString()));
-				continue;
-			}
-
-			userManager.getDatabase().saveAllStatistic(user);
-		}
 	}
 
 	@NotNull
@@ -191,5 +160,35 @@ public class Main extends JavaPlugin {
 	@NotNull
 	public RewardsFactory getRewardsFactory() {
 		return rewardsFactory;
+	}
+
+	private void saveAllUserStatistics() {
+		for (final var player : getServer().getOnlinePlayers()) {
+			final var user = userManager.getUser(player);
+
+			if (userManager.getUserDatabase() instanceof MysqlManager mysqlManager) {
+				final var builder = new StringBuilder(" SET ");
+
+				for (final var stat : StatsStorage.StatisticType.values()) {
+					if (!stat.isPersistent()) continue;
+
+					final var value = user.getStat(stat);
+					final var name = stat.getName();
+
+					if (builder.toString().equalsIgnoreCase(" SET ")) {
+						builder.append(name).append("=").append(value);
+					}
+
+					builder.append(", ").append(name).append("=").append(value);
+				}
+
+				final var update = builder.toString();
+
+				mysqlManager.getDatabase().executeUpdate("UPDATE %s%s WHERE UUID='%s';".formatted(mysqlManager.getTable(), update, user.getUniqueId().toString()));
+				continue;
+			}
+
+			userManager.getUserDatabase().saveStatistics(user);
+		}
 	}
 }

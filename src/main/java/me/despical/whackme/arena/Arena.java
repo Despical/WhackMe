@@ -3,7 +3,7 @@ package me.despical.whackme.arena;
 import me.despical.commons.miscellaneous.AttributeUtils;
 import me.despical.commons.serializer.InventorySerializer;
 import me.despical.whackme.ConfigPreferences;
-import me.despical.whackme.Main;
+import me.despical.whackme.WhackMe;
 import me.despical.whackme.api.StatsStorage;
 import me.despical.whackme.api.event.arena.*;
 import me.despical.whackme.arena.blocks.PointBlock;
@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
  */
 public class Arena extends BukkitRunnable {
 
-	private final static Main plugin = JavaPlugin.getPlugin(Main.class);
+	private final static WhackMe plugin = JavaPlugin.getPlugin(WhackMe.class);
 
 	private Player player;
 	private boolean ready;
@@ -133,7 +133,7 @@ public class Arena extends BukkitRunnable {
 
 		user.addStat(StatsStorage.StatisticType.TOURS_PLAYED, 1);
 
-		plugin.getUserManager().getDatabase().saveAllStatistic(user);
+		plugin.getUserManager().getUserDatabase().saveStatistics(user);
 
 		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.CLEAR_INVENTORY)) {
 			player.getInventory().clear();

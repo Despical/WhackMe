@@ -1,7 +1,7 @@
 package me.despical.whackme.handlers;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import me.despical.whackme.Main;
+import me.despical.whackme.WhackMe;
 import me.despical.whackme.api.StatsStorage;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -13,9 +13,9 @@ import org.jetbrains.annotations.NotNull;
  */
 public class PlaceholderManager extends PlaceholderExpansion {
 
-	private final Main plugin;
+	private final WhackMe plugin;
 
-	public PlaceholderManager(Main plugin) {
+	public PlaceholderManager(WhackMe plugin) {
 		this.plugin = plugin;
 
 		register();

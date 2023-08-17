@@ -1,7 +1,7 @@
 package me.despical.whackme.arena.blocks;
 
 import me.despical.commons.ReflectionUtils;
-import me.despical.whackme.Main;
+import me.despical.whackme.WhackMe;
 import me.despical.whackme.api.StatsStorage;
 import me.despical.whackme.arena.Arena;
 import me.despical.whackme.arena.options.ArenaOption;
@@ -31,7 +31,7 @@ import static me.despical.whackme.ConfigPreferences.*;
  */
 public class PointBlock extends BukkitRunnable {
 
-	private final static Main plugin = JavaPlugin.getPlugin(Main.class);
+	private final static WhackMe plugin = JavaPlugin.getPlugin(WhackMe.class);
 	private final static ChatManager chatManager = plugin.getChatManager();
 	private final static String PUNCH_ME = chatManager.message("point_blocks.punch_me"), DONT_PUNCH_ME = chatManager.message("point_blocks.dont_punch_me"), OUCH = chatManager.message("point_blocks.ouch");
 	private final static boolean async = plugin.getConfigPreferences().isAsync();

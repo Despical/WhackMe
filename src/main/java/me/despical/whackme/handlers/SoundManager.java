@@ -1,7 +1,7 @@
 package me.despical.whackme.handlers;
 
 import me.despical.commons.compat.XSound;
-import me.despical.whackme.Main;
+import me.despical.whackme.WhackMe;
 import org.bukkit.entity.Player;
 
 /**
@@ -13,7 +13,7 @@ public class SoundManager {
 
 	private XSound pointSound, minusPointSound;
 
-	public SoundManager(Main plugin) {
+	public SoundManager(WhackMe plugin) {
 		try {
 			this.pointSound = XSound.matchXSound(plugin.getConfig().getString(GameSounds.POINT_SOUND.path)).orElse(XSound.ENTITY_EXPERIENCE_BOTTLE_THROW);
 			this.minusPointSound = XSound.matchXSound(plugin.getConfig().getString(GameSounds.MINUS_POINT_SOUND.path)).orElse(XSound.BLOCK_NOTE_BLOCK_BASS);

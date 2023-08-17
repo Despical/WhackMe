@@ -1,6 +1,6 @@
 package me.despical.whackme.arena.options;
 
-import me.despical.whackme.Main;
+import me.despical.whackme.WhackMe;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -21,7 +21,7 @@ public enum ArenaOption {
 	final int defaultValue;
 
 	ArenaOption(String path, int defaultValue) {
-		final var plugin = JavaPlugin.getPlugin(Main.class);
+		final var plugin = JavaPlugin.getPlugin(WhackMe.class);
 
 		this.defaultValue = plugin.getConfig().getInt(path, defaultValue);
 	}

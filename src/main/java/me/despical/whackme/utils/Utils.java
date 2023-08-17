@@ -2,7 +2,7 @@ package me.despical.whackme.utils;
 
 import me.despical.commons.compat.XMaterial;
 import me.despical.commons.item.ItemBuilder;
-import me.despical.whackme.Main;
+import me.despical.whackme.WhackMe;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -18,7 +18,7 @@ import java.util.*;
  */
 public class Utils {
 
-	private static final Main plugin = JavaPlugin.getPlugin(Main.class);
+	private static final WhackMe plugin = JavaPlugin.getPlugin(WhackMe.class);
 
 	public static final ItemStack END_PORTAL_FRAME = new ItemBuilder(XMaterial.END_PORTAL_FRAME).build();
 	public static final int[][] DIRECTIONS = {{1, 0}, {-1, 0}, {1, 1}, {-1, 1}, {1, -1}, {-1, -1}, {0, 1}, {0, -1}};

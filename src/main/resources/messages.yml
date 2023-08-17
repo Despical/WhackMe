@@ -26,6 +26,7 @@ Commands:
     Invalid-Name: "&cName of statistic is invalid! Type: record_score or tours_played"
     Header: "&8&m-------------------[&6 Top 10 &8&m]-------------------"
     Format: "&e#%position% %name% - %value% &7%statistic%"
+    Unknown-Player: "Unknown Player"
   Stats-Command:
     Header: "&l[-----YOUR STATS-----]"
     Header-Other: "&l[-----STATS FOR %player%-----]"

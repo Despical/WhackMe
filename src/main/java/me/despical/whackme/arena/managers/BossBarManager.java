@@ -3,7 +3,7 @@ package me.despical.whackme.arena.managers;
 import me.despical.commons.ReflectionUtils;
 import me.despical.commons.number.NumberUtils;
 import me.despical.whackme.ConfigPreferences;
-import me.despical.whackme.Main;
+import me.despical.whackme.WhackMe;
 import me.despical.whackme.arena.Arena;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class BossBarManager extends BukkitRunnable {
 
-	private final Main plugin;
+	private final WhackMe plugin;
 	private final Arena arena;
 	private final boolean enabled;
 
@@ -28,7 +28,7 @@ public class BossBarManager extends BukkitRunnable {
 
 	private int queue = 0;
 
-	public BossBarManager(Main plugin, Arena arena) {
+	public BossBarManager(WhackMe plugin, Arena arena) {
 		this.plugin = plugin;
 		this.arena = arena;
 		this.enabled = plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSS_BAR_ENABLED) && ReflectionUtils.supports(13);

@@ -3,7 +3,7 @@ package me.despical.whackme.handlers;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.util.Strings;
-import me.despical.whackme.Main;
+import me.despical.whackme.WhackMe;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -16,13 +16,13 @@ import java.util.List;
  */
 public class ChatManager {
 
-	private final Main plugin;
+	private final WhackMe plugin;
 	private final String prefix;
 	private final boolean papiEnabled;
 
 	private FileConfiguration config;
 
-	public ChatManager(Main plugin) {
+	public ChatManager(WhackMe plugin) {
 		this.plugin = plugin;
 		this.config = ConfigUtils.getConfig(plugin, "messages");
 		this.prefix = message("in_game.plugin_prefix");
