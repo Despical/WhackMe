@@ -30,7 +30,7 @@ public class Events extends ListenerAdapter {
 			return;
 		}
 
-		if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BLOCK_COMMANDS)) {
+		if (!plugin.getOption(ConfigPreferences.Option.BLOCK_COMMANDS)) {
 			return;
 		}
 
@@ -88,11 +88,11 @@ public class Events extends ListenerAdapter {
 
 		plugin.getUserManager().loadStatistics(user);
 
-		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
+		if (plugin.getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
 			InventorySerializer.loadInventory(plugin, player);
 		}
 
-		if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.UPDATE_NOTIFIER_ENABLED) && !player.hasPermission("wm.update")) {
+		if (!plugin.getOption(ConfigPreferences.Option.UPDATE_NOTIFIER_ENABLED) && !player.hasPermission("wm.update")) {
 			return;
 		}
 

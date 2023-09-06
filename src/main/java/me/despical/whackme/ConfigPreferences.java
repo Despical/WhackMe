@@ -109,7 +109,6 @@ public class ConfigPreferences {
 		final var redBlockMsg = config.getString("Point-Blocks.Dont-Punch-Me");
 		final var cyanBlockMsg = config.getString("Point-Blocks.Ouch");
 
-
 		GREEN_BLOCK = greenBlockMsg.startsWith("skull:") ? ItemUtils.getSkull(greenBlockMsg.substring(6)) : XMaterial.valueOf(greenBlockMsg).parseItem();
 		RED_BLOCK = redBlockMsg.startsWith("skull:") ? ItemUtils.getSkull(redBlockMsg.substring(6)) : XMaterial.valueOf(redBlockMsg).parseItem();
 		CYAN_BLOCK = cyanBlockMsg.startsWith("skull:") ? ItemUtils.getSkull(cyanBlockMsg.substring(6)) : XMaterial.valueOf(cyanBlockMsg).parseItem();

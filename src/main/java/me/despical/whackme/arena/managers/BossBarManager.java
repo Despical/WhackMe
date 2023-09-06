@@ -31,7 +31,7 @@ public class BossBarManager extends BukkitRunnable {
 	public BossBarManager(WhackMe plugin, Arena arena) {
 		this.plugin = plugin;
 		this.arena = arena;
-		this.enabled = plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSS_BAR_ENABLED) && ReflectionUtils.supports(13);
+		this.enabled = plugin.getOption(ConfigPreferences.Option.BOSS_BAR_ENABLED) && ReflectionUtils.supports(13);
 
 		if (enabled) {
 			final var chatManager = plugin.getChatManager();

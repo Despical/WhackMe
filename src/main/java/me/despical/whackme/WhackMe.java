@@ -69,8 +69,8 @@ public class WhackMe extends JavaPlugin {
 
 			userManager.getUserDatabase().saveStatistics(user);
 
-			if (configPreferences.getOption(ConfigPreferences.Option.CLEAR_INVENTORY)) player.getInventory().clear();
-			if (configPreferences.getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) InventorySerializer.loadInventory(this, player);
+			if (getOption(ConfigPreferences.Option.CLEAR_INVENTORY)) player.getInventory().clear();
+			if (getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) InventorySerializer.loadInventory(this, player);
 
 			AttributeUtils.resetAttackCooldown(player);
 
@@ -85,8 +85,7 @@ public class WhackMe extends JavaPlugin {
 	private void initializeClasses() {
 		this.setupConfigurationFiles();
 
-		if ((this.configPreferences = new ConfigPreferences()).getOption(ConfigPreferences.Option.DATABASE_ENABLED)) database = new MysqlDatabase(this, "mysql");
-
+		this.configPreferences = new ConfigPreferences();
 		this.chatManager = new ChatManager(this);
 		this.commandFramework = new CommandFramework(this);
 		this.userManager = new UserManager(this);
@@ -94,14 +93,15 @@ public class WhackMe extends JavaPlugin {
 		this.rewardsFactory = new RewardsFactory(this);
 		this.arenaRegistry = new ArenaRegistry(this);
 
+		if (getOption(ConfigPreferences.Option.DATABASE_ENABLED)) database = new MysqlDatabase(this, "mysql");
 		if (chatManager.isPapiEnabled()) new PlaceholderManager(this);
 
 		ListenerAdapter.registerEvents(this);
 		AbstractCommand.registerCommands(this);
 
 		final Metrics metrics = new Metrics(this, 15722);
-		metrics.addCustomChart(new SimplePie("database_enabled", () -> configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED) ? "Enabled" : "Disabled"));
-		metrics.addCustomChart(new SimplePie("update_notifier", () -> configPreferences.getOption(ConfigPreferences.Option.UPDATE_NOTIFIER_ENABLED) ? "Enabled" : "Disabled"));
+		metrics.addCustomChart(new SimplePie("database_enabled", () -> getOption(ConfigPreferences.Option.DATABASE_ENABLED) ? "Enabled" : "Disabled"));
+		metrics.addCustomChart(new SimplePie("update_notifier", () -> getOption(ConfigPreferences.Option.UPDATE_NOTIFIER_ENABLED) ? "Enabled" : "Disabled"));
 	}
 
 	private void setupConfigurationFiles() {
@@ -109,7 +109,7 @@ public class WhackMe extends JavaPlugin {
 	}
 
 	private void checkUpdate() {
-		if (!configPreferences.getOption(ConfigPreferences.Option.UPDATE_NOTIFIER_ENABLED)) return;
+		if (!getOption(ConfigPreferences.Option.UPDATE_NOTIFIER_ENABLED)) return;
 
 		UpdateChecker.init(this, 104912).requestUpdateCheck().whenComplete((result, exception) -> {
 			if (result.requiresUpdate()) {
@@ -120,6 +120,10 @@ public class WhackMe extends JavaPlugin {
 				logger.info("https://spigotmc.org/resources/104912");
 			}
 		});
+	}
+
+	public boolean getOption(ConfigPreferences.Option option) {
+		return configPreferences.getOption(option);
 	}
 
 	@NotNull
@@ -137,6 +141,7 @@ public class WhackMe extends JavaPlugin {
 		return commandFramework;
 	}
 
+	@Deprecated
 	@NotNull
 	public ConfigPreferences getConfigPreferences() {
 		return configPreferences;

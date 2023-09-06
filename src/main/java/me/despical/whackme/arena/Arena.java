@@ -83,19 +83,17 @@ public class Arena extends BukkitRunnable {
 
 		if (event.isCancelled()) return;
 
-		final var preferences = plugin.getConfigPreferences();
-
-		if (preferences.getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
+		if (plugin.getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
 			InventorySerializer.saveInventoryToFile(plugin, player);
 		}
 
 		AttributeUtils.setAttackCooldown(player, plugin.getConfig().getDouble("Hit-Cooldown-Delay", 4));
 
-		if (preferences.getOption(ConfigPreferences.Option.CLEAR_INVENTORY)) {
+		if (plugin.getOption(ConfigPreferences.Option.CLEAR_INVENTORY)) {
 			player.getInventory().clear();
 		}
 
-		if (preferences.getOption(ConfigPreferences.Option.CLEAR_EFFECTS)) {
+		if (plugin.getOption(ConfigPreferences.Option.CLEAR_EFFECTS)) {
 			player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
 		}
 
@@ -135,11 +133,11 @@ public class Arena extends BukkitRunnable {
 
 		plugin.getUserManager().getUserDatabase().saveStatistics(user);
 
-		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.CLEAR_INVENTORY)) {
+		if (plugin.getOption(ConfigPreferences.Option.CLEAR_INVENTORY)) {
 			player.getInventory().clear();
 		}
 
-		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
+		if (plugin.getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
 			InventorySerializer.loadInventory(plugin, player);
 		} else {
 			player.setGameMode(GameMode.SURVIVAL);

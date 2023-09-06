@@ -2,7 +2,6 @@ package me.despical.whackme.user;
 
 import me.despical.whackme.ConfigPreferences;
 import me.despical.whackme.WhackMe;
-import me.despical.whackme.api.StatsStorage;
 import me.despical.whackme.user.data.FileStatistics;
 import me.despical.whackme.user.data.IUserDatabase;
 import me.despical.whackme.user.data.MysqlManager;
@@ -27,7 +26,7 @@ public class UserManager {
 
 	public UserManager(WhackMe plugin) {
 		this.users = new HashSet<>();
-		this.userDatabase = plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED) ? new MysqlManager(plugin) : new FileStatistics(plugin);
+		this.userDatabase = plugin.getOption(ConfigPreferences.Option.DATABASE_ENABLED) ? new MysqlManager(plugin) : new FileStatistics(plugin);
 
 		plugin.getServer().getOnlinePlayers().stream().map(this::getUser).forEach(this::loadStatistics);
 	}
@@ -58,23 +57,8 @@ public class UserManager {
 	}
 
 	@NotNull
-	public Set<User> getUsers() {
-		return Set.copyOf(users);
-	}
-
-	@NotNull
 	public IUserDatabase getUserDatabase() {
 		return this.userDatabase;
-	}
-
-	public void saveStatistic(final User user, final StatsStorage.StatisticType statisticType) {
-		if (!statisticType.isPersistent()) return;
-
-		this.userDatabase.saveStatistics(user);
-	}
-
-	public void saveStatistics(final User user) {
-		this.userDatabase.saveStatistics(user);
 	}
 
 	public void loadStatistics(final User user) {

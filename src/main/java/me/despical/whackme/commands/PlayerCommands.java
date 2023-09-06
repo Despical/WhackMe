@@ -115,7 +115,7 @@ public class PlayerCommands extends AbstractCommand {
 	public void randomJoinCommand(CommandArguments arguments) {
 		final Player player = arguments.getSender();
 
-		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BLOCK_LEAVE_COMMAND)) return;
+		if (plugin.getOption(ConfigPreferences.Option.BLOCK_LEAVE_COMMAND)) return;
 
 		if (plugin.getArenaRegistry().isInArena(player)) {
 			player.sendMessage(chatManager.prefixedMessage("in_game.already_playing"));
@@ -198,7 +198,7 @@ public class PlayerCommands extends AbstractCommand {
 			} catch (NullPointerException ex) {
 				var current = (UUID) stats.keySet().toArray()[stats.keySet().toArray().length - 1];
 
-				if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
+				if (plugin.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
 					try (Connection connection = plugin.getMysqlDatabase().getConnection()) {
 						var statement = connection.createStatement();
 						var set = statement.executeQuery("SELECT name FROM playerstats WHERE UUID='" + current.toString() + "'");
