@@ -36,7 +36,7 @@ public class Utils {
 	}
 
 	public static Set<Block> getBlocksSurroundedBy(Location center) {
-		final Set<Block> blocks = new HashSet<>();
+		final var blocks = new HashSet<Block>();
 
 		for (int[] array : DIRECTIONS) {
 			final var block = center.clone().add(array[0], 0, array[1]).getBlock();
@@ -47,9 +47,9 @@ public class Utils {
 		return blocks;
 	}
 
-	public static void trySilently(Runnable consumer) {
+	public static void trySilently(Runnable runnable) {
 		try {
-			consumer.run();
+			runnable.run();
 		} catch (Exception ignored) {
 		}
 	}

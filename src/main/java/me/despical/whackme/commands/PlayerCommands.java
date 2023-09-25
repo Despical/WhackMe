@@ -45,14 +45,11 @@ public class PlayerCommands extends AbstractCommand {
 		desc = "Main command of Whack Me plugin."
 	)
 	public void mainCommand(CommandArguments arguments) {
-		arguments.sendMessage(chatManager.coloredRawMessage("&3This server is running &bWhack Me &3v" + plugin.getDescription().getVersion() + " by &bDespical"));
+		arguments.sendMessage(chatManager.coloredRawMessage("&3This server is running &bWhack Me " + plugin.getDescription().getVersion() + " &3by &bDespical&3"));
 
 		if (arguments.hasPermission("wm.admin")) {
 			arguments.sendMessage(chatManager.coloredRawMessage("&3Commands: &b/" + arguments.getLabel() + " help"));
 		}
-
-		plugin.getUserManager().getUser(arguments.getSender()).addStat(StatsStorage.StatisticType.RECORD_SCORE, 31);
-		plugin.getUserManager().getUser(arguments.getSender()).addStat(StatsStorage.StatisticType.TOURS_PLAYED, 62);
 	}
 
 	@Command(

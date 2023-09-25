@@ -42,7 +42,7 @@ public class User {
 		return uuid;
 	}
 
-	public Object getName() {
+	public String getName() {
 		return player.getName();
 	}
 
@@ -61,7 +61,8 @@ public class User {
 		stats.put(stat, value);
 
 		// When disable initialized you can no longer create a scheduler
-		if (plugin.isEnabled()) plugin.getServer().getScheduler().runTask(plugin, () -> plugin.getServer().getPluginManager().callEvent(new WMPlayerStatisticChangeEvent(getArena(), player, stat, value)));
+		if (plugin.isEnabled())
+			plugin.getServer().getScheduler().runTask(plugin, () -> plugin.getServer().getPluginManager().callEvent(new WMPlayerStatisticChangeEvent(getArena(), player, stat, value)));
 	}
 
 	public void addStat(StatsStorage.StatisticType stat, int value) {

@@ -2,6 +2,7 @@ package me.despical.whackme.commands;
 
 import me.despical.commandframework.Command;
 import me.despical.commandframework.CommandArguments;
+import me.despical.commandframework.Completer;
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.miscellaneous.MiscUtils;
 import me.despical.commons.serializer.LocationSerializer;
@@ -15,11 +16,9 @@ import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.util.StringUtil;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static me.despical.commandframework.Command.SenderType.PLAYER;
@@ -61,17 +60,18 @@ public class AdminCommands extends AbstractCommand {
 		player.sendMessage("");
 		MiscUtils.sendCenteredMessage(player, "&aEdit this arena via /wm edit &6" + id + "&a!");
 		player.sendMessage("");
-		MiscUtils.sendCenteredMessage(player, "&6Don't know where to start? Check out our wiki:");
-		MiscUtils.sendCenteredMessage(player, "&7https://www.github.com/Despical/WhackMe/wiki");
+		MiscUtils.sendCenteredMessage(player, "&6Don't know where to start? Check out our video:");
+		MiscUtils.sendCenteredMessage(player, "&7https://www.youtube.com/watch?v=fOw5AQ8A-Jk");
 		player.sendMessage(chatManager.coloredRawMessage("&l--------------------------------------------"));
 
-		final var path = "instances." + id + ".";
+		final var path = "instances.%s.".formatted(id);
+		final var config = ConfigUtils.getConfig(plugin, "arenas");
 
-		arenaConfig.set(path + "ready", false);
-		arenaConfig.set(path + "endLocation", LocationSerializer.SERIALIZED_LOCATION);
-		arenaConfig.set(path + "centerLocation", LocationSerializer.SERIALIZED_LOCATION);
+		config.set(path + "ready", false);
+		config.set(path + "endLocation", LocationSerializer.SERIALIZED_LOCATION);
+		config.set(path + "centerLocation", LocationSerializer.SERIALIZED_LOCATION);
 
-		ConfigUtils.saveConfig(plugin, arenaConfig, "arenas");
+		ConfigUtils.saveConfig(plugin, config, "arenas");
 
 		var arena = new Arena(id);
 		arena.setReady(false);
@@ -116,8 +116,10 @@ public class AdminCommands extends AbstractCommand {
 
 		plugin.getArenaRegistry().unregisterArena(arena);
 
-		arenaConfig.set("instances." + arenaId, null);
-		ConfigUtils.saveConfig(plugin, arenaConfig, "arenas");
+		final var config = ConfigUtils.getConfig(plugin, "arenas");
+
+		config.set("instances." + arenaId, null);
+		ConfigUtils.saveConfig(plugin, config, "arenas");
 
 		sender.sendMessage(chatManager.prefixedMessage("commands.removed_game_instance"));
 	}
@@ -231,9 +233,7 @@ public class AdminCommands extends AbstractCommand {
 		desc = "Kicks specified player if they're playing"
 	)
 	public void reloadCommand(CommandArguments arguments) {
-		plugin.reloadConfig();
-		plugin.getChatManager().reloadConfig();
-		plugin.getConfigPreferences().reload();
+		plugin.reload();
 
 		for (var arena : plugin.getArenaRegistry().getArenas()) {
 			final var player = arena.getPlayer();
@@ -249,5 +249,42 @@ public class AdminCommands extends AbstractCommand {
 
 		plugin.getArenaRegistry().registerArenas();
 		arguments.sendMessage(chatManager.prefixedMessage("commands.success_reload"));
+	}
+
+	@Completer(
+		name = "wm"
+	)
+	public List<String> onTabComplete(CommandArguments arguments) {
+		final List<String> completions = new ArrayList<>(), commands = plugin.getCommandFramework().getCommands().stream().map(cmd -> cmd.name().replace(arguments.getLabel() + '.', "")).collect(Collectors.toList());
+		final String args[] = arguments.getArguments(), arg = args[0];
+
+		commands.remove("wm");
+
+		if (args.length == 1) {
+			StringUtil.copyPartialMatches(arg, commands, completions);
+		}
+
+		if (args.length == 2) {
+			if (arg.equalsIgnoreCase("top")) {
+				return List.of("tours_played", "record_score");
+			}
+
+			if (arg.equalsIgnoreCase("stats")) {
+				return plugin.getServer().getOnlinePlayers().stream().map(Player::getName).toList();
+			}
+
+			if (!commands.contains(arg)) {
+				return null;
+			}
+
+			var arenas = plugin.getArenaRegistry().getArenas().stream().map(Arena::getId).collect(Collectors.toList());
+			StringUtil.copyPartialMatches(args[1], arenas, completions);
+
+			arenas.sort(null);
+			return arenas;
+		}
+
+		completions.sort(null);
+		return completions;
 	}
 }

@@ -167,6 +167,13 @@ public class WhackMe extends JavaPlugin {
 		return rewardsFactory;
 	}
 
+	public void reload() {
+		configPreferences.reload();
+		chatManager.reloadConfig();
+
+		reloadConfig();
+	}
+
 	private void saveAllUserStatistics() {
 		for (final var player : getServer().getOnlinePlayers()) {
 			final var user = userManager.getUser(player);
