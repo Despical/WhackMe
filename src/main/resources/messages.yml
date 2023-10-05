@@ -21,6 +21,8 @@ Commands:
   No-Permission: "&cYou don't have enough permission to use this command!"
   Success-Reload: "&aSystem successfully reloaded all configurations and arenas!"
   Player-Not-Found: "&cWe couldn't find any player with that name matching!"
+  # %wm_{arena}_player_name% -> placeholder will return text below if arena player is null.
+  Unknown-Player: "Unknown"
   Statistics:
     Type-Name: "&cPlease type statistic name to view!"
     Invalid-Name: "&cName of statistic is invalid! Type: record_score or tours_played"

@@ -64,7 +64,7 @@ public class PlaceholderManager extends PlaceholderExpansion {
 		if (arena == null) return null;
 
 		return switch (data[1].toLowerCase()) {
-			case "player_name" -> arena.getPlayer() == null ? "Unknown" : arena.getPlayer().getName();
+			case "player_name" -> arena.getPlayer() == null ? plugin.getChatManager().message("commands.unknown_player") : arena.getPlayer().getName();
 			case "point_blocks" -> Integer.toString(arena.getPointBlocks().size());
 			default -> null;
 		};
