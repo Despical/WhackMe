@@ -149,12 +149,13 @@ public class AdminCommands extends AbstractCommand {
 		permission = "wm.admin.help"
 	)
 	public void helpCommand(CommandArguments arguments) {
-		arguments.sendMessage("");
-		arguments.sendMessage(chatManager.coloredRawMessage("&3&l---- Whack Me Admin Commands ----"));
-		arguments.sendMessage("");
-
+		final var isPlayer = arguments.isSenderPlayer();
+		final var header = chatManager.coloredRawMessage("&3&l---- Whack Me Admin Commands ----");
 		final CommandSender sender = arguments.getSender();
-		final boolean isPlayer = arguments.isSenderPlayer();
+
+		arguments.sendMessage("");
+		MiscUtils.sendCenteredMessage(sender, header);
+		arguments.sendMessage("");
 
 		for (final var command : plugin.getCommandFramework().getCommands().stream().sorted(Collections
 			.reverseOrder(Comparator.comparingInt(cmd -> cmd.usage().length()))).toList()) {
