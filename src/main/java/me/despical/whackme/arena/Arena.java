@@ -20,6 +20,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 /**
@@ -32,11 +33,10 @@ public class Arena extends BukkitRunnable {
 	private final static WhackMe plugin = JavaPlugin.getPlugin(WhackMe.class);
 
 	private Player player;
-	private boolean ready;
+	private boolean ready, custom;
 	private List<Location> locations;
 
 	private final String id;
-	private final Random random;
 	private final PointHandler pointHandler;
 	private final BossBarManager bossBarManager;
 	private final List<PointBlock> pointBlocks;
@@ -45,7 +45,6 @@ public class Arena extends BukkitRunnable {
 
 	public Arena(String id) {
 		this.id = id;
-		this.random = new Random();
 		this.pointHandler = new PointHandler(plugin, this);
 		this.bossBarManager = new BossBarManager(plugin, this);
 		this.pointBlocks = new ArrayList<>();
@@ -68,6 +67,14 @@ public class Arena extends BukkitRunnable {
 
 	public void setReady(boolean ready) {
 		this.ready = ready;
+	}
+
+	public boolean isCustom() {
+		return custom;
+	}
+
+	public void setCustom(boolean custom) {
+		this.custom = custom;
 	}
 
 	public Player getPlayer() {
@@ -173,7 +180,7 @@ public class Arena extends BukkitRunnable {
 	public void setStartLocation(Location location) {
 		gameLocations.put(GameLocation.START, location);
 
-		if (Utils.isSurroundedBy(location)) locations = Utils.getBlocksSurroundedBy(location).stream().map(Block::getLocation).collect(Collectors.toList());
+		if (custom && Utils.isSurroundedBy(location)) locations = Utils.getBlocksSurroundedBy(location).stream().map(Block::getLocation).collect(Collectors.toList());
 	}
 
 	public Location getEndLocation() {
@@ -182,6 +189,10 @@ public class Arena extends BukkitRunnable {
 
 	public void setEndLocation(Location location) {
 		gameLocations.put(GameLocation.END, location);
+	}
+
+	public void setLocations(List<Location> locations) {
+		this.locations = locations;
 	}
 
 	public int getTimer() {
@@ -228,8 +239,8 @@ public class Arena extends BukkitRunnable {
 		runTaskTimer(plugin, 20L, 20L);
 	}
 
-	public Location getAvailableLocation() {
-		return locations.isEmpty() ? null : locations.get(random.nextInt(locations.size()));
+	public synchronized Location getAvailableLocation() {
+		return locations.isEmpty() ? null : locations.get(ThreadLocalRandom.current().nextInt(locations.size()));
 	}
 
 	@Override

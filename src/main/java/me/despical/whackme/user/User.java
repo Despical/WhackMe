@@ -24,6 +24,8 @@ public class User {
 	private final Player player;
 	private final Map<StatsStorage.StatisticType, Integer> stats;
 
+	private boolean editingMode;
+
 	public User(Player player) {
 		this.player = player;
 		this.uuid = player.getUniqueId();
@@ -44,6 +46,18 @@ public class User {
 
 	public String getName() {
 		return player.getName();
+	}
+
+	public boolean isInEditingMode() {
+		return editingMode;
+	}
+
+	public void setEditingMode(boolean editingMode) {
+		this.editingMode = editingMode;
+	}
+
+	public void sendRawMessage(final String message) {
+		this.player.sendMessage(plugin.getChatManager().coloredRawMessage(message));
 	}
 
 	public int getStat(StatsStorage.StatisticType statisticType) {

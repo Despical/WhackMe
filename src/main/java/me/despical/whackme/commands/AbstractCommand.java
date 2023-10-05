@@ -15,7 +15,7 @@ public abstract class AbstractCommand {
 	}
 
 	public static void registerCommands(final WhackMe plugin) {
-		final Class<?>[] commandClasses = new Class[] {AdminCommands.class, PlayerCommands.class};
+		final Class<?>[] commandClasses = new Class[] {PlayerCommands.class, AdminCommands.class};
 
 		for (final var clazz : commandClasses) {
 			try {

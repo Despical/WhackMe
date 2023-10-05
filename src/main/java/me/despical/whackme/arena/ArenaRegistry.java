@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 /**
  * @author Despical
@@ -71,16 +72,25 @@ public class ArenaRegistry {
 			final var path = "instances.%s.".formatted(id);
 			final var arena = new Arena(id);
 			arena.setReady(true);
+			arena.setCustom(config.getBoolean(path + "custom"));
 			arena.setStartLocation(LocationSerializer.fromString(config.getString(path + "startLocation")));
 			arena.setEndLocation(LocationSerializer.fromString(config.getString(path + "endLocation")));
+			arena.setLocations(config.getStringList(path + "portalLocations").stream().map(LocationSerializer::fromString).collect(Collectors.toList()));
 			arena.start();
 
 			registerArena(arena);
 
-			if (!Utils.isSurroundedBy(arena.getStartLocation())) {
+			if (!arena.isCustom() && !Utils.isSurroundedBy(arena.getStartLocation())) {
 				arena.setReady(false);
 
 				plugin.getLogger().log(Level.WARNING, "Arena ''{0}'' has invalid configuration! (Missing node: INVALID GAME ARENA)");
+				continue;
+			}
+
+			if (arena.isCustom() && arena.getLocations().isEmpty()) {
+				arena.setReady(false);
+
+				plugin.getLogger().log(Level.WARNING, "Arena ''{0}'' has invalid configuration! (Missing node: NO PORTALS ADDED)");
 				continue;
 			}
 

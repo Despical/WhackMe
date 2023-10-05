@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>me.despical</groupId>
     <artifactId>whack-me</artifactId>
-    <version>1.2.3</version>
+    <version>1.2.4</version>
     <packaging>jar</packaging>
 
     <name>Whack Me</name>
@@ -123,12 +123,12 @@
         <dependency>
             <groupId>com.github.Despical</groupId>
             <artifactId>Commons</artifactId>
-            <version>1.6.6</version>
+            <version>1.6.8</version>
         </dependency>
         <dependency>
             <groupId>com.github.Despical</groupId>
             <artifactId>CommandFramework</artifactId>
-            <version>1.2.4</version>
+            <version>1.2.6</version>
         </dependency>
         <dependency>
             <groupId>com.github.Despical</groupId>

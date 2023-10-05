@@ -41,35 +41,38 @@ public class AdminCommands extends AbstractCommand {
 	)
 	public void createCommand(CommandArguments arguments) {
 		final Player player = arguments.getSender();
+		final var user = plugin.getUserManager().getUser(player);
 
 		if (arguments.isArgumentsEmpty()) {
-			player.sendMessage(chatManager.prefixedRawMessage("&cPlease enter an name to create an arena!"));
+			user.sendRawMessage("&cPlease enter an name to create an arena!");
 			return;
 		}
 
 		final var id = arguments.getArgument(0);
 
 		if (plugin.getArenaRegistry().isArena(id)) {
-			player.sendMessage(chatManager.prefixedRawMessage("&cArena with that ID already contains!"));
-			player.sendMessage(chatManager.prefixedRawMessage("&cTo check existing arenas use: /wm list"));
+			user.sendRawMessage("&cArena with that ID already contains!");
+			user.sendRawMessage("&cTo check existing arenas use: /wm list");
 			return;
 		}
 
-		player.sendMessage(chatManager.coloredRawMessage("&l--------------------------------------------"));
+		user.sendRawMessage("&l--------------------------------------------");
 		MiscUtils.sendCenteredMessage(player, "&eInstance &a&l" + id + " &ecreated!");
-		player.sendMessage("");
+		user.sendRawMessage("");
 		MiscUtils.sendCenteredMessage(player, "&aEdit this arena via /wm edit &6" + id + "&a!");
-		player.sendMessage("");
+		user.sendRawMessage("");
 		MiscUtils.sendCenteredMessage(player, "&6Don't know where to start? Check out our video:");
 		MiscUtils.sendCenteredMessage(player, "&7https://www.youtube.com/watch?v=fOw5AQ8A-Jk");
-		player.sendMessage(chatManager.coloredRawMessage("&l--------------------------------------------"));
+		user.sendRawMessage("&l--------------------------------------------");
 
 		final var path = "instances.%s.".formatted(id);
 		final var config = ConfigUtils.getConfig(plugin, "arenas");
 
 		config.set(path + "ready", false);
+		config.set(path + "custom", false);
+		config.set(path + "startLocation", LocationSerializer.SERIALIZED_LOCATION);
 		config.set(path + "endLocation", LocationSerializer.SERIALIZED_LOCATION);
-		config.set(path + "centerLocation", LocationSerializer.SERIALIZED_LOCATION);
+		config.set(path + "portalLocations", new ArrayList<>());
 
 		ConfigUtils.saveConfig(plugin, config, "arenas");
 
@@ -140,7 +143,7 @@ public class AdminCommands extends AbstractCommand {
 			return;
 		}
 
-		new SetupInventory(arena, player).openInventory();
+		new SetupInventory(plugin, arena, player).openInventory();
 	}
 
 	@SuppressWarnings("all")

@@ -10,7 +10,6 @@ import me.despical.whackme.arena.Arena;
 import me.despical.whackme.handlers.setup.components.ArenaRegisterComponent;
 import me.despical.whackme.handlers.setup.components.SpawnComponents;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * @author Despical
@@ -19,15 +18,16 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class SetupInventory {
 
-	private Gui gui;
 	private final WhackMe plugin;
 	private final Arena arena;
 	private final Player player;
 
-	public SetupInventory(Arena arena, Player player) {
+	private Gui gui;
+
+	public SetupInventory(WhackMe plugin, Arena arena, Player player) {
+		this.plugin = plugin;
 		this.arena = arena;
 		this.player = player;
-		this.plugin = JavaPlugin.getPlugin(WhackMe.class);
 
 		prepareGui();
 	}

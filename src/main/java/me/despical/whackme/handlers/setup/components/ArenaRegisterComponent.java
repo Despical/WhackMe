@@ -12,6 +12,8 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 
+import java.util.stream.Collectors;
+
 /**
  * @author Despical
  * <p>
@@ -61,10 +63,10 @@ public class ArenaRegisterComponent implements SetupComponent {
 			plugin.getArenaRegistry().unregisterArena(arena);
 
 			final var newArena = new Arena(arena.getId());
-
 			newArena.setReady(true);
 			newArena.setStartLocation(LocationSerializer.fromString(config.getString(path + "startLocation")));
 			newArena.setEndLocation(LocationSerializer.fromString(config.getString(path + "endLocation")));
+			newArena.setLocations(config.getStringList(path + "portalLocations").stream().map(LocationSerializer::fromString).collect(Collectors.toList()));
 			newArena.start();
 
 			player.sendMessage(chatManager.coloredRawMessage("&a&l✔ &aValidation succeeded! Registering new arena instance: " + newArena.getId()));
