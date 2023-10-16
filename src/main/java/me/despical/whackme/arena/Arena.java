@@ -33,7 +33,7 @@ public class Arena extends BukkitRunnable {
 	private final static WhackMe plugin = JavaPlugin.getPlugin(WhackMe.class);
 
 	private Player player;
-	private boolean ready, custom;
+	private boolean ready, custom, started;
 	private List<Location> locations;
 
 	private final String id;
@@ -180,7 +180,8 @@ public class Arena extends BukkitRunnable {
 	public void setStartLocation(Location location) {
 		gameLocations.put(GameLocation.START, location);
 
-		if (custom && Utils.isSurroundedBy(location)) locations = Utils.getBlocksSurroundedBy(location).stream().map(Block::getLocation).collect(Collectors.toList());
+		if (Utils.isSurroundedBy(location))
+			locations = Utils.getBlocksSurroundedBy(location).stream().map(Block::getLocation).collect(Collectors.toList());
 	}
 
 	public Location getEndLocation() {
@@ -234,13 +235,17 @@ public class Arena extends BukkitRunnable {
 	}
 
 	public void start() {
+		if (started) return;
+
+		started = true;
+
 		pointHandler.handleTask();
 
 		runTaskTimer(plugin, 20L, 20L);
 	}
 
-	public synchronized Location getAvailableLocation() {
-		return locations.isEmpty() ? null : locations.get(ThreadLocalRandom.current().nextInt(locations.size()));
+	public Location getAvailableLocation() {
+        return locations.isEmpty() ? null : locations.get(ThreadLocalRandom.current().nextInt(locations.size()));
 	}
 
 	@Override

@@ -6,7 +6,6 @@ import me.despical.commons.item.ItemBuilder;
 import me.despical.commons.serializer.LocationSerializer;
 import me.despical.inventoryframework.GuiItem;
 import me.despical.inventoryframework.pane.StaticPane;
-import me.despical.whackme.arena.Arena;
 import me.despical.whackme.handlers.setup.SetupInventory;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -42,7 +41,8 @@ public class ArenaRegisterComponent implements SetupComponent {
 		}
 
 		pane.addItem(GuiItem.of(registeredItem.build(), e -> {
-			final String path = "instances.%s.".formatted(arena.getId());
+			final var path = "instances.%s.".formatted(arena.getId());
+			final var config = ConfigUtils.getConfig(plugin, "arenas");
 
 			player.closeInventory();
 
@@ -60,21 +60,16 @@ public class ArenaRegisterComponent implements SetupComponent {
 				}
 			}
 
-			plugin.getArenaRegistry().unregisterArena(arena);
+			arena.setReady(true);
+			arena.setStartLocation(LocationSerializer.fromString(config.getString(path + "startLocation")));
+			arena.setEndLocation(LocationSerializer.fromString(config.getString(path + "endLocation")));
+			arena.setLocations(config.getStringList(path + "portalLocations").stream().map(LocationSerializer::fromString).collect(Collectors.toList()));
+			arena.start();
 
-			final var newArena = new Arena(arena.getId());
-			newArena.setReady(true);
-			newArena.setStartLocation(LocationSerializer.fromString(config.getString(path + "startLocation")));
-			newArena.setEndLocation(LocationSerializer.fromString(config.getString(path + "endLocation")));
-			newArena.setLocations(config.getStringList(path + "portalLocations").stream().map(LocationSerializer::fromString).collect(Collectors.toList()));
-			newArena.start();
-
-			player.sendMessage(chatManager.coloredRawMessage("&a&l✔ &aValidation succeeded! Registering new arena instance: " + newArena.getId()));
+			player.sendMessage(chatManager.coloredRawMessage("&a&l✔ &aValidation succeeded! Registering new arena instance: " + arena.getId()));
 
 			config.set(path + "ready", true);
 			ConfigUtils.saveConfig(plugin, config, "arenas");
-
-			plugin.getArenaRegistry().registerArena(newArena);
 		}), 8, 2);
 	}
 }

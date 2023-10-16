@@ -70,6 +70,8 @@ public class SpawnComponents implements SetupComponent {
 				inventory.setItem(slot, item);
 			}
 
+			arena.setCustom(true);
+
 			user.setEditingMode(true);
 			user.sendRawMessage("&e✔ Info | &aIn editing mode you can place end portals to anywhere you want and can leave by clicking barrier item.");
 
@@ -93,6 +95,7 @@ public class SpawnComponents implements SetupComponent {
 
 					arena.setLocations(new ArrayList<>(locations));
 
+					var config = ConfigUtils.getConfig(plugin, "arenas");
 					config.set("instances.%s.portalLocations".formatted(arena.getId()), locations.stream().map(LocationSerializer::toString).collect(Collectors.toList()));
 					ConfigUtils.saveConfig(plugin, config, "arenas");
 				}
@@ -131,8 +134,7 @@ public class SpawnComponents implements SetupComponent {
 			.build(), e -> {
 
 			final var location = player.getLocation();
-
-			arena.setCustom(true);
+			boolean reopenInventory = false;
 
 			if (e.isShiftClick()) {
 				final var portal = Utils.END_PORTAL_FRAME.getType();
@@ -142,7 +144,8 @@ public class SpawnComponents implements SetupComponent {
 				}
 
 				arena.setCustom(false);
-				config.set(path + "custom", false);
+
+				reopenInventory = true;
 			} else {
 				player.closeInventory(); // to prevent shift click bugs
 			}
@@ -155,9 +158,14 @@ public class SpawnComponents implements SetupComponent {
 			arena.setStartLocation(location);
 			user.sendRawMessage("&e✔ Completed | &aStart location for arena &e" + arena.getId() + " &aset at your location!");
 
+			final var config = ConfigUtils.getConfig(plugin, "arenas");
 			config.set(path + "custom", arena.isCustom());
 			config.set(path + "startLocation", LocationSerializer.toString(location));
+			config.set(path + "portalLocations", arena.getLocations().stream().map(LocationSerializer::toString).toList());
 			ConfigUtils.saveConfig(plugin, config, "arenas");
+
+			if (reopenInventory)
+				new SetupInventory(plugin, arena, player).openInventory();
 		}), 3, 1);
 
 		pane.addItem(GuiItem.of(new ItemBuilder(XMaterial.REDSTONE_BLOCK)
@@ -176,6 +184,7 @@ public class SpawnComponents implements SetupComponent {
 			final var location = player.getLocation().clone().add(.5, 0, .5);
 			arena.setEndLocation(location);
 
+			var config = ConfigUtils.getConfig(plugin, "arenas");
 			config.set(path + "endLocation", LocationSerializer.toString(location));
 			ConfigUtils.saveConfig(plugin, config, "arenas");
 		}), 5, 1);
