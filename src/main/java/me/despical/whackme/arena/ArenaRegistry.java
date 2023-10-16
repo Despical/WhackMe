@@ -83,14 +83,14 @@ public class ArenaRegistry {
 			if (!arena.isCustom() && !Utils.isSurroundedBy(arena.getStartLocation())) {
 				arena.setReady(false);
 
-				plugin.getLogger().log(Level.WARNING, "Arena ''{0}'' has invalid configuration! (Missing node: INVALID GAME ARENA)");
+				plugin.getLogger().log(Level.WARNING, "Arena ''{0}'' has invalid configuration! (Missing node: INVALID GAME ARENA)", id);
 				continue;
 			}
 
 			if (arena.isCustom() && arena.getLocations().isEmpty()) {
 				arena.setReady(false);
 
-				plugin.getLogger().log(Level.WARNING, "Arena ''{0}'' has invalid configuration! (Missing node: NO PORTALS ADDED)");
+				plugin.getLogger().log(Level.WARNING, "Arena ''{0}'' has invalid configuration! (Missing node: NO PORTALS ADDED)", id);
 				continue;
 			}
 
@@ -101,10 +101,7 @@ public class ArenaRegistry {
 				ConfigUtils.saveConfig(plugin, config, "arenas");
 
 				plugin.getLogger().log(Level.WARNING, "Setup of arena ''{0}'' is not finished yet!", id);
-				continue;
 			}
-
-			ConfigUtils.saveConfig(plugin, config, "arenas");
 		}
 	}
 }
