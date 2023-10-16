@@ -15,14 +15,7 @@ public abstract class AbstractCommand {
 	}
 
 	public static void registerCommands(final WhackMe plugin) {
-		final Class<?>[] commandClasses = new Class[] {PlayerCommands.class, AdminCommands.class};
-
-		for (final var clazz : commandClasses) {
-			try {
-				clazz.getConstructor(WhackMe.class).newInstance(plugin);
-			} catch (Exception exception) {
-				exception.printStackTrace();
-			}
-		}
+		new PlayerCommands(plugin);
+		new AdminCommands(plugin);
 	}
 }
