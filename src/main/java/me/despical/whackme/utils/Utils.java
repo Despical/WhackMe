@@ -50,7 +50,7 @@ public class Utils {
 	public static void trySilently(Runnable runnable) {
 		try {
 			runnable.run();
-		} catch (Exception ignored) {
+		} catch (Exception | Error ignored) {
 		}
 	}
 
