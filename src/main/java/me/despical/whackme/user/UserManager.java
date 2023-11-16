@@ -33,7 +33,7 @@ public class UserManager {
 
 	@NotNull
 	public User addUser(final Player player) {
-		final var user = new User(player);
+		final var user = new User(player.getUniqueId());
 
 		this.users.add(user);
 		return user;

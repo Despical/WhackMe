@@ -21,23 +21,21 @@ public class User {
 	private static final WhackMe plugin = JavaPlugin.getPlugin(WhackMe.class);
 
 	private final UUID uuid;
-	private final Player player;
 	private final Map<StatsStorage.StatisticType, Integer> stats;
 
 	private boolean editingMode;
 
-	public User(Player player) {
-		this.player = player;
-		this.uuid = player.getUniqueId();
+	public User(UUID uuid) {
+		this.uuid = uuid;
 		this.stats = new EnumMap<>(StatsStorage.StatisticType.class);
 	}
 
 	public Arena getArena() {
-		return plugin.getArenaRegistry().getArena(player);
+		return plugin.getArenaRegistry().getArena(getPlayer());
 	}
 
 	public Player getPlayer() {
-		return player;
+		return plugin.getServer().getPlayer(uuid);
 	}
 
 	public UUID getUniqueId() {
@@ -45,7 +43,9 @@ public class User {
 	}
 
 	public String getName() {
-		return player.getName();
+		final var player = getPlayer();
+
+		return player != null ? player.getName() : "";
 	}
 
 	public boolean isInEditingMode() {
@@ -57,7 +57,7 @@ public class User {
 	}
 
 	public void sendRawMessage(final String message) {
-		this.player.sendMessage(plugin.getChatManager().coloredRawMessage(message));
+		getPlayer().sendMessage(plugin.getChatManager().coloredRawMessage(message));
 	}
 
 	public int getStat(StatsStorage.StatisticType statisticType) {
@@ -76,7 +76,7 @@ public class User {
 
 		// When disable initialized you can no longer create a scheduler
 		if (plugin.isEnabled())
-			plugin.getServer().getScheduler().runTask(plugin, () -> plugin.getServer().getPluginManager().callEvent(new WMPlayerStatisticChangeEvent(getArena(), player, stat, value)));
+			plugin.getServer().getScheduler().runTask(plugin, () -> plugin.getServer().getPluginManager().callEvent(new WMPlayerStatisticChangeEvent(getArena(), getPlayer(), stat, value)));
 	}
 
 	public void addStat(StatsStorage.StatisticType stat, int value) {
