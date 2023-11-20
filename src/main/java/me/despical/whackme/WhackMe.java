@@ -7,6 +7,7 @@ import me.despical.commons.serializer.InventorySerializer;
 import me.despical.commons.util.Collections;
 import me.despical.commons.util.UpdateChecker;
 import me.despical.whackme.api.StatsStorage;
+import me.despical.whackme.arena.Arena;
 import me.despical.whackme.arena.ArenaRegistry;
 import me.despical.whackme.commands.AbstractCommand;
 import me.despical.whackme.events.ListenerAdapter;
@@ -14,14 +15,17 @@ import me.despical.whackme.handlers.ChatManager;
 import me.despical.whackme.handlers.PlaceholderManager;
 import me.despical.whackme.handlers.SoundManager;
 import me.despical.whackme.handlers.rewards.RewardsFactory;
+import me.despical.whackme.user.User;
 import me.despical.whackme.user.UserManager;
 import me.despical.whackme.user.data.MysqlManager;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.util.logging.Logger;
 
 /**
  * @author Despical
@@ -49,15 +53,15 @@ public class WhackMe extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
-		for (final var arena : arenaRegistry.getArenas()) {
-			final var player = arena.getPlayer();
+		for (final Arena arena : arenaRegistry.getArenas()) {
+			final Player player = arena.getPlayer();
 			
 			if (player == null) continue;
 			
-			final var user = userManager.getUser(player);
+			final User user = userManager.getUser(player);
 			user.addStat(StatsStorage.StatisticType.TOURS_PLAYED, 1);
 
-			final var score = user.getStat(StatsStorage.StatisticType.LOCAL_SCORE);
+			final int score = user.getStat(StatsStorage.StatisticType.LOCAL_SCORE);
 
 			if (score > user.getStat(StatsStorage.StatisticType.RECORD_SCORE)) {
 				user.setStat(StatsStorage.StatisticType.RECORD_SCORE, score);
@@ -113,7 +117,7 @@ public class WhackMe extends JavaPlugin {
 
 		UpdateChecker.init(this, 104912).requestUpdateCheck().whenComplete((result, exception) -> {
 			if (result.requiresUpdate()) {
-				final var logger = getLogger();
+				final Logger logger = getLogger();
 
 				logger.info("Found a new version available: v" + result.getNewestVersion());
 				logger.info("Download it on SpigotMC:");
@@ -175,17 +179,18 @@ public class WhackMe extends JavaPlugin {
 	}
 
 	private void saveAllUserStatistics() {
-		for (final var player : getServer().getOnlinePlayers()) {
-			final var user = userManager.getUser(player);
+		for (final Player player : getServer().getOnlinePlayers()) {
+			final User user = userManager.getUser(player);
 
-			if (userManager.getUserDatabase() instanceof MysqlManager mysqlManager) {
-				final var builder = new StringBuilder(" SET ");
+			if (userManager.getUserDatabase() instanceof MysqlManager) {
+				final MysqlManager mysqlManager = (MysqlManager) userManager.getUserDatabase();
+				final StringBuilder builder = new StringBuilder(" SET ");
 
-				for (final var stat : StatsStorage.StatisticType.values()) {
+				for (final StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
 					if (!stat.isPersistent()) continue;
 
-					final var value = user.getStat(stat);
-					final var name = stat.getName();
+					final int value = user.getStat(stat);
+					final String name = stat.getName();
 
 					if (builder.toString().equalsIgnoreCase(" SET ")) {
 						builder.append(name).append("=").append(value);
@@ -194,9 +199,9 @@ public class WhackMe extends JavaPlugin {
 					builder.append(", ").append(name).append("=").append(value);
 				}
 
-				final var update = builder.toString();
+				final String update = builder.toString();
 
-				mysqlManager.getDatabase().executeUpdate("UPDATE %s%s WHERE UUID='%s';".formatted(mysqlManager.getTable(), update, user.getUniqueId().toString()));
+				mysqlManager.getDatabase().executeUpdate(String.format("UPDATE %s%s WHERE UUID='%s';", mysqlManager.getTable(), update, user.getUniqueId().toString()));
 				continue;
 			}
 

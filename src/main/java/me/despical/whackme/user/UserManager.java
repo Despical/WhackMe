@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * @author Despical
@@ -33,7 +34,7 @@ public class UserManager {
 
 	@NotNull
 	public User addUser(final Player player) {
-		final var user = new User(player.getUniqueId());
+		final User user = new User(player.getUniqueId());
 
 		this.users.add(user);
 		return user;
@@ -45,9 +46,9 @@ public class UserManager {
 
 	@NotNull
 	public User getUser(final Player player) {
-		final var uuid = player.getUniqueId();
+		final UUID uuid = player.getUniqueId();
 
-		for (final var user : this.users) {
+		for (final User user : this.users) {
 			if (uuid.equals(user.getUniqueId())) {
 				return user;
 			}

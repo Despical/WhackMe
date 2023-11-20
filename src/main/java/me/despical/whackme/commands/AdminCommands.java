@@ -9,12 +9,14 @@ import me.despical.commons.serializer.LocationSerializer;
 import me.despical.whackme.WhackMe;
 import me.despical.whackme.arena.Arena;
 import me.despical.whackme.handlers.setup.SetupInventory;
+import me.despical.whackme.user.User;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
 
@@ -41,14 +43,14 @@ public class AdminCommands extends AbstractCommand {
 	)
 	public void createCommand(CommandArguments arguments) {
 		final Player player = arguments.getSender();
-		final var user = plugin.getUserManager().getUser(player);
+		final User user = plugin.getUserManager().getUser(player);
 
 		if (arguments.isArgumentsEmpty()) {
 			user.sendRawMessage("&cPlease enter an name to create an arena!");
 			return;
 		}
 
-		final var id = arguments.getArgument(0);
+		final String id = arguments.getArgument(0);
 
 		if (plugin.getArenaRegistry().isArena(id)) {
 			user.sendRawMessage("&cArena with that ID already contains!");
@@ -65,8 +67,8 @@ public class AdminCommands extends AbstractCommand {
 		MiscUtils.sendCenteredMessage(player, "&7https://www.youtube.com/watch?v=fOw5AQ8A-Jk");
 		user.sendRawMessage("&l--------------------------------------------");
 
-		final var path = "instances.%s.".formatted(id);
-		final var config = ConfigUtils.getConfig(plugin, "arenas");
+		final String path = String.format("instances.%s.", id);
+		final FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
 
 		config.set(path + "ready", false);
 		config.set(path + "custom", false);
@@ -76,7 +78,7 @@ public class AdminCommands extends AbstractCommand {
 
 		ConfigUtils.saveConfig(plugin, config, "arenas");
 
-		var arena = new Arena(id);
+		Arena arena = new Arena(id);
 		arena.setReady(false);
 		arena.setEndLocation(LocationSerializer.DEFAULT_LOCATION);
 		arena.setStartLocation(LocationSerializer.DEFAULT_LOCATION);
@@ -92,9 +94,9 @@ public class AdminCommands extends AbstractCommand {
 		min = 1
 	)
 	public void deleteCommand(CommandArguments arguments) {
-		final var arenaId = arguments.getArgument(0);
-		final var arena = plugin.getArenaRegistry().getArena(arenaId);
-		final var sender = arguments.getSender();
+		final String arenaId = arguments.getArgument(0);
+		final Arena arena = plugin.getArenaRegistry().getArena(arenaId);
+		final CommandSender sender = arguments.getSender();
 
 		if (arena == null) {
 			arguments.sendMessage(chatManager.prefixedMessage("commands.no_arena_like_that"));
@@ -110,7 +112,7 @@ public class AdminCommands extends AbstractCommand {
 
 		confirmations.remove(sender);
 
-		final var player = arena.getPlayer();
+		final Player player = arena.getPlayer();
 
 		if (player != null) {
 			arena.removePlayer();
@@ -119,7 +121,7 @@ public class AdminCommands extends AbstractCommand {
 
 		plugin.getArenaRegistry().unregisterArena(arena);
 
-		final var config = ConfigUtils.getConfig(plugin, "arenas");
+		final FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
 
 		config.set("instances." + arenaId, null);
 		ConfigUtils.saveConfig(plugin, config, "arenas");
@@ -136,7 +138,7 @@ public class AdminCommands extends AbstractCommand {
 	)
 	public void editCommand(CommandArguments arguments) {
 		final Player player = arguments.getSender();
-		final var arena = plugin.getArenaRegistry().getArena(arguments.getArgument(0));
+		final Arena arena = plugin.getArenaRegistry().getArena(arguments.getArgument(0));
 
 		if (arena == null) {
 			player.sendMessage(chatManager.prefixedMessage("commands.no_arena_like_that"));
@@ -152,16 +154,16 @@ public class AdminCommands extends AbstractCommand {
 		permission = "wm.admin.help"
 	)
 	public void helpCommand(CommandArguments arguments) {
-		final var isPlayer = arguments.isSenderPlayer();
-		final var header = chatManager.coloredRawMessage("&3&l---- Whack Me Admin Commands ----");
+		final boolean isPlayer = arguments.isSenderPlayer();
+		final String header = chatManager.coloredRawMessage("&3&l---- Whack Me Admin Commands ----");
 		final CommandSender sender = arguments.getSender();
 
 		arguments.sendMessage("");
 		MiscUtils.sendCenteredMessage(sender, header);
 		arguments.sendMessage("");
 
-		for (final var command : plugin.getCommandFramework().getCommands().stream().sorted(Collections
-			.reverseOrder(Comparator.comparingInt(cmd -> cmd.usage().length()))).toList()) {
+		for (final Command command : plugin.getCommandFramework().getCommands().stream().sorted(Collections
+			.reverseOrder(Comparator.comparingInt(cmd -> cmd.usage().length()))).collect(Collectors.toList())) {
 			final String usage = command.usage(), desc = command.desc();
 
 			if (usage.isEmpty()) continue;
@@ -203,7 +205,7 @@ public class AdminCommands extends AbstractCommand {
 		desc = "Shows all of the existing arenas"
 	)
 	public void listCommand(CommandArguments arguments) {
-		final var arenas = plugin.getArenaRegistry().getArenas();
+		final Set<Arena> arenas = plugin.getArenaRegistry().getArenas();
 
 		if (arenas.isEmpty()) {
 			arguments.sendMessage(chatManager.prefixedMessage("commands.list_command.no_arenas_created"));
@@ -220,7 +222,7 @@ public class AdminCommands extends AbstractCommand {
 		desc = "Kicks specified player if they're playing"
 	)
 	public void kickCommand(CommandArguments arguments) {
-		final var arena = plugin.getArenaRegistry().getArena(arguments.getArgument(0));
+		final Arena arena = plugin.getArenaRegistry().getArena(arguments.getArgument(0));
 
 		if (arena == null) {
 			arguments.sendMessage(chatManager.prefixedMessage("commands.no_arena_like_that"));
@@ -239,8 +241,8 @@ public class AdminCommands extends AbstractCommand {
 	public void reloadCommand(CommandArguments arguments) {
 		plugin.reload();
 
-		for (var arena : plugin.getArenaRegistry().getArenas()) {
-			final var player = arena.getPlayer();
+		for (Arena arena : plugin.getArenaRegistry().getArenas()) {
+			final Player player = arena.getPlayer();
 
 			if (player != null) {
 				player.setFlySpeed(.1F);
@@ -270,18 +272,18 @@ public class AdminCommands extends AbstractCommand {
 
 		if (args.length == 2) {
 			if (arg.equalsIgnoreCase("top")) {
-				return List.of("tours_played", "record_score");
+				return Arrays.asList("tours_played", "record_score");
 			}
 
 			if (arg.equalsIgnoreCase("stats")) {
-				return plugin.getServer().getOnlinePlayers().stream().map(Player::getName).toList();
+				return plugin.getServer().getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList());
 			}
 
 			if (!commands.contains(arg)) {
 				return null;
 			}
 
-			var arenas = plugin.getArenaRegistry().getArenas().stream().map(Arena::getId).collect(Collectors.toList());
+			List<String> arenas = plugin.getArenaRegistry().getArenas().stream().map(Arena::getId).collect(Collectors.toList());
 			StringUtil.copyPartialMatches(args[1], arenas, completions);
 
 			arenas.sort(null);

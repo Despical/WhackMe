@@ -51,14 +51,14 @@ public class ChatManager {
 	}
 
 	public String message(String path, Player player) {
-		var returnString = message(path);
+		String returnString = message(path);
 		returnString = formatPlaceholders(returnString, player);
 
 		return returnString;
 	}
 
 	public String formatPlaceholders(String message, Player player) {
-		var returnString = message;
+		String returnString = message;
 		returnString = returnString.replace("%player%", player.getName());
 
 		if (papiEnabled) {

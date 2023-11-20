@@ -38,7 +38,7 @@ public class Reward {
 		private final int chance, executor;
 
 		public SubReward(final WhackMe plugin, final String rawCode) {
-			var processedCode = rawCode;
+			String processedCode = rawCode;
 
 			if (rawCode.contains("p:")) {
 				this.executor = 2;

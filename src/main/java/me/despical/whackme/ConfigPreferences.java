@@ -11,6 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -59,9 +60,9 @@ public class ConfigPreferences {
 	private void loadOptions() {
 		this.options.clear();
 
-		final var config = plugin.getConfig();
+		final FileConfiguration config = plugin.getConfig();
 
-		for (final var option : Option.values()) {
+		for (final Option option : Option.values()) {
 			options.put(option, config.getBoolean(option.path, option.def));
 		}
 
@@ -79,7 +80,7 @@ public class ConfigPreferences {
 		BLOCK_COMMANDS(false), BOSS_BAR_ENABLED, CHAT_FORMAT_ENABLED, CLEAR_EFFECTS,
 		CLEAR_INVENTORY, DATABASE_ENABLED(false), BLOCK_LEAVE_COMMAND(false),
 		UPDATE_NOTIFIER_ENABLED, INVENTORY_MANAGER_ENABLED((config) -> {
-			final var list = config.getStringList("Inventory-Manager.Do-Not-Restore");
+			final List<String> list = config.getStringList("Inventory-Manager.Do-Not-Restore");
 			list.forEach(InventorySerializer::addNonSerializableElements);
 
 			return config.getBoolean("Inventory-Manager.Enabled");
@@ -104,10 +105,10 @@ public class ConfigPreferences {
 	}
 
 	private void initializeItems() {
-		final var config = plugin.getConfig();
-		final var greenBlockMsg = config.getString("Point-Blocks.Punch-Me");
-		final var redBlockMsg = config.getString("Point-Blocks.Dont-Punch-Me");
-		final var cyanBlockMsg = config.getString("Point-Blocks.Ouch");
+		final FileConfiguration config = plugin.getConfig();
+		final String greenBlockMsg = config.getString("Point-Blocks.Punch-Me");
+		final String redBlockMsg = config.getString("Point-Blocks.Dont-Punch-Me");
+		final String cyanBlockMsg = config.getString("Point-Blocks.Ouch");
 
 		GREEN_BLOCK = greenBlockMsg.startsWith("skull:") ? ItemUtils.getSkull(greenBlockMsg.substring(6)) : XMaterial.valueOf(greenBlockMsg).parseItem();
 		RED_BLOCK = redBlockMsg.startsWith("skull:") ? ItemUtils.getSkull(redBlockMsg.substring(6)) : XMaterial.valueOf(redBlockMsg).parseItem();

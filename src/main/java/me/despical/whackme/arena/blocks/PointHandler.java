@@ -27,7 +27,7 @@ public class PointHandler extends BukkitRunnable {
 
 	@Override
 	public void run() {
-		final var player = arena.getPlayer();
+		final Player player = arena.getPlayer();
 
 		if (player == null) return;
 

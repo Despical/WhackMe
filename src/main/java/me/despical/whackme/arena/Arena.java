@@ -10,7 +10,9 @@ import me.despical.whackme.arena.blocks.PointBlock;
 import me.despical.whackme.arena.blocks.PointHandler;
 import me.despical.whackme.arena.managers.BossBarManager;
 import me.despical.whackme.arena.options.ArenaOption;
+import me.despical.whackme.handlers.ChatManager;
 import me.despical.whackme.handlers.rewards.Reward;
+import me.despical.whackme.user.User;
 import me.despical.whackme.utils.Utils;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -52,7 +54,7 @@ public class Arena extends BukkitRunnable {
 		this.arenaOptions = new EnumMap<>(ArenaOption.class);
 		this.gameLocations = new EnumMap<>(GameLocation.class);
 
-		for (final var option : ArenaOption.values()) {
+		for (final ArenaOption option : ArenaOption.values()) {
 			arenaOptions.put(option, option.getDefaultValue());
 		}
 	}
@@ -84,7 +86,7 @@ public class Arena extends BukkitRunnable {
 	public void addPlayer(Player player) {
 		if (player == null) return;
 
-		final var event = new WMJoinEvent(player, this);
+		final WMJoinEvent event = new WMJoinEvent(player, this);
 
 		plugin.getServer().getPluginManager().callEvent(event);
 
@@ -124,8 +126,8 @@ public class Arena extends BukkitRunnable {
 	public void removePlayer(boolean flag) {
 		plugin.getServer().getPluginManager().callEvent(new WMLeaveEvent(player, this));
 
-		final var user = plugin.getUserManager().getUser(player);
-		final var chatManager = plugin.getChatManager();
+		final User user = plugin.getUserManager().getUser(player);
+		final ChatManager chatManager = plugin.getChatManager();
 		final int score = user.getStat(StatsStorage.StatisticType.LOCAL_SCORE);
 
 		if (score > user.getStat(StatsStorage.StatisticType.RECORD_SCORE)) {

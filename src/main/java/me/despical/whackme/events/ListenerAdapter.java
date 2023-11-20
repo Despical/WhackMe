@@ -21,14 +21,6 @@ public abstract class ListenerAdapter implements Listener {
 	}
 
 	public static void registerEvents(WhackMe plugin) {
-		final Class<?>[] listenerAdapters = {Events.class};
-
-		try {
-			for (final var listenerAdapter : listenerAdapters) {
-				listenerAdapter.getConstructor(WhackMe.class).newInstance(plugin);
-			}
-		} catch (Exception ignored) {
-			plugin.getLogger().log(java.util.logging.Level.SEVERE, "An exception occurred on event registering.");
-		}
+		new Events(plugin);
 	}
 }
