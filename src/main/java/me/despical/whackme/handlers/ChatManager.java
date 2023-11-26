@@ -1,6 +1,7 @@
 package me.despical.whackme.handlers;
 
 import me.clip.placeholderapi.PlaceholderAPI;
+import me.despical.commandframework.CommandFramework;
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.util.Strings;
 import me.despical.whackme.WhackMe;
@@ -27,6 +28,8 @@ public class ChatManager {
 		this.config = ConfigUtils.getConfig(plugin, "messages");
 		this.prefix = message("in_game.plugin_prefix");
 		this.papiEnabled = plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI");
+
+		CommandFramework.NO_PERMISSION = message("Commands.No-Permission");
 	}
 
 	public boolean isPapiEnabled() {
