@@ -226,7 +226,12 @@ public class AdminCommands extends AbstractCommand {
 			return;
 		}
 
-		arena.removePlayer();
+		if (arena.getPlayer() != null) {
+			arena.removePlayer();
+			return;
+		}
+
+		arguments.sendMessage(chatManager.prefixedMessage("commands.no_one_playing"));
 	}
 
 	@Command(

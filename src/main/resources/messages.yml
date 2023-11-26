@@ -20,6 +20,7 @@ Commands:
   Only-By-Player: "&cYou can execute this command only as player!"
   No-Permission: "&cYou don't have enough permission to use this command!"
   Success-Reload: "&aSystem successfully reloaded all configurations and arenas!"
+  No-One-Playing: "&cNo one playing Whack Me in this arena at the moment!"
   Player-Not-Found: "&cWe couldn't find any player with that name matching!"
   # %wm_{arena}_player_name% -> placeholder will return text below if arena player is null.
   Unknown-Player: "Unknown"
