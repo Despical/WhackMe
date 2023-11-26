@@ -270,7 +270,7 @@ public class AdminCommands extends AbstractCommand {
 		commands.remove("wm");
 
 		if (args.length == 1) {
-			StringUtil.copyPartialMatches(arg, hasPerm ? commands : Arrays.asList("join", "randomjoin", "top", "stats"), completions);
+			StringUtil.copyPartialMatches(arg, hasPerm ? commands : Arrays.asList("join", "randomjoin", "leave", "top", "stats"), completions);
 		}
 
 		if (args.length == 2) {
