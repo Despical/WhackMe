@@ -265,11 +265,12 @@ public class AdminCommands extends AbstractCommand {
 	public List<String> onTabComplete(CommandArguments arguments) {
 		final List<String> completions = new ArrayList<>(), commands = plugin.getCommandFramework().getCommands().stream().map(cmd -> cmd.name().replace(arguments.getLabel() + '.', "")).collect(Collectors.toList());
 		final String args[] = arguments.getArguments(), arg = args[0];
+		final boolean hasPerm = arguments.hasPermission("oitc.admin") || arguments.getSender().isOp();
 
 		commands.remove("wm");
 
 		if (args.length == 1) {
-			StringUtil.copyPartialMatches(arg, commands, completions);
+			StringUtil.copyPartialMatches(arg, hasPerm ? commands : Arrays.asList("join", "randomjoin", "top", "stats"), completions);
 		}
 
 		if (args.length == 2) {
@@ -284,6 +285,8 @@ public class AdminCommands extends AbstractCommand {
 			if (!commands.contains(arg)) {
 				return null;
 			}
+
+			if (!hasPerm && !arg.equalsIgnoreCase("join")) return null;
 
 			List<String> arenas = plugin.getArenaRegistry().getArenas().stream().map(Arena::getId).collect(Collectors.toList());
 			StringUtil.copyPartialMatches(args[1], arenas, completions);
