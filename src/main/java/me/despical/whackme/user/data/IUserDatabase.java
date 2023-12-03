@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
  * <p>
  * Created at 20.06.2022
  */
-public abstract sealed class IUserDatabase permits FileStatistics, MysqlManager {
+public abstract class IUserDatabase {
 
 	@NotNull
 	protected final WhackMe plugin;

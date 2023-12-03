@@ -28,7 +28,7 @@ public class Utils {
 
 		center = new Location(center.getWorld(), center.getX(), center.getY(), center.getZ());
 
-		for (final var block : Objects.requireNonNull(getBlocksSurroundedBy(center))) {
+		for (final Block block : getBlocksSurroundedBy(center)) {
 			if (block.getType() != END_PORTAL_FRAME.getType()) return false;
 		}
 
@@ -36,10 +36,10 @@ public class Utils {
 	}
 
 	public static Set<Block> getBlocksSurroundedBy(Location center) {
-		final var blocks = new HashSet<Block>();
+		final Set<Block> blocks = new HashSet<>();
 
 		for (int[] array : DIRECTIONS) {
-			final var block = center.clone().add(array[0], 0, array[1]).getBlock();
+			final Block block = center.clone().add(array[0], 0, array[1]).getBlock();
 
 			blocks.add(block);
 		}
@@ -55,7 +55,7 @@ public class Utils {
 	}
 
 	public static boolean hasJoinPermission(Player player) {
-		final var permission = plugin.getConfig().getString("Join-Permission");
+		final String permission = plugin.getConfig().getString("Join-Permission");
 
 		return permission == null || permission.isEmpty() || player != null && player.hasPermission(permission);
 	}

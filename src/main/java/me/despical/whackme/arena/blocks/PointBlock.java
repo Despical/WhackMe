@@ -8,6 +8,7 @@ import me.despical.whackme.arena.options.ArenaOption;
 import me.despical.whackme.handlers.ChatManager;
 import me.despical.whackme.handlers.SoundManager;
 import me.despical.whackme.handlers.rewards.Reward;
+import me.despical.whackme.user.User;
 import me.despical.whackme.utils.Utils;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
@@ -104,11 +105,11 @@ public class PointBlock extends BukkitRunnable {
 
 			@EventHandler
 			public void onArmorStandManipulate(PlayerArmorStandManipulateEvent event) {
-				final var player = event.getPlayer();
+				final Player player = event.getPlayer();
 
 				if (!arena.containPlayer(player)) return;
 
-				final var armorStand = event.getRightClicked();
+				final ArmorStand armorStand = event.getRightClicked();
 
 				if (!armorStand.equals(stand)) return;
 
@@ -117,25 +118,30 @@ public class PointBlock extends BukkitRunnable {
 
 			@EventHandler
 			public void onArmorStandDamage(EntityDamageByEntityEvent event) {
-				if (!(event.getDamager() instanceof Player player)) return;
-				if (!(event.getEntity() instanceof ArmorStand armorStand)) return;
+				if (!(event.getDamager() instanceof Player)) return;
+				if (!(event.getEntity() instanceof ArmorStand)) return;
+
+				Player player = (Player) event.getDamager();
+				ArmorStand armorStand = (ArmorStand) event.getEntity();
 
 				if (!arena.containPlayer(player)) return;
 				if (!armorStand.equals(stand)) return;
 
-				final var user = plugin.getUserManager().getUser(player);
-				final var name = stand.getCustomName();
+				final User user = plugin.getUserManager().getUser(player);
+				final String name = stand.getCustomName();
 
 				if (name == null) return;
 				if (stand.getCustomName().equals(OUCH)) return;
 
 				if (name.equalsIgnoreCase(PUNCH_ME)) {
 					user.addStat(StatsStorage.StatisticType.LOCAL_SCORE, 1);
+					user.addStat(StatsStorage.StatisticType.PLUS_BLOCKS, 1);
 
 					plugin.getSoundManager().playSound(player, SoundManager.GameSounds.POINT_SOUND);
 					plugin.getRewardsFactory().performReward(player, Reward.RewardType.SUCCESSFUL_POINT);
 				} else if (name.equalsIgnoreCase(DONT_PUNCH_ME)) {
 					user.addStat(StatsStorage.StatisticType.LOCAL_SCORE, -1);
+					user.addStat(StatsStorage.StatisticType.MINUS_BLOCKS, 1);
 
 					plugin.getSoundManager().playSound(player, SoundManager.GameSounds.MINUS_POINT_SOUND);
 					plugin.getRewardsFactory().performReward(player, Reward.RewardType.WRONG_POINT);

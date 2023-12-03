@@ -4,6 +4,8 @@ import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.serializer.LocationSerializer;
 import me.despical.whackme.WhackMe;
 import me.despical.whackme.utils.Utils;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.HashSet;
@@ -28,7 +30,7 @@ public class ArenaRegistry {
 	}
 
 	public Set<Arena> getArenas() {
-		return Set.copyOf(arenas);
+		return new HashSet<>(arenas);
 	}
 
 	public boolean isInArena(Player player) {
@@ -58,19 +60,19 @@ public class ArenaRegistry {
 	public void registerArenas() {
 		this.arenas.clear();
 		
-		final var config = ConfigUtils.getConfig(plugin, "arenas");
-		final var section = config.getConfigurationSection("instances");
+		final FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+		final ConfigurationSection section = config.getConfigurationSection("instances");
 
 		if (section == null) {
 			plugin.getLogger().warning("Couldn't find 'instance' section in arena.yml, delete the file to regenerate it!");
 			return;
 		}
 
-		for (var id : section.getKeys(false)) {
+		for (String id : section.getKeys(false)) {
 			if (id.equals("default")) continue;
 
-			final var path = "instances.%s.".formatted(id);
-			final var arena = new Arena(id);
+			final String path = String.format("instances.%s.", id);
+			final Arena arena = new Arena(id);
 			arena.setReady(true);
 			arena.setCustom(config.getBoolean(path + "custom"));
 			arena.setStartLocation(LocationSerializer.fromString(config.getString(path + "startLocation")));

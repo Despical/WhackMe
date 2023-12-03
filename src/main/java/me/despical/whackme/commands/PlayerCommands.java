@@ -7,16 +7,23 @@ import me.despical.commons.string.StringUtils;
 import me.despical.whackme.ConfigPreferences;
 import me.despical.whackme.WhackMe;
 import me.despical.whackme.api.StatsStorage;
+import me.despical.whackme.arena.Arena;
+import me.despical.whackme.user.User;
 import me.despical.whackme.utils.Utils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static me.despical.commandframework.Command.SenderType.PLAYER;
+import static me.despical.whackme.api.StatsStorage.StatisticType.*;
 
 public class PlayerCommands extends AbstractCommand {
 
@@ -28,7 +35,7 @@ public class PlayerCommands extends AbstractCommand {
 
 			String label = arguments.getLabel(), arg = arguments.getArgument(0);
 
-			final var matches = StringMatcher.match(arg, plugin.getCommandFramework().getCommands().stream().map(cmd -> cmd.name().replace(label + ".", "")).collect(Collectors.toList()));
+			final List<StringMatcher.Match> matches = StringMatcher.match(arg, plugin.getCommandFramework().getCommands().stream().map(cmd -> cmd.name().replace(label + ".", "")).collect(Collectors.toList()));
 
 			if (!matches.isEmpty()) {
 				arguments.sendMessage(chatManager.prefixedMessage("commands.did_you_mean").replace("%command%", label + " " + matches.get(0).getMatch()));
@@ -62,7 +69,7 @@ public class PlayerCommands extends AbstractCommand {
 			return;
 		}
 
-		final var arena = plugin.getArenaRegistry().getArena(arguments.getArgument(0));
+		final Arena arena = plugin.getArenaRegistry().getArena(arguments.getArgument(0));
 
 		if (arena == null) {
 			arguments.sendMessage(chatManager.prefixedMessage("commands.no_arena_like_that"));
@@ -95,7 +102,7 @@ public class PlayerCommands extends AbstractCommand {
 	)
 	public void leaveCommand(CommandArguments arguments) {
 		final Player player = arguments.getSender();
-		final var arena = plugin.getArenaRegistry().getArena(player);
+		final Arena arena = plugin.getArenaRegistry().getArena(player);
 
 		if (arena == null) {
 			player.sendMessage(chatManager.prefixedMessage("commands.not_playing"));
@@ -119,10 +126,10 @@ public class PlayerCommands extends AbstractCommand {
 			return;
 		}
 
-		final var arenas = plugin.getArenaRegistry().getArenas().stream().filter(arena -> arena.getPlayer() == null && arena.isReady()).toList();
+		final List<Arena> arenas = plugin.getArenaRegistry().getArenas().stream().filter(arena -> arena.getPlayer() == null && arena.isReady()).collect(Collectors.toList());
 
 		if (!arenas.isEmpty()) {
-			var arena = arenas.get(0);
+			Arena arena = arenas.get(0);
 
 			if (!Utils.hasJoinPermission(player)) {
 				player.sendMessage(chatManager.prefixedMessage("commands.no_permission"));
@@ -148,18 +155,21 @@ public class PlayerCommands extends AbstractCommand {
 			return;
 		}
 
-		final var user = plugin.getUserManager().getUser(target);
-		final var path = "commands.stats_command.";
+		final User user = plugin.getUserManager().getUser(target);
 
-		if (player.equals(target)) {
-			player.sendMessage(chatManager.message(path + "header", player));
-		} else {
-			player.sendMessage(chatManager.message(path + "header_other", target));
-		}
+		chatManager.getStringList("commands.stats_command.messages").stream().map(message -> formatStats(message, player.equals(target) ? "header" : "header_other", user)).forEach(player::sendMessage);
+	}
 
-		player.sendMessage(chatManager.message(path + "tours_played", player) + user.getStat(StatsStorage.StatisticType.TOURS_PLAYED));
-		player.sendMessage(chatManager.message(path + "record_score", player) + user.getStat(StatsStorage.StatisticType.RECORD_SCORE));
-		player.sendMessage(chatManager.message(path + "footer", player));
+	private String formatStats(String message, String header, User user) {
+		final int minusBlocks = user.getStat(MINUS_BLOCKS), plusBlocks = user.getStat(PLUS_BLOCKS);
+
+		message = message.replace("%header%", chatManager.message("commands.stats_command." + header));
+		message = message.replace("%tours_played%", Integer.toString(user.getStat(TOURS_PLAYED)));
+		message = message.replace("%record_score%", Integer.toString(user.getStat(RECORD_SCORE)));
+		message = message.replace("%whacked_point_blocks%", Integer.toString(plusBlocks));
+		message = message.replace("%whacked_minus_point_blocks%", Integer.toString(minusBlocks));
+		message = message.replace("%whacked_block_rate%", String.format("%.1f", (minusBlocks + plusBlocks == 0 ? 100 : ((double) plusBlocks / (minusBlocks + plusBlocks)) * 100D)));
+		return chatManager.coloredRawMessage(message);
 	}
 
 	@Command(
@@ -182,23 +192,23 @@ public class PlayerCommands extends AbstractCommand {
 	private void printLeaderboard(CommandSender sender, StatsStorage.StatisticType statisticType) {
 		sender.sendMessage(plugin.getChatManager().message("commands.statistics.header"));
 
-		final var stats = StatsStorage.getStats(statisticType);
-		final var statistic = StringUtils.capitalize(statisticType.name().toLowerCase(java.util.Locale.ENGLISH).replace("_", " "));
+		final Map<UUID, Integer> stats = StatsStorage.getStats(statisticType);
+		final String statistic = StringUtils.capitalize(statisticType.name().toLowerCase(java.util.Locale.ENGLISH).replace("_", " "));
 
-		for (var i = 0; i < 10; i++) {
+		for (int i = 0; i < 10; i++) {
 			try {
-				var current = (UUID) stats.keySet().toArray()[stats.keySet().toArray().length - 1];
+				UUID current = (UUID) stats.keySet().toArray()[stats.keySet().toArray().length - 1];
 				sender.sendMessage(formatMessage(statistic, plugin.getServer().getOfflinePlayer(current).getName(), i + 1, stats.get(current)));
 				stats.remove(current);
 			} catch (IndexOutOfBoundsException ex) {
 				sender.sendMessage(formatMessage(statistic, "Empty", i + 1, 0));
 			} catch (NullPointerException ex) {
-				var current = (UUID) stats.keySet().toArray()[stats.keySet().toArray().length - 1];
+				UUID current = (UUID) stats.keySet().toArray()[stats.keySet().toArray().length - 1];
 
 				if (plugin.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
 					try (Connection connection = plugin.getMysqlDatabase().getConnection()) {
-						var statement = connection.createStatement();
-						var set = statement.executeQuery("SELECT name FROM playerstats WHERE UUID='" + current.toString() + "'");
+						Statement statement = connection.createStatement();
+						ResultSet set = statement.executeQuery(String.format("SELECT name FROM playerstats WHERE UUID='%s'", current.toString()));
 
 						if (set.next()) {
 							sender.sendMessage(formatMessage(statistic, set.getString(1), i + 1, stats.get(current)));
@@ -213,7 +223,7 @@ public class PlayerCommands extends AbstractCommand {
 	}
 
 	private String formatMessage(String statisticName, String playerName, int position, int value) {
-		var message = chatManager.message("commands.statistics.format");
+		String message = chatManager.message("commands.statistics.format");
 
 		message = message.replace("%position%", Integer.toString(position));
 		message = message.replace("%name%", playerName);

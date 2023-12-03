@@ -6,9 +6,12 @@ import me.despical.commons.item.ItemBuilder;
 import me.despical.commons.serializer.LocationSerializer;
 import me.despical.inventoryframework.GuiItem;
 import me.despical.inventoryframework.pane.StaticPane;
+import me.despical.whackme.arena.Arena;
 import me.despical.whackme.handlers.setup.SetupInventory;
 import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 
 import java.util.stream.Collectors;
@@ -22,8 +25,8 @@ public class ArenaRegisterComponent implements SetupComponent {
 
 	@Override
 	public void injectComponents(SetupInventory setupInventory, StaticPane pane) {
-		final var player = setupInventory.getPlayer();
-		final var arena = setupInventory.getArena();
+		final Player player = setupInventory.getPlayer();
+		final Arena arena = setupInventory.getArena();
 		final ItemBuilder registeredItem;
 
 		if (!arena.isReady()) {
@@ -41,8 +44,8 @@ public class ArenaRegisterComponent implements SetupComponent {
 		}
 
 		pane.addItem(GuiItem.of(registeredItem.build(), e -> {
-			final var path = "instances.%s.".formatted(arena.getId());
-			final var config = ConfigUtils.getConfig(plugin, "arenas");
+			final String path = String.format("instances.%s.", arena.getId());
+			final FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
 
 			player.closeInventory();
 
@@ -53,7 +56,7 @@ public class ArenaRegisterComponent implements SetupComponent {
 
 			final String[] locations = {"startLocation", "endLocation"};
 
-			for (final var loc : locations) {
+			for (final String loc : locations) {
 				if (!config.isSet(path + loc) || LocationSerializer.isDefaultLocation(config.getString(path + loc))) {
 					player.sendMessage(chatManager.coloredRawMessage("&c&l✘ &cArena validation failed! Please configure following spawn properly: " + loc + " (cannot be world spawn location)"));
 					return;

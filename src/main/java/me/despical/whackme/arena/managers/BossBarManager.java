@@ -5,6 +5,7 @@ import me.despical.commons.number.NumberUtils;
 import me.despical.whackme.ConfigPreferences;
 import me.despical.whackme.WhackMe;
 import me.despical.whackme.arena.Arena;
+import me.despical.whackme.handlers.ChatManager;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
@@ -34,7 +35,7 @@ public class BossBarManager extends BukkitRunnable {
 		this.enabled = plugin.getOption(ConfigPreferences.Option.BOSS_BAR_ENABLED) && ReflectionUtils.supports(13);
 
 		if (enabled) {
-			final var chatManager = plugin.getChatManager();
+			final ChatManager chatManager = plugin.getChatManager();
 
 			this.bossBar = plugin.getServer().createBossBar(chatManager.message("boss_bar.game_info"), BarColor.valueOf(chatManager.message("boss_bar.color")), BarStyle.valueOf(chatManager.message("boss_bar.style")));
 			this.messages = chatManager.getStringList("boss_bar.messages");

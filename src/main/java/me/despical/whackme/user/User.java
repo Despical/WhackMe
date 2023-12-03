@@ -43,7 +43,7 @@ public class User {
 	}
 
 	public String getName() {
-		final var player = getPlayer();
+		final Player player = getPlayer();
 
 		return player != null ? player.getName() : "";
 	}
@@ -60,15 +60,8 @@ public class User {
 		getPlayer().sendMessage(plugin.getChatManager().coloredRawMessage(message));
 	}
 
-	public int getStat(StatsStorage.StatisticType statisticType) {
-		final var statistic = stats.get(statisticType);
-
-		if (statistic == null) {
-			stats.put(statisticType, 0);
-			return 0;
-		}
-
-		return statistic;
+	public Integer getStat(StatsStorage.StatisticType statisticType) {
+		return stats.putIfAbsent(statisticType, 0);
 	}
 
 	public void setStat(StatsStorage.StatisticType stat, int value) {

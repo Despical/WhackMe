@@ -3,12 +3,16 @@ package me.despical.whackme.handlers.rewards;
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.whackme.WhackMe;
 import me.despical.whackme.api.StatsStorage;
+import me.despical.whackme.arena.Arena;
 import me.despical.whackme.user.User;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 /**
  * @author Despical
@@ -28,27 +32,30 @@ public class RewardsFactory {
 	}
 
 	public void performReward(final Player player, final Reward.RewardType type) {
-		final var rewardList = rewards.stream().filter(rew -> rew.getType() == type).toList();
+		final List<Reward> rewardList = rewards.stream().filter(rew -> rew.getType() == type).collect(Collectors.toList());
 
 		if (rewardList.isEmpty()) return;
 
-		for (final var mainRewards : rewardList) {
-			for (final var reward : mainRewards.getRewards()){
+		for (final Reward mainRewards : rewardList) {
+			for (final Reward.SubReward reward : mainRewards.getRewards()){
 				if (ThreadLocalRandom.current().nextInt(0, 100) > reward.getChance()) continue;
 
-				final var command = formatCommandPlaceholders(reward, plugin.getUserManager().getUser(player));
+				final String command = formatCommandPlaceholders(reward, plugin.getUserManager().getUser(player));
 
 				switch (reward.getExecutor()) {
-					case 1 -> plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), command);
-					case 2 -> player.performCommand(command);
+					case 1:
+						plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), command);
+						break;
+					case 2:
+						player.performCommand(command);
 				}
 			}
 		}
 	}
 
 	private String formatCommandPlaceholders(final Reward.SubReward reward, final User user) {
-		var arena = user.getArena();
-		var formatted = reward.getExecutableCode();
+		Arena arena = user.getArena();
+		String formatted = reward.getExecutableCode();
 
 		formatted = formatted.replace("%arena%", arena.getId());
 		formatted = formatted.replace("%player%", user.getPlayer().getName());
@@ -57,11 +64,11 @@ public class RewardsFactory {
 	}
 
 	private void registerRewards() {
-		final var config = ConfigUtils.getConfig(plugin, "rewards");
+		final FileConfiguration config = ConfigUtils.getConfig(plugin, "rewards");
 
 		if (!config.getBoolean("rewards-enabled")) return;
 
-		for (final var rewardType : Reward.RewardType.values()) {
+		for (final Reward.RewardType rewardType : Reward.RewardType.values()) {
 			rewards.add(new Reward(plugin, rewardType, config.getStringList(rewardType.path)));
 		}
 	}

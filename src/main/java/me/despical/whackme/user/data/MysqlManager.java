@@ -7,14 +7,17 @@ import me.despical.whackme.api.StatsStorage;
 import me.despical.whackme.user.User;
 import org.jetbrains.annotations.NotNull;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
  * @author Despical
  * <p>
  * Created at 20.06.2022
  */
-public non-sealed class MysqlManager extends IUserDatabase {
+public class MysqlManager extends IUserDatabase {
 
 	private final String table;
 
@@ -27,16 +30,16 @@ public non-sealed class MysqlManager extends IUserDatabase {
 		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
 			this.database = plugin.getMysqlDatabase();
 
-			try (final var connection = database.getConnection()) {
-				final var statement = connection.createStatement();
+			try (final Connection connection = database.getConnection()) {
+				final Statement statement = connection.createStatement();
 
-				statement.executeUpdate("""
-						CREATE TABLE IF NOT EXISTS `%s` (
-						  `UUID` char(36) NOT NULL PRIMARY KEY,
-						  `name` varchar(32) NOT NULL,
-						  `recordscore` int(11) NOT NULL DEFAULT '0',
-						  `toursplayed` int(11) NOT NULL DEFAULT '0'
-						);""".formatted(table));
+				statement.executeUpdate(String.format(
+						"CREATE TABLE IF NOT EXISTS `%s` (\n" +
+						  "`UUID` char(36) NOT NULL PRIMARY KEY,\n" +
+						  "`name` varchar(32) NOT NULL,\n" +
+						  "`recordscore` int(11) NOT NULL DEFAULT '0',\n" +
+						  "`toursplayed` int(11) NOT NULL DEFAULT '0');",
+					table));
 			} catch (SQLException exception) {
 				exception.fillInStackTrace();
 
@@ -47,18 +50,18 @@ public non-sealed class MysqlManager extends IUserDatabase {
 
 	@Override
 	public void saveStatistic(@NotNull User user, StatsStorage.StatisticType statisticType) {
-		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> database.executeUpdate("UPDATE %s SET %s=%d WHERE UUID='%s';".formatted(table, statisticType.getName(), user.getStat(statisticType), user.getUniqueId().toString())));
+		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> database.executeUpdate(String.format("UPDATE %s SET %s=%d WHERE UUID='%s';", table, statisticType.getName(), user.getStat(statisticType), user.getUniqueId().toString())));
 	}
 
 	@Override
 	public void saveStatistics(@NotNull User user) {
-		final var builder = new StringBuilder(" SET ");
+		final StringBuilder builder = new StringBuilder(" SET ");
 
-		for (final var stat : StatsStorage.StatisticType.values()) {
+		for (final StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
 			if (!stat.isPersistent()) continue;
 
-			final var name = stat.getName();
-			final var value = user.getStat(stat);
+			final String name = stat.getName();
+			final int value = user.getStat(stat);
 
 			if (builder.toString().equalsIgnoreCase(" SET ")) {
 				builder.append(name).append("=").append(value);
@@ -67,30 +70,30 @@ public non-sealed class MysqlManager extends IUserDatabase {
 			builder.append(", ").append(name).append("=").append(value);
 		}
 
-		final var update = builder.toString();
+		final String update = builder.toString();
 
-		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> database.executeUpdate("UPDATE %s%s WHERE UUID='%s';".formatted(table, update, user.getUniqueId().toString())));
+		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> database.executeUpdate(String.format("UPDATE %s%s WHERE UUID='%s';", table, update, user.getUniqueId().toString())));
 	}
 
 	@Override
 	public void loadStatistics(@NotNull User user) {
-		final var uuid = user.getUniqueId().toString();
+		final String uuid = user.getUniqueId().toString();
 
 		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
-			try (final var connection = database.getConnection()) {
-				final var statement = connection.createStatement();
-				final var result = statement.executeQuery("SELECT * from %s WHERE UUID='%s';".formatted(table, uuid));
+			try (final Connection connection = database.getConnection()) {
+				final Statement statement = connection.createStatement();
+				final ResultSet result = statement.executeQuery(String.format("SELECT * from %s WHERE UUID='%s';", table, uuid));
 
 				if (result.next()) {
-					for (final var stat : StatsStorage.StatisticType.values()) {
+					for (final StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
 						if (!stat.isPersistent()) continue;
 
 						user.setStat(stat, result.getInt(stat.getName()));
 					}
 				} else {
-					statement.executeUpdate("INSERT INTO %s (UUID,name) VALUES ('%s','%s');".formatted(table, uuid, user.getName()));
+					statement.executeUpdate(String.format("INSERT INTO %s (UUID,name) VALUES ('%s','%s');", table, uuid, user.getName()));
 
-					for (final var stat : StatsStorage.StatisticType.values()) {
+					for (final StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
 						if (!stat.isPersistent()) continue;
 
 						user.setStat(stat, 0);

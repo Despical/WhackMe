@@ -7,9 +7,14 @@ import me.despical.commons.serializer.InventorySerializer;
 import me.despical.commons.serializer.LocationSerializer;
 import me.despical.inventoryframework.GuiItem;
 import me.despical.inventoryframework.pane.StaticPane;
+import me.despical.whackme.arena.Arena;
 import me.despical.whackme.handlers.setup.SetupInventory;
+import me.despical.whackme.user.User;
 import me.despical.whackme.utils.Utils;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
@@ -17,10 +22,10 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -32,10 +37,10 @@ public class SpawnComponents implements SetupComponent {
 
 	@Override
 	public void injectComponents(SetupInventory setupInventory, StaticPane pane) {
-		final var player = setupInventory.getPlayer();
-		final var arena = setupInventory.getArena();
-		final var path = "instances." + arena.getId() + ".";
-		final var user = plugin.getUserManager().getUser(player);
+		final Player player = setupInventory.getPlayer();
+		final Arena arena = setupInventory.getArena();
+		final String path = "instances." + arena.getId() + ".";
+		final User user = plugin.getUserManager().getUser(player);
 
 		pane.addItem(GuiItem.of(new ItemBuilder(user.isInEditingMode() ? XMaterial.ENDER_EYE : XMaterial.ENDER_PEARL)
 			.name("&e&lSet Custom Portals")
@@ -60,13 +65,13 @@ public class SpawnComponents implements SetupComponent {
 
 			InventorySerializer.saveInventoryToFile(plugin, player);
 
-			var inventory = player.getInventory();
+			Inventory inventory = player.getInventory();
 			inventory.clear();
 			inventory.setItem(4, new ItemBuilder(XMaterial.BARRIER).name("&c&lLeave Editing Mode").build());
 
-			var item = XMaterial.END_PORTAL_FRAME.parseItem();
+			ItemStack item = XMaterial.END_PORTAL_FRAME.parseItem();
 
-			for (int slot : List.of(0, 1, 2, 3, 5, 6, 7, 8)) {
+			for (int slot : Arrays.asList(0, 1, 2, 3, 5, 6, 7, 8)) {
 				inventory.setItem(slot, item);
 			}
 
@@ -75,13 +80,13 @@ public class SpawnComponents implements SetupComponent {
 			user.setEditingMode(true);
 			user.sendRawMessage("&e✔ Info | &aIn editing mode you can place end portals to anywhere you want and can leave by clicking barrier item.");
 
-			var locations = new HashSet<>(arena.getLocations());
+			Set<Location> locations = new HashSet<>(arena.getLocations());
 
 			plugin.getServer().getPluginManager().registerEvents(new Listener() {
 
 				@EventHandler
 				public void onLeaveEditing(PlayerInteractEvent event) {
-					final var user = plugin.getUserManager().getUser(event.getPlayer());
+					final User user = plugin.getUserManager().getUser(event.getPlayer());
 
 					if (!user.isInEditingMode()) return;
 					if (event.getAction() == Action.PHYSICAL) return;
@@ -95,14 +100,14 @@ public class SpawnComponents implements SetupComponent {
 
 					arena.setLocations(new ArrayList<>(locations));
 
-					var config = ConfigUtils.getConfig(plugin, "arenas");
-					config.set("instances.%s.portalLocations".formatted(arena.getId()), locations.stream().map(LocationSerializer::toString).collect(Collectors.toList()));
+					FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+					config.set(String.format("instances.%s.portalLocations", arena.getId()), locations.stream().map(LocationSerializer::toString).collect(Collectors.toList()));
 					ConfigUtils.saveConfig(plugin, config, "arenas");
 				}
 
 				@EventHandler
 				public void onPortalPlacing(BlockPlaceEvent event) {
-					final var user = plugin.getUserManager().getUser(event.getPlayer());
+					final User user = plugin.getUserManager().getUser(event.getPlayer());
 
 					if (!user.isInEditingMode()) return;
 					if (event.getBlock().getType() != Material.END_PORTAL_FRAME) return;
@@ -112,7 +117,7 @@ public class SpawnComponents implements SetupComponent {
 
 				@EventHandler
 				public void onPortalBreaking(BlockBreakEvent event) {
-					final var user = plugin.getUserManager().getUser(event.getPlayer());
+					final User user = plugin.getUserManager().getUser(event.getPlayer());
 
 					if (!user.isInEditingMode()) return;
 					if (event.getBlock().getType() != Material.END_PORTAL_FRAME) return;
@@ -133,11 +138,11 @@ public class SpawnComponents implements SetupComponent {
 			.lore("&caround you without placing manually.")
 			.build(), e -> {
 
-			final var location = player.getLocation();
+			final Location location = player.getLocation();
 			boolean reopenInventory = false;
 
 			if (e.isShiftClick()) {
-				final var portal = Utils.END_PORTAL_FRAME.getType();
+				final Material portal = Utils.END_PORTAL_FRAME.getType();
 
 				for (int[] array : Utils.DIRECTIONS) {
 					location.clone().add(array[0], 0, array[1]).getBlock().setType(portal);
@@ -158,10 +163,10 @@ public class SpawnComponents implements SetupComponent {
 			arena.setStartLocation(location);
 			user.sendRawMessage("&e✔ Completed | &aStart location for arena &e" + arena.getId() + " &aset at your location!");
 
-			final var config = ConfigUtils.getConfig(plugin, "arenas");
+			final FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
 			config.set(path + "custom", arena.isCustom());
 			config.set(path + "startLocation", LocationSerializer.toString(location));
-			config.set(path + "portalLocations", arena.getLocations().stream().map(LocationSerializer::toString).toList());
+			config.set(path + "portalLocations", arena.getLocations().stream().map(LocationSerializer::toString).collect(Collectors.toList()));
 			ConfigUtils.saveConfig(plugin, config, "arenas");
 
 			if (reopenInventory)
@@ -181,10 +186,10 @@ public class SpawnComponents implements SetupComponent {
 
 			user.sendRawMessage("&e✔ Completed | &aEnding location for arena &e" + arena.getId() + " &aset at your location!");
 
-			final var location = player.getLocation().clone().add(.5, 0, .5);
+			final Location location = player.getLocation().clone().add(.5, 0, .5);
 			arena.setEndLocation(location);
 
-			var config = ConfigUtils.getConfig(plugin, "arenas");
+			FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
 			config.set(path + "endLocation", LocationSerializer.toString(location));
 			ConfigUtils.saveConfig(plugin, config, "arenas");
 		}), 5, 1);

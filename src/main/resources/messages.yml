@@ -20,6 +20,7 @@ Commands:
   Only-By-Player: "&cYou can execute this command only as player!"
   No-Permission: "&cYou don't have enough permission to use this command!"
   Success-Reload: "&aSystem successfully reloaded all configurations and arenas!"
+  No-One-Playing: "&cNo one playing Whack Me in this arena at the moment!"
   Player-Not-Found: "&cWe couldn't find any player with that name matching!"
   # %wm_{arena}_player_name% -> placeholder will return text below if arena player is null.
   Unknown-Player: "Unknown"
@@ -32,9 +33,14 @@ Commands:
   Stats-Command:
     Header: "&l[-----YOUR STATS-----]"
     Header-Other: "&l[-----STATS FOR %player%-----]"
-    Footer: "&l[--------------------]"
-    Record-Score: "&aRecord Score: &e"
-    Tours-Played: "&aTours played: &e"
+    Messages:
+      - "%header%"
+      - "&8 * &aRecord Score: &e%record_score%"
+      - "&8 * &aTours Played: &e%tours_played%"
+      - "&8 * &aWhacked Plus Point: &e%whacked_point_blocks%"
+      - "&8 * &aWhacked Minus Point: &e%whacked_minus_point_blocks%"
+      - "&8 * &aWhacked Block Rate: &e%whacked_block_rate%%"
+      - "&l[--------------------]"
   List-Command:
     No-Arenas-Created: "&cThere aren't any game instances to show! What about creating one?"
     Format: "&aExisting arenas: &7%list%"
