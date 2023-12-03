@@ -2,11 +2,12 @@ package me.despical.whackme.handlers;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.despical.whackme.WhackMe;
-import me.despical.whackme.api.StatsStorage;
 import me.despical.whackme.arena.Arena;
 import me.despical.whackme.user.User;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+
+import static me.despical.whackme.api.StatsStorage.StatisticType.*;
 
 /**
  * @author Despical
@@ -55,10 +56,17 @@ public class PlaceholderManager extends PlaceholderExpansion {
 		switch (id.toLowerCase()) {
 			case "online_players":
 				return Long.toString(plugin.getArenaRegistry().getArenas().stream().filter(arena -> arena.getPlayer() != null).count());
+			case "whacked_point_blocks":
+				return Integer.toString(user.getStat(PLUS_BLOCKS));
+			case "whacked_minus_point_blocks":
+				return Integer.toString(user.getStat(MINUS_BLOCKS));
+			case "whacked_block_rate":
+				int minusBlocks = user.getStat(MINUS_BLOCKS), plusBlocks = user.getStat(PLUS_BLOCKS);
+				return String.format("%.1f", (minusBlocks + plusBlocks == 0 ? 100 : ((double) plusBlocks / (minusBlocks + plusBlocks)) * 100D));
 			case "record_score":
-				return Integer.toString(user.getStat(StatsStorage.StatisticType.RECORD_SCORE));
+				return Integer.toString(user.getStat(RECORD_SCORE));
 			case "tours_played":
-				return Integer.toString(user.getStat(StatsStorage.StatisticType.TOURS_PLAYED));
+				return Integer.toString(user.getStat(TOURS_PLAYED));
 			default:
 				return handleArenaPlaceholderRequest(id);
 		}
