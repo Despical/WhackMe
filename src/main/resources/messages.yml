@@ -33,9 +33,14 @@ Commands:
   Stats-Command:
     Header: "&l[-----YOUR STATS-----]"
     Header-Other: "&l[-----STATS FOR %player%-----]"
-    Footer: "&l[--------------------]"
-    Record-Score: "&aRecord Score: &e"
-    Tours-Played: "&aTours played: &e"
+    Messages:
+      - "%header%"
+      - "&8 * &aRecord Score: &e%record_score%"
+      - "&8 * &aTours Played: &e%tours_played%"
+      - "&8 * &aWhacked Plus Point: &e%whacked_point_blocks%"
+      - "&8 * &aWhacked Minus Point: &e%whacked_minus_point_blocks%"
+      - "&8 * &aWhacked Block Rate: &e%whacked_block_rate%%"
+      - "&l[--------------------]"
   List-Command:
     No-Arenas-Created: "&cThere aren't any game instances to show! What about creating one?"
     Format: "&aExisting arenas: &7%list%"

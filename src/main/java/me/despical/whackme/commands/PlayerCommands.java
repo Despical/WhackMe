@@ -23,6 +23,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static me.despical.commandframework.Command.SenderType.PLAYER;
+import static me.despical.whackme.api.StatsStorage.StatisticType.*;
 
 public class PlayerCommands extends AbstractCommand {
 
@@ -125,7 +126,7 @@ public class PlayerCommands extends AbstractCommand {
 			return;
 		}
 
-		final List<Arena> arenas = plugin.getArenaRegistry().getArenas().stream().filter(arena -> arena.getPlayer() == null && arena.isReady()).collect(Collectors.toList());;
+		final List<Arena> arenas = plugin.getArenaRegistry().getArenas().stream().filter(arena -> arena.getPlayer() == null && arena.isReady()).collect(Collectors.toList());
 
 		if (!arenas.isEmpty()) {
 			Arena arena = arenas.get(0);
@@ -155,17 +156,20 @@ public class PlayerCommands extends AbstractCommand {
 		}
 
 		final User user = plugin.getUserManager().getUser(target);
-		final String path = "commands.stats_command.";
 
-		if (player.equals(target)) {
-			player.sendMessage(chatManager.message(path + "header", player));
-		} else {
-			player.sendMessage(chatManager.message(path + "header_other", target));
-		}
+		chatManager.getStringList("commands.stats_command.messages").stream().map(message -> formatStats(message, player.equals(target) ? "header" : "header_other", user)).forEach(player::sendMessage);
+	}
 
-		player.sendMessage(chatManager.message(path + "tours_played", player) + user.getStat(StatsStorage.StatisticType.TOURS_PLAYED));
-		player.sendMessage(chatManager.message(path + "record_score", player) + user.getStat(StatsStorage.StatisticType.RECORD_SCORE));
-		player.sendMessage(chatManager.message(path + "footer", player));
+	private String formatStats(String message, String header, User user) {
+		final int minusBlocks = user.getStat(MINUS_BLOCKS), plusBlocks = user.getStat(PLUS_BLOCKS);
+
+		message = message.replace("%header%", chatManager.message("commands.stats_command." + header));
+		message = message.replace("%tours_played%", Integer.toString(user.getStat(TOURS_PLAYED)));
+		message = message.replace("%record_score%", Integer.toString(user.getStat(RECORD_SCORE)));
+		message = message.replace("%whacked_point_blocks%", Integer.toString(plusBlocks));
+		message = message.replace("%whacked_minus_point_blocks%", Integer.toString(minusBlocks));
+		message = message.replace("%whacked_block_rate%", String.format("%.1f", (minusBlocks + plusBlocks == 0 ? 100 : ((double) plusBlocks / (minusBlocks + plusBlocks)) * 100D)));
+		return chatManager.coloredRawMessage(message);
 	}
 
 	@Command(

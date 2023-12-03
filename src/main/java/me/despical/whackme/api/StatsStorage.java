@@ -67,6 +67,8 @@ public class StatsStorage {
 
 		TOURS_PLAYED("toursplayed"),
 		RECORD_SCORE("recordscore"),
+		PLUS_BLOCKS("whackedpluspointblocks"),
+		MINUS_BLOCKS("whackedminuspointblocks"),
 		LOCAL_SCORE("local_score", false);
 
 		final String name;
