@@ -61,7 +61,7 @@ public class User {
 	}
 
 	public int getStat(StatsStorage.StatisticType statisticType) {
-		return stats.putIfAbsent(statisticType, 0);
+		return stats.computeIfAbsent(statisticType, stat -> 0);
 	}
 
 	public void setStat(StatsStorage.StatisticType stat, int value) {
