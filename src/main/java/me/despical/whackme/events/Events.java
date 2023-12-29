@@ -94,14 +94,13 @@ public class Events extends ListenerAdapter {
 			InventorySerializer.loadInventory(plugin, player);
 		}
 
-		if (!plugin.getOption(ConfigPreferences.Option.UPDATE_NOTIFIER_ENABLED) && !player.hasPermission("wm.update")) {
-			return;
-		}
+		if (!plugin.getOption(ConfigPreferences.Option.UPDATE_NOTIFIER_ENABLED)) return;
+		if (!player.hasPermission("wm.update")) return;
 
 		UpdateChecker.init(plugin, 104912).requestUpdateCheck().whenComplete((result, exception) -> {
 			if (result.requiresUpdate()) {
-				player.sendMessage(plugin.getChatManager().coloredRawMessage("&3[Whack Me] &bFound an update: v" + result.getNewestVersion()));
-				player.sendMessage(plugin.getChatManager().coloredRawMessage("&3>> &bhttps://spigotmc.org/resources/104912"));
+				player.sendMessage(chatManager.coloredRawMessage("&3[Whack Me] &bFound an update: v" + result.getNewestVersion()));
+				player.sendMessage(chatManager.coloredRawMessage("&3>> &bhttps://spigotmc.org/resources/104912"));
 			}
 		});
 	}
