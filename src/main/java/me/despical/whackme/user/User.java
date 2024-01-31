@@ -60,8 +60,8 @@ public class User {
 		getPlayer().sendMessage(plugin.getChatManager().coloredRawMessage(message));
 	}
 
-	public Integer getStat(StatsStorage.StatisticType statisticType) {
-		return stats.putIfAbsent(statisticType, 0);
+	public int getStat(StatsStorage.StatisticType statisticType) {
+		return stats.computeIfAbsent(statisticType, stat -> 0);
 	}
 
 	public void setStat(StatsStorage.StatisticType stat, int value) {
