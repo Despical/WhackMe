@@ -74,7 +74,8 @@ public class AdminCommands extends AbstractCommand {
 		config.set(path + "custom", false);
 		config.set(path + "startLocation", LocationSerializer.SERIALIZED_LOCATION);
 		config.set(path + "endLocation", LocationSerializer.SERIALIZED_LOCATION);
-		config.set(path + "portalLocations", new ArrayList<>());
+		config.set(path + "portalLocations", Collections.EMPTY_LIST);
+		config.set(path + "signs", Collections.EMPTY_LIST);
 
 		ConfigUtils.saveConfig(plugin, config, "arenas");
 
@@ -265,7 +266,7 @@ public class AdminCommands extends AbstractCommand {
 	public List<String> onTabComplete(CommandArguments arguments) {
 		final List<String> completions = new ArrayList<>(), commands = plugin.getCommandFramework().getCommands().stream().map(cmd -> cmd.name().replace(arguments.getLabel() + '.', "")).collect(Collectors.toList());
 		final String args[] = arguments.getArguments(), arg = args[0];
-		final boolean hasPerm = arguments.hasPermission("oitc.admin") || arguments.getSender().isOp();
+		final boolean hasPerm = arguments.hasPermission("wm.admin") || arguments.getSender().isOp();
 
 		commands.remove("wm");
 
