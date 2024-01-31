@@ -145,7 +145,6 @@ public class WhackMe extends JavaPlugin {
 		return commandFramework;
 	}
 
-	@Deprecated
 	@NotNull
 	public ConfigPreferences getConfigPreferences() {
 		return configPreferences;

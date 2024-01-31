@@ -23,8 +23,8 @@ import java.util.Map;
 public class ConfigPreferences {
 
 	public static ItemStack RED_BLOCK, GREEN_BLOCK, CYAN_BLOCK;
-	private static final WhackMe plugin = JavaPlugin.getPlugin(WhackMe.class);
 
+	private static final WhackMe plugin = JavaPlugin.getPlugin(WhackMe.class);
 	private final Map<Option, Boolean> options;
 
 	private double pointBlockMultiplier;
@@ -36,8 +36,8 @@ public class ConfigPreferences {
 
 		plugin.saveDefaultConfig();
 
-		this.initializeItems();
 		this.loadOptions();
+		this.initializeItems();
 	}
 
 	public void reload() {
@@ -77,20 +77,26 @@ public class ConfigPreferences {
 
 	public enum Option {
 
-		BLOCK_COMMANDS(false), BOSS_BAR_ENABLED, CHAT_FORMAT_ENABLED, CLEAR_EFFECTS,
-		CLEAR_INVENTORY, DATABASE_ENABLED(false), BLOCK_LEAVE_COMMAND(false),
-		UPDATE_NOTIFIER_ENABLED, INVENTORY_MANAGER_ENABLED((config) -> {
+		BLOCK_COMMANDS(false),
+		BLOCK_LEAVE_COMMAND(false),
+		BOSS_BAR_ENABLED,
+		CHAT_FORMAT_ENABLED,
+		CLEAR_EFFECTS,
+		CLEAR_INVENTORY,
+		DATABASE_ENABLED(false),
+		INVENTORY_MANAGER_ENABLED((config) -> {
 			final List<String> list = config.getStringList("Inventory-Manager.Do-Not-Restore");
 			list.forEach(InventorySerializer::addNonSerializableElements);
 
 			return config.getBoolean("Inventory-Manager.Enabled");
-		});
+		}),
+		UPDATE_NOTIFIER_ENABLED;
 
 		final String path;
 		final boolean def;
 
 		Option() {
-			this (true);
+			this(true);
 		}
 
 		Option(boolean def) {

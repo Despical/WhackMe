@@ -34,7 +34,7 @@ public class UserManager {
 
 	@NotNull
 	public User addUser(final Player player) {
-		final User user = new User(player.getUniqueId());
+		final User user = new User(player);
 
 		this.users.add(user);
 		return user;

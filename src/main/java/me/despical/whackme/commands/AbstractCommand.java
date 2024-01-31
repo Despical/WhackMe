@@ -2,6 +2,7 @@ package me.despical.whackme.commands;
 
 import me.despical.whackme.WhackMe;
 import me.despical.whackme.handlers.ChatManager;
+import me.despical.whackme.user.User;
 
 public abstract class AbstractCommand {
 
@@ -12,6 +13,7 @@ public abstract class AbstractCommand {
 		this.plugin = plugin;
 		this.chatManager = plugin.getChatManager();
 		this.plugin.getCommandFramework().registerCommands(this);
+		this.plugin.getCommandFramework().addCustomParameter(User.class, args -> plugin.getUserManager().getUser(args.getSender()));
 	}
 
 	public static void registerCommands(final WhackMe plugin) {

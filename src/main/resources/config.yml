@@ -77,7 +77,7 @@ Point-Sound: "ORB_PICKUP"
 # The sound plays when player clicks the incorrect point block.
 Minus-Point-Sound: "NOTE_BASS"
 
-# The delay between hitting players.
+# The delay between hitting blocks.
 Hit-Cooldown-Delay: 16
 
 # Commands which can be used in game, remove all of them to disable.
