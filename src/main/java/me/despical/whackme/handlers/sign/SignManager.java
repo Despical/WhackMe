@@ -151,7 +151,7 @@ public class SignManager extends EventListener {
 				if (loc.getBlock().getState() instanceof Sign) {
 					arenaSigns.add(new ArenaSign((Sign) loc.getBlock().getState(), plugin.getArenaRegistry().getArena(path)));
 				} else {
-					plugin.getLogger().log(Level.WARNING, "Block at location {0} for arena {1} is not a sign!", new Object[] { loc, path });
+					plugin.getLogger().log(Level.WARNING, "Block at location ({0}) for arena {1} is not a sign!", new Object[] { location, path });
 				}
 			}
 		}
