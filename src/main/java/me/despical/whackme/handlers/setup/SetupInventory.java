@@ -9,7 +9,7 @@ import me.despical.whackme.WhackMe;
 import me.despical.whackme.arena.Arena;
 import me.despical.whackme.handlers.setup.components.ArenaRegisterComponent;
 import me.despical.whackme.handlers.setup.components.SetupComponent;
-import me.despical.whackme.handlers.setup.components.SpawnComponents;
+import me.despical.whackme.handlers.setup.components.MainComponents;
 import org.bukkit.entity.Player;
 
 /**
@@ -48,7 +48,7 @@ public class SetupInventory {
 	}
 
 	private void prepareComponents(StaticPane pane) {
-		final SetupComponent spawnComponents = new SpawnComponents();
+		final SetupComponent spawnComponents = new MainComponents();
 		spawnComponents.injectComponents(this, pane);
 
 		final SetupComponent arenaRegistryComponents = new ArenaRegisterComponent();

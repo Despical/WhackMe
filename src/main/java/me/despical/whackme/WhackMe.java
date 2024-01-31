@@ -9,12 +9,14 @@ import me.despical.commons.util.UpdateChecker;
 import me.despical.whackme.api.StatsStorage;
 import me.despical.whackme.arena.Arena;
 import me.despical.whackme.arena.ArenaRegistry;
+import me.despical.whackme.arena.managers.ArenaManager;
 import me.despical.whackme.commands.AbstractCommand;
-import me.despical.whackme.events.ListenerAdapter;
+import me.despical.whackme.events.EventListener;
 import me.despical.whackme.handlers.ChatManager;
 import me.despical.whackme.handlers.PlaceholderManager;
 import me.despical.whackme.handlers.SoundManager;
 import me.despical.whackme.handlers.rewards.RewardsFactory;
+import me.despical.whackme.handlers.sign.SignManager;
 import me.despical.whackme.user.User;
 import me.despical.whackme.user.UserManager;
 import me.despical.whackme.user.data.MysqlManager;
@@ -34,7 +36,6 @@ import java.util.logging.Logger;
  */
 public class WhackMe extends JavaPlugin {
 
-	private ArenaRegistry arenaRegistry;
 	private ChatManager chatManager;
 	private CommandFramework commandFramework;
 	private ConfigPreferences configPreferences;
@@ -42,6 +43,9 @@ public class WhackMe extends JavaPlugin {
 	private SoundManager soundManager;
 	private UserManager userManager;
 	private RewardsFactory rewardsFactory;
+	private ArenaRegistry arenaRegistry;
+	private SignManager signManager;
+	private ArenaManager arenaManager;
 
 	@Override
 	public void onEnable() {
@@ -96,11 +100,13 @@ public class WhackMe extends JavaPlugin {
 		this.soundManager = new SoundManager(this);
 		this.rewardsFactory = new RewardsFactory(this);
 		this.arenaRegistry = new ArenaRegistry(this);
+		this.signManager = new SignManager(this);
+		this.arenaManager = new ArenaManager(this);
 
 		if (getOption(ConfigPreferences.Option.DATABASE_ENABLED)) database = new MysqlDatabase(this, "mysql");
 		if (chatManager.isPapiEnabled()) new PlaceholderManager(this);
 
-		ListenerAdapter.registerEvents(this);
+		EventListener.registerEvents(this);
 		AbstractCommand.registerCommands(this);
 
 		final Metrics metrics = new Metrics(this, 15722);
@@ -128,11 +134,6 @@ public class WhackMe extends JavaPlugin {
 
 	public boolean getOption(ConfigPreferences.Option option) {
 		return configPreferences.getOption(option);
-	}
-
-	@NotNull
-	public ArenaRegistry getArenaRegistry() {
-		return arenaRegistry;
 	}
 
 	@NotNull
@@ -170,11 +171,28 @@ public class WhackMe extends JavaPlugin {
 		return rewardsFactory;
 	}
 
+	@NotNull
+	public ArenaRegistry getArenaRegistry() {
+		return arenaRegistry;
+	}
+
+	@NotNull
+	public SignManager getSignManager() {
+		return signManager;
+	}
+
+	@NotNull
+	public ArenaManager getArenaManager() {
+		return arenaManager;
+	}
+
 	public void reload() {
+		reloadConfig();
+
+		configPreferences.reload();
 		configPreferences.reload();
 		chatManager.reloadConfig();
-
-		reloadConfig();
+		signManager.loadSigns();
 	}
 
 	private void saveAllUserStatistics() {

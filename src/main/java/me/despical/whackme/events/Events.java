@@ -18,7 +18,7 @@ import org.bukkit.event.player.*;
  * <p>
  * Created at 21.06.2022
  */
-public class Events extends ListenerAdapter {
+public class Events extends EventListener {
 
 	public Events(WhackMe plugin) {
 		super(plugin);

@@ -32,7 +32,7 @@ rewards-enabled: true
 rewards:
   # Rewards performed when player clicked on right point block.
   successful-point:
-    - p:say yey, +1 point!
+    - p:say yey, +1 point! (disable this message via rewards.yml)
   # Rewards performed when player clicked on wrong point block.
   wrong-point:
     - p:say I shouldn't click this one!

@@ -120,6 +120,7 @@ public class AdminCommands extends AbstractCommand {
 			arena.teleportToEndLocation();
 		}
 
+		plugin.getSignManager().removeSigns(arena);
 		plugin.getArenaRegistry().unregisterArena(arena);
 
 		final FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");

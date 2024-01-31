@@ -83,6 +83,10 @@ public class Arena extends BukkitRunnable {
 		return player;
 	}
 
+	public String getPlayerName() {
+		return player == null ? plugin.getChatManager().message("commands.unknown_player") : player.getName();
+	}
+
 	public void addPlayer(Player player) {
 		if (player == null) return;
 
@@ -112,6 +116,7 @@ public class Arena extends BukkitRunnable {
 		bossBarManager.addPlayer();
 
 		plugin.getUserManager().getUser(player).setStat(StatsStorage.StatisticType.LOCAL_SCORE, 0);
+		plugin.getSignManager().updateSign(this);
 
 		player.setFoodLevel(20);
 		player.setGameMode(GameMode.ADVENTURE);
@@ -160,6 +165,8 @@ public class Arena extends BukkitRunnable {
 		cleanGameArea();
 
 		player = null;
+
+		plugin.getSignManager().updateSign(this);
 	}
 
 	public void cleanGameArea() {
@@ -263,6 +270,11 @@ public class Arena extends BukkitRunnable {
 
 			removePlayer();
 		}
+	}
+
+	@Override
+	public String toString() {
+		return id;
 	}
 
 	public enum GameLocation {

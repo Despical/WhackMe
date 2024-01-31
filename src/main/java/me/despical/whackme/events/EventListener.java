@@ -9,12 +9,12 @@ import org.bukkit.event.Listener;
  * <p>
  * Created at 22.06.2022
  */
-public abstract class ListenerAdapter implements Listener {
+public abstract class EventListener implements Listener {
 
 	protected final WhackMe plugin;
 	protected final ChatManager chatManager;
 
-	public ListenerAdapter(WhackMe plugin) {
+	public EventListener(WhackMe plugin) {
 		this.plugin = plugin;
 		this.chatManager = plugin.getChatManager();
 		this.plugin.getServer().getPluginManager().registerEvents(this, plugin);

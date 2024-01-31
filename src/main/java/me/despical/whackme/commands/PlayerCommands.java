@@ -76,24 +76,7 @@ public class PlayerCommands extends AbstractCommand {
 			return;
 		}
 
-		final Player player = arguments.getSender();
-
-		if (arena.containPlayer(player)) {
-			player.sendMessage(chatManager.prefixedMessage("in_game.already_playing"));
-			return;
-		}
-
-		if (arena.getPlayer() != null) {
-			player.sendMessage(chatManager.prefixedMessage("in_game.someone_is_already_playing"));
-			return;
-		}
-
-		if (!Utils.hasJoinPermission(player)) {
-			player.sendMessage(chatManager.prefixedMessage("commands.no_permission"));
-			return;
-		}
-
-		arena.addPlayer(player);
+		plugin.getArenaManager().joinAttempt(arguments.getSender(), arena);
 	}
 
 	@Command(

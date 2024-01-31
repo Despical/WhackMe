@@ -15,7 +15,7 @@ Commands:
   No-Arena-Like-That: "&cWe couldn't find any arena with that name matching!"
   No-Free-Arenas: "&cThere aren't any available arena to play!"
   Not-Playing: "&cYou must be in an arena to leave!"
-  Type-Arena-Name: "&cPlease type arena name to join!"
+  Type-Arena-Name: "&cPlease type an arena name!"
   Arena-Not-Configured: "&cThis arena is not configured yet. If you think this is an issue contact staff!"
   Only-By-Player: "&cYou can execute this command only as player!"
   No-Permission: "&cYou don't have enough permission to use this command!"
@@ -71,3 +71,14 @@ Boss-Bar:
   Messages:
     - "&e&lPLAYING &f&lWhack Me &e&lby &b&lDESPICAL"
     - "&e&lYOU LIKE THE PLUGIN? RATE US ON SPIGOT!"
+
+Signs:
+  States:
+    Waiting: "&eWaiting"
+    Playing: "&cIn-Game"
+    Inactive: "&0Inactive"
+  Lines:
+    - "&4&lWhack Me"
+    - "%state%"
+    - "%arena%"
+    - "&5[%player%]"

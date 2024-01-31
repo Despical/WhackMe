@@ -9,10 +9,13 @@ import me.despical.inventoryframework.GuiItem;
 import me.despical.inventoryframework.pane.StaticPane;
 import me.despical.whackme.arena.Arena;
 import me.despical.whackme.handlers.setup.SetupInventory;
+import me.despical.whackme.handlers.sign.SignManager;
 import me.despical.whackme.user.User;
 import me.despical.whackme.utils.Utils;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -33,7 +36,7 @@ import java.util.stream.Collectors;
  * <p>
  * Created at 20.06.2022
  */
-public class SpawnComponents implements SetupComponent {
+public class MainComponents implements SetupComponent {
 
 	@Override
 	public void injectComponents(SetupInventory setupInventory, StaticPane pane) {
@@ -171,7 +174,7 @@ public class SpawnComponents implements SetupComponent {
 
 			if (reopenInventory)
 				new SetupInventory(plugin, arena, player).openInventory();
-		}), 3, 1);
+		}), 2, 1);
 
 		pane.addItem(GuiItem.of(new ItemBuilder(XMaterial.REDSTONE_BLOCK)
 			.name("        &e&lSet Ending Location        ")
@@ -192,6 +195,40 @@ public class SpawnComponents implements SetupComponent {
 			FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
 			config.set(path + "endLocation", LocationSerializer.toString(location));
 			ConfigUtils.saveConfig(plugin, config, "arenas");
-		}), 5, 1);
+		}), 6, 1);
+
+		pane.addItem(GuiItem.of(new ItemBuilder(XMaterial.OAK_SIGN)
+			.name("       &e&lAdd Game Sign")
+			.lore("&7Target a sign and click this.")
+			.build(), e -> {
+
+			player.closeInventory();
+
+			Block block = user.getPlayer().getTargetBlock(null, 10);
+
+			if (!(block.getState() instanceof Sign)) {
+				user.sendRawMessage("&cYou are not looking at any sign block!");
+				return;
+			}
+
+			SignManager signManager = plugin.getSignManager();
+
+			if (signManager.isGameSign(block)) {
+				user.sendRawMessage("&cThis sign is already a game sign!");
+				return;
+			}
+
+			FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+			List<String> locations = config.getStringList(path + "signs");
+			locations.add(LocationSerializer.toString(block.getLocation()));
+
+			config.set(path + "signs", locations);
+			ConfigUtils.saveConfig(plugin, config, "arenas");
+
+			signManager.addArenaSign(block, arena);
+			signManager.updateSign(arena);
+
+			user.sendRawMessage("&aArena sign has been created successfully!");
+		}), 4, 1);
 	}
 }

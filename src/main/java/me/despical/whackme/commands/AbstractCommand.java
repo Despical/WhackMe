@@ -13,7 +13,6 @@ public abstract class AbstractCommand {
 		this.plugin = plugin;
 		this.chatManager = plugin.getChatManager();
 		this.plugin.getCommandFramework().registerCommands(this);
-		this.plugin.getCommandFramework().addCustomParameter(User.class, args -> plugin.getUserManager().getUser(args.getSender()));
 	}
 
 	public static void registerCommands(final WhackMe plugin) {
