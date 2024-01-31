@@ -18,3 +18,5 @@ permissions:
       wm.admin.help: true
       wm.admin.reload: true
       wm.admin.kick: true
+      wm.admin.sign.create: true
+      wm.admin.sign.break: true
