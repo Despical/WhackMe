@@ -171,7 +171,10 @@ public class AdminCommands extends AbstractCommand {
 			if (usage.isEmpty()) continue;
 
 			if (isPlayer) {
-				((Player) sender).spigot().sendMessage(new ComponentBuilder(" • " + usage)
+				((Player) sender).spigot().sendMessage(new ComponentBuilder()
+					.color(ChatColor.DARK_GRAY)
+					.append(" • ")
+					.append(usage)
 					.color(ChatColor.AQUA)
 					.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, usage))
 					.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(desc)))
