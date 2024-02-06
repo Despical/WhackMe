@@ -75,8 +75,6 @@ public class WhackMe extends JavaPlugin {
 				player.sendMessage(chatManager.message("in_game.finish_message").replace("%points%", Integer.toString(user.getStat(StatsStorage.StatisticType.LOCAL_SCORE))));
 			}
 
-			userManager.getUserDatabase().saveStatistics(user);
-
 			if (getOption(ConfigPreferences.Option.CLEAR_INVENTORY)) player.getInventory().clear();
 			if (getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) InventorySerializer.loadInventory(this, player);
 
