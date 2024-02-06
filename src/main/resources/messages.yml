@@ -1,16 +1,5 @@
-#
-#        You can translate Whack Me messages here.
-#             Color codes (&) supported.
-#
-#              Use \n to make new line
-#
-#     Some messages support their own placeholders
-#                 like %player%
-
-# Whack Me Command Messages
 Commands:
   Did-You-Mean: "&cDid you mean &7/%command%&c?"
-  Are-You-Sure: "&cAre you sure you want to do this action? Type the command again &6within 10 seconds &cto confirm!"
   Removed-Game-Instance: "&aGame instance has been removed successfully."
   No-Arena-Like-That: "&cWe couldn't find any arena with that name matching!"
   No-Free-Arenas: "&cThere aren't any available arena to play!"
@@ -37,15 +26,14 @@ Commands:
       - "%header%"
       - "&8 * &aRecord Score: &e%record_score%"
       - "&8 * &aTours Played: &e%tours_played%"
-      - "&8 * &aWhacked Plus Point: &e%whacked_point_blocks%"
-      - "&8 * &aWhacked Minus Point: &e%whacked_minus_point_blocks%"
+      - "&8 * &aWhacked Plus Points: &e%whacked_point_blocks%"
+      - "&8 * &aWhacked Minus Points: &e%whacked_minus_point_blocks%"
       - "&8 * &aWhacked Block Rate: &e%whacked_block_rate%%"
       - "&l[--------------------]"
   List-Command:
     No-Arenas-Created: "&cThere aren't any game instances to show! What about creating one?"
     Format: "&aExisting arenas: &7%list%"
 
-# Used in most game messages.
 In-Game:
   Plugin-Prefix: "&8[&6Whack Me&8] "
   Start-Message: "&a&lYou started playing Whack Me game!\n&a&lYou have 30s to punch as many whackies as possible!"
