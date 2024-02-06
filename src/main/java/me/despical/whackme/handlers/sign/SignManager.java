@@ -6,8 +6,8 @@ import me.despical.whackme.WhackMe;
 import me.despical.whackme.arena.Arena;
 import me.despical.whackme.events.EventListener;
 import me.despical.whackme.user.User;
-import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -18,7 +18,6 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import java.util.*;
-import java.util.logging.Level;
 
 /**
  * @author Despical
@@ -142,18 +141,30 @@ public class SignManager extends EventListener {
 	public void loadSigns() {
 		arenaSigns.clear();
 
-		final FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+		FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+		boolean removed = false;
 
-		for (final String path : config.getConfigurationSection("instances").getKeys(false)) {
-			for (final String location : config.getStringList("instances." + path + ".signs")) {
-				final Location loc = LocationSerializer.fromString(location);
+		for (final String arenaId : config.getConfigurationSection("instances").getKeys(false)) {
+			List<String> signs = config.getStringList("instances." + arenaId + ".signs");
+			int size = signs.size();
 
-				if (loc.getBlock().getState() instanceof Sign) {
-					arenaSigns.add(new ArenaSign((Sign) loc.getBlock().getState(), plugin.getArenaRegistry().getArena(path)));
+			for (final String location : signs) {
+				final BlockState blockState = LocationSerializer.fromString(location).getBlock().getState();
+
+				if (blockState instanceof Sign) {
+					arenaSigns.add(new ArenaSign((Sign) blockState, plugin.getArenaRegistry().getArena(arenaId)));
 				} else {
-					plugin.getLogger().log(Level.WARNING, "Block at location ({0}) for arena {1} is not a sign!", new Object[] { location, path });
+					signs.remove(location);
 				}
 			}
+
+			if (removed |= size != signs.size()) {
+				config.set("instances." + arenaId + ".signs", signs);
+			}
+		}
+
+		if (removed) {
+			ConfigUtils.saveConfig(plugin, config, "arenas");
 		}
 
 		updateSigns();
