@@ -3,6 +3,7 @@ package me.despical.whackme.commands;
 import me.despical.commandframework.Command;
 import me.despical.commandframework.CommandArguments;
 import me.despical.commandframework.Completer;
+import me.despical.commandframework.Confirmation;
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.miscellaneous.MiscUtils;
 import me.despical.commons.serializer.LocationSerializer;
@@ -27,11 +28,8 @@ import static me.despical.commandframework.Command.SenderType.PLAYER;
 
 public class AdminCommands extends AbstractCommand {
 
-	private final Set<CommandSender> confirmations;
-
 	public AdminCommands(WhackMe plugin) {
 		super(plugin);
-		this.confirmations = new HashSet<>();
 	}
 
 	@Command(
@@ -39,7 +37,8 @@ public class AdminCommands extends AbstractCommand {
 		permission = "wm.admin.create",
 		usage = "/wm create <arena name>",
 		desc = "Creates a new arena with default configuration",
-		senderType = PLAYER
+		senderType = PLAYER,
+		allowInfiniteArgs = true
 	)
 	public void createCommand(CommandArguments arguments) {
 		final Player player = arguments.getSender();
@@ -94,6 +93,11 @@ public class AdminCommands extends AbstractCommand {
 		desc = "Deletes arena with the current configuration",
 		min = 1
 	)
+	@Confirmation(
+		message = "§cAre you sure you want to do this action? " +
+			      "Type the command again §6within 10 seconds §cto confirm!",
+		expireAfter = 10
+	)
 	public void deleteCommand(CommandArguments arguments) {
 		final String arenaId = arguments.getArgument(0);
 		final Arena arena = plugin.getArenaRegistry().getArena(arenaId);
@@ -103,15 +107,6 @@ public class AdminCommands extends AbstractCommand {
 			arguments.sendMessage(chatManager.prefixedMessage("commands.no_arena_like_that"));
 			return;
 		}
-
-		if (!confirmations.contains(sender)) {
-			confirmations.add(sender);
-			plugin.getServer().getScheduler().runTaskLater(plugin, () -> confirmations.remove(sender), 200);
-			arguments.sendMessage(chatManager.prefixedMessage("commands.are_you_sure"));
-			return;
-		}
-
-		confirmations.remove(sender);
 
 		final Player player = arena.getPlayer();
 
@@ -136,7 +131,8 @@ public class AdminCommands extends AbstractCommand {
 		permission = "wm.admin.edit",
 		usage = "/wm edit <arena name>",
 		desc = "Opens the arena editor",
-		senderType = PLAYER
+		senderType = PLAYER,
+		min = 1
 	)
 	public void editCommand(CommandArguments arguments) {
 		final Player player = arguments.getSender();
@@ -153,7 +149,8 @@ public class AdminCommands extends AbstractCommand {
 	@SuppressWarnings("all")
 	@Command(
 		name = "wm.help",
-		permission = "wm.admin.help"
+		permission = "wm.admin.help",
+		allowInfiniteArgs = true
 	)
 	public void helpCommand(CommandArguments arguments) {
 		final boolean isPlayer = arguments.isSenderPlayer();
@@ -204,7 +201,8 @@ public class AdminCommands extends AbstractCommand {
 		name = "wm.list",
 		permission = "wm.admin.list",
 		usage = "/wm list",
-		desc = "Shows all of the existing arenas"
+		desc = "Shows all of the existing arenas",
+		allowInfiniteArgs = true
 	)
 	public void listCommand(CommandArguments arguments) {
 		final Set<Arena> arenas = plugin.getArenaRegistry().getArenas();
@@ -221,7 +219,8 @@ public class AdminCommands extends AbstractCommand {
 		name = "wm.kick",
 		permission = "wm.admin.kick",
 		usage = "/wm kick <player>",
-		desc = "Kicks specified player if they're playing"
+		desc = "Kicks specified player if they're playing",
+		allowInfiniteArgs = true
 	)
 	public void kickCommand(CommandArguments arguments) {
 		final Arena arena = plugin.getArenaRegistry().getArena(arguments.getArgument(0));
@@ -243,7 +242,8 @@ public class AdminCommands extends AbstractCommand {
 		name = "wm.reload",
 		permission = "wm.admin.reload",
 		usage = "/wm reload",
-		desc = "Kicks specified player if they're playing"
+		desc = "Kicks specified player if they're playing",
+		allowInfiniteArgs = true
 	)
 	public void reloadCommand(CommandArguments arguments) {
 		plugin.reload();
@@ -291,6 +291,7 @@ public class AdminCommands extends AbstractCommand {
 				return null;
 			}
 
+			if (arg.equalsIgnoreCase("create")) return null;
 			if (!hasPerm && !arg.equalsIgnoreCase("join")) return null;
 
 			List<String> arenas = plugin.getArenaRegistry().getArenas().stream().map(Arena::getId).collect(Collectors.toList());

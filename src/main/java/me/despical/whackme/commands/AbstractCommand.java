@@ -2,7 +2,6 @@ package me.despical.whackme.commands;
 
 import me.despical.whackme.WhackMe;
 import me.despical.whackme.handlers.ChatManager;
-import me.despical.whackme.user.User;
 
 public abstract class AbstractCommand {
 

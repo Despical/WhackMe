@@ -61,7 +61,8 @@ public class PlayerCommands extends AbstractCommand {
 
 	@Command(
 		name = "wm.join",
-		senderType = PLAYER
+		senderType = PLAYER,
+		allowInfiniteArgs = true
 	)
 	public void joinCommand(CommandArguments arguments) {
 		if (arguments.isArgumentsEmpty()) {
@@ -81,7 +82,8 @@ public class PlayerCommands extends AbstractCommand {
 
 	@Command(
 		name = "wm.leave",
-		senderType = PLAYER
+		senderType = PLAYER,
+		allowInfiniteArgs = true
 	)
 	public void leaveCommand(CommandArguments arguments) {
 		final Player player = arguments.getSender();
@@ -97,7 +99,8 @@ public class PlayerCommands extends AbstractCommand {
 
 	@Command(
 		name = "wm.randomjoin",
-		senderType = PLAYER
+		senderType = PLAYER,
+		allowInfiniteArgs = true
 	)
 	public void randomJoinCommand(CommandArguments arguments) {
 		final Player player = arguments.getSender();
@@ -128,7 +131,8 @@ public class PlayerCommands extends AbstractCommand {
 
 	@Command(
 		name = "wm.stats",
-		senderType = PLAYER
+		senderType = PLAYER,
+		allowInfiniteArgs = true
 	)
 	public void statsCommand(CommandArguments argument) {
 		final Player player = argument.getSender(), target = argument.isArgumentsEmpty() ? player : plugin.getServer().getPlayer(argument.getArgument(0));
@@ -157,7 +161,8 @@ public class PlayerCommands extends AbstractCommand {
 
 	@Command(
 		name = "wm.top",
-		senderType = PLAYER
+		senderType = PLAYER,
+		allowInfiniteArgs = true
 	)
 	public void leaderboardCommand(CommandArguments arguments) {
 		if (arguments.isArgumentsEmpty()) {
