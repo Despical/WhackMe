@@ -2,8 +2,10 @@ package me.despical.whackme.commands;
 
 import me.despical.commandframework.Command;
 import me.despical.commandframework.CommandArguments;
+import me.despical.commandframework.CommandFramework;
 import me.despical.commons.string.StringMatcher;
 import me.despical.commons.string.StringUtils;
+import me.despical.commons.util.Strings;
 import me.despical.whackme.ConfigPreferences;
 import me.despical.whackme.WhackMe;
 import me.despical.whackme.api.StatsStorage;
@@ -17,9 +19,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static me.despical.commandframework.Command.SenderType.PLAYER;
@@ -30,15 +30,34 @@ public class PlayerCommands extends AbstractCommand {
 	public PlayerCommands(WhackMe plugin) {
 		super(plugin);
 
-		plugin.getCommandFramework().setMatchFunction(arguments -> {
+		final CommandFramework commandFramework = plugin.getCommandFramework();
+
+		commandFramework.addCustomParameter(Player.class, CommandArguments::getSender);
+		commandFramework.setColorFormatter(Strings::format);
+		commandFramework.setMatchFunction(arguments -> {
 			if (arguments.isArgumentsEmpty()) return false;
 
 			String label = arguments.getLabel(), arg = arguments.getArgument(0);
-
-			final List<StringMatcher.Match> matches = StringMatcher.match(arg, plugin.getCommandFramework().getCommands().stream().map(cmd -> cmd.name().replace(label + ".", "")).collect(Collectors.toList()));
+			List<String> commands = commandFramework.getCommands().stream().map(cmd -> cmd.name().replace(label + ".", "")).collect(Collectors.toList());
+			List<StringMatcher.Match> matches = StringMatcher.match(arg, commands);
 
 			if (!matches.isEmpty()) {
-				arguments.sendMessage(chatManager.prefixedMessage("commands.did_you_mean").replace("%command%", label + " " + matches.get(0).getMatch()));
+				Optional<Command> optionalMatch = commandFramework.getCommands().stream().filter(cmd -> cmd.name().equals(label + "." + matches.get(0).getMatch())).findFirst();
+
+				if (optionalMatch.isPresent()) {
+					String matchedName = getMatchingParts(optionalMatch.get().name(), label + "." + String.join(".", arguments.getArguments()));
+					Optional<Command> matchedCommand = commandFramework.getSubCommands().stream().filter(cmd -> cmd.name().equals(matchedName)).findFirst();
+
+					if (matchedCommand.isPresent()) {
+						arguments.sendMessage(chatManager.prefixedMessage("commands.correct_usage").replace("%usage%", matchedCommand.get().usage()));
+						return true;
+					}
+
+					arguments.sendMessage(chatManager.prefixedMessage("commands.did_you_mean").replace("%command%", optionalMatch.get().usage()));
+					return true;
+				}
+
+				arguments.sendMessage(chatManager.prefixedMessage("commands.did_you_mean").replace("%command%", label));
 				return true;
 			}
 
@@ -52,15 +71,16 @@ public class PlayerCommands extends AbstractCommand {
 		desc = "Main command of Whack Me plugin."
 	)
 	public void mainCommand(CommandArguments arguments) {
-		arguments.sendMessage(chatManager.coloredRawMessage("&3This server is running &bWhack Me " + plugin.getDescription().getVersion() + " &3by &bDespical&3!"));
+		arguments.sendMessage("&3This server is running &bWhack Me " + plugin.getDescription().getVersion() + " &3by &bDespical&3!");
 
 		if (arguments.hasPermission("wm.admin")) {
-			arguments.sendMessage(chatManager.coloredRawMessage("&3Commands: &b/" + arguments.getLabel() + " help"));
+			arguments.sendMessage("&3Commands: &b/" + arguments.getLabel() + " help");
 		}
 	}
 
 	@Command(
 		name = "wm.join",
+		usage = "/wm join <arena>",
 		senderType = PLAYER,
 		allowInfiniteArgs = true
 	)
@@ -82,11 +102,10 @@ public class PlayerCommands extends AbstractCommand {
 
 	@Command(
 		name = "wm.leave",
-		senderType = PLAYER,
-		allowInfiniteArgs = true
+		usage = "/wm leave",
+		senderType = PLAYER
 	)
-	public void leaveCommand(CommandArguments arguments) {
-		final Player player = arguments.getSender();
+	public void leaveCommand(Player player, CommandArguments arguments) {
 		final Arena arena = plugin.getArenaRegistry().getArena(player);
 
 		if (arena == null) {
@@ -99,14 +118,10 @@ public class PlayerCommands extends AbstractCommand {
 
 	@Command(
 		name = "wm.randomjoin",
-		senderType = PLAYER,
-		allowInfiniteArgs = true
+		usage = "/wm randomjoin",
+		senderType = PLAYER
 	)
-	public void randomJoinCommand(CommandArguments arguments) {
-		final Player player = arguments.getSender();
-
-		if (plugin.getOption(ConfigPreferences.Option.BLOCK_LEAVE_COMMAND)) return;
-
+	public void randomJoinCommand(Player player, CommandArguments arguments) {
 		if (plugin.getArenaRegistry().isInArena(player)) {
 			player.sendMessage(chatManager.prefixedMessage("in_game.already_playing"));
 			return;
@@ -131,11 +146,12 @@ public class PlayerCommands extends AbstractCommand {
 
 	@Command(
 		name = "wm.stats",
+		usage = "/wm stats <player>",
 		senderType = PLAYER,
 		allowInfiniteArgs = true
 	)
-	public void statsCommand(CommandArguments argument) {
-		final Player player = argument.getSender(), target = argument.isArgumentsEmpty() ? player : plugin.getServer().getPlayer(argument.getArgument(0));
+	public void statsCommand(Player player, CommandArguments argument) {
+		final Player target = argument.isArgumentsEmpty() ? player : plugin.getServer().getPlayer(argument.getArgument(0));
 
 		if (target == null) {
 			player.sendMessage(chatManager.prefixedMessage("commands.player_not_found"));
@@ -161,6 +177,7 @@ public class PlayerCommands extends AbstractCommand {
 
 	@Command(
 		name = "wm.top",
+		usage = "/wm top <statistic>",
 		senderType = PLAYER,
 		allowInfiniteArgs = true
 	)
@@ -218,5 +235,19 @@ public class PlayerCommands extends AbstractCommand {
 		message = message.replace("%value%", Integer.toString(value));
 		message = message.replace("%statistic%", statisticName);
 		return message;
+	}
+
+	public String getMatchingParts(String matched, String current) {
+		String[] matchedArray = matched.split("\\."), currentArray = current.split("\\.");
+		int max = Math.min(matchedArray.length, currentArray.length);
+		List<String> matchingParts = new ArrayList<>();
+
+		for (int i = 0; i < max; i++) {
+			if (matchedArray[i].equals(currentArray[i])) {
+				matchingParts.add(matchedArray[i]);
+			}
+		}
+
+		return String.join(".", matchingParts);
 	}
 }

@@ -1,5 +1,6 @@
 Commands:
   Did-You-Mean: "&cDid you mean &7/%command%&c?"
+  Correct-Usage: "&cCorrect usage: %usage%"
   Removed-Game-Instance: "&aGame instance has been removed successfully."
   No-Arena-Like-That: "&cWe couldn't find any arena with that name matching!"
   No-Free-Arenas: "&cThere aren't any available arena to play!"
@@ -10,6 +11,7 @@ Commands:
   No-Permission: "&cYou don't have enough permission to use this command!"
   Success-Reload: "&aSystem successfully reloaded all configurations and arenas!"
   No-One-Playing: "&cNo one playing Whack Me in this arena at the moment!"
+  Kicked-Player: "&aPlayer has kicked successfully from the game."
   Player-Not-Found: "&cWe couldn't find any player with that name matching!"
   # %wm_{arena}_player_name% -> placeholder will return text below if arena player is null.
   Unknown-Player: "Unknown"

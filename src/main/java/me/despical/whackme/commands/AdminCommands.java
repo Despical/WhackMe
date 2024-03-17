@@ -10,7 +10,6 @@ import me.despical.commons.serializer.LocationSerializer;
 import me.despical.whackme.WhackMe;
 import me.despical.whackme.arena.Arena;
 import me.despical.whackme.handlers.setup.SetupInventory;
-import me.despical.whackme.user.User;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -41,30 +40,29 @@ public class AdminCommands extends AbstractCommand {
 		allowInfiniteArgs = true
 	)
 	public void createCommand(CommandArguments arguments) {
-		final Player player = arguments.getSender();
-		final User user = plugin.getUserManager().getUser(player);
-
 		if (arguments.isArgumentsEmpty()) {
-			user.sendRawMessage("&cPlease enter an name to create an arena!");
+			arguments.sendMessage(chatManager.prefixedRawMessage("&cPlease enter an name to create an arena!"));
 			return;
 		}
 
 		final String id = arguments.getArgument(0);
 
 		if (plugin.getArenaRegistry().isArena(id)) {
-			user.sendRawMessage("&cArena with that ID already contains!");
-			user.sendRawMessage("&cTo check existing arenas use: /wm list");
+			arguments.sendMessage(chatManager.prefixedRawMessage("&cArena with that ID already contains!"));
+			arguments.sendMessage(chatManager.prefixedRawMessage("&cTo check existing arenas use: /wm list"));
 			return;
 		}
 
-		user.sendRawMessage("&l--------------------------------------------");
+		final Player player = arguments.getSender();
+
+		arguments.sendMessage("&l--------------------------------------------");
 		MiscUtils.sendCenteredMessage(player, "&eInstance &a&l" + id + " &ecreated!");
-		user.sendRawMessage("");
+		arguments.sendMessage("");
 		MiscUtils.sendCenteredMessage(player, "&aEdit this arena via /wm edit &6" + id + "&a!");
-		user.sendRawMessage("");
+		arguments.sendMessage("");
 		MiscUtils.sendCenteredMessage(player, "&6Don't know where to start? Check out our video:");
 		MiscUtils.sendCenteredMessage(player, "&7https://www.youtube.com/watch?v=fOw5AQ8A-Jk");
-		user.sendRawMessage("&l--------------------------------------------");
+		arguments.sendMessage("&l--------------------------------------------");
 
 		final String path = String.format("instances.%s.", id);
 		final FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
@@ -101,16 +99,13 @@ public class AdminCommands extends AbstractCommand {
 	public void deleteCommand(CommandArguments arguments) {
 		final String arenaId = arguments.getArgument(0);
 		final Arena arena = plugin.getArenaRegistry().getArena(arenaId);
-		final CommandSender sender = arguments.getSender();
 
 		if (arena == null) {
 			arguments.sendMessage(chatManager.prefixedMessage("commands.no_arena_like_that"));
 			return;
 		}
 
-		final Player player = arena.getPlayer();
-
-		if (player != null) {
+		if (arena.getPlayer() != null) {
 			arena.removePlayer();
 			arena.teleportToEndLocation();
 		}
@@ -123,7 +118,7 @@ public class AdminCommands extends AbstractCommand {
 		config.set("instances." + arenaId, null);
 		ConfigUtils.saveConfig(plugin, config, "arenas");
 
-		sender.sendMessage(chatManager.prefixedMessage("commands.removed_game_instance"));
+		arguments.sendMessage(chatManager.prefixedMessage("commands.removed_game_instance"));
 	}
 
 	@Command(
@@ -131,53 +126,48 @@ public class AdminCommands extends AbstractCommand {
 		permission = "wm.admin.edit",
 		usage = "/wm edit <arena name>",
 		desc = "Opens the arena editor",
-		senderType = PLAYER,
-		min = 1
+		min = 1,
+		senderType = PLAYER
 	)
 	public void editCommand(CommandArguments arguments) {
-		final Player player = arguments.getSender();
 		final Arena arena = plugin.getArenaRegistry().getArena(arguments.getArgument(0));
 
 		if (arena == null) {
-			player.sendMessage(chatManager.prefixedMessage("commands.no_arena_like_that"));
+			arguments.sendMessage(chatManager.prefixedMessage("commands.no_arena_like_that"));
 			return;
 		}
 
-		new SetupInventory(plugin, arena, player).openInventory();
+		new SetupInventory(plugin, arena, arguments.getSender()).openInventory();
 	}
 
 	@SuppressWarnings("all")
 	@Command(
 		name = "wm.help",
 		permission = "wm.admin.help",
-		allowInfiniteArgs = true
+		usage = "/wm help"
 	)
 	public void helpCommand(CommandArguments arguments) {
 		final boolean isPlayer = arguments.isSenderPlayer();
-		final String header = chatManager.coloredRawMessage("&3&l---- Whack Me Admin Commands ----");
 		final CommandSender sender = arguments.getSender();
 
 		arguments.sendMessage("");
-		MiscUtils.sendCenteredMessage(sender, header);
+		MiscUtils.sendCenteredMessage(sender, "&3&l---- Whack Me Commands ----");
 		arguments.sendMessage("");
 
-		for (final Command command : plugin.getCommandFramework().getCommands().stream().sorted(Collections
-			.reverseOrder(Comparator.comparingInt(cmd -> cmd.usage().length()))).collect(Collectors.toList())) {
+		for (final Command command : plugin.getCommandFramework().getSubCommands()) {
 			final String usage = command.usage(), desc = command.desc();
 
-			if (usage.isEmpty()) continue;
+			if (desc.isEmpty() || usage.isEmpty()) continue;
 
 			if (isPlayer) {
-				((Player) sender).spigot().sendMessage(new ComponentBuilder()
-					.color(ChatColor.DARK_GRAY)
-					.append(" • ")
+				((Player) sender).spigot().sendMessage(new ComponentBuilder(ChatColor.DARK_GRAY + " • ")
 					.append(usage)
 					.color(ChatColor.AQUA)
 					.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, usage))
 					.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(desc)))
 					.create());
 			} else {
-				sender.sendMessage(chatManager.coloredRawMessage(" &8• &b" + usage + " &3- &b" + desc));
+				arguments.sendMessage(" &8• &b" + usage + " &3- &b" + desc);
 			}
 		}
 
@@ -220,7 +210,7 @@ public class AdminCommands extends AbstractCommand {
 		permission = "wm.admin.kick",
 		usage = "/wm kick <player>",
 		desc = "Kicks specified player if they're playing",
-		allowInfiniteArgs = true
+		min = 1
 	)
 	public void kickCommand(CommandArguments arguments) {
 		final Arena arena = plugin.getArenaRegistry().getArena(arguments.getArgument(0));
@@ -232,6 +222,8 @@ public class AdminCommands extends AbstractCommand {
 
 		if (arena.getPlayer() != null) {
 			arena.removePlayer();
+
+			arguments.sendMessage(chatManager.prefixedMessage("commands.kicked_player"));
 			return;
 		}
 
@@ -242,8 +234,7 @@ public class AdminCommands extends AbstractCommand {
 		name = "wm.reload",
 		permission = "wm.admin.reload",
 		usage = "/wm reload",
-		desc = "Kicks specified player if they're playing",
-		allowInfiniteArgs = true
+		desc = "Reloads arenas and configuration files"
 	)
 	public void reloadCommand(CommandArguments arguments) {
 		plugin.reload();
@@ -268,19 +259,24 @@ public class AdminCommands extends AbstractCommand {
 		name = "wm"
 	)
 	public List<String> onTabComplete(CommandArguments arguments) {
-		final List<String> completions = new ArrayList<>(), commands = plugin.getCommandFramework().getCommands().stream().map(cmd -> cmd.name().replace(arguments.getLabel() + '.', "")).collect(Collectors.toList());
-		final String args[] = arguments.getArguments(), arg = args[0];
-		final boolean hasPerm = arguments.hasPermission("wm.admin") || arguments.getSender().isOp();
+		final List<String> completions = new ArrayList<>(), commands = plugin.getCommandFramework().getSubCommands().stream().map(cmd -> cmd.name().replace(arguments.getLabel() + '.', "")).collect(Collectors.toList());
+		final String[] args = arguments.getArguments();
 
-		commands.remove("wm");
+		if (args.length > 0) {
+			if (Arrays.asList("create", "list", "help", "reload", "leave", "randomjoin").contains(args[0])) {
+				return completions;
+			}
+		}
 
 		if (args.length == 1) {
-			StringUtil.copyPartialMatches(arg, hasPerm ? commands : Arrays.asList("join", "randomjoin", "leave", "top", "stats"), completions);
+			return StringUtil.copyPartialMatches(args[0], arguments.hasPermission("wm.admin") ? commands : Arrays.asList("join", "randomjoin", "leave", "top", "stats"), completions);
 		}
+
+		final String arg = args[0];
 
 		if (args.length == 2) {
 			if (arg.equalsIgnoreCase("top")) {
-				return Arrays.asList("tours_played", "record_score");
+				return StringUtil.copyPartialMatches(args[1], Arrays.asList("tours_played", "record_score"), completions);
 			}
 
 			if (arg.equalsIgnoreCase("stats")) {
@@ -288,20 +284,16 @@ public class AdminCommands extends AbstractCommand {
 			}
 
 			if (!commands.contains(arg)) {
-				return null;
+				return completions;
 			}
 
 			if (arg.equalsIgnoreCase("create")) return null;
-			if (!hasPerm && !arg.equalsIgnoreCase("join")) return null;
+			if (!arguments.hasPermission("wm.adin") && !arg.equalsIgnoreCase("join")) return null;
 
 			List<String> arenas = plugin.getArenaRegistry().getArenas().stream().map(Arena::getId).collect(Collectors.toList());
-			StringUtil.copyPartialMatches(args[1], arenas, completions);
-
-			arenas.sort(null);
-			return arenas;
+			return StringUtil.copyPartialMatches(args[1], arenas, completions);
 		}
 
-		completions.sort(null);
 		return completions;
 	}
 }

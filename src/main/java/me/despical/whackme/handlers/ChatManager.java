@@ -40,6 +40,10 @@ public class ChatManager {
 		return Strings.format(message);
 	}
 
+	public String prefixedRawMessage(String message) {
+		return prefix + coloredRawMessage(message);
+	}
+
 	public String message(String path) {
 		path = me.despical.commons.string.StringUtils.capitalize(path.replace('_', '-'), '-', '.');
 		return coloredRawMessage(config.getString(path));
