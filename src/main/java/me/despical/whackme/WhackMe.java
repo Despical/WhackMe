@@ -113,7 +113,7 @@ public class WhackMe extends JavaPlugin {
 	}
 
 	private void setupConfigurationFiles() {
-		Collections.streamOf("arenas", "stats", "mysql", "messages", "rewards").filter(name -> !new File(getDataFolder(),name + ".yml").exists()).forEach(name -> saveResource(name + ".yml", false));
+		Collections.streamOf("config", "arenas", "stats", "mysql", "messages", "rewards").filter(name -> !new File(getDataFolder(),name + ".yml").exists()).forEach(name -> saveResource(name + ".yml", false));
 	}
 
 	private void checkUpdate() {

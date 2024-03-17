@@ -33,9 +33,6 @@ public class ConfigPreferences {
 
 	public ConfigPreferences() {
 		this.options = new HashMap<>();
-
-		plugin.saveDefaultConfig();
-
 		this.loadOptions();
 		this.initializeItems();
 	}
