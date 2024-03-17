@@ -4,6 +4,7 @@ author: Despical
 version: ${project.version}
 api-version: 1.13
 softdepend: [ Multiverse-Core, PlaceholderAPI ]
+website: https://www.spigotmc.org/resources/104912
 
 permissions:
   wm.admin.*:
