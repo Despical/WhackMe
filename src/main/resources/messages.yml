@@ -1,5 +1,5 @@
 Commands:
-  Did-You-Mean: "&cDid you mean &7/%command%&c?"
+  Did-You-Mean: "&cDid you mean &7%command%&c?"
   Correct-Usage: "&cCorrect usage: %usage%"
   Removed-Game-Instance: "&aGame instance has been removed successfully."
   No-Arena-Like-That: "&cWe couldn't find any arena with that name matching!"
