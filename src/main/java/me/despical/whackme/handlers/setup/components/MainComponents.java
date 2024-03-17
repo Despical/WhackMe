@@ -49,14 +49,14 @@ public class MainComponents implements SetupComponent {
 			.name("&e&lSet Custom Portals")
 			.build(), e -> {
 
-			player.closeInventory();
+			setupInventory.closeInventory();
 
 			Runnable leaveEditing = () -> {
 				user.setEditingMode(false);
 				user.sendRawMessage("&e✔ Completed | &aYou've left the editing mode.");
 
 				player.getInventory().clear();
-				player.closeInventory();
+				setupInventory.closeInventory();
 
 				InventorySerializer.loadInventory(plugin, player);
 			};
@@ -131,7 +131,7 @@ public class MainComponents implements SetupComponent {
 		}), 0, 0);
 
 		pane.addItem(GuiItem.of(new ItemBuilder(XMaterial.IRON_BLOCK)
-			.name("&e&l        Set Start Location        ")
+			.name("&e&l        Set Start Location       ")
 			.lore("&7Click to set start location on")
 			.lore("&7the place where you are standing.")
 			.lore("&8(location where players will be")
@@ -155,7 +155,7 @@ public class MainComponents implements SetupComponent {
 
 				reopenInventory = true;
 			} else {
-				player.closeInventory(); // to prevent shift click bugs
+				setupInventory.closeInventory();
 			}
 
 			if (!arena.isCustom() && !Utils.isSurroundedBy(location)) {
@@ -177,7 +177,7 @@ public class MainComponents implements SetupComponent {
 		}), 2, 1);
 
 		pane.addItem(GuiItem.of(new ItemBuilder(XMaterial.REDSTONE_BLOCK)
-			.name("        &e&lSet Ending Location        ")
+			.name("        &e&lSet Ending Location      ")
 			.lore("&7Click to set ending location on")
 			.lore("&7the place where you are standing.")
 			.lore("&8(location where players will be")
@@ -185,7 +185,7 @@ public class MainComponents implements SetupComponent {
 			.lore("", isOptionDoneBool(path + "endLocation"))
 			.build(), e -> {
 
-			player.closeInventory();
+			setupInventory.closeInventory();
 
 			user.sendRawMessage("&e✔ Completed | &aEnding location for arena &e" + arena.getId() + " &aset at your location!");
 
@@ -202,7 +202,7 @@ public class MainComponents implements SetupComponent {
 			.lore("&7Target a sign and click this.")
 			.build(), e -> {
 
-			player.closeInventory();
+			setupInventory.closeInventory();
 
 			Block block = user.getPlayer().getTargetBlock(null, 10);
 

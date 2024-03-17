@@ -70,4 +70,8 @@ public class SetupInventory {
 	public Player getPlayer() {
 		return player;
 	}
+
+	public void closeInventory() {
+		plugin.getServer().getScheduler().runTaskLater(plugin, () -> player.closeInventory(), 4L);
+	}
 }

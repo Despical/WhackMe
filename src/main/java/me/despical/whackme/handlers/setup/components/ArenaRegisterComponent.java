@@ -47,7 +47,7 @@ public class ArenaRegisterComponent implements SetupComponent {
 			final String path = String.format("instances.%s.", arena.getId());
 			final FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
 
-			player.closeInventory();
+			setupInventory.closeInventory();
 
 			if (config.getBoolean(path + "ready")) {
 				player.sendMessage(chatManager.coloredRawMessage("&a&l✔ &aThis arena was already validated and is ready to use!"));
