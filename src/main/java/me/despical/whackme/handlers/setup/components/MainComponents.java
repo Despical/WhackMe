@@ -7,6 +7,7 @@ import me.despical.commons.serializer.InventorySerializer;
 import me.despical.commons.serializer.LocationSerializer;
 import me.despical.inventoryframework.GuiItem;
 import me.despical.inventoryframework.pane.StaticPane;
+import me.despical.whackme.WhackMe;
 import me.despical.whackme.arena.Arena;
 import me.despical.whackme.handlers.setup.SetupInventory;
 import me.despical.whackme.handlers.sign.SignManager;
@@ -36,27 +37,32 @@ import java.util.stream.Collectors;
  * <p>
  * Created at 20.06.2022
  */
-public class MainComponents implements SetupComponent {
+public class MainComponents extends SetupComponent {
+
+	public MainComponents(SetupInventory setup) {
+		super(setup);
+	}
 
 	@Override
-	public void injectComponents(SetupInventory setupInventory, StaticPane pane) {
-		final Player player = setupInventory.getPlayer();
-		final Arena arena = setupInventory.getArena();
-		final String path = "instances." + arena.getId() + ".";
-		final User user = plugin.getUserManager().getUser(player);
+	public void injectComponents(StaticPane pane) {
+		WhackMe plugin = setup.getPlugin();
+		Player player = setup.getPlayer();
+		Arena arena = setup.getArena();
+		String path = "instances." + arena.getId() + ".";
+		User user = plugin.getUserManager().getUser(player);
 
 		pane.addItem(GuiItem.of(new ItemBuilder(user.isInEditingMode() ? XMaterial.ENDER_EYE : XMaterial.ENDER_PEARL)
 			.name("&e&lSet Custom Portals")
 			.build(), e -> {
 
-			setupInventory.closeInventory();
+			setup.closeInventory();
 
 			Runnable leaveEditing = () -> {
 				user.setEditingMode(false);
 				user.sendRawMessage("&e✔ Completed | &aYou've left the editing mode.");
 
 				player.getInventory().clear();
-				setupInventory.closeInventory();
+				setup.closeInventory();
 
 				InventorySerializer.loadInventory(plugin, player);
 			};
@@ -89,7 +95,7 @@ public class MainComponents implements SetupComponent {
 
 				@EventHandler
 				public void onLeaveEditing(PlayerInteractEvent event) {
-					final User user = plugin.getUserManager().getUser(event.getPlayer());
+					User user = plugin.getUserManager().getUser(event.getPlayer());
 
 					if (!user.isInEditingMode()) return;
 					if (event.getAction() == Action.PHYSICAL) return;
@@ -155,7 +161,7 @@ public class MainComponents implements SetupComponent {
 
 				reopenInventory = true;
 			} else {
-				setupInventory.closeInventory();
+				setup.closeInventory();
 			}
 
 			if (!arena.isCustom() && !Utils.isSurroundedBy(location)) {
@@ -166,7 +172,7 @@ public class MainComponents implements SetupComponent {
 			arena.setStartLocation(location);
 			user.sendRawMessage("&e✔ Completed | &aStart location for arena &e" + arena.getId() + " &aset at your location!");
 
-			final FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+			FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
 			config.set(path + "custom", arena.isCustom());
 			config.set(path + "startLocation", LocationSerializer.toString(location));
 			config.set(path + "portalLocations", arena.getLocations().stream().map(LocationSerializer::toString).collect(Collectors.toList()));
@@ -185,7 +191,7 @@ public class MainComponents implements SetupComponent {
 			.lore("", isOptionDoneBool(path + "endLocation"))
 			.build(), e -> {
 
-			setupInventory.closeInventory();
+			setup.closeInventory();
 
 			user.sendRawMessage("&e✔ Completed | &aEnding location for arena &e" + arena.getId() + " &aset at your location!");
 
@@ -202,7 +208,7 @@ public class MainComponents implements SetupComponent {
 			.lore("&7Target a sign and click this.")
 			.build(), e -> {
 
-			setupInventory.closeInventory();
+			setup.closeInventory();
 
 			Block block = user.getPlayer().getTargetBlock(null, 10);
 

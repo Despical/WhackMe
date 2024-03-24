@@ -19,40 +19,33 @@ import org.bukkit.entity.Player;
  */
 public class SetupInventory {
 
-	private final WhackMe plugin;
-	private final Arena arena;
+	private final Gui gui;
 	private final Player player;
-
-	private Gui gui;
+	private final Arena arena;
+	private final WhackMe plugin;
 
 	public SetupInventory(WhackMe plugin, Arena arena, Player player) {
 		this.plugin = plugin;
 		this.arena = arena;
 		this.player = player;
-
+		this.gui = new Gui(plugin, 3, "       Whack Me Arena Editor");
+		this.gui.setOnGlobalClick(e -> e.setCancelled(true));
 		prepareGui();
 	}
 
 	private void prepareGui() {
-		this.gui = new Gui(plugin, 3, "       Whack Me Arena Editor");
-		this.gui.setOnGlobalClick(e -> e.setCancelled(true));
-
-		final StaticPane pane = new StaticPane(9, 3);
-		final ItemBuilder registeredItem = new ItemBuilder(XMaterial.GREEN_STAINED_GLASS_PANE).name("&aArena Validation Successful"), notRegisteredItem = new ItemBuilder(XMaterial.BLACK_STAINED_GLASS_PANE).name("&cArena Validation Not Finished Yet");
+		StaticPane pane = new StaticPane(9, 3);
+		ItemBuilder registeredItem = new ItemBuilder(XMaterial.GREEN_STAINED_GLASS_PANE).name("&aArena Validation Successful"), notRegisteredItem = new ItemBuilder(XMaterial.BLACK_STAINED_GLASS_PANE).name("&cArena Validation Not Finished Yet");
 		pane.fillWith(arena.isReady() ? registeredItem.build() : notRegisteredItem.build());
 		pane.fillProgressBorder(GuiItem.of(registeredItem.build()), GuiItem.of(notRegisteredItem.build()), arena.isReady() ? 100 : 0);
 
 		this.gui.addPane(pane);
 
-		prepareComponents(pane);
-	}
+		SetupComponent spawnComponents = new MainComponents(this);
+		spawnComponents.injectComponents(pane);
 
-	private void prepareComponents(StaticPane pane) {
-		final SetupComponent spawnComponents = new MainComponents();
-		spawnComponents.injectComponents(this, pane);
-
-		final SetupComponent arenaRegistryComponents = new ArenaRegisterComponent();
-		arenaRegistryComponents.injectComponents(this, pane);
+		SetupComponent arenaRegistryComponents = new ArenaRegisterComponent(this);
+		arenaRegistryComponents.injectComponents(pane);
 	}
 
 	public void openInventory() {
