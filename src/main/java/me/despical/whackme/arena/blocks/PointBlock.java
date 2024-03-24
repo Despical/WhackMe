@@ -59,7 +59,11 @@ public class PointBlock extends BukkitRunnable {
 		stand.setGravity(false);
 		stand.setVisible(false);
 
-		Utils.trySilently(() -> stand.setShieldBlockingDelay(1));
+		Utils.trySilently(() -> {
+			stand.setShieldBlockingDelay(1);
+			stand.setSilent(true);
+			stand.setPersistent(false);
+		});
 
 		arena.getPointBlocks().add(this);
 		arena.getLocations().remove(availableLocation);
