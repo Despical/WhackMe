@@ -15,7 +15,7 @@ public class Reward {
 	private final RewardType type;
 	private final List<SubReward> rewards;
 
-	public Reward(final WhackMe plugin, final RewardType type, final List<String> rawCodes) {
+	public Reward(WhackMe plugin, RewardType type, List<String> rawCodes) {
 		this.type = type;
 		this.rewards = new ArrayList<>();
 
@@ -24,7 +24,7 @@ public class Reward {
 		}
 	}
 
-	public List<SubReward> getRewards() {
+	List<SubReward> getRewards() {
 		return rewards;
 	}
 
@@ -32,7 +32,7 @@ public class Reward {
 		return type;
 	}
 
-	final static class SubReward {
+	 static final class SubReward {
 
 		private String executableCode;
 		private final int chance, executor;

@@ -27,27 +27,26 @@ public class RewardsFactory {
 	public RewardsFactory(final WhackMe plugin) {
 		this.plugin = plugin;
 		this.rewards = new HashSet<>();
-
-		registerRewards();
+		this.registerRewards();
 	}
 
-	public void performReward(final Player player, final Reward.RewardType type) {
-		final List<Reward> rewardList = rewards.stream().filter(rew -> rew.getType() == type).collect(Collectors.toList());
+	public void performReward(Player player, Reward.RewardType type) {
+		List<Reward> rewardList = rewards.stream().filter(rew -> rew.getType() == type).collect(Collectors.toList());
 
 		if (rewardList.isEmpty()) return;
 
-		for (final Reward mainRewards : rewardList) {
-			for (final Reward.SubReward reward : mainRewards.getRewards()){
+		for (Reward mainRewards : rewardList) {
+			for (Reward.SubReward reward : mainRewards.getRewards()){
 				if (ThreadLocalRandom.current().nextInt(0, 100) > reward.getChance()) continue;
 
-				final String command = formatCommandPlaceholders(reward, plugin.getUserManager().getUser(player));
+				String command = formatCommandPlaceholders(reward, plugin.getUserManager().getUser(player));
+				int executor = reward.getExecutor();
 
-				switch (reward.getExecutor()) {
-					case 1:
-						plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), command);
-						break;
-					case 2:
-						player.performCommand(command);
+				if (executor == 1) {
+					plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), command);
+					return;
+				} else if (executor == 2) {
+					player.performCommand(command);
 				}
 			}
 		}
@@ -64,7 +63,7 @@ public class RewardsFactory {
 	}
 
 	private void registerRewards() {
-		final FileConfiguration config = ConfigUtils.getConfig(plugin, "rewards");
+		FileConfiguration config = ConfigUtils.getConfig(plugin, "rewards");
 
 		if (!config.getBoolean("rewards-enabled")) return;
 
