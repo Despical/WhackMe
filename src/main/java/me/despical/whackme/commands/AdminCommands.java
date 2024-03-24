@@ -23,8 +23,6 @@ import org.bukkit.util.StringUtil;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static me.despical.commandframework.Command.SenderType.PLAYER;
-
 public class AdminCommands extends AbstractCommand {
 
 	public AdminCommands(WhackMe plugin) {
@@ -36,8 +34,7 @@ public class AdminCommands extends AbstractCommand {
 		permission = "wm.admin.create",
 		usage = "/wm create <arena name>",
 		desc = "Creates a new arena with default configuration",
-		senderType = PLAYER,
-		allowInfiniteArgs = true
+		senderType = Command.SenderType.PLAYER
 	)
 	public void createCommand(CommandArguments arguments) {
 		if (arguments.isArgumentsEmpty()) {
@@ -45,7 +42,7 @@ public class AdminCommands extends AbstractCommand {
 			return;
 		}
 
-		final String id = arguments.getArgument(0);
+		String id = arguments.getArgument(0);
 
 		if (plugin.getArenaRegistry().isArena(id)) {
 			arguments.sendMessage(chatManager.prefixedRawMessage("&cArena with that ID already contains!"));
@@ -53,7 +50,7 @@ public class AdminCommands extends AbstractCommand {
 			return;
 		}
 
-		final Player player = arguments.getSender();
+		Player player = arguments.getSender();
 
 		arguments.sendMessage("&l--------------------------------------------");
 		MiscUtils.sendCenteredMessage(player, "&eInstance &a&l" + id + " &ecreated!");
@@ -64,8 +61,8 @@ public class AdminCommands extends AbstractCommand {
 		MiscUtils.sendCenteredMessage(player, "&7https://www.youtube.com/watch?v=fOw5AQ8A-Jk");
 		arguments.sendMessage("&l--------------------------------------------");
 
-		final String path = String.format("instances.%s.", id);
-		final FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+		String path = String.format("instances.%s.", id);
+		FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
 
 		config.set(path + "ready", false);
 		config.set(path + "custom", false);
@@ -113,7 +110,7 @@ public class AdminCommands extends AbstractCommand {
 		plugin.getSignManager().removeSigns(arena);
 		plugin.getArenaRegistry().unregisterArena(arena);
 
-		final FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+		FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
 
 		config.set("instances." + arenaId, null);
 		ConfigUtils.saveConfig(plugin, config, "arenas");
@@ -127,7 +124,7 @@ public class AdminCommands extends AbstractCommand {
 		usage = "/wm edit <arena name>",
 		desc = "Opens the arena editor",
 		min = 1,
-		senderType = PLAYER
+		senderType = Command.SenderType.PLAYER
 	)
 	public void editCommand(CommandArguments arguments) {
 		final Arena arena = plugin.getArenaRegistry().getArena(arguments.getArgument(0));
@@ -191,8 +188,7 @@ public class AdminCommands extends AbstractCommand {
 		name = "wm.list",
 		permission = "wm.admin.list",
 		usage = "/wm list",
-		desc = "Shows all of the existing arenas",
-		allowInfiniteArgs = true
+		desc = "Shows all of the existing arenas"
 	)
 	public void listCommand(CommandArguments arguments) {
 		final Set<Arena> arenas = plugin.getArenaRegistry().getArenas();
@@ -288,7 +284,7 @@ public class AdminCommands extends AbstractCommand {
 			}
 
 			if (arg.equalsIgnoreCase("create")) return null;
-			if (!arguments.hasPermission("wm.adin") && !arg.equalsIgnoreCase("join")) return null;
+			if (!arguments.hasPermission("wm.admin") && !arg.equalsIgnoreCase("join")) return null;
 
 			List<String> arenas = plugin.getArenaRegistry().getArenas().stream().map(Arena::getId).collect(Collectors.toList());
 			return StringUtil.copyPartialMatches(args[1], arenas, completions);

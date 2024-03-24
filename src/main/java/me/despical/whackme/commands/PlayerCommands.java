@@ -22,7 +22,6 @@ import java.sql.Statement;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static me.despical.commandframework.Command.SenderType.PLAYER;
 import static me.despical.whackme.api.StatsStorage.StatisticType.*;
 
 public class PlayerCommands extends AbstractCommand {
@@ -30,59 +29,55 @@ public class PlayerCommands extends AbstractCommand {
 	public PlayerCommands(WhackMe plugin) {
 		super(plugin);
 
-		final CommandFramework commandFramework = plugin.getCommandFramework();
-
-		commandFramework.addCustomParameter(Player.class, CommandArguments::getSender);
-		commandFramework.setColorFormatter(Strings::format);
-		commandFramework.setMatchFunction(arguments -> {
-			if (arguments.isArgumentsEmpty()) return false;
-
-			String label = arguments.getLabel(), arg = arguments.getArgument(0);
-			List<String> commands = commandFramework.getCommands().stream().map(cmd -> cmd.name().replace(label + ".", "")).collect(Collectors.toList());
-			List<StringMatcher.Match> matches = StringMatcher.match(arg, commands);
-
-			if (!matches.isEmpty()) {
-				Optional<Command> optionalMatch = commandFramework.getCommands().stream().filter(cmd -> cmd.name().equals(label + "." + matches.get(0).getMatch())).findFirst();
-
-				if (optionalMatch.isPresent()) {
-					String matchedName = getMatchingParts(optionalMatch.get().name(), label + "." + String.join(".", arguments.getArguments()));
-					Optional<Command> matchedCommand = commandFramework.getSubCommands().stream().filter(cmd -> cmd.name().equals(matchedName)).findFirst();
-
-					if (matchedCommand.isPresent()) {
-						arguments.sendMessage(chatManager.prefixedMessage("commands.correct_usage").replace("%usage%", matchedCommand.get().usage()));
-						return true;
-					}
-
-					arguments.sendMessage(chatManager.prefixedMessage("commands.did_you_mean").replace("%command%", optionalMatch.get().usage()));
-					return true;
-				}
-
-				arguments.sendMessage(chatManager.prefixedMessage("commands.did_you_mean").replace("%command%", label));
-				return true;
-			}
-
-			return false;
-		});
+		plugin.getCommandFramework().addCustomParameter(Player.class, CommandArguments::getSender);
+		plugin.getCommandFramework().setColorFormatter(Strings::format);
 	}
 
 	@Command(
 		name = "wm",
 		usage = "/wm help",
-		desc = "Main command of Whack Me plugin."
+		desc = "Main command of the Whack Me plugin."
 	)
 	public void mainCommand(CommandArguments arguments) {
-		arguments.sendMessage("&3This server is running &bWhack Me " + plugin.getDescription().getVersion() + " &3by &bDespical&3!");
+		if (arguments.isArgumentsEmpty()) {
+			arguments.sendMessage("&3This server is running &bWhack Me " + plugin.getDescription().getVersion() + " &3by &bDespical&3!");
 
-		if (arguments.hasPermission("wm.admin")) {
-			arguments.sendMessage("&3Commands: &b/" + arguments.getLabel() + " help");
+			if (arguments.hasPermission("wm.admin")) {
+				arguments.sendMessage("&3Commands: &b/" + arguments.getLabel() + " help");
+			}
+
+			return;
+		}
+
+		CommandFramework commandFramework = plugin.getCommandFramework();
+		String label = arguments.getLabel(), arg = arguments.getArgument(0);
+		List<String> commands = commandFramework.getCommands().stream().map(cmd -> cmd.name().replace(label + ".", "")).collect(Collectors.toList());
+		List<StringMatcher.Match> matches = StringMatcher.match(arg, commands);
+
+		if (!matches.isEmpty()) {
+			Optional<Command> optionalMatch = commandFramework.getCommands().stream().filter(cmd -> cmd.name().equals(label + "." + matches.get(0).getMatch())).findFirst();
+
+			if (optionalMatch.isPresent()) {
+				String matchedName = getMatchingParts(optionalMatch.get().name(), label + "." + String.join(".", arguments.getArguments()));
+				Optional<Command> matchedCommand = commandFramework.getSubCommands().stream().filter(cmd -> cmd.name().equals(matchedName)).findFirst();
+
+				if (matchedCommand.isPresent()) {
+					arguments.sendMessage(chatManager.prefixedMessage("commands.correct_usage").replace("%usage%", matchedCommand.get().usage()));
+					return;
+				}
+
+				arguments.sendMessage(chatManager.prefixedMessage("commands.did_you_mean").replace("%command%", optionalMatch.get().usage()));
+				return;
+			}
+
+			arguments.sendMessage(chatManager.prefixedMessage("commands.did_you_mean").replace("%command%", label));
 		}
 	}
 
 	@Command(
 		name = "wm.join",
 		usage = "/wm join <arena>",
-		senderType = PLAYER,
-		allowInfiniteArgs = true
+		senderType = Command.SenderType.PLAYER
 	)
 	public void joinCommand(CommandArguments arguments) {
 		if (arguments.isArgumentsEmpty()) {
@@ -103,7 +98,7 @@ public class PlayerCommands extends AbstractCommand {
 	@Command(
 		name = "wm.leave",
 		usage = "/wm leave",
-		senderType = PLAYER
+		senderType = Command.SenderType.PLAYER
 	)
 	public void leaveCommand(Player player, CommandArguments arguments) {
 		final Arena arena = plugin.getArenaRegistry().getArena(player);
@@ -119,7 +114,7 @@ public class PlayerCommands extends AbstractCommand {
 	@Command(
 		name = "wm.randomjoin",
 		usage = "/wm randomjoin",
-		senderType = PLAYER
+		senderType = Command.SenderType.PLAYER
 	)
 	public void randomJoinCommand(Player player, CommandArguments arguments) {
 		if (plugin.getArenaRegistry().isInArena(player)) {
@@ -141,14 +136,13 @@ public class PlayerCommands extends AbstractCommand {
 			return;
 		}
 
-		player.sendMessage(plugin.getChatManager().prefixedMessage("commands.no_free_arenas"));
+		player.sendMessage(chatManager.prefixedMessage("commands.no_free_arenas"));
 	}
 
 	@Command(
 		name = "wm.stats",
 		usage = "/wm stats <player>",
-		senderType = PLAYER,
-		allowInfiniteArgs = true
+		senderType = Command.SenderType.PLAYER
 	)
 	public void statsCommand(Player player, CommandArguments argument) {
 		final Player target = argument.isArgumentsEmpty() ? player : plugin.getServer().getPlayer(argument.getArgument(0));
@@ -178,8 +172,7 @@ public class PlayerCommands extends AbstractCommand {
 	@Command(
 		name = "wm.top",
 		usage = "/wm top <statistic>",
-		senderType = PLAYER,
-		allowInfiniteArgs = true
+		senderType = Command.SenderType.PLAYER
 	)
 	public void leaderboardCommand(CommandArguments arguments) {
 		if (arguments.isArgumentsEmpty()) {
@@ -195,7 +188,7 @@ public class PlayerCommands extends AbstractCommand {
 	}
 
 	private void printLeaderboard(CommandSender sender, StatsStorage.StatisticType statisticType) {
-		sender.sendMessage(plugin.getChatManager().message("commands.statistics.header"));
+		sender.sendMessage(chatManager.message("commands.statistics.header"));
 
 		final Map<UUID, Integer> stats = StatsStorage.getStats(statisticType);
 		final String statistic = StringUtils.capitalize(statisticType.name().toLowerCase(java.util.Locale.ENGLISH).replace("_", " "));

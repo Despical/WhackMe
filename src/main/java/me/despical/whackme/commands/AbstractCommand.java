@@ -13,9 +13,4 @@ public abstract class AbstractCommand {
 		this.chatManager = plugin.getChatManager();
 		this.plugin.getCommandFramework().registerCommands(this);
 	}
-
-	public static void registerCommands(final WhackMe plugin) {
-		new PlayerCommands(plugin);
-		new AdminCommands(plugin);
-	}
 }
