@@ -67,6 +67,8 @@ public class PlaceholderManager extends PlaceholderExpansion {
 				return Integer.toString(user.getStat(RECORD_SCORE));
 			case "tours_played":
 				return Integer.toString(user.getStat(TOURS_PLAYED));
+			case "local_score":
+				return Integer.toString(user.getStat(LOCAL_SCORE));
 			default:
 				return handleArenaPlaceholderRequest(id);
 		}
