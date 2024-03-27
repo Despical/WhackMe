@@ -19,8 +19,4 @@ public abstract class EventListener implements Listener {
 		this.chatManager = plugin.getChatManager();
 		this.plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
-
-	public static void registerEvents(WhackMe plugin) {
-		new Events(plugin);
-	}
 }

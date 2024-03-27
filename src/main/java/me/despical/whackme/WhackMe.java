@@ -10,8 +10,9 @@ import me.despical.whackme.api.StatsStorage;
 import me.despical.whackme.arena.Arena;
 import me.despical.whackme.arena.ArenaRegistry;
 import me.despical.whackme.arena.managers.ArenaManager;
-import me.despical.whackme.commands.AbstractCommand;
-import me.despical.whackme.events.EventListener;
+import me.despical.whackme.commands.AdminCommands;
+import me.despical.whackme.commands.PlayerCommands;
+import me.despical.whackme.events.Events;
 import me.despical.whackme.handlers.ChatManager;
 import me.despical.whackme.handlers.PlaceholderManager;
 import me.despical.whackme.handlers.SoundManager;
@@ -104,10 +105,11 @@ public class WhackMe extends JavaPlugin {
 		if (getOption(ConfigPreferences.Option.DATABASE_ENABLED)) database = new MysqlDatabase(this, "mysql");
 		if (chatManager.isPapiEnabled()) new PlaceholderManager(this);
 
-		EventListener.registerEvents(this);
-		AbstractCommand.registerCommands(this);
+		new Events(this);
+		new PlayerCommands(this);
+		new AdminCommands(this);
 
-		final Metrics metrics = new Metrics(this, 15722);
+		Metrics metrics = new Metrics(this, 15722);
 		metrics.addCustomChart(new SimplePie("database_enabled", () -> getOption(ConfigPreferences.Option.DATABASE_ENABLED) ? "Enabled" : "Disabled"));
 		metrics.addCustomChart(new SimplePie("update_notifier", () -> getOption(ConfigPreferences.Option.UPDATE_NOTIFIER_ENABLED) ? "Enabled" : "Disabled"));
 	}
