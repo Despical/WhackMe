@@ -18,12 +18,6 @@
 #    - p:chance(99):spawn                         # Player has %99 chance to teleport to spawn                        #
 #    - chance(50):eco give %player% 10            # Console has %50 chance to give player 10$                         #
 #                                                                                                                     #
-#          All object documents that can be used in commands:                                                         #
-#                                                                                                                     #
-#       arena - Whack Me arena object (No public API documents provided, PM me on Discord(id: mrdespical) or Spigot)  #
-#       player - Player object (API methods https://hub.spigotmc.org/javadocs/spigot/org/bukkit/entity/Player.html)   #
-#       server - Server object (API methods https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Server.html)          #
-#                                                                                                                     #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 # Should rewards be enabled?
