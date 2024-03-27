@@ -20,6 +20,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
+import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
 import static me.despical.whackme.api.StatsStorage.StatisticType.*;
@@ -31,6 +32,13 @@ public class PlayerCommands extends AbstractCommand {
 
 		plugin.getCommandFramework().addCustomParameter(Player.class, CommandArguments::getSender);
 		plugin.getCommandFramework().setColorFormatter(Strings::format);
+
+		BiFunction<Command, CommandArguments, Boolean> sendUsage = (command, arguments) -> {
+			arguments.sendMessage(chatManager.prefixedMessage("commands.correct_usage").replace("%usage%", command.usage()));
+			return true;
+		};
+
+		CommandFramework.SHORT_ARG_SIZE = CommandFramework.LONG_ARG_SIZE = sendUsage;
 	}
 
 	@Command(
