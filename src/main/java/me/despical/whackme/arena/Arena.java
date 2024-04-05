@@ -128,7 +128,7 @@ public class Arena extends BukkitRunnable {
 		this.removePlayer(true);
 	}
 
-	public void removePlayer(boolean flag) {
+	public void removePlayer(boolean teleportToEnd) {
 		plugin.getServer().getPluginManager().callEvent(new WMLeaveEvent(player, this));
 
 		final User user = plugin.getUserManager().getUser(player);
@@ -138,9 +138,9 @@ public class Arena extends BukkitRunnable {
 		if (score > user.getStat(StatsStorage.StatisticType.RECORD_SCORE)) {
 			user.setStat(StatsStorage.StatisticType.RECORD_SCORE, score);
 
-			if (flag) player.sendMessage(chatManager.message("in_game.finish_record_message").replace("%points%", Integer.toString(user.getStat(StatsStorage.StatisticType.LOCAL_SCORE))));
+			if (teleportToEnd) player.sendMessage(chatManager.message("in_game.finish_record_message").replace("%points%", Integer.toString(user.getStat(StatsStorage.StatisticType.LOCAL_SCORE))));
 		} else {
-			if (flag) player.sendMessage(chatManager.message("in_game.finish_message").replace("%points%", Integer.toString(user.getStat(StatsStorage.StatisticType.LOCAL_SCORE))));
+			if (teleportToEnd) player.sendMessage(chatManager.message("in_game.finish_message").replace("%points%", Integer.toString(user.getStat(StatsStorage.StatisticType.LOCAL_SCORE))));
 		}
 
 		user.addStat(StatsStorage.StatisticType.TOURS_PLAYED, 1);
@@ -161,7 +161,7 @@ public class Arena extends BukkitRunnable {
 
 		bossBarManager.removePlayer();
 
-		if (flag) teleportToEndLocation();
+		if (teleportToEnd) teleportToEndLocation();
 		cleanGameArea();
 
 		player = null;

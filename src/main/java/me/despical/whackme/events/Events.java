@@ -1,17 +1,22 @@
 package me.despical.whackme.events;
 
+import me.despical.commons.compat.XMaterial;
 import me.despical.commons.serializer.InventorySerializer;
 import me.despical.commons.util.UpdateChecker;
 import me.despical.whackme.ConfigPreferences;
 import me.despical.whackme.WhackMe;
 import me.despical.whackme.arena.Arena;
 import me.despical.whackme.user.User;
+import me.despical.whackme.utils.Utils;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.*;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * @author Despical
@@ -42,7 +47,7 @@ public class Events extends EventListener {
 			return;
 		}
 
-		if (player.isOp() || player.hasPermission("wm.admin")) {
+		if (player.hasPermission("wm.admin")) {
 			return;
 		}
 
@@ -79,6 +84,25 @@ public class Events extends EventListener {
 	@EventHandler
 	public void onDrop(PlayerDropItemEvent event) {
 		if (plugin.getArenaRegistry().isInArena(event.getPlayer())) {
+			event.setCancelled(true);
+		}
+	}
+
+	@EventHandler
+	public void onInteract(PlayerInteractEvent event) {
+		if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+
+		Block block = event.getClickedBlock();
+
+		if (block == null || block.getType() != Utils.END_PORTAL_FRAME.getType()) {
+			return;
+		}
+
+		ItemStack item = event.getItem();
+
+		if (item == null || item.getType() != XMaterial.ENDER_EYE.parseMaterial()) return;
+
+		if (plugin.getArenaRegistry().getArenas().stream().map(Arena::getLocations).anyMatch(location -> location.contains(block.getLocation()))) {
 			event.setCancelled(true);
 		}
 	}
