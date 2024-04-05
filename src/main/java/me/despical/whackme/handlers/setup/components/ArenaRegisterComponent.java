@@ -75,6 +75,8 @@ public class ArenaRegisterComponent extends SetupComponent {
 			arena.setLocations(config.getStringList(path + "portalLocations").stream().map(LocationSerializer::fromString).collect(Collectors.toList()));
 			arena.start();
 
+			plugin.getSignManager().updateSign(arena);
+
 			player.sendMessage(plugin.getChatManager().coloredRawMessage("&a&l✔ &aValidation succeeded! Registering new arena instance: " + arena.getId()));
 
 			config.set(path + "ready", true);
