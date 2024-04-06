@@ -93,10 +93,7 @@ public class AdminCommands extends AbstractCommand {
 			      "Type the command again §6within 10 seconds §cto confirm!",
 		expireAfter = 10
 	)
-	public void deleteCommand(CommandArguments arguments) {
-		final String arenaId = arguments.getArgument(0);
-		final Arena arena = plugin.getArenaRegistry().getArena(arenaId);
-
+	public void deleteCommand(Arena arena, CommandArguments arguments) {
 		if (arena == null) {
 			arguments.sendMessage(chatManager.prefixedMessage("commands.no_arena_like_that"));
 			return;
@@ -112,7 +109,7 @@ public class AdminCommands extends AbstractCommand {
 
 		FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
 
-		config.set("instances." + arenaId, null);
+		config.set("instances." + arguments.getArgument(0), null);
 		ConfigUtils.saveConfig(plugin, config, "arenas");
 
 		arguments.sendMessage(chatManager.prefixedMessage("commands.removed_game_instance"));
@@ -126,9 +123,7 @@ public class AdminCommands extends AbstractCommand {
 		min = 1,
 		senderType = Command.SenderType.PLAYER
 	)
-	public void editCommand(CommandArguments arguments) {
-		final Arena arena = plugin.getArenaRegistry().getArena(arguments.getArgument(0));
-
+	public void editCommand(Arena arena, CommandArguments arguments) {
 		if (arena == null) {
 			arguments.sendMessage(chatManager.prefixedMessage("commands.no_arena_like_that"));
 			return;
@@ -208,9 +203,7 @@ public class AdminCommands extends AbstractCommand {
 		desc = "Kicks specified player if they're playing",
 		min = 1
 	)
-	public void kickCommand(CommandArguments arguments) {
-		final Arena arena = plugin.getArenaRegistry().getArena(arguments.getArgument(0));
-
+	public void kickCommand(Arena arena, CommandArguments arguments) {
 		if (arena == null) {
 			arguments.sendMessage(chatManager.prefixedMessage("commands.no_arena_like_that"));
 			return;

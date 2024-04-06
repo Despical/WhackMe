@@ -3,6 +3,7 @@ package me.despical.whackme.commands;
 import me.despical.commandframework.Command;
 import me.despical.commandframework.CommandArguments;
 import me.despical.commandframework.CommandFramework;
+import me.despical.commandframework.Param;
 import me.despical.commons.string.StringMatcher;
 import me.despical.commons.string.StringUtils;
 import me.despical.commons.util.Strings;
@@ -30,7 +31,9 @@ public class PlayerCommands extends AbstractCommand {
 	public PlayerCommands(WhackMe plugin) {
 		super(plugin);
 
-		plugin.getCommandFramework().addCustomParameter(Player.class, CommandArguments::getSender);
+		plugin.getCommandFramework().addCustomParameter("Player", CommandArguments::getSender);
+		plugin.getCommandFramework().addCustomParameter("Arena", arguments -> plugin.getArenaRegistry().getArena(arguments.getArgument(0)));
+		plugin.getCommandFramework().addCustomParameter("pArena", arguments -> plugin.getArenaRegistry().getArena(arguments.<Player>getSender()));
 		plugin.getCommandFramework().setColorFormatter(Strings::format);
 
 		BiFunction<Command, CommandArguments, Boolean> sendUsage = (command, arguments) -> {
@@ -87,13 +90,11 @@ public class PlayerCommands extends AbstractCommand {
 		usage = "/wm join <arena>",
 		senderType = Command.SenderType.PLAYER
 	)
-	public void joinCommand(CommandArguments arguments) {
+	public void joinCommand(Arena arena, CommandArguments arguments) {
 		if (arguments.isArgumentsEmpty()) {
 			arguments.sendMessage(chatManager.prefixedMessage("commands.type_arena_name"));
 			return;
 		}
-
-		final Arena arena = plugin.getArenaRegistry().getArena(arguments.getArgument(0));
 
 		if (arena == null) {
 			arguments.sendMessage(chatManager.prefixedMessage("commands.no_arena_like_that"));
@@ -108,9 +109,7 @@ public class PlayerCommands extends AbstractCommand {
 		usage = "/wm leave",
 		senderType = Command.SenderType.PLAYER
 	)
-	public void leaveCommand(Player player, CommandArguments arguments) {
-		final Arena arena = plugin.getArenaRegistry().getArena(player);
-
+	public void leaveCommand(Player player, @Param("pArena") Arena arena, CommandArguments arguments) {
 		if (arena == null) {
 			player.sendMessage(chatManager.prefixedMessage("commands.not_playing"));
 			return;
