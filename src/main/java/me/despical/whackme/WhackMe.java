@@ -190,7 +190,6 @@ public class WhackMe extends JavaPlugin {
 		reloadConfig();
 
 		configPreferences.reload();
-		configPreferences.reload();
 		chatManager.reloadConfig();
 		signManager.loadSigns();
 	}
