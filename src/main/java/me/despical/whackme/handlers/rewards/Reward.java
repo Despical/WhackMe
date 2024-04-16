@@ -35,7 +35,7 @@ public class Reward {
 	 static final class SubReward {
 
 		private String executableCode;
-		private final int chance, executor;
+		private final int chance, executor, minimumPoints;
 
 		public SubReward(final WhackMe plugin, final String rawCode) {
 			String processedCode = rawCode;
@@ -48,24 +48,45 @@ public class Reward {
 				this.executor = 1;
 			}
 
+			chance:
 			if (processedCode.contains("chance(")) {
-				int loc = processedCode.indexOf(")");
+				int loc = processedCode.indexOf(")", processedCode.indexOf("chance("));
 
 				if (loc == -1) {
 					plugin.getLogger().warning(String.format("Second '')'' is not found in chance condition! Command: %s", rawCode));
 
 					this.chance = 101;
-					return;
+					break chance;
 				}
 
 				String chanceStr = processedCode;
-				chanceStr = chanceStr.substring(0, loc).replaceAll("[^0-9]+", "");
+				chanceStr = chanceStr.substring(processedCode.indexOf("chance("), loc).replaceAll("[^0-9]+", "");
 
 				processedCode = processedCode.replace(String.format("chance(%s):", chanceStr), "");
 
 				this.chance = Integer.parseInt(chanceStr);
 			} else {
 				this.chance = 100;
+			}
+
+			if (processedCode.contains("points(")) {
+				int loc = processedCode.indexOf(")", processedCode.indexOf("points("));
+
+				if (loc == -1) {
+					plugin.getLogger().warning(String.format("Second '')'' is not found in points condition! Command: %s", rawCode));
+
+					this.minimumPoints = -1;
+					return;
+				}
+
+				String pointsStr = processedCode;
+				pointsStr = pointsStr.substring(processedCode.indexOf("points("), loc).replaceAll("[^0-9]+", "");
+
+				processedCode = processedCode.replace(String.format("points(%s):", pointsStr), "");
+
+				this.minimumPoints = Integer.parseInt(pointsStr);
+			} else {
+				this.minimumPoints = -1;
 			}
 
 			this.executableCode = processedCode;
@@ -82,7 +103,11 @@ public class Reward {
 		public int getChance() {
 			return chance;
 		}
-	}
+
+		 public boolean testPoints(int points) {
+			 return minimumPoints == -1 || points >= minimumPoints;
+		 }
+	 }
 
 	public enum RewardType {
 

@@ -35,11 +35,15 @@ public class RewardsFactory {
 
 		if (rewardList.isEmpty()) return;
 
+		User user = plugin.getUserManager().getUser(player);
+		int points = user.getStat(StatsStorage.StatisticType.LOCAL_SCORE);
+
 		for (Reward mainRewards : rewardList) {
 			for (Reward.SubReward reward : mainRewards.getRewards()){
 				if (ThreadLocalRandom.current().nextInt(0, 100) > reward.getChance()) continue;
+				if (!reward.testPoints(points)) continue;
 
-				String command = formatCommandPlaceholders(reward, plugin.getUserManager().getUser(player));
+				String command = formatCommandPlaceholders(reward, user);
 				int executor = reward.getExecutor();
 
 				if (executor == 1) {
