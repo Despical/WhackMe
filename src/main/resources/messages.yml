@@ -31,6 +31,7 @@ Commands:
       - "&8 * &aWhacked Plus Points: &e%whacked_point_blocks%"
       - "&8 * &aWhacked Minus Points: &e%whacked_minus_point_blocks%"
       - "&8 * &aWhacked Block Rate: &e%whacked_block_rate%%"
+      - "&8 * &aLongest Point Streak: &e%longest_point_streak%"
       - "&l[--------------------]"
   List-Command:
     No-Arenas-Created: "&cThere aren't any game instances to show! What about creating one?"
