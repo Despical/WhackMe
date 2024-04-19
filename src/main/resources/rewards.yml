@@ -7,8 +7,8 @@
 #                                             %arena% - Arena identifier                                              #
 #                                           %player% - Current player name                                            #
 #                                         %points% - Number of player's score                                         #
-#                                     %point_streak% - Current point score of player                                  #
-#                        %longest_point_streak% - Longest point score of player in current game                       #
+#                           %point_streak% - Current point streak of player in current game                           #
+#                       %longest_point_streak% - Longest point streak of player in current game                       #
 #                                                                                                                     #
 #                 Commands are executed by default by CONSOLE, use "p:" to preform command by player .                #
 #        Use points conditions to execute commands if player gets more than a specific point; "points(NUMBER):"       #
