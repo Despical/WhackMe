@@ -12,6 +12,7 @@ import me.despical.whackme.WhackMe;
 import me.despical.whackme.api.StatsStorage;
 import me.despical.whackme.arena.Arena;
 import me.despical.whackme.user.User;
+import me.despical.whackme.user.data.MysqlManager;
 import me.despical.whackme.utils.Utils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -148,7 +149,7 @@ public class PlayerCommands extends AbstractCommand {
 
 	@Command(
 		name = "wm.stats",
-		usage = "/wm stats <player>",
+		usage = "/wm stats [player]",
 		senderType = Command.SenderType.PLAYER
 	)
 	public void statsCommand(Player player, CommandArguments argument) {
@@ -168,11 +169,12 @@ public class PlayerCommands extends AbstractCommand {
 		final int minusBlocks = user.getStat(MINUS_BLOCKS), plusBlocks = user.getStat(PLUS_BLOCKS);
 
 		message = message.replace("%header%", chatManager.message("commands.stats_command." + header));
-		message = message.replace("%tours_played%", Integer.toString(user.getStat(TOURS_PLAYED)));
-		message = message.replace("%record_score%", Integer.toString(user.getStat(RECORD_SCORE)));
+		message = message.replace("%tours_played%", TOURS_PLAYED.from(user));
+		message = message.replace("%record_score%", RECORD_SCORE.from(user));
 		message = message.replace("%whacked_point_blocks%", Integer.toString(plusBlocks));
 		message = message.replace("%whacked_minus_point_blocks%", Integer.toString(minusBlocks));
 		message = message.replace("%whacked_block_rate%", String.format("%.1f", (minusBlocks + plusBlocks == 0 ? 100 : ((double) plusBlocks / (minusBlocks + plusBlocks)) * 100D)));
+		message = message.replace("%longest_point_streak%", LONGEST_STREAK.from(user));
 		return chatManager.coloredRawMessage(message);
 	}
 
@@ -211,9 +213,11 @@ public class PlayerCommands extends AbstractCommand {
 				UUID current = (UUID) stats.keySet().toArray()[stats.keySet().toArray().length - 1];
 
 				if (plugin.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
+					String table = ((MysqlManager) plugin.getUserManager().getUserDatabase()).getTable();
+
 					try (Connection connection = plugin.getMysqlDatabase().getConnection()) {
 						Statement statement = connection.createStatement();
-						ResultSet set = statement.executeQuery(String.format("SELECT name FROM playerstats WHERE UUID='%s'", current.toString()));
+						ResultSet set = statement.executeQuery(String.format("SELECT name FROM %s WHERE UUID='%s'", table, current.toString()));
 
 						if (set.next()) {
 							sender.sendMessage(formatMessage(statistic, set.getString(1), i + 1, stats.get(current)));
