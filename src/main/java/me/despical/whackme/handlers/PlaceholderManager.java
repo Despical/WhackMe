@@ -57,18 +57,24 @@ public class PlaceholderManager extends PlaceholderExpansion {
 			case "online_players":
 				return Long.toString(plugin.getArenaRegistry().getArenas().stream().filter(arena -> arena.getPlayer() != null).count());
 			case "whacked_point_blocks":
-				return Integer.toString(user.getStat(PLUS_BLOCKS));
+				return PLUS_BLOCKS.from(user);
 			case "whacked_minus_point_blocks":
-				return Integer.toString(user.getStat(MINUS_BLOCKS));
+				return MINUS_BLOCKS.from(user);
 			case "whacked_block_rate":
 				int minusBlocks = user.getStat(MINUS_BLOCKS), plusBlocks = user.getStat(PLUS_BLOCKS);
 				return String.format("%.1f", (minusBlocks + plusBlocks == 0 ? 100 : ((double) plusBlocks / (minusBlocks + plusBlocks)) * 100D));
 			case "record_score":
-				return Integer.toString(user.getStat(RECORD_SCORE));
+				return RECORD_SCORE.from(user);
 			case "tours_played":
-				return Integer.toString(user.getStat(TOURS_PLAYED));
+				return TOURS_PLAYED.from(user);
+			case "longest_streak":
+				return LONGEST_STREAK.from(user);
 			case "local_score":
-				return Integer.toString(user.getStat(LOCAL_SCORE));
+				return LOCAL_SCORE.from(user);
+			case "local_point_streak":
+				return LOCAL_STREAK.from(user);
+			case "local_longest_point_streak":
+				return LOCAL_LONGEST_STREAK.from(user);
 			default:
 				return handleArenaPlaceholderRequest(id);
 		}
