@@ -47,10 +47,11 @@ public class Utils {
 		return blocks;
 	}
 
-	public static void trySilently(Runnable runnable) {
-		try {
-			runnable.run();
-		} catch (Exception | Error ignored) {
+	public static void trySilently(Runnable... runnables) {
+		for (Runnable runnable : runnables) {
+			try {
+				runnable.run();
+			} catch (Exception | Error ignored) {}
 		}
 	}
 

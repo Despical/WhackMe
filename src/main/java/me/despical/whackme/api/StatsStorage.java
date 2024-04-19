@@ -3,6 +3,7 @@ package me.despical.whackme.api;
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.sorter.SortUtils;
 import me.despical.whackme.WhackMe;
+import me.despical.whackme.user.User;
 import me.despical.whackme.user.data.MysqlManager;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -67,6 +68,9 @@ public class StatsStorage {
 		RECORD_SCORE("recordscore"),
 		PLUS_BLOCKS("whackedpluspointblocks"),
 		MINUS_BLOCKS("whackedminuspointblocks"),
+		LONGEST_STREAK("longeststreak"),
+		LOCAL_STREAK("local_streak", false),
+		LOCAL_LONGEST_STREAK("local_longest_streak", false),
 		LOCAL_SCORE("local_score", false);
 
 		final String name;
@@ -87,6 +91,10 @@ public class StatsStorage {
 
 		public boolean isPersistent() {
 			return persistent;
+		}
+
+		public String from(User user) {
+			return Integer.toString(user.getStat(this));
 		}
 	}
 }

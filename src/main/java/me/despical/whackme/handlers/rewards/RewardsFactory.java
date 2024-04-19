@@ -62,7 +62,9 @@ public class RewardsFactory {
 
 		formatted = formatted.replace("%arena%", arena.getId());
 		formatted = formatted.replace("%player%", user.getPlayer().getName());
-		formatted = formatted.replace("%points%", Integer.toString(user.getStat(StatsStorage.StatisticType.LOCAL_SCORE)));
+		formatted = formatted.replace("%points%", StatsStorage.StatisticType.LOCAL_SCORE.from(user));
+		formatted = formatted.replace("%point_streak%", StatsStorage.StatisticType.LOCAL_STREAK.from(user));
+		formatted = formatted.replace("%longest_point_streak%", StatsStorage.StatisticType.LOCAL_LONGEST_STREAK.from(user));
 		return formatted;
 	}
 

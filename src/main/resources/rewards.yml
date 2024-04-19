@@ -1,24 +1,26 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #                                                                                                                     #
-#             Whack Me Rewards Configuration                                                                          #
+#                                           Whack Me Rewards Configuration                                            #
 #                                                                                                                     #
-#                 Placeholders list:                                                                                  #
+#                                                 Placeholders List                                                   #
 #                                                                                                                     #
-#             %player% - Current player name                                                                          #
-#             %arena%  - Arena identifier                                                                             #
-#             %points% - Number of player's score                                                                     #
+#                                             %arena% - Arena identifier                                              #
+#                                           %player% - Current player name                                            #
+#                                         %points% - Number of player's score                                         #
+#                                     %point_streak% - Current point score of player                                  #
+#                        %longest_point_streak% - Longest point score of player in current game                       #
 #                                                                                                                     #
-#      Commands are executed by default by CONSOLE, use "p:" to preform command by player                             #
+#                 Commands are executed by default by CONSOLE, use "p:" to preform command by player .                #
+#        Use points conditions to execute commands if player gets more than a specific point; "points(NUMBER):"       #
 #   Use chance conditions to execute command with a chance, by adding "chance(NUMBER):" at the beginning of command   #
-#   Use points conditions to execute commands if player gets more than a specific point; "points(NUMBER):"            #
 #                                                                                                                     #
 #  Commands examples:                                                                                                 #
-#    - p:say Hello everyone in %arena%!           # Player will say "Hello everyone in <arena name here>"             #
-#    - broadcast Game %arena% has ended!          # Will broadcast "Game <arena name here> has ended" message         #
-#    - chance(1):p:say I was very lucky!          # Player has 1% chance to say "I was very lucky!"                   #
-#    - p:chance(99):spawn                         # Player has 99% chance to teleport to spawn                        #
-#    - chance(50):eco give %player% 10            # Console has 50% chance to give player 10$                         #
-#    - points(20):eco give %player% 50            # Player will receive $50 if they get more than 20 points.          #
+#    - p:say Hello everyone in %arena%!   =====>  Player will say "Hello everyone in <arena name here>"               #
+#    - broadcast Game %arena% has ended!  =====>  Will broadcast "Game <arena name here> has ended" message           #
+#    - chance(1):p:say I was very lucky!  =====>  Player has 1% chance to say "I was very lucky!"                     #
+#    - p:chance(99):spawn                 =====>  Player has 99% chance to teleport to spawn                          #
+#    - chance(50):eco give %player% 10    =====>  Console has 50% chance to give player 10$                           #
+#    - points(20):eco give %player% 50    =====>  Player will receive $50 if they get more than 20 points.            #
 #                                                                                                                     #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 

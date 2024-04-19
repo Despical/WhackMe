@@ -145,6 +145,12 @@ public class Arena extends BukkitRunnable {
 
 		user.addStat(StatsStorage.StatisticType.TOURS_PLAYED, 1);
 
+		int localStreak = user.getStat(StatsStorage.StatisticType.LOCAL_LONGEST_STREAK);
+
+		if (localStreak > user.getStat(StatsStorage.StatisticType.LONGEST_STREAK)) {
+			user.setStat(StatsStorage.StatisticType.LONGEST_STREAK, localStreak);
+		}
+
 		plugin.getUserManager().getUserDatabase().saveStatistics(user);
 
 		if (plugin.getOption(ConfigPreferences.Option.CLEAR_INVENTORY)) {

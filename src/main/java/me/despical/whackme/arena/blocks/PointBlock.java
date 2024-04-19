@@ -24,6 +24,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import static me.despical.whackme.ConfigPreferences.*;
+import static me.despical.whackme.api.StatsStorage.StatisticType.*;
 
 /**
  * @author Despical
@@ -59,11 +60,10 @@ public class PointBlock extends BukkitRunnable {
 		stand.setGravity(false);
 		stand.setVisible(false);
 
-		Utils.trySilently(() -> {
-			stand.setShieldBlockingDelay(1);
-			stand.setSilent(true);
-			stand.setPersistent(false);
-		});
+		Utils.trySilently(
+			() -> stand.setShieldBlockingDelay(1),
+			() -> stand.setSilent(true),
+			() -> stand.setPersistent(false));
 
 		arena.getPointBlocks().add(this);
 		arena.getLocations().remove(availableLocation);
@@ -138,14 +138,22 @@ public class PointBlock extends BukkitRunnable {
 				if (stand.getCustomName().equals(OUCH)) return;
 
 				if (name.equalsIgnoreCase(PUNCH_ME)) {
-					user.addStat(StatsStorage.StatisticType.LOCAL_SCORE, 1);
-					user.addStat(StatsStorage.StatisticType.PLUS_BLOCKS, 1);
+					user.addStat(LOCAL_SCORE, 1);
+					user.addStat(LOCAL_STREAK, 1);
+					user.addStat(PLUS_BLOCKS, 1);
+
+					int localStreak = user.getStat(LOCAL_STREAK);
+
+					if (localStreak > user.getStat(LOCAL_LONGEST_STREAK)) {
+						user.setStat(LOCAL_LONGEST_STREAK, localStreak);
+					}
 
 					plugin.getSoundManager().playSound(player, SoundManager.GameSounds.POINT_SOUND);
 					plugin.getRewardsFactory().performReward(player, Reward.RewardType.SUCCESSFUL_POINT);
 				} else if (name.equalsIgnoreCase(DONT_PUNCH_ME)) {
-					user.addStat(StatsStorage.StatisticType.LOCAL_SCORE, -1);
-					user.addStat(StatsStorage.StatisticType.MINUS_BLOCKS, 1);
+					user.addStat(LOCAL_SCORE, -1);
+					user.addStat(MINUS_BLOCKS, 1);
+					user.setStat(LOCAL_STREAK, 0);
 
 					plugin.getSoundManager().playSound(player, SoundManager.GameSounds.MINUS_POINT_SOUND);
 					plugin.getRewardsFactory().performReward(player, Reward.RewardType.WRONG_POINT);
