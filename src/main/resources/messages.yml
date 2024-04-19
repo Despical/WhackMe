@@ -35,6 +35,9 @@ Commands:
   List-Command:
     No-Arenas-Created: "&cThere aren't any game instances to show! What about creating one?"
     Format: "&aExisting arenas: &7%list%"
+  Time-Command:
+    Usage: "&cCorrect usage: /wm time <arena> <add | remove | set> <value>"
+    Arena-Is-Empty: "&cNo one is playing in this arena at the moment!"
 
 In-Game:
   Plugin-Prefix: "&8[&6Whack Me&8] "

@@ -244,6 +244,49 @@ public class AdminCommands extends AbstractCommand {
 		arguments.sendMessage(chatManager.prefixedMessage("commands.success_reload"));
 	}
 
+	@Command(
+		name = "wm.time",
+		usage = "/wm time <arena> <add | remove | set> <value>",
+		desc = "Manipulates the timer of target arena.",
+		senderType = Command.SenderType.CONSOLE
+	)
+	public void timeCommand(Arena arena, CommandArguments arguments) {
+		String usage = chatManager.prefixedMessage("commands.time_command.usage");
+
+		if (arguments.getLength() < 3) {
+			arguments.sendMessage(usage);
+			return;
+		}
+
+		if (arena == null) {
+			arguments.sendMessage(chatManager.prefixedMessage("commands.no_arena_like_that"));
+			return;
+		}
+
+		if (arena.getPlayer() == null) {
+			arguments.sendMessage(chatManager.prefixedMessage("commands.time_command.arena_is_empty"));
+			return;
+		}
+
+		String argument = arguments.getArgument(1);
+		int value = Math.abs(arguments.getArgumentAsInt(2));
+		int current = arena.getTimer();
+
+		switch (argument) {
+			case "add":
+				arena.setTimer(current + value);
+				break;
+			case "remove":
+				arena.setTimer(Math.max(0, current - value));
+				break;
+			case "set":
+				arena.setTimer(Math.max(0, value));
+				break;
+			default:
+				arguments.sendMessage(usage);
+		}
+	}
+
 	@Completer(
 		name = "wm"
 	)
