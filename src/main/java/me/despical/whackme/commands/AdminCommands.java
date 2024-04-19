@@ -143,7 +143,8 @@ public class AdminCommands extends AbstractCommand {
 		final CommandSender sender = arguments.getSender();
 
 		arguments.sendMessage("");
-		MiscUtils.sendCenteredMessage(sender, "&3&l---- Whack Me Commands ----");
+		MiscUtils.sendCenteredMessage(sender, "&3&lWhack Me");
+		MiscUtils.sendCenteredMessage(arguments.getSender(), "&3[&boptional argument&3] &b- &3<&brequired argument&3>");
 		arguments.sendMessage("");
 
 		for (final Command command : plugin.getCommandFramework().getSubCommands()) {
