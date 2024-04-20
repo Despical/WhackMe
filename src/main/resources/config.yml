@@ -73,13 +73,16 @@ Chat-Format-Enabled: true
 # The gameplay time for each arena. Default is 30 seconds.
 Gameplay-Time: 30
 
-# The sound plays when player clicks the correct point block.
-Point-Sound: "ORB_PICKUP"
+# Set NONE to disable.
+Sounds:
+  # The sound plays when player clicks the correct point block.
+  Point: "ORB_PICKUP"
 
-# The sound plays when player clicks the incorrect point block.
-Minus-Point-Sound: "NOTE_BASS"
+  # The sound plays when player clicks the incorrect point block.
+  Minus-Point: "NOTE_BASS"
 
 # The delay between hitting blocks.
+# 4 is the default value.
 Hit-Cooldown-Delay: 16
 
 # Commands which can be used in game, remove all of them to disable.

@@ -5,9 +5,11 @@ import me.despical.commandframework.CommandFramework;
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.util.Strings;
 import me.despical.whackme.WhackMe;
+import me.despical.whackme.api.Reloadable;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import java.text.MessageFormat;
 import java.util.List;
 
 /**
@@ -15,7 +17,7 @@ import java.util.List;
  * <p>
  * Created at 18.06.2022
  */
-public class ChatManager {
+public class ChatManager implements Reloadable {
 
 	private final WhackMe plugin;
 	private final String prefix;
@@ -49,6 +51,10 @@ public class ChatManager {
 		return coloredRawMessage(config.getString(path));
 	}
 
+	public String getPrefix() {
+		return prefix;
+	}
+
 	public String prefixedMessage(String path) {
 		return prefix + message(path);
 	}
@@ -58,6 +64,15 @@ public class ChatManager {
 		returnString = formatPlaceholders(returnString, player);
 
 		return returnString;
+	}
+
+	public String prefixedMessage(String message, Object... params) {
+		return prefix + this.message(message, params);
+	}
+
+	public String message(String path, Object... params) {
+		String message = this.message(path);
+		return MessageFormat.format(message, params);
 	}
 
 	public String formatPlaceholders(String message, Player player) {
@@ -76,7 +91,8 @@ public class ChatManager {
 		return config.getStringList(path);
 	}
 
-	public void reloadConfig() {
-		config = ConfigUtils.getConfig(plugin, "messages");
+	@Override
+	public void reload() {
+		this.config = ConfigUtils.getConfig(plugin, "messages");
 	}
 }

@@ -9,9 +9,13 @@ Commands:
   Arena-Not-Configured: "&cThis arena is not configured yet. If you think this is an issue contact staff!"
   Only-By-Player: "&cYou can execute this command only as player!"
   No-Permission: "&cYou don't have enough permission to use this command!"
-  Success-Reload: "&aSystem successfully reloaded all configurations and arenas!"
   No-One-Playing: "&cNo one playing Whack Me in this arena at the moment!"
   Kicked-Player: "&aPlayer has kicked successfully from the game."
+  Reload-Command:
+    Initialized: "&aPlugin reload initialized by {0}."
+    Finished: "&aPlugin reload finished successfully."
+    Error-Occurred: "&cException occurred during the plugin reload!"
+
   Player-Not-Found: "&cWe couldn't find any player with that name matching!"
   # %wm_{arena}_player_name% -> placeholder will return text below if arena player is null.
   Unknown-Player: "Unknown"

@@ -15,6 +15,7 @@ import me.despical.whackme.commands.PlayerCommands;
 import me.despical.whackme.events.Events;
 import me.despical.whackme.handlers.ChatManager;
 import me.despical.whackme.handlers.PlaceholderManager;
+import me.despical.whackme.handlers.ReloadManager;
 import me.despical.whackme.handlers.SoundManager;
 import me.despical.whackme.handlers.rewards.RewardsFactory;
 import me.despical.whackme.handlers.sign.SignManager;
@@ -47,6 +48,7 @@ public class WhackMe extends JavaPlugin {
 	private ArenaRegistry arenaRegistry;
 	private SignManager signManager;
 	private ArenaManager arenaManager;
+	private ReloadManager reloadManager;
 
 	@Override
 	public void onEnable() {
@@ -101,6 +103,7 @@ public class WhackMe extends JavaPlugin {
 		this.arenaRegistry = new ArenaRegistry(this);
 		this.signManager = new SignManager(this);
 		this.arenaManager = new ArenaManager(this);
+		this.reloadManager = new ReloadManager(this);
 
 		if (getOption(ConfigPreferences.Option.DATABASE_ENABLED)) database = new MysqlDatabase(this, "mysql");
 		if (chatManager.isPapiEnabled()) new PlaceholderManager(this);
@@ -186,12 +189,9 @@ public class WhackMe extends JavaPlugin {
 		return arenaManager;
 	}
 
-	public void reload() {
-		reloadConfig();
-
-		configPreferences.reload();
-		chatManager.reloadConfig();
-		signManager.loadSigns();
+	@NotNull
+	public ReloadManager getReloadManager() {
+		return reloadManager;
 	}
 
 	private void saveAllUserStatistics() {

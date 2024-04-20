@@ -227,7 +227,7 @@ public class AdminCommands extends AbstractCommand {
 		desc = "Reloads arenas and configuration files"
 	)
 	public void reloadCommand(CommandArguments arguments) {
-		plugin.reload();
+		plugin.getReloadManager().initializeReload(arguments.getSender());
 
 		for (Arena arena : plugin.getArenaRegistry().getArenas()) {
 			final Player player = arena.getPlayer();
@@ -242,7 +242,6 @@ public class AdminCommands extends AbstractCommand {
 		}
 
 		plugin.getArenaRegistry().registerArenas();
-		arguments.sendMessage(chatManager.prefixedMessage("commands.success_reload"));
 	}
 
 	@Command(

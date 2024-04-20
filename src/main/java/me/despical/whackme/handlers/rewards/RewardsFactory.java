@@ -2,6 +2,7 @@ package me.despical.whackme.handlers.rewards;
 
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.whackme.WhackMe;
+import me.despical.whackme.api.Reloadable;
 import me.despical.whackme.api.StatsStorage;
 import me.despical.whackme.arena.Arena;
 import me.despical.whackme.user.User;
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
  * <p>
  * Created at 21.08.2022
  */
-public class RewardsFactory {
+public class RewardsFactory implements Reloadable {
 
 	private final WhackMe plugin;
 	private final Set<Reward> rewards;
@@ -76,5 +77,11 @@ public class RewardsFactory {
 		for (final Reward.RewardType rewardType : Reward.RewardType.values()) {
 			rewards.add(new Reward(plugin, rewardType, config.getStringList(rewardType.path)));
 		}
+	}
+
+	@Override
+	public void reload() {
+		this.rewards.clear();
+		this.registerRewards();
 	}
 }

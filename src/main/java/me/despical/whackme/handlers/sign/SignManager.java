@@ -3,6 +3,7 @@ package me.despical.whackme.handlers.sign;
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.serializer.LocationSerializer;
 import me.despical.whackme.WhackMe;
+import me.despical.whackme.api.Reloadable;
 import me.despical.whackme.arena.Arena;
 import me.despical.whackme.events.EventListener;
 import me.despical.whackme.user.User;
@@ -24,7 +25,7 @@ import java.util.*;
  * <p>
  * Created at 31.01.2024
  */
-public class SignManager extends EventListener {
+public class SignManager extends EventListener implements Reloadable {
 
 	private final Set<ArenaSign> arenaSigns;
 	private final List<String> signLines;
@@ -229,5 +230,10 @@ public class SignManager extends EventListener {
 
 	private ArenaSign getArenaSignByBlock(Block block) {
 		return block == null || !(block.getState() instanceof Sign) ? null : arenaSigns.stream().filter(sign -> sign.getSign().getLocation().equals(block.getLocation())).findFirst().orElse(null);
+	}
+
+	@Override
+	public void reload() {
+		this.loadSigns();
 	}
 }

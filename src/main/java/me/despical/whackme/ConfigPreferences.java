@@ -6,6 +6,7 @@ import me.despical.commons.item.ItemUtils;
 import me.despical.commons.serializer.InventorySerializer;
 import me.despical.commons.string.StringUtils;
 import me.despical.commons.util.function.DoubleSupplier;
+import me.despical.whackme.api.Reloadable;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -20,7 +21,7 @@ import java.util.Map;
  * <p>
  * Created at 20.06.2022
  */
-public class ConfigPreferences {
+public class ConfigPreferences implements Reloadable {
 
 	public static ItemStack RED_BLOCK, GREEN_BLOCK, CYAN_BLOCK;
 
@@ -37,7 +38,10 @@ public class ConfigPreferences {
 		this.initializeItems();
 	}
 
+	@Override
 	public void reload() {
+		plugin.reloadConfig();
+
 		this.loadOptions();
 		this.initializeItems();
 	}

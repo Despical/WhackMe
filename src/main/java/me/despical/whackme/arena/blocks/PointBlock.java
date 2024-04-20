@@ -2,7 +2,6 @@ package me.despical.whackme.arena.blocks;
 
 import me.despical.commons.ReflectionUtils;
 import me.despical.whackme.WhackMe;
-import me.despical.whackme.api.StatsStorage;
 import me.despical.whackme.arena.Arena;
 import me.despical.whackme.arena.options.ArenaOption;
 import me.despical.whackme.handlers.ChatManager;
@@ -148,14 +147,14 @@ public class PointBlock extends BukkitRunnable {
 						user.setStat(LOCAL_LONGEST_STREAK, localStreak);
 					}
 
-					plugin.getSoundManager().playSound(player, SoundManager.GameSounds.POINT_SOUND);
+					plugin.getSoundManager().playSound(player, SoundManager.GameSound.POINT_SOUND);
 					plugin.getRewardsFactory().performReward(player, Reward.RewardType.SUCCESSFUL_POINT);
 				} else if (name.equalsIgnoreCase(DONT_PUNCH_ME)) {
 					user.addStat(LOCAL_SCORE, -1);
 					user.addStat(MINUS_BLOCKS, 1);
 					user.setStat(LOCAL_STREAK, 0);
 
-					plugin.getSoundManager().playSound(player, SoundManager.GameSounds.MINUS_POINT_SOUND);
+					plugin.getSoundManager().playSound(player, SoundManager.GameSound.MINUS_POINT_SOUND);
 					plugin.getRewardsFactory().performReward(player, Reward.RewardType.WRONG_POINT);
 				}
 
