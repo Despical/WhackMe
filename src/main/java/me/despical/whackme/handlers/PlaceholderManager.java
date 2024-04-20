@@ -67,7 +67,7 @@ public class PlaceholderManager extends PlaceholderExpansion {
 				return RECORD_SCORE.from(user);
 			case "tours_played":
 				return TOURS_PLAYED.from(user);
-			case "longest_streak":
+			case "longest_point_streak":
 				return LONGEST_STREAK.from(user);
 			case "local_score":
 				return LOCAL_SCORE.from(user);
