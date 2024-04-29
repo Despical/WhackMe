@@ -1,6 +1,5 @@
 package me.despical.whackme.arena;
 
-import me.despical.commons.miscellaneous.AttributeUtils;
 import me.despical.commons.serializer.InventorySerializer;
 import me.despical.whackme.ConfigPreferences;
 import me.despical.whackme.WhackMe;
@@ -32,7 +31,7 @@ import java.util.stream.Collectors;
  */
 public class Arena extends BukkitRunnable {
 
-	private final static WhackMe plugin = JavaPlugin.getPlugin(WhackMe.class);
+	private static final WhackMe plugin = JavaPlugin.getPlugin(WhackMe.class);
 
 	private Player player;
 	private boolean ready, custom, started;
@@ -100,8 +99,6 @@ public class Arena extends BukkitRunnable {
 			InventorySerializer.saveInventoryToFile(plugin, player);
 		}
 
-		AttributeUtils.setAttackCooldown(player, plugin.getConfig().getDouble("Hit-Cooldown-Delay", 4));
-
 		if (plugin.getOption(ConfigPreferences.Option.CLEAR_INVENTORY)) {
 			player.getInventory().clear();
 		}
@@ -115,7 +112,10 @@ public class Arena extends BukkitRunnable {
 
 		bossBarManager.addPlayer();
 
-		plugin.getUserManager().getUser(player).setStat(StatsStorage.StatisticType.LOCAL_SCORE, 0);
+		User user = plugin.getUserManager().getUser(player);
+		user.resetStats();
+		user.updateAttackCooldown();
+
 		plugin.getSignManager().updateSign(this);
 
 		player.setFoodLevel(20);
@@ -131,9 +131,9 @@ public class Arena extends BukkitRunnable {
 	public void removePlayer(boolean teleportToEnd) {
 		plugin.getServer().getPluginManager().callEvent(new WMLeaveEvent(player, this));
 
-		final User user = plugin.getUserManager().getUser(player);
-		final ChatManager chatManager = plugin.getChatManager();
-		final int score = user.getStat(StatsStorage.StatisticType.LOCAL_SCORE);
+		User user = plugin.getUserManager().getUser(player);
+		ChatManager chatManager = plugin.getChatManager();
+		int score = user.getStat(StatsStorage.StatisticType.LOCAL_SCORE);
 
 		if (score > user.getStat(StatsStorage.StatisticType.RECORD_SCORE)) {
 			user.setStat(StatsStorage.StatisticType.RECORD_SCORE, score);
@@ -144,6 +144,8 @@ public class Arena extends BukkitRunnable {
 		}
 
 		user.addStat(StatsStorage.StatisticType.TOURS_PLAYED, 1);
+		user.resetAttackCooldown();
+		user.resetStats();
 
 		int localStreak = user.getStat(StatsStorage.StatisticType.LOCAL_LONGEST_STREAK);
 
@@ -162,8 +164,6 @@ public class Arena extends BukkitRunnable {
 		} else {
 			player.setGameMode(GameMode.SURVIVAL);
 		}
-
-		AttributeUtils.resetAttackCooldown(player);
 
 		bossBarManager.removePlayer();
 

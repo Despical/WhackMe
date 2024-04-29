@@ -30,10 +30,16 @@ Point-Blocks:
     Min: 4
     # Maximum amount of the point blocks that will be spawned around the player.
     Max: 8
-  # For custom skulls: "skull:URL"
+  # For custom skulls: "skull:VALUE"
+  # Copy the 'Value' part in from the skull URL.
   Punch-Me: GREEN_TERRACOTTA
   Dont-Punch-Me: RED_TERRACOTTA
   Ouch: CYAN_TERRACOTTA
+  # Game blocks' yaw and pitch values can be customized. (YAW:PITCH)
+  Rotations:
+    Punch-Me: "0:0"
+    Dont-Punch-Me: "0:0"
+    Ouch: "0:0"
 
 # Should we create a game bar for in-game player?
 # See messages.yml for game bar messages.

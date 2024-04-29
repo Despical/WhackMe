@@ -2,9 +2,11 @@ package me.despical.whackme.utils;
 
 import me.despical.commons.compat.XMaterial;
 import me.despical.commons.item.ItemBuilder;
+import me.despical.commons.number.NumberUtils;
 import me.despical.whackme.WhackMe;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -51,7 +53,8 @@ public class Utils {
 		for (Runnable runnable : runnables) {
 			try {
 				runnable.run();
-			} catch (Exception | Error ignored) {}
+			} catch (Exception | Error ignored) {
+			}
 		}
 	}
 
@@ -59,5 +62,22 @@ public class Utils {
 		final String permission = plugin.getConfig().getString("Join-Permission");
 
 		return permission == null || permission.isEmpty() || player != null && player.hasPermission(permission);
+	}
+
+	public static void rotateGameBlocks(ArmorStand stand, String path) {
+		plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
+			String[] angles = plugin.getConfig().getString("Point-Blocks.Rotations." + path, "").split(":");
+
+			if (angles.length == 0) return;
+
+			int yaw = NumberUtils.getInt(angles[0]);
+			int pitch = NumberUtils.getInt(angles[1]);
+
+			Location location = stand.getLocation().clone();
+			location.setYaw(yaw);
+			location.setPitch(pitch);
+
+			stand.teleport(location);
+		}, 1);
 	}
 }

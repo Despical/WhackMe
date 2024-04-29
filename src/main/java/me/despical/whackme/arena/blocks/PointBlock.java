@@ -32,10 +32,10 @@ import static me.despical.whackme.api.StatsStorage.StatisticType.*;
  */
 public class PointBlock extends BukkitRunnable {
 
-	private final static WhackMe plugin = JavaPlugin.getPlugin(WhackMe.class);
-	private final static ChatManager chatManager = plugin.getChatManager();
-	private final static String PUNCH_ME = chatManager.message("point_blocks.punch_me"), DONT_PUNCH_ME = chatManager.message("point_blocks.dont_punch_me"), OUCH = chatManager.message("point_blocks.ouch");
-	private final static boolean async = plugin.getConfigPreferences().isAsync();
+	private static final WhackMe plugin = JavaPlugin.getPlugin(WhackMe.class);
+	private static final ChatManager chatManager = plugin.getChatManager();
+	private static final String PUNCH_ME = chatManager.message("point_blocks.punch_me"), DONT_PUNCH_ME = chatManager.message("point_blocks.dont_punch_me"), OUCH = chatManager.message("point_blocks.ouch");
+	private static final boolean async = plugin.getConfigPreferences().isAsync();
 
 	private double y;
 	private int waitedMs = ArenaOption.WAIT_MILLISECONDS.getDefaultValue();
@@ -59,10 +59,13 @@ public class PointBlock extends BukkitRunnable {
 		stand.setGravity(false);
 		stand.setVisible(false);
 
+		Utils.rotateGameBlocks(stand, PUNCH_ME.equals(stand.getCustomName()) ? "Punch-Me" : "Dont-Punch-Me");
+
 		Utils.trySilently(
 			() -> stand.setShieldBlockingDelay(1),
 			() -> stand.setSilent(true),
-			() -> stand.setPersistent(false));
+			() -> stand.setPersistent(false)
+		);
 
 		arena.getPointBlocks().add(this);
 		arena.getLocations().remove(availableLocation);
@@ -162,6 +165,8 @@ public class PointBlock extends BukkitRunnable {
 
 				stand.setHelmet(CYAN_BLOCK);
 				stand.setCustomName(OUCH);
+
+				Utils.rotateGameBlocks(stand, "Ouch");
 			}
 		}, plugin);
 	}

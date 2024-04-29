@@ -2,7 +2,6 @@ package me.despical.whackme;
 
 import me.despical.commandframework.CommandFramework;
 import me.despical.commons.database.MysqlDatabase;
-import me.despical.commons.miscellaneous.AttributeUtils;
 import me.despical.commons.serializer.InventorySerializer;
 import me.despical.commons.util.Collections;
 import me.despical.commons.util.UpdateChecker;
@@ -60,15 +59,16 @@ public class WhackMe extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
-		for (final Arena arena : arenaRegistry.getArenas()) {
-			final Player player = arena.getPlayer();
+		for (Arena arena : arenaRegistry.getArenas()) {
+			Player player = arena.getPlayer();
 			
 			if (player == null) continue;
 			
-			final User user = userManager.getUser(player);
+			User user = userManager.getUser(player);
 			user.addStat(StatsStorage.StatisticType.TOURS_PLAYED, 1);
+			user.resetAttackCooldown();
 
-			final int score = user.getStat(StatsStorage.StatisticType.LOCAL_SCORE);
+			int score = user.getStat(StatsStorage.StatisticType.LOCAL_SCORE);
 
 			if (score > user.getStat(StatsStorage.StatisticType.RECORD_SCORE)) {
 				user.setStat(StatsStorage.StatisticType.RECORD_SCORE, score);
@@ -80,8 +80,6 @@ public class WhackMe extends JavaPlugin {
 
 			if (getOption(ConfigPreferences.Option.CLEAR_INVENTORY)) player.getInventory().clear();
 			if (getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) InventorySerializer.loadInventory(this, player);
-
-			AttributeUtils.resetAttackCooldown(player);
 
 			arena.getBossBarManager().removePlayer();
 			arena.teleportToEndLocation();

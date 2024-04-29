@@ -1,15 +1,19 @@
 package me.despical.whackme.user;
 
+import me.despical.commons.ReflectionUtils;
 import me.despical.whackme.WhackMe;
 import me.despical.whackme.api.StatsStorage;
 import me.despical.whackme.api.event.player.WMPlayerStatisticChangeEvent;
 import me.despical.whackme.arena.Arena;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 /**
  * @author Despical
@@ -25,6 +29,7 @@ public class User {
 	private final Map<StatsStorage.StatisticType, Integer> stats;
 
 	private boolean editingMode;
+	private double attackCooldown;
 
 	public User(Player player) {
 		this.uuid = player.getUniqueId();
@@ -74,5 +79,33 @@ public class User {
 
 	public void addStat(StatsStorage.StatisticType stat, int value) {
 		setStat(stat, getStat(stat) + value);
+	}
+
+	public void resetStats() {
+		Stream.of(StatsStorage.StatisticType.values()).filter(stat -> !stat.isPersistent()).forEach(stat -> this.setStat(stat, 0));
+	}
+
+	public void updateAttackCooldown() {
+		if (!ReflectionUtils.supports(9)) return;
+
+		Player player = this.getPlayer();
+
+		if (player == null) return;
+
+		Optional.ofNullable(player.getAttribute(Attribute.GENERIC_ATTACK_SPEED)).ifPresent(attribute -> {
+			this.attackCooldown = attribute.getBaseValue();
+
+			attribute.setBaseValue(plugin.getConfig().getDouble("Hit-Cooldown-Delay", 4));
+		});
+	}
+
+	public void resetAttackCooldown() {
+		if (!ReflectionUtils.supports(9)) return;
+
+		Player player = this.getPlayer();
+
+		if (player == null) return;
+
+		Optional.ofNullable(player.getAttribute(Attribute.GENERIC_ATTACK_SPEED)).ifPresent(attribute -> attribute.setBaseValue(this.attackCooldown));
 	}
 }
