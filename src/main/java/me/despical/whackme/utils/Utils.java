@@ -64,20 +64,18 @@ public class Utils {
 		return permission == null || permission.isEmpty() || player != null && player.hasPermission(permission);
 	}
 
-	public static void rotateGameBlocks(ArmorStand stand, Location center, String path) {
-		center = new Location(center.getWorld(), center.getX(), center.getY(), center.getZ());
-
-		Set<Block> locations = getBlocksSurroundedBy(center);
-
+	public static void rotateGameBlocks(ArmorStand stand, Location availableLocation, Location center, String path) {
 		plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
 			String[] yaws = plugin.getConfig().getString("Point-Blocks.Rotations." + path, "").split(":");
 
+			Location newCenter = new Location(center.getWorld(), center.getX(), center.getY(), center.getZ());
+			Set<Block> locations = getBlocksSurroundedBy(newCenter);
 			int i = -1;
 
 			for (Block block : locations) {
 				i++;
 
-				if (block.getLocation().equals(stand.getLocation())) {
+				if (block.getLocation().equals(availableLocation)) {
 					break;
 				}
 			}

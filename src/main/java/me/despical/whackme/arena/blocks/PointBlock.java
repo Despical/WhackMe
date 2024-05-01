@@ -59,7 +59,7 @@ public class PointBlock extends BukkitRunnable {
 		stand.setGravity(false);
 		stand.setVisible(false);
 
-		Utils.rotateGameBlocks(stand, arena.getStartLocation(), PUNCH_ME.equals(stand.getCustomName()) ? "Punch-Me" : "Dont-Punch-Me");
+		Utils.rotateGameBlocks(stand, availableLocation, arena.getStartLocation(), PUNCH_ME.equals(stand.getCustomName()) ? "Punch-Me" : "Dont-Punch-Me");
 
 		Utils.trySilently(
 			() -> stand.setShieldBlockingDelay(1),
@@ -166,7 +166,7 @@ public class PointBlock extends BukkitRunnable {
 				stand.setHelmet(CYAN_BLOCK);
 				stand.setCustomName(OUCH);
 
-				Utils.rotateGameBlocks(stand, arena.getStartLocation(), "Ouch");
+				Utils.rotateGameBlocks(stand, availableLocation, arena.getStartLocation(), "Ouch");
 			}
 		}, plugin);
 	}
