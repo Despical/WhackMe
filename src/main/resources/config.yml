@@ -35,11 +35,12 @@ Point-Blocks:
   Punch-Me: GREEN_TERRACOTTA
   Dont-Punch-Me: RED_TERRACOTTA
   Ouch: CYAN_TERRACOTTA
-  # Game blocks' yaw and pitch values can be customized. (YAW:PITCH)
+  # Point blocks can be rotated around the vertical axis.
   Rotations:
-    Punch-Me: "0:0"
-    Dont-Punch-Me: "0:0"
-    Ouch: "0:0"
+    # Values below are represented to yaw of point blocks in the game.
+    Punch-Me: "0:0:0:0:0:0:0:0"
+    Dont-Punch-Me: "0:0:0:0:0:0:0:0"
+    Ouch: "0:0:0:0:0:0:0:0"
 
 # Should we create a game bar for in-game player?
 # See messages.yml for game bar messages.

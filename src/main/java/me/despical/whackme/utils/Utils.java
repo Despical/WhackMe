@@ -64,18 +64,30 @@ public class Utils {
 		return permission == null || permission.isEmpty() || player != null && player.hasPermission(permission);
 	}
 
-	public static void rotateGameBlocks(ArmorStand stand, String path) {
+	public static void rotateGameBlocks(ArmorStand stand, Location center, String path) {
+		center = new Location(center.getWorld(), center.getX(), center.getY(), center.getZ());
+
+		Set<Block> locations = getBlocksSurroundedBy(center);
+
 		plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
-			String[] angles = plugin.getConfig().getString("Point-Blocks.Rotations." + path, "").split(":");
+			String[] yaws = plugin.getConfig().getString("Point-Blocks.Rotations." + path, "").split(":");
 
-			if (angles.length == 0) return;
+			int i = -1;
 
-			int yaw = NumberUtils.getInt(angles[0]);
-			int pitch = NumberUtils.getInt(angles[1]);
+			for (Block block : locations) {
+				i++;
+
+				if (block.getLocation().equals(stand.getLocation())) {
+					break;
+				}
+			}
+
+			if (i >= yaws.length) return;
+
+			int yaw = NumberUtils.getInt(yaws[i]);
 
 			Location location = stand.getLocation().clone();
 			location.setYaw(yaw);
-			location.setPitch(pitch);
 
 			stand.teleport(location);
 		}, 1);
