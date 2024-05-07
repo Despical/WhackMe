@@ -69,6 +69,7 @@ public class MysqlManager extends IUserDatabase {
 
 			if (builder.toString().equalsIgnoreCase(" SET ")) {
 				builder.append(name).append("=").append(value);
+				continue;
 			}
 
 			builder.append(", ").append(name).append("=").append(value);
