@@ -143,15 +143,15 @@ public class Arena extends BukkitRunnable {
 			if (teleportToEnd) player.sendMessage(chatManager.message("in_game.finish_message").replace("%points%", Integer.toString(user.getStat(StatsStorage.StatisticType.LOCAL_SCORE))));
 		}
 
-		user.addStat(StatsStorage.StatisticType.TOURS_PLAYED, 1);
-		user.resetAttackCooldown();
-		user.resetStats();
-
 		int localStreak = user.getStat(StatsStorage.StatisticType.LOCAL_LONGEST_STREAK);
 
 		if (localStreak > user.getStat(StatsStorage.StatisticType.LONGEST_STREAK)) {
 			user.setStat(StatsStorage.StatisticType.LONGEST_STREAK, localStreak);
 		}
+
+		user.addStat(StatsStorage.StatisticType.TOURS_PLAYED, 1);
+		user.resetAttackCooldown();
+		user.resetStats();
 
 		plugin.getUserManager().getUserDatabase().saveStatistics(user);
 
