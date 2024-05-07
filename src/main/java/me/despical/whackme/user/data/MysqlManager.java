@@ -5,6 +5,7 @@ import me.despical.commons.database.MysqlDatabase;
 import me.despical.whackme.WhackMe;
 import me.despical.whackme.api.StatsStorage;
 import me.despical.whackme.user.User;
+import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.Connection;
@@ -38,7 +39,10 @@ public class MysqlManager extends IUserDatabase {
 						  "`UUID` char(36) NOT NULL PRIMARY KEY,\n" +
 						  "`name` varchar(32) NOT NULL,\n" +
 						  "`recordscore` int(11) NOT NULL DEFAULT '0',\n" +
-						  "`toursplayed` int(11) NOT NULL DEFAULT '0');",
+						  "`toursplayed` int(11) NOT NULL DEFAULT '0',\n" +
+						  "`whackedpluspointblocks` int(11) NOT NULL DEFAULT '0',\n" +
+						  "`whackedminuspointblocks` int(11) NOT NULL DEFAULT '0',\n" +
+						  "`longeststreak` int(11) NOT NULL DEFAULT '0');",
 					table));
 			} catch (SQLException exception) {
 				exception.fillInStackTrace();
