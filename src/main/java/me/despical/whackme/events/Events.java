@@ -14,6 +14,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
@@ -103,6 +104,17 @@ public class Events extends EventListener {
 		if (item == null || item.getType() != XMaterial.ENDER_EYE.parseMaterial()) return;
 
 		if (plugin.getArenaRegistry().getArenas().stream().map(Arena::getLocations).anyMatch(location -> location.contains(block.getLocation()))) {
+			event.setCancelled(true);
+		}
+	}
+
+	@EventHandler
+	public void onDamage(EntityDamageByEntityEvent event) {
+		if (!(event.getEntity() instanceof Player)) return;
+
+		Player player = (Player) event.getEntity();
+
+		if (plugin.getArenaRegistry().isInArena(player)) {
 			event.setCancelled(true);
 		}
 	}
