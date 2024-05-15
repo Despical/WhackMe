@@ -19,7 +19,7 @@ public class ArenaSign {
 	}
 
 	public Sign getSign() {
-		return sign;
+		return (Sign) sign.getBlock().getState();
 	}
 
 	public Arena getArena() {
