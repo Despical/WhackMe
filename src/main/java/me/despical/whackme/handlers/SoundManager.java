@@ -28,7 +28,7 @@ public class SoundManager implements Reloadable {
 			String pointSoundName = plugin.getConfig().getString(GameSound.POINT_SOUND.path);
 			String minusPointSoundName = plugin.getConfig().getString(GameSound.MINUS_POINT_SOUND.path);
 
-			this.pointSound = XSound.matchXSound(pointSoundName).orElse(XSound.ENTITY_EXPERIENCE_BOTTLE_THROW);
+			this.pointSound = XSound.matchXSound(pointSoundName).orElse(XSound.ENTITY_EXPERIENCE_ORB_PICKUP);
 			this.minusPointSound = XSound.matchXSound(minusPointSoundName).orElse(XSound.BLOCK_NOTE_BLOCK_BASS);
 
 			if ("NONE".equals(pointSoundName)) this.pointSound = null;
