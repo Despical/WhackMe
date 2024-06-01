@@ -5,7 +5,7 @@ import me.despical.commons.item.ItemBuilder;
 import me.despical.commons.item.ItemUtils;
 import me.despical.commons.serializer.InventorySerializer;
 import me.despical.commons.string.StringUtils;
-import me.despical.commons.util.function.DoubleSupplier;
+import me.despical.commons.util.function.BiSupplier;
 import me.despical.whackme.api.Reloadable;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
@@ -105,7 +105,7 @@ public class ConfigPreferences implements Reloadable {
 			this.path = StringUtils.capitalize(name().replace('_', '-').toLowerCase(Locale.ENGLISH), '-', '.');
 		}
 
-		Option(DoubleSupplier<FileConfiguration, Boolean> supplier) {
+		Option(BiSupplier<FileConfiguration, Boolean> supplier) {
 			this.path = "";
 			this.def = supplier.accept(plugin.getConfig());
 		}
