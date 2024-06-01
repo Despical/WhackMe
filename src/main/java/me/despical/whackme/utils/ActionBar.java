@@ -1,6 +1,7 @@
 package me.despical.whackme.utils;
 
-import me.despical.commons.ReflectionUtils;
+import me.despical.commons.reflection.minecraft.MinecraftConnection;
+import me.despical.commons.util.Strings;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.entity.Player;
@@ -12,11 +13,11 @@ import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.util.Objects;
 
-import static me.despical.commons.ReflectionUtils.*;
+import static me.despical.commons.reflection.XReflection.*;
 
 public final class ActionBar {
 
-	private static final boolean USE_SPIGOT_API = ReflectionUtils.supports(12);
+	private static final boolean USE_SPIGOT_API = supports(12);
 	private static final MethodHandle CHAT_COMPONENT_TEXT, PACKET_PLAY_OUT_CHAT;
 	private static final Object CHAT_MESSAGE_TYPE;
 
@@ -70,6 +71,8 @@ public final class ActionBar {
 		Objects.requireNonNull(player, "Cannot send action bar to null player");
 		Objects.requireNonNull(message, "Cannot send null actionbar message");
 
+		message = Strings.format(message);
+
 		if (USE_SPIGOT_API) {
 			player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
 			return;
@@ -78,7 +81,7 @@ public final class ActionBar {
 		try {
 			Object component = CHAT_COMPONENT_TEXT.invoke("{\"text\":\"" + message.replace("\\", "\\\\").replace("\"", "\\\"") + "\"}");
 			Object packet = PACKET_PLAY_OUT_CHAT.invoke(component, CHAT_MESSAGE_TYPE);
-			sendPacket(player, packet);
+			MinecraftConnection.sendPacket(player, packet);
 		} catch (Throwable throwable) {
 			throwable.printStackTrace();
 		}

@@ -1,6 +1,6 @@
 package me.despical.whackme.arena.blocks;
 
-import me.despical.commons.ReflectionUtils;
+import me.despical.commons.reflection.XReflection;
 import me.despical.whackme.WhackMe;
 import me.despical.whackme.arena.Arena;
 import me.despical.whackme.arena.options.ArenaOption;
@@ -218,7 +218,7 @@ public class PointBlock extends BukkitRunnable {
 
 	private void handleEntityTeleportation(final Location destination) {
 		if (async) {
-			if (ReflectionUtils.supports(16)) {
+			if (XReflection.supports(16)) {
 				stand.teleportAsync(destination);
 			} else {
 				plugin.getServer().getScheduler().runTask(plugin, () -> stand.teleport(destination));

@@ -1,7 +1,7 @@
 package me.despical.whackme.arena.managers;
 
-import me.despical.commons.ReflectionUtils;
 import me.despical.commons.number.NumberUtils;
+import me.despical.commons.reflection.XReflection;
 import me.despical.whackme.ConfigPreferences;
 import me.despical.whackme.WhackMe;
 import me.despical.whackme.arena.Arena;
@@ -32,7 +32,7 @@ public class BossBarManager extends BukkitRunnable {
 	public BossBarManager(WhackMe plugin, Arena arena) {
 		this.plugin = plugin;
 		this.arena = arena;
-		this.enabled = plugin.getOption(ConfigPreferences.Option.BOSS_BAR_ENABLED) && ReflectionUtils.supports(13);
+		this.enabled = plugin.getOption(ConfigPreferences.Option.BOSS_BAR_ENABLED) && XReflection.supports(13);
 
 		if (enabled) {
 			final ChatManager chatManager = plugin.getChatManager();

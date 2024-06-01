@@ -1,6 +1,6 @@
 package me.despical.whackme.user;
 
-import me.despical.commons.ReflectionUtils;
+import me.despical.commons.reflection.XReflection;
 import me.despical.whackme.WhackMe;
 import me.despical.whackme.api.StatsStorage;
 import me.despical.whackme.api.event.player.WMPlayerStatisticChangeEvent;
@@ -86,7 +86,7 @@ public class User {
 	}
 
 	public void updateAttackCooldown() {
-		if (!ReflectionUtils.supports(9)) return;
+		if (!XReflection.supports(9)) return;
 
 		Player player = this.getPlayer();
 
@@ -100,7 +100,7 @@ public class User {
 	}
 
 	public void resetAttackCooldown() {
-		if (!ReflectionUtils.supports(9)) return;
+		if (!XReflection.supports(9)) return;
 
 		Player player = this.getPlayer();
 
