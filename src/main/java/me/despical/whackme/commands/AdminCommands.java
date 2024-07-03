@@ -3,7 +3,6 @@ package me.despical.whackme.commands;
 import me.despical.commandframework.Command;
 import me.despical.commandframework.CommandArguments;
 import me.despical.commandframework.Completer;
-import me.despical.commandframework.Confirmation;
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.miscellaneous.MiscUtils;
 import me.despical.commons.serializer.LocationSerializer;
@@ -33,7 +32,7 @@ public class AdminCommands extends AbstractCommand {
 		name = "wm.create",
 		permission = "wm.admin.create",
 		usage = "/wm create <arena name>",
-		desc = "Creates a new arena with default configuration",
+		desc = "Creates a new arena with default configuration.",
 		senderType = Command.SenderType.PLAYER
 	)
 	public void createCommand(CommandArguments arguments) {
@@ -85,13 +84,8 @@ public class AdminCommands extends AbstractCommand {
 		name = "wm.delete",
 		permission = "wm.admin.delete",
 		usage = "/wm delete <arena name>",
-		desc = "Deletes arena with the current configuration",
+		desc = "Deletes arena with the current configuration.",
 		min = 1
-	)
-	@Confirmation(
-		message = "§cAre you sure you want to do this action? " +
-			      "Type the command again §6within 10 seconds §cto confirm!",
-		expireAfter = 10
 	)
 	public void deleteCommand(Arena arena, CommandArguments arguments) {
 		if (arena == null) {
@@ -119,7 +113,7 @@ public class AdminCommands extends AbstractCommand {
 		name = "wm.edit",
 		permission = "wm.admin.edit",
 		usage = "/wm edit <arena name>",
-		desc = "Opens the arena editor",
+		desc = "Opens the arena editor.",
 		min = 1,
 		senderType = Command.SenderType.PLAYER
 	)
@@ -184,7 +178,7 @@ public class AdminCommands extends AbstractCommand {
 		name = "wm.list",
 		permission = "wm.admin.list",
 		usage = "/wm list",
-		desc = "Shows all of the existing arenas"
+		desc = "Shows all of the existing arenas."
 	)
 	public void listCommand(CommandArguments arguments) {
 		final Set<Arena> arenas = plugin.getArenaRegistry().getArenas();
@@ -200,8 +194,8 @@ public class AdminCommands extends AbstractCommand {
 	@Command(
 		name = "wm.kick",
 		permission = "wm.admin.kick",
-		usage = "/wm kick <arena>",
-		desc = "Kicks specified player if they're playing",
+		usage = "/wm kick <arena name>",
+		desc = "Kicks specified player if they're playing.",
 		min = 1
 	)
 	public void kickCommand(Arena arena, CommandArguments arguments) {
