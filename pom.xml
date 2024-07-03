@@ -4,19 +4,19 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>me.despical</groupId>
     <artifactId>whack-me</artifactId>
-    <version>1.4.6</version>
+    <version>1.4.7</version>
     <packaging>jar</packaging>
 
     <name>Whack Me</name>
     <inceptionYear>2022</inceptionYear>
-    <url>https://www.spigotmc.org/resources/104912</url>
+    <url>https://www.spigotmc.org/resources/104912/</url>
 
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-<!--                <serverDirectory>C:\Users\berke\OneDrive\Masaüstü\1.9.9\plugins</serverDirectory>-->
+<!--        <serverDirectory>C:\Users\berke\OneDrive\Masaüstü\1.9.9\plugins</serverDirectory>-->
 <!--        <serverDirectory>C:\Users\berke\OneDrive\Masaüstü\Server\plugins</serverDirectory>-->
-        <serverDirectory>C:\Users\berke\OneDrive\Masaüstü\1.21 Server\plugins</serverDirectory>
+<!--        <serverDirectory>C:\Users\berke\OneDrive\Masaüstü\1.21 Server\plugins</serverDirectory>-->
     </properties>
 
     <licenses>
@@ -84,6 +84,12 @@
     </dependencies>
 
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -150,11 +156,5 @@
                 </executions>
             </plugin>
         </plugins>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
     </build>
 </project>
