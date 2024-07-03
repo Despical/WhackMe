@@ -25,6 +25,9 @@ public class Utils {
 	public static final ItemStack END_PORTAL_FRAME = new ItemBuilder(XMaterial.END_PORTAL_FRAME).build();
 	public static final int[][] DIRECTIONS = {{1, 0}, {-1, 0}, {1, 1}, {-1, 1}, {1, -1}, {-1, -1}, {0, 1}, {0, -1}};
 
+	private Utils() {
+	}
+
 	public static boolean isSurroundedBy(Location center) {
 		if (center == null) return false;
 

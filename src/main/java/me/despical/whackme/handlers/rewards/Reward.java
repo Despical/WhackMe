@@ -113,7 +113,8 @@ public class Reward {
 
 		SUCCESSFUL_POINT("successful-point"),
 		WRONG_POINT("wrong-point"),
-		END_GAME("end-game");
+		END_GAME("end-game"),
+		NEW_RECORD("new-record");
 
 		final String path;
 

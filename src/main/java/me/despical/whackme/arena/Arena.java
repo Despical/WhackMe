@@ -138,6 +138,8 @@ public class Arena extends BukkitRunnable {
 		if (score > user.getStat(StatsStorage.StatisticType.RECORD_SCORE)) {
 			user.setStat(StatsStorage.StatisticType.RECORD_SCORE, score);
 
+			plugin.getRewardsFactory().performReward(player, Reward.RewardType.NEW_RECORD);
+
 			if (teleportToEnd) player.sendMessage(chatManager.message("in_game.finish_record_message").replace("%points%", Integer.toString(user.getStat(StatsStorage.StatisticType.LOCAL_SCORE))));
 		} else {
 			if (teleportToEnd) player.sendMessage(chatManager.message("in_game.finish_message").replace("%points%", Integer.toString(user.getStat(StatsStorage.StatisticType.LOCAL_SCORE))));

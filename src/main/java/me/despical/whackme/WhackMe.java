@@ -16,6 +16,7 @@ import me.despical.whackme.handlers.ChatManager;
 import me.despical.whackme.handlers.PlaceholderManager;
 import me.despical.whackme.handlers.ReloadManager;
 import me.despical.whackme.handlers.SoundManager;
+import me.despical.whackme.handlers.rewards.Reward;
 import me.despical.whackme.handlers.rewards.RewardsFactory;
 import me.despical.whackme.handlers.sign.SignManager;
 import me.despical.whackme.user.User;
@@ -73,6 +74,8 @@ public class WhackMe extends JavaPlugin {
 			if (score > user.getStat(StatsStorage.StatisticType.RECORD_SCORE)) {
 				user.setStat(StatsStorage.StatisticType.RECORD_SCORE, score);
 
+				rewardsFactory.performReward(player, Reward.RewardType.NEW_RECORD);
+
 				player.sendMessage(chatManager.message("in_game.finish_record_message").replace("%points%", Integer.toString(user.getStat(StatsStorage.StatisticType.LOCAL_SCORE))));
 			} else {
 				player.sendMessage(chatManager.message("in_game.finish_message").replace("%points%", Integer.toString(user.getStat(StatsStorage.StatisticType.LOCAL_SCORE))));
@@ -128,7 +131,7 @@ public class WhackMe extends JavaPlugin {
 
 				logger.info("Found a new version available: v" + result.getNewestVersion());
 				logger.info("Download it on SpigotMC:");
-				logger.info("https://spigotmc.org/resources/104912");
+				logger.info("https://spigotmc.org/resources/104912/");
 			}
 		});
 	}

@@ -28,12 +28,19 @@
 rewards-enabled: true
 
 rewards:
-  # Rewards performed when player clicked on right point block.
+
+  # The rewards performed when player clicked on right point block.
   successful-point:
     - p:say yey, +1 point! (disable this message via rewards.yml)
-  # Rewards performed when player clicked on wrong point block.
+
+  # The rewards performed when player clicked on a wrong point block.
   wrong-point:
     - p:say I shouldn't click this one!
-  # Rewards performed on a successful game end (when the timer reaches 0).
+
+  # The rewards performed on a successful game end (when the timer reaches 0).
   end-game:
     - p:say I whacked %points% blocks!
+
+  # The rewards performed when player beats their highest score.
+  new-record:
+    - p:say I beat my highest score!
