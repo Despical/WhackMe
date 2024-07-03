@@ -82,7 +82,7 @@ public class PlayerCommands extends AbstractCommand {
 				return;
 			}
 
-			arguments.sendMessage(chatManager.prefixedMessage("commands.did_you_mean").replace("%command%", label));
+			arguments.sendMessage(chatManager.prefixedMessage("commands.did_you_mean").replace("%command%", "/" + label));
 		}
 	}
 
