@@ -9,7 +9,6 @@ import me.despical.inventoryframework.pane.StaticPane;
 import me.despical.whackme.WhackMe;
 import me.despical.whackme.arena.Arena;
 import me.despical.whackme.handlers.setup.SetupInventory;
-import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -33,23 +32,23 @@ public class ArenaRegisterComponent extends SetupComponent {
 		WhackMe plugin = setup.getPlugin();
 		Player player = setup.getPlayer();
 		Arena arena = setup.getArena();
-		ItemBuilder registeredItem;
+		ItemBuilder registerItem;
 
-		if (!arena.isReady()) {
-			registeredItem = new ItemBuilder(XMaterial.FIREWORK_ROCKET)
-				.name("&e&lRegister Arena - Finish Setup")
-				.lore("&7Click this when you're done with configuration.")
-				.lore("&7It will validate and register the arena.");
-		} else {
-			registeredItem = new ItemBuilder(Material.BARRIER)
-				.name("&a&lArena Registered - Congratulations")
-				.lore("&7This arena is already registered!")
+		if (arena.isReady()) {
+			registerItem = new ItemBuilder(XMaterial.BARRIER)
+				.name("&a&l           Arena Registered")
 				.lore("&7Good job, you went through whole setup!")
-				.enchantment(Enchantment.ARROW_DAMAGE)
+				.lore("&7      You can play on this arena now!")
+				.enchantment(Enchantment.DURABILITY)
 				.flag(ItemFlag.HIDE_ENCHANTS);
+		} else {
+			registerItem = new ItemBuilder(XMaterial.FIREWORK_ROCKET)
+				.name("       &e&lFinish Arena Setup")
+				.lore("&7  Click this when you are done.")
+				.lore("&7You'll still be able to edit arena.");
 		}
 
-		pane.addItem(GuiItem.of(registeredItem.build(), e -> {
+		pane.addItem(GuiItem.of(registerItem.build(), e -> {
 			final String path = String.format("instances.%s.", arena.getId());
 			final FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
 

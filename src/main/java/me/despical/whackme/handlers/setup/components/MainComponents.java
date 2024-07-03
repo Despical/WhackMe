@@ -136,12 +136,10 @@ public class MainComponents extends SetupComponent {
 			}, plugin);
 		}), 0, 0);
 
-		pane.addItem(GuiItem.of(new ItemBuilder(XMaterial.IRON_BLOCK)
-			.name("&e&l        Set Start Location       ")
-			.lore("&7Click to set start location on")
-			.lore("&7the place where you are standing.")
-			.lore("&8(location where players will be")
-			.lore("&8teleported to join game)")
+		pane.addItem(GuiItem.of(new ItemBuilder(XMaterial.WHITE_TERRACOTTA)
+			.name("&e&l        Set Start Location")
+			.lore("&7  Click to set lobby location on the")
+			.lore("&7    place where you are standing.")
 			.lore("", isOptionDoneBool(path + "startLocation"), "")
 			.lore("&8• &cShift Click to spawn end portals")
 			.lore("&caround you without placing manually.")
@@ -182,12 +180,10 @@ public class MainComponents extends SetupComponent {
 				new SetupInventory(plugin, arena, player).openInventory();
 		}), 2, 1);
 
-		pane.addItem(GuiItem.of(new ItemBuilder(XMaterial.REDSTONE_BLOCK)
-			.name("        &e&lSet Ending Location      ")
-			.lore("&7Click to set ending location on")
+		pane.addItem(GuiItem.of(new ItemBuilder(XMaterial.RED_TERRACOTTA)
+			.name("&e&l      Set Ending Location")
+			.lore("&7Click to set the ending location on")
 			.lore("&7the place where you are standing.")
-			.lore("&8(location where players will be")
-			.lore("&8teleported after the reloading)")
 			.lore("", isOptionDoneBool(path + "endLocation"))
 			.build(), e -> {
 
