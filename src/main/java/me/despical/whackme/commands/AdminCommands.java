@@ -200,7 +200,7 @@ public class AdminCommands extends AbstractCommand {
 	@Command(
 		name = "wm.kick",
 		permission = "wm.admin.kick",
-		usage = "/wm kick <player>",
+		usage = "/wm kick <arena>",
 		desc = "Kicks specified player if they're playing",
 		min = 1
 	)
