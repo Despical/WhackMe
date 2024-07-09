@@ -9,10 +9,7 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.EnumMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Stream;
 
 /**
@@ -23,9 +20,11 @@ import java.util.stream.Stream;
 public class User {
 
 	private static final WhackMe plugin = JavaPlugin.getPlugin(WhackMe.class);
+	private static long cooldownCounter = 0;
 
 	private final UUID uuid;
 	private final String playerName;
+	private final Map<String, Double> cooldowns;
 	private final Map<StatsStorage.StatisticType, Integer> stats;
 
 	private boolean editingMode;
@@ -34,6 +33,7 @@ public class User {
 	public User(Player player) {
 		this.uuid = player.getUniqueId();
 		this.playerName = player.getName();
+		this.cooldowns = new HashMap<>();
 		this.stats = new EnumMap<>(StatsStorage.StatisticType.class);
 	}
 
@@ -107,5 +107,19 @@ public class User {
 		if (player == null) return;
 
 		Optional.ofNullable(player.getAttribute(Attribute.GENERIC_ATTACK_SPEED)).ifPresent(attribute -> attribute.setBaseValue(this.attackCooldown));
+	}
+
+	public void setCooldown(String cooldown, double seconds) {
+		cooldowns.put(cooldown, seconds + cooldownCounter);
+	}
+
+	public double getCooldown(String cooldown) {
+		final Double remainingTime = cooldowns.get(cooldown);
+
+		return (remainingTime == null || remainingTime <= cooldownCounter) ? 0 : remainingTime - cooldownCounter;
+	}
+
+	public static void cooldownHandlerTask() {
+		plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, () -> cooldownCounter++, 20, 20);
 	}
 }

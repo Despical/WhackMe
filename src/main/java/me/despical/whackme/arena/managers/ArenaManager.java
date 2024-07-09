@@ -2,6 +2,7 @@ package me.despical.whackme.arena.managers;
 
 import me.despical.whackme.WhackMe;
 import me.despical.whackme.arena.Arena;
+import me.despical.whackme.user.User;
 import me.despical.whackme.utils.Utils;
 import org.bukkit.entity.Player;
 
@@ -36,6 +37,13 @@ public class ArenaManager {
 
 		if (!Utils.hasJoinPermission(player)) {
 			player.sendMessage(plugin.getChatManager().prefixedMessage("commands.no_permission"));
+			return;
+		}
+
+		User user = plugin.getUserManager().getUser(player);
+
+		if (user.getCooldown("play_again") > 0) {
+			player.sendMessage(plugin.getChatManager().prefixedMessage("commands.wait_for_cooldown"));
 			return;
 		}
 

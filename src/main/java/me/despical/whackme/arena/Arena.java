@@ -154,6 +154,7 @@ public class Arena extends BukkitRunnable {
 		user.addStat(StatsStorage.StatisticType.TOURS_PLAYED, 1);
 		user.resetAttackCooldown();
 		user.resetStats();
+		user.setCooldown("play_again", plugin.getConfig().getInt("Game-Cooldown"));
 
 		plugin.getUserManager().getUserDatabase().saveStatistics(user);
 

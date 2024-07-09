@@ -140,7 +140,7 @@ public class PlayerCommands extends AbstractCommand {
 				return;
 			}
 
-			arena.addPlayer(player);
+			plugin.getArenaManager().joinAttempt(player, arena);
 			return;
 		}
 

@@ -92,6 +92,9 @@ Sounds:
 # 4 is the default value.
 Hit-Cooldown-Delay: 16
 
+# Should players wait a certain amount of time before playing again Whack Me? (in seconds)
+Game-Cooldown: 0
+
 # Commands which can be used in game, remove all of them to disable.
 Whitelisted-Commands:
   - me

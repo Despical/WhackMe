@@ -11,6 +11,7 @@ Commands:
   No-Permission: "&cYou don't have enough permission to use this command!"
   No-One-Playing: "&cNo one playing Whack Me in this arena at the moment!"
   Kicked-Player: "&aPlayer has kicked successfully from the game."
+  Wait-For-Cooldown: "&cPlease wait a bit before playing again!"
   Reload-Command:
     Initialized: "&aPlugin reload initialized by {0}."
     Finished: "&aPlugin reload finished successfully."
