@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>me.despical</groupId>
     <artifactId>whack-me</artifactId>
-    <version>1.4.8</version>
+    <version>1.4.9</version>
     <packaging>jar</packaging>
 
     <name>Whack Me</name>
@@ -16,6 +16,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 <!--        <serverDirectory>C:\Users\berke\OneDrive\Masaüstü\1.9.9\plugins</serverDirectory>-->
 <!--        <serverDirectory>C:\Users\berke\OneDrive\Masaüstü\Server\plugins</serverDirectory>-->
+<!--        <serverDirectory>C:\Users\berke\OneDrive\Masaüstü\1.20.5 Server - Kopya\plugins</serverDirectory>-->
 <!--        <serverDirectory>C:\Users\berke\OneDrive\Masaüstü\1.21 Server\plugins</serverDirectory>-->
     </properties>
 
@@ -58,7 +59,7 @@
         <dependency>
             <groupId>com.github.Despical</groupId>
             <artifactId>Commons</artifactId>
-            <version>1.7.9</version>
+            <version>1.8.0</version>
         </dependency>
         <dependency>
             <groupId>com.github.Despical</groupId>
