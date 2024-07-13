@@ -20,7 +20,7 @@ import java.util.stream.Stream;
 public class User {
 
 	private static final WhackMe plugin = JavaPlugin.getPlugin(WhackMe.class);
-	private static long cooldownCounter = 0;
+	private static long cooldownCounter;
 
 	private final UUID uuid;
 	private final String playerName;
