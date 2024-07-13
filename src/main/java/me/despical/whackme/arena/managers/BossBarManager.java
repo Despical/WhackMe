@@ -20,8 +20,8 @@ import java.util.List;
  */
 public class BossBarManager extends BukkitRunnable {
 
-	private final WhackMe plugin;
 	private final Arena arena;
+	private final WhackMe plugin;
 	private final boolean enabled;
 
 	private BossBar bossBar;
@@ -29,9 +29,9 @@ public class BossBarManager extends BukkitRunnable {
 
 	private int queue = 0;
 
-	public BossBarManager(WhackMe plugin, Arena arena) {
-		this.plugin = plugin;
+	public BossBarManager(Arena arena, WhackMe plugin) {
 		this.arena = arena;
+		this.plugin = plugin;
 		this.enabled = plugin.getOption(ConfigPreferences.Option.BOSS_BAR_ENABLED) && XReflection.supports(13);
 
 		if (enabled) {

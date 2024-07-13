@@ -58,6 +58,10 @@ public class ConfigPreferences implements Reloadable {
 		return options.get(option);
 	}
 
+	public boolean isAsync() {
+		return isAsync;
+	}
+
 	private void loadOptions() {
 		this.options.clear();
 
@@ -70,10 +74,6 @@ public class ConfigPreferences implements Reloadable {
 		this.pointBlockMultiplier = Math.min(config.getDouble("Point-Blocks.Y-Multiplier"), .64);
 		this.ticks = config.getLong("Point-Blocks.Ticks", 8);
 		this.isAsync = config.getBoolean("Point-Blocks.Run-Async");
-	}
-
-	public boolean isAsync() {
-		return isAsync;
 	}
 
 	public enum Option {
@@ -93,8 +93,8 @@ public class ConfigPreferences implements Reloadable {
 		}),
 		UPDATE_NOTIFIER_ENABLED;
 
-		final String path;
-		final boolean def;
+		private final String path;
+		private final boolean def;
 
 		Option() {
 			this(true);

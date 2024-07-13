@@ -17,12 +17,12 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class PointHandler extends BukkitRunnable {
 
-	private final WhackMe plugin;
 	private final Arena arena;
+	private final WhackMe plugin;
 
-	public PointHandler(WhackMe plugin, Arena arena) {
-		this.plugin = plugin;
+	public PointHandler(Arena arena, WhackMe plugin) {
 		this.arena = arena;
+		this.plugin = plugin;
 	}
 
 	@Override
@@ -34,8 +34,9 @@ public class PointHandler extends BukkitRunnable {
 		sendActionBar(player);
 
 		int size = arena.getPointBlocks().size();
+		int maximumPoints = arena.getMaximumPoints();
 
-		if (size <= arena.getMaximumPoints() && size < ThreadLocalRandom.current().nextInt(arena.getMinimumPoints(), arena.getMaximumPoints())) {
+		if (size <= maximumPoints && size < ThreadLocalRandom.current().nextInt(arena.getMinimumPoints(), maximumPoints)) {
 			new PointBlock(arena).handleItself();
 		}
 	}

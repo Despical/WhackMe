@@ -49,12 +49,12 @@ public final class ActionBar {
 				}
 
 				packet = lookup.findConstructor(packetPlayOutChatClass, type);
-			} catch (NoSuchMethodException | IllegalAccessException | ClassNotFoundException ignored) {
+			} catch (Exception ignored) {
 				try {
 					chatMsgType = (byte) 2;
 
 					packet = lookup.findConstructor(packetPlayOutChatClass, MethodType.methodType(void.class, iChatBaseComponentClass, byte.class));
-				} catch (NoSuchMethodException | IllegalAccessException ex) {
+				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
 			}

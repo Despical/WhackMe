@@ -46,8 +46,8 @@ public class Arena extends BukkitRunnable {
 
 	public Arena(String id) {
 		this.id = id;
-		this.pointHandler = new PointHandler(plugin, this);
-		this.bossBarManager = new BossBarManager(plugin, this);
+		this.pointHandler = new PointHandler(this, plugin);
+		this.bossBarManager = new BossBarManager(this, plugin);
 		this.pointBlocks = new ArrayList<>();
 		this.locations = new ArrayList<>();
 		this.arenaOptions = new EnumMap<>(ArenaOption.class);
