@@ -36,9 +36,15 @@ public class PointHandler extends BukkitRunnable {
 		int size = arena.getPointBlocks().size();
 		int maximumPoints = arena.getMaximumPoints();
 
-		if (size <= maximumPoints && size < ThreadLocalRandom.current().nextInt(arena.getMinimumPoints(), maximumPoints)) {
+		if (size <= maximumPoints && size < random(maximumPoints + 1)) {
 			new PointBlock(arena).handleItself();
 		}
+	}
+
+	private int random(int max) {
+		int min = arena.getMinimumPoints();
+
+		return min == max ? min : ThreadLocalRandom.current().nextInt(min, max);
 	}
 
 	private void sendActionBar(final Player player) {

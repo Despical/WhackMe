@@ -226,8 +226,16 @@ public class Arena extends BukkitRunnable {
 		return getOption(ArenaOption.MINIMUM_POINTS);
 	}
 
+	public void setMinimumPoints(int points) {
+		this.setOptionValue(ArenaOption.MINIMUM_POINTS, points);
+	}
+
 	public int getMaximumPoints() {
 		return getOption(ArenaOption.MAXIMUM_POINTS);
+	}
+
+	public void setMaximumPoints(int points) {
+		this.setOptionValue(ArenaOption.MAXIMUM_POINTS, points);
 	}
 
 	private int getOption(ArenaOption option) {

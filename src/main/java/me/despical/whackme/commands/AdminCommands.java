@@ -67,6 +67,8 @@ public class AdminCommands extends AbstractCommand {
 		config.set(path + "custom", false);
 		config.set(path + "startLocation", LocationSerializer.SERIALIZED_LOCATION);
 		config.set(path + "endLocation", LocationSerializer.SERIALIZED_LOCATION);
+		config.set(path + "minPoints", 4);
+		config.set(path + "maxPoints", 8);
 		config.set(path + "portalLocations", Collections.EMPTY_LIST);
 		config.set(path + "signs", Collections.EMPTY_LIST);
 
@@ -123,7 +125,7 @@ public class AdminCommands extends AbstractCommand {
 			return;
 		}
 
-		new SetupInventory(plugin, arena, arguments.getSender()).openInventory();
+		new SetupInventory(plugin, arena, arguments.getSender());
 	}
 
 	@SuppressWarnings("all")
@@ -262,7 +264,7 @@ public class AdminCommands extends AbstractCommand {
 			return;
 		}
 
-		String argument = arguments.getArgument(1);
+		String argument = arguments.getArgument(1, "invalid_args");
 		int value = Math.abs(arguments.getArgumentAsInt(2));
 		int current = arena.getTimer();
 

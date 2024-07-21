@@ -12,13 +12,17 @@ public enum ArenaOption {
 
 	TIMER("Gameplay-Time", 30),
 
-	MINIMUM_POINTS("Point-Blocks.Minimum-Points", 4),
+	MINIMUM_POINTS(4),
 
-	MAXIMUM_POINTS("Point-Blocks.Maximum-Points", 8),
+	MAXIMUM_POINTS(8),
 
 	WAIT_MILLISECONDS("Point-Blocks.Wait-Ms", 12);
 
 	final int defaultValue;
+
+	ArenaOption(int defaultValue) {
+		this.defaultValue = defaultValue;
+	}
 
 	ArenaOption(String path, int defaultValue) {
 		final WhackMe plugin = JavaPlugin.getPlugin(WhackMe.class);

@@ -2,9 +2,12 @@ package me.despical.whackme.handlers.setup.components;
 
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.serializer.LocationSerializer;
-import me.despical.inventoryframework.pane.StaticPane;
+import me.despical.inventoryframework.pane.PaginatedPane;
+import me.despical.whackme.WhackMe;
+import me.despical.whackme.arena.Arena;
 import me.despical.whackme.handlers.setup.SetupInventory;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 
 /**
  * @author Despical
@@ -13,13 +16,21 @@ import org.bukkit.configuration.file.FileConfiguration;
  */
 public abstract class SetupComponent {
 
-	protected SetupInventory setup;
+	protected final String path;
+	protected final Arena arena;
+	protected final Player player;
+	protected final WhackMe plugin;
+	protected final SetupInventory setup;
 
 	public SetupComponent(SetupInventory setup) {
-		this.setup = setup;
+		this.setup  = setup;
+		this.plugin = setup.getPlugin();
+		this.player = setup.getPlayer();
+		this.arena  = setup.getArena();
+		this.path = String.format("instances.%s.", arena.getId());
 	}
 
-	public abstract void injectComponents(StaticPane pane);
+	public abstract void injectComponents(PaginatedPane paginatedPane);
 
 	protected final String isOptionDoneBool(String path) {
 		FileConfiguration config = ConfigUtils.getConfig(setup.getPlugin(), "arenas");
