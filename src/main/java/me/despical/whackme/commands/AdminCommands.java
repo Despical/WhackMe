@@ -1,8 +1,8 @@
 package me.despical.whackme.commands;
 
-import me.despical.commandframework.Command;
 import me.despical.commandframework.CommandArguments;
-import me.despical.commandframework.Completer;
+import me.despical.commandframework.annotations.Command;
+import me.despical.commandframework.annotations.Completer;
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.miscellaneous.MiscUtils;
 import me.despical.commons.serializer.LocationSerializer;

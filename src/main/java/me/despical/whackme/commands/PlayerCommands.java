@@ -1,9 +1,10 @@
 package me.despical.whackme.commands;
 
-import me.despical.commandframework.Command;
 import me.despical.commandframework.CommandArguments;
 import me.despical.commandframework.CommandFramework;
-import me.despical.commandframework.Param;
+import me.despical.commandframework.Message;
+import me.despical.commandframework.annotations.Command;
+import me.despical.commandframework.annotations.Param;
 import me.despical.commons.string.StringMatcher;
 import me.despical.commons.string.StringUtils;
 import me.despical.commons.util.Strings;
@@ -24,6 +25,7 @@ import java.sql.Statement;
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static me.despical.whackme.api.StatsStorage.StatisticType.*;
 
@@ -35,14 +37,15 @@ public class PlayerCommands extends AbstractCommand {
 		plugin.getCommandFramework().addCustomParameter("Player", CommandArguments::getSender);
 		plugin.getCommandFramework().addCustomParameter("Arena", arguments -> plugin.getArenaRegistry().getArena(arguments.getArgument(0)));
 		plugin.getCommandFramework().addCustomParameter("pArena", arguments -> plugin.getArenaRegistry().getArena(arguments.<Player>getSender()));
-		plugin.getCommandFramework().setColorFormatter(Strings::format);
+
+		Message.setColorFormatter(Strings::format);
 
 		BiFunction<Command, CommandArguments, Boolean> sendUsage = (command, arguments) -> {
 			arguments.sendMessage(chatManager.prefixedMessage("commands.correct_usage").replace("%usage%", command.usage()));
 			return true;
 		};
 
-		CommandFramework.SHORT_ARG_SIZE = CommandFramework.LONG_ARG_SIZE = sendUsage;
+		Stream.of(Message.SHORT_ARG_SIZE, Message.LONG_ARG_SIZE).forEach(message -> message.setMessage(sendUsage));
 	}
 
 	@Command(
