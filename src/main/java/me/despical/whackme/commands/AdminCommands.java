@@ -30,9 +30,9 @@ public class AdminCommands extends AbstractCommand {
 
 	@Command(
 		name = "wm.create",
-		permission = "wm.admin.create",
 		usage = "/wm create <arena name>",
 		desc = "Creates a new arena with default configuration.",
+		permission = "wm.admin.create",
 		senderType = Command.SenderType.PLAYER
 	)
 	public void createCommand(CommandArguments arguments) {
@@ -84,9 +84,9 @@ public class AdminCommands extends AbstractCommand {
 
 	@Command(
 		name = "wm.delete",
-		permission = "wm.admin.delete",
 		usage = "/wm delete <arena name>",
 		desc = "Deletes arena with the current configuration.",
+		permission = "wm.admin.delete",
 		min = 1
 	)
 	public void deleteCommand(Arena arena, CommandArguments arguments) {
@@ -113,9 +113,9 @@ public class AdminCommands extends AbstractCommand {
 
 	@Command(
 		name = "wm.edit",
-		permission = "wm.admin.edit",
 		usage = "/wm edit <arena name>",
 		desc = "Opens the arena editor.",
+		permission = "wm.admin.edit",
 		min = 1,
 		senderType = Command.SenderType.PLAYER
 	)
@@ -131,15 +131,15 @@ public class AdminCommands extends AbstractCommand {
 	@SuppressWarnings("all")
 	@Command(
 		name = "wm.help",
-		permission = "wm.admin.help",
-		usage = "/wm help"
+		usage = "/wm help",
+		permission = "wm.admin.help"
 	)
 	public void helpCommand(CommandArguments arguments) {
 		final boolean isPlayer = arguments.isSenderPlayer();
 		final CommandSender sender = arguments.getSender();
 
 		arguments.sendMessage("");
-		MiscUtils.sendCenteredMessage(sender, "&3&lWhack Me");
+		MiscUtils.sendCenteredMessage(sender, "&3&l---- Whack Me ----");
 		MiscUtils.sendCenteredMessage(arguments.getSender(), "&3[&boptional argument&3] &b- &3<&brequired argument&3>");
 		arguments.sendMessage("");
 
@@ -178,9 +178,9 @@ public class AdminCommands extends AbstractCommand {
 
 	@Command(
 		name = "wm.list",
-		permission = "wm.admin.list",
 		usage = "/wm list",
-		desc = "Shows all of the existing arenas."
+		desc = "Shows all of the existing arenas.",
+		permission = "wm.admin.list"
 	)
 	public void listCommand(CommandArguments arguments) {
 		final Set<Arena> arenas = plugin.getArenaRegistry().getArenas();
@@ -195,9 +195,9 @@ public class AdminCommands extends AbstractCommand {
 
 	@Command(
 		name = "wm.kick",
-		permission = "wm.admin.kick",
 		usage = "/wm kick <arena name>",
 		desc = "Kicks specified player if they're playing.",
+		permission = "wm.admin.kick",
 		min = 1
 	)
 	public void kickCommand(Arena arena, CommandArguments arguments) {
@@ -218,9 +218,9 @@ public class AdminCommands extends AbstractCommand {
 
 	@Command(
 		name = "wm.reload",
-		permission = "wm.admin.reload",
 		usage = "/wm reload",
-		desc = "Reloads arenas and configuration files"
+		desc = "Reloads arenas and configuration files",
+		permission = "wm.admin.reload"
 	)
 	public void reloadCommand(CommandArguments arguments) {
 		plugin.getReloadManager().initializeReload(arguments.getSender());

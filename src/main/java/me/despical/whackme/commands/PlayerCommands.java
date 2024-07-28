@@ -23,7 +23,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
-import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -34,18 +33,17 @@ public class PlayerCommands extends AbstractCommand {
 	public PlayerCommands(WhackMe plugin) {
 		super(plugin);
 
-		plugin.getCommandFramework().addCustomParameter("Player", CommandArguments::getSender);
-		plugin.getCommandFramework().addCustomParameter("Arena", arguments -> plugin.getArenaRegistry().getArena(arguments.getArgument(0)));
-		plugin.getCommandFramework().addCustomParameter("pArena", arguments -> plugin.getArenaRegistry().getArena(arguments.<Player>getSender()));
+		CommandFramework commandFramework = plugin.getCommandFramework();
+		commandFramework.addCustomParameter("Player", CommandArguments::<Player>getSender);
+		commandFramework.addCustomParameter("Arena", arguments -> plugin.getArenaRegistry().getArena(arguments.getArgument(0)));
+		commandFramework.addCustomParameter("pArena", arguments -> plugin.getArenaRegistry().getArena(arguments.<Player>getSender()));
 
 		Message.setColorFormatter(Strings::format);
 
-		BiFunction<Command, CommandArguments, Boolean> sendUsage = (command, arguments) -> {
+		Stream.of(Message.SHORT_ARG_SIZE, Message.LONG_ARG_SIZE).forEach(message -> message.setMessage((command, arguments) -> {
 			arguments.sendMessage(chatManager.prefixedMessage("commands.correct_usage").replace("%usage%", command.usage()));
 			return true;
-		};
-
-		Stream.of(Message.SHORT_ARG_SIZE, Message.LONG_ARG_SIZE).forEach(message -> message.setMessage(sendUsage));
+		}));
 	}
 
 	@Command(
@@ -244,7 +242,7 @@ public class PlayerCommands extends AbstractCommand {
 		return message;
 	}
 
-	public String getMatchingParts(String matched, String current) {
+	private String getMatchingParts(String matched, String current) {
 		String[] matchedArray = matched.split("\\."), currentArray = current.split("\\.");
 		int max = Math.min(matchedArray.length, currentArray.length);
 		List<String> matchingParts = new ArrayList<>();
