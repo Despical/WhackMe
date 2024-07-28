@@ -4,15 +4,15 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>me.despical</groupId>
     <artifactId>whack-me</artifactId>
-    <version>1.5.0</version>
-    <packaging>jar</packaging>
+    <version>1.5.1</version>
 
     <name>Whack Me</name>
     <inceptionYear>2022</inceptionYear>
     <url>https://www.spigotmc.org/resources/104912/</url>
+    <packaging>jar</packaging>
 
     <properties>
-        <java.version>1.8</java.version>
+        <java.version>8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 <!--        <serverDirectory>C:\Users\berke\OneDrive\Masaüstü\1.9.9\plugins</serverDirectory>-->
 <!--        <serverDirectory>C:\Users\berke\OneDrive\Masaüstü\Server\plugins</serverDirectory>-->
@@ -20,19 +20,19 @@
 <!--        <serverDirectory>C:\Users\berke\OneDrive\Masaüstü\1.21 Server\plugins</serverDirectory>-->
     </properties>
 
-    <licenses>
-        <license>
-            <name>GNU General Public License v3</name>
-            <url>https://www.gnu.org/licenses/gpl-3.0.en.html</url>
-        </license>
-    </licenses>
-
     <developers>
         <developer>
-            <name>Despical</name>
+            <id>Despical</id>
+            <name>Berke Akçen</name>
+            <email>berkeakcen@gmail.com</email>
             <url>https://www.spigotmc.org/members/615094/</url>
         </developer>
     </developers>
+
+    <issueManagement>
+        <system>GitHub Issue Tracker</system>
+        <url>https://github.com/Despical/whack_me/issues/</url>
+    </issueManagement>
 
     <repositories>
         <repository>
@@ -64,7 +64,7 @@
         <dependency>
             <groupId>com.github.Despical</groupId>
             <artifactId>CommandFramework</artifactId>
-            <version>1.4.8</version>
+            <version>1.4.9</version>
         </dependency>
         <dependency>
             <groupId>com.github.Despical</groupId>
