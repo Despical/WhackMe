@@ -14,10 +14,6 @@
     <properties>
         <java.version>8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-<!--        <serverDirectory>C:\Users\berke\OneDrive\Masaüstü\1.9.9\plugins</serverDirectory>-->
-<!--        <serverDirectory>C:\Users\berke\OneDrive\Masaüstü\Server\plugins</serverDirectory>-->
-<!--        <serverDirectory>C:\Users\berke\OneDrive\Masaüstü\1.20.5 Server - Kopya\plugins</serverDirectory>-->
-<!--        <serverDirectory>C:\Users\berke\OneDrive\Masaüstü\1.21 Server\plugins</serverDirectory>-->
     </properties>
 
     <developers>
@@ -106,7 +102,6 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>3.1.0</version>
                 <configuration>
-                    <outputDirectory>${serverDirectory}</outputDirectory>
                     <archive>
                         <addMavenDescriptor>false</addMavenDescriptor>
                     </archive>
