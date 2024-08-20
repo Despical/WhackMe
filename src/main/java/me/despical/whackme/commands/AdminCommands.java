@@ -6,6 +6,7 @@ import me.despical.commandframework.annotations.Completer;
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.miscellaneous.MiscUtils;
 import me.despical.commons.serializer.LocationSerializer;
+import me.despical.commons.util.Strings;
 import me.despical.whackme.WhackMe;
 import me.despical.whackme.arena.Arena;
 import me.despical.whackme.handlers.setup.SetupInventory;
@@ -139,22 +140,23 @@ public class AdminCommands extends AbstractCommand {
 		final CommandSender sender = arguments.getSender();
 
 		arguments.sendMessage("");
-		MiscUtils.sendCenteredMessage(sender, "&3&l---- Whack Me ----");
+		MiscUtils.sendCenteredMessage(sender, "&3&lWhack Me");
 		MiscUtils.sendCenteredMessage(arguments.getSender(), "&3[&boptional argument&3] &b- &3<&brequired argument&3>");
 		arguments.sendMessage("");
 
 		for (final Command command : plugin.getCommandFramework().getSubCommands()) {
-			final String usage = command.usage(), desc = command.desc();
+			final String usage = formatCommandUsage("&3" + command.usage()), desc = command.desc();
 
-			if (desc.isEmpty() || usage.isEmpty()) continue;
+			if (desc.isEmpty()) continue;
 
 			if (isPlayer) {
-				((Player) sender).spigot().sendMessage(new ComponentBuilder(ChatColor.DARK_GRAY + " • ")
-					.append(usage)
-					.color(ChatColor.AQUA)
-					.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, usage))
-					.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(desc)))
-					.create());
+				((Player) sender).spigot().sendMessage(
+					new ComponentBuilder(ChatColor.DARK_GRAY + " • ")
+						.append(usage)
+						.color(ChatColor.AQUA)
+						.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, command.usage()))
+						.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(desc)))
+						.create());
 			} else {
 				arguments.sendMessage(" &8• &b" + usage + " &3- &b" + desc);
 			}
@@ -323,5 +325,19 @@ public class AdminCommands extends AbstractCommand {
 		}
 
 		return completions;
+	}
+
+	private String formatCommandUsage(String usage) {
+		final char[] array = usage.toCharArray();
+		final StringBuilder buffer = new StringBuilder(usage);
+
+		for (int i = 0; i < array.length; i++) {
+			if (array[i] == '[' || array[i] == '<') {
+				buffer.insert(i, "&b");
+				return Strings.format(buffer.toString());
+			}
+		}
+
+		return Strings.format(usage);
 	}
 }
