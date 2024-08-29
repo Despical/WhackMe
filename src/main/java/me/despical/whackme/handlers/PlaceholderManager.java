@@ -54,6 +54,8 @@ public class PlaceholderManager extends PlaceholderExpansion {
 		final User user = plugin.getUserManager().getUser(player);
 
 		switch (id.toLowerCase()) {
+			case "all_arenas":
+				return Integer.toString(plugin.getArenaRegistry().getArenas().size());
 			case "online_players":
 				return Long.toString(plugin.getArenaRegistry().getArenas().stream().filter(arena -> arena.getPlayer() != null).count());
 			case "whacked_point_blocks":
