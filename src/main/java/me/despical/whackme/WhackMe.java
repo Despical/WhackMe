@@ -132,8 +132,6 @@ public class WhackMe extends JavaPlugin {
 				final Logger logger = getLogger();
 
 				logger.info("Found a new version available: v" + result.getNewestVersion());
-				logger.info("Download it on SpigotMC:");
-				logger.info("https://spigotmc.org/resources/104912/");
 			}
 		});
 	}

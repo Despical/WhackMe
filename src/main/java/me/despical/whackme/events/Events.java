@@ -136,7 +136,6 @@ public class Events extends EventListener {
 		UpdateChecker.init(plugin, 104912).requestUpdateCheck().whenComplete((result, exception) -> {
 			if (result.requiresUpdate()) {
 				player.sendMessage(chatManager.coloredRawMessage("&3[Whack Me] &bFound an update: v" + result.getNewestVersion()));
-				player.sendMessage(chatManager.coloredRawMessage("&3>> &bhttps://spigotmc.org/resources/104912"));
 			}
 		});
 	}
