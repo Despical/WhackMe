@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>me.despical</groupId>
     <artifactId>whack-me</artifactId>
-    <version>1.5.6</version>
+    <version>1.5.7</version>
 
     <name>Whack Me</name>
     <inceptionYear>2022</inceptionYear>
