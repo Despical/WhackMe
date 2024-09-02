@@ -32,7 +32,12 @@ public class ChatManager implements Reloadable {
 		this.papiEnabled = plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI");
 
 		Message.NO_PERMISSION.setMessage((cmd, args) -> {
-			message("Commands.No-Permission");
+			final String message = this.message("Commands.No-Permission");
+
+			if (!message.isEmpty()) {
+				args.sendMessage(message);
+			}
+
 			return true;
 		});
 	}
