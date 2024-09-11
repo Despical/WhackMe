@@ -50,6 +50,8 @@ public class PointHandler extends BukkitRunnable {
 	private void sendActionBar(final Player player) {
 		String message = plugin.getChatManager().message("in_game.action_bar");
 
+		if (message.isEmpty()) return;
+
 		message = message.replace("%player%", player.getName());
 		message = message.replace("%score%", Integer.toString(StatsStorage.getUserStats(player, StatsStorage.StatisticType.LOCAL_SCORE)));
 		message = message.replace("%timer%", StringFormatUtils.formatIntoMMSS(arena.getTimer()));

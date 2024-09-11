@@ -54,6 +54,7 @@ In-Game:
   Someone-Is-Already-Playing: "&cSomeone is already playing at the moment!"
   Chat-Format: "&7%player%: &f%message%"
   Only-Command-Is-Leave: "&cYou have to leave the game first to perform commands."
+  # Leave the actionbar message empty, if you do not want it.
   Action-Bar: "&a&l%timer% &6- &a&l%score%"
 
 Point-Blocks:
