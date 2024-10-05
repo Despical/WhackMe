@@ -56,6 +56,7 @@ public class WhackMe extends JavaPlugin {
 		checkUpdate();
 
 		getLogger().info("Initialization finished. Consider donating: https://buymeacoffee.com/despical");
+		getLogger().info("Need help? Join our Discord server: https://discord.gg/uXVU8jmtpU");
 	}
 
 	@Override
