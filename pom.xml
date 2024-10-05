@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>me.despical</groupId>
     <artifactId>whack-me</artifactId>
-    <version>1.5.7</version>
+    <version>1.5.8</version>
 
     <name>Whack Me</name>
     <inceptionYear>2022</inceptionYear>
@@ -55,12 +55,12 @@
         <dependency>
             <groupId>com.github.Despical</groupId>
             <artifactId>Commons</artifactId>
-            <version>1.8.2</version>
+            <version>1.8.6</version>
         </dependency>
         <dependency>
             <groupId>com.github.Despical</groupId>
             <artifactId>CommandFramework</artifactId>
-            <version>1.5.0</version>
+            <version>1.5.11</version>
         </dependency>
         <dependency>
             <groupId>com.github.Despical</groupId>
@@ -70,7 +70,7 @@
         <dependency>
             <groupId>org.bstats</groupId>
             <artifactId>bstats-bukkit</artifactId>
-            <version>3.0.2</version>
+            <version>3.1.0</version>
         </dependency>
         <dependency>
             <groupId>me.clip</groupId>
