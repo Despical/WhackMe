@@ -42,6 +42,7 @@ public class ArenaManager {
 
 		User user = plugin.getUserManager().getUser(player);
 
+		// FEATURE - Add option to bypass cooldown.
 		if (user.getCooldown("play_again") > 0) {
 			player.sendMessage(plugin.getChatManager().prefixedMessage("commands.wait_for_cooldown"));
 			return;

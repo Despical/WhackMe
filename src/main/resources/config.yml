@@ -23,17 +23,25 @@ Point-Blocks:
   Y-Multiplier: 0.05
   # How many milliseconds should any point block wait in the air?
   Wait-Ms: 12
-  # For custom skulls: "skull:VALUE"
-  # Copy the 'Value' part in from the skull URL.
-  Punch-Me: GREEN_TERRACOTTA
-  Dont-Punch-Me: RED_TERRACOTTA
-  Ouch: CYAN_TERRACOTTA
   # Point blocks can be rotated around the vertical axis.
   Rotations:
     # Values below are represented to yaw of point blocks in the game.
     Punch-Me: "0:0:0:0:0:0:0:0"
     Dont-Punch-Me: "0:0:0:0:0:0:0:0"
     Ouch: "0:0:0:0:0:0:0:0"
+  # The default point block materials.
+  Default:
+    # For custom skulls: "skull:VALUE"
+    Punch-Me: GREEN_TERRACOTTA
+    Dont-Punch-Me: RED_TERRACOTTA
+    Ouch: CYAN_TERRACOTTA
+  Custom:
+    # The ID of the arena.
+    default:
+      # For custom skulls: "skull:VALUE"
+      Punch-Me: GREEN_TERRACOTTA
+      Dont-Punch-Me: RED_TERRACOTTA
+      Ouch: CYAN_TERRACOTTA
 
 # Should we create a game bar for in-game player?
 # See messages.yml for game bar messages.

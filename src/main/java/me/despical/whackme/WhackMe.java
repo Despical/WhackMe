@@ -19,6 +19,7 @@ import me.despical.whackme.handlers.SoundManager;
 import me.despical.whackme.handlers.rewards.Reward;
 import me.despical.whackme.handlers.rewards.RewardsFactory;
 import me.despical.whackme.handlers.sign.SignManager;
+import me.despical.whackme.skulls.SkullManager;
 import me.despical.whackme.user.User;
 import me.despical.whackme.user.UserManager;
 import me.despical.whackme.user.data.MysqlManager;
@@ -50,6 +51,7 @@ public class WhackMe extends JavaPlugin {
 	private ArenaRegistry arenaRegistry;
 	private SignManager signManager;
 	private ArenaManager arenaManager;
+	private SkullManager skullManager;
 	private ReloadManager reloadManager;
 
 	@Override
@@ -110,6 +112,7 @@ public class WhackMe extends JavaPlugin {
 		this.signManager = new SignManager(this);
 		this.arenaManager = new ArenaManager(this);
 		this.reloadManager = new ReloadManager(this);
+		this.skullManager = new SkullManager(this);
 
 		if (getOption(ConfigPreferences.Option.DATABASE_ENABLED)) database = new MysqlDatabase(this, "mysql");
 		if (chatManager.isPapiEnabled()) new PlaceholderManager(this);
@@ -193,6 +196,11 @@ public class WhackMe extends JavaPlugin {
 	@NotNull
 	public ArenaManager getArenaManager() {
 		return arenaManager;
+	}
+
+	@NotNull
+	public SkullManager getSkullManager() {
+		return skullManager;
 	}
 
 	@NotNull

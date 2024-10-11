@@ -18,10 +18,8 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import static me.despical.whackme.ConfigPreferences.*;
 import static me.despical.whackme.api.StatsStorage.StatisticType.*;
 
 /**
@@ -52,7 +50,7 @@ public class PointBlock extends BukkitRunnable {
 		this.availableLocation = arena.getAvailableLocation();
 
 		stand = (ArmorStand) availableLocation.getWorld().spawnEntity(availableLocation.clone().add(.5, -1.2, .5), EntityType.ARMOR_STAND);
-		stand.setHelmet(getRandomItem());
+		stand.setHelmet(plugin.getSkullManager().getPointBlock(arena, this.getPointBlockType()));
 		stand.setCustomName(getCustomName());
 		stand.setCustomNameVisible(true);
 		stand.setGravity(false);
@@ -88,17 +86,17 @@ public class PointBlock extends BukkitRunnable {
 		}
 	}
 
-	private ItemStack getRandomItem() {
+	private PointBlockType getPointBlockType() {
 		final int greenSize = (int) arena.getPointBlocks().stream().filter(pointBlock -> pointBlock.stand.getCustomName().equalsIgnoreCase(PUNCH_ME)).count(),
 			redSize = (int) arena.getPointBlocks().stream().filter(pointBlock -> pointBlock.stand.getCustomName().equalsIgnoreCase(DONT_PUNCH_ME)).count();
 
 		if (greenSize > redSize) {
-			return RED_BLOCK;
+			return PointBlockType.RED_BLOCK;
 		} else if (greenSize == redSize) {
-			return GREEN_BLOCK;
+			return PointBlockType.GREEN_BLOCK;
 		}
 
-		return GREEN_BLOCK;
+		return PointBlockType.GREEN_BLOCK;
 	}
 
 	private String getCustomName() {
@@ -162,7 +160,7 @@ public class PointBlock extends BukkitRunnable {
 
 				event.setCancelled(true);
 
-				stand.setHelmet(CYAN_BLOCK);
+				stand.setHelmet(plugin.getSkullManager().getPointBlock(arena, PointBlockType.CYAN_BLOCK));
 				stand.setCustomName(OUCH);
 
 				Utils.rotateGameBlocks(stand, availableLocation, arena.getStartLocation(), "Ouch");
