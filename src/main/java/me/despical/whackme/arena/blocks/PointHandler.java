@@ -20,9 +20,9 @@ public class PointHandler extends BukkitRunnable {
 	private final Arena arena;
 	private final WhackMe plugin;
 
-	public PointHandler(Arena arena, WhackMe plugin) {
+	public PointHandler(Arena arena) {
 		this.arena = arena;
-		this.plugin = plugin;
+		this.plugin = WhackMe.getInstance();
 	}
 
 	@Override

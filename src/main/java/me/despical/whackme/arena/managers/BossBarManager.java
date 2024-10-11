@@ -20,18 +20,17 @@ import java.util.List;
  */
 public class BossBarManager extends BukkitRunnable {
 
+	private int queue = 0;
+	private BossBar bossBar;
+	private List<String> messages;
+
 	private final Arena arena;
 	private final WhackMe plugin;
 	private final boolean enabled;
 
-	private BossBar bossBar;
-	private List<String> messages;
-
-	private int queue = 0;
-
-	public BossBarManager(Arena arena, WhackMe plugin) {
+	public BossBarManager(Arena arena) {
 		this.arena = arena;
-		this.plugin = plugin;
+		this.plugin = WhackMe.getInstance();
 		this.enabled = plugin.getOption(ConfigPreferences.Option.BOSS_BAR_ENABLED) && XReflection.supports(13);
 
 		if (enabled) {

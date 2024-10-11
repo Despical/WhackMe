@@ -1,7 +1,9 @@
 package me.despical.whackme.arena.options;
 
 import me.despical.whackme.WhackMe;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.configuration.file.FileConfiguration;
+
+import java.util.function.Function;
 
 /**
  * @author Despical
@@ -10,27 +12,26 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public enum ArenaOption {
 
-	TIMER("Gameplay-Time", 30),
+	TIMER(config -> config.getInt("Gameplay-Time", 30)),
 
 	MINIMUM_POINTS(4),
 
 	MAXIMUM_POINTS(8),
 
-	WAIT_MILLISECONDS("Point-Blocks.Wait-Ms", 12);
+	WAIT_MILLISECONDS(config -> config.getInt("Point-Blocks.Wait-Ms", 12));
 
-	final int defaultValue;
+	private final Object value;
 
 	ArenaOption(int defaultValue) {
-		this.defaultValue = defaultValue;
+		this.value = defaultValue;
 	}
 
-	ArenaOption(String path, int defaultValue) {
-		final WhackMe plugin = JavaPlugin.getPlugin(WhackMe.class);
-
-		this.defaultValue = plugin.getConfig().getInt(path, defaultValue);
+	ArenaOption(Function<FileConfiguration, Object> function) {
+		this.value = function.apply(WhackMe.getInstance().getConfig());
 	}
 
-	public int getDefaultValue() {
-		return defaultValue;
+	@SuppressWarnings("unchecked")
+	public <T> T getDefault() {
+		return (T) this.value;
 	}
 }

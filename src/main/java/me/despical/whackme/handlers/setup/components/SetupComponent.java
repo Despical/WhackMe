@@ -24,7 +24,7 @@ public abstract class SetupComponent {
 
 	public SetupComponent(SetupInventory setup) {
 		this.setup  = setup;
-		this.plugin = setup.getPlugin();
+		this.plugin = WhackMe.getInstance();
 		this.player = setup.getPlayer();
 		this.arena  = setup.getArena();
 		this.path = String.format("instances.%s.", arena.getId());
@@ -33,7 +33,7 @@ public abstract class SetupComponent {
 	public abstract void injectComponents(PaginatedPane paginatedPane);
 
 	protected final String isOptionDoneBool(String path) {
-		FileConfiguration config = ConfigUtils.getConfig(setup.getPlugin(), "arenas");
+		FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
 		return config.isSet(path) ? LocationSerializer.isDefaultLocation(config.getString(path)) ? "&c✘ &lNot Completed" : "&a✔ &lCompleted" : "&c✘ &lNot Completed";
 	}
 }

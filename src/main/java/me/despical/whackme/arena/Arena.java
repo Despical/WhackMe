@@ -17,7 +17,6 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
@@ -31,7 +30,7 @@ import java.util.stream.Collectors;
  */
 public class Arena extends BukkitRunnable {
 
-	private static final WhackMe plugin = JavaPlugin.getPlugin(WhackMe.class);
+	private static final WhackMe plugin = WhackMe.getInstance();
 
 	private Player player;
 	private boolean ready, custom, started;
@@ -41,20 +40,20 @@ public class Arena extends BukkitRunnable {
 	private final PointHandler pointHandler;
 	private final BossBarManager bossBarManager;
 	private final List<PointBlock> pointBlocks;
-	private final Map<ArenaOption, Integer> arenaOptions;
+	private final Map<ArenaOption, Object> arenaOptions;
 	private final Map<GameLocation, Location> gameLocations;
 
 	public Arena(String id) {
 		this.id = id;
-		this.pointHandler = new PointHandler(this, plugin);
-		this.bossBarManager = new BossBarManager(this, plugin);
+		this.pointHandler = new PointHandler(this);
+		this.bossBarManager = new BossBarManager(this);
 		this.pointBlocks = new ArrayList<>();
 		this.locations = new ArrayList<>();
 		this.arenaOptions = new EnumMap<>(ArenaOption.class);
 		this.gameLocations = new EnumMap<>(GameLocation.class);
 
 		for (final ArenaOption option : ArenaOption.values()) {
-			arenaOptions.put(option, option.getDefaultValue());
+			arenaOptions.put(option, option.getDefault());
 		}
 	}
 
@@ -108,7 +107,7 @@ public class Arena extends BukkitRunnable {
 		}
 
 		this.player = player;
-		this.setTimer(ArenaOption.TIMER.getDefaultValue());
+		this.setTimer(ArenaOption.TIMER.getDefault());
 
 		bossBarManager.addPlayer();
 
@@ -239,7 +238,7 @@ public class Arena extends BukkitRunnable {
 	}
 
 	private int getOption(ArenaOption option) {
-		return arenaOptions.get(option);
+		return (int) arenaOptions.get(option);
 	}
 
 	private void setOptionValue(ArenaOption option, int value) {

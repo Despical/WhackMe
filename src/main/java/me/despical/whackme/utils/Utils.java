@@ -8,7 +8,6 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.*;
 
@@ -19,7 +18,7 @@ import java.util.*;
  */
 public class Utils {
 
-	private static final WhackMe plugin = JavaPlugin.getPlugin(WhackMe.class);
+	private static final WhackMe plugin = WhackMe.getInstance();
 
 	public static final ItemStack END_PORTAL_FRAME = XMaterial.END_PORTAL_FRAME.parseItem();
 	public static final int[][] DIRECTIONS = {{1, 0}, {-1, 0}, {1, 1}, {-1, 1}, {1, -1}, {-1, -1}, {0, 1}, {0, -1}};

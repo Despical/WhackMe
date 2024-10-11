@@ -8,7 +8,6 @@ import me.despical.commons.string.StringUtils;
 import me.despical.whackme.api.Reloadable;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
 import java.util.List;
@@ -25,7 +24,7 @@ public class ConfigPreferences implements Reloadable {
 
 	public static ItemStack RED_BLOCK, GREEN_BLOCK, CYAN_BLOCK;
 
-	private static final WhackMe plugin = JavaPlugin.getPlugin(WhackMe.class);
+	private final WhackMe plugin;
 	private final Map<Option, Boolean> options;
 
 	private double pointBlockMultiplier;
@@ -33,6 +32,7 @@ public class ConfigPreferences implements Reloadable {
 	private boolean isAsync;
 
 	public ConfigPreferences() {
+		this.plugin = WhackMe.getInstance();
 		this.options = new HashMap<>();
 		this.loadOptions();
 		this.initializeItems();
@@ -40,7 +40,7 @@ public class ConfigPreferences implements Reloadable {
 
 	@Override
 	public void reload() {
-		plugin.reloadConfig();
+		WhackMe.getInstance().reloadConfig();
 
 		this.loadOptions();
 		this.initializeItems();
@@ -107,7 +107,7 @@ public class ConfigPreferences implements Reloadable {
 
 		Option(Function<FileConfiguration, Boolean> supplier) {
 			this.path = "";
-			this.def = supplier.apply(plugin.getConfig());
+			this.def = supplier.apply(WhackMe.getInstance().getConfig());
 		}
 	}
 

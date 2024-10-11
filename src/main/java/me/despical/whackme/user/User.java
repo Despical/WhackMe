@@ -7,7 +7,6 @@ import me.despical.whackme.api.event.player.WMPlayerStatisticChangeEvent;
 import me.despical.whackme.arena.Arena;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.*;
 import java.util.stream.Stream;
@@ -19,7 +18,7 @@ import java.util.stream.Stream;
  */
 public class User {
 
-	private static final WhackMe plugin = JavaPlugin.getPlugin(WhackMe.class);
+	private static final WhackMe plugin = WhackMe.getInstance();
 	private static long cooldownCounter;
 
 	private final UUID uuid;

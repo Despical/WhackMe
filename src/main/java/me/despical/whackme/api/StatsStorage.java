@@ -7,7 +7,6 @@ import me.despical.whackme.user.User;
 import me.despical.whackme.user.data.MysqlManager;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.Connection;
@@ -25,7 +24,7 @@ import java.util.UUID;
  */
 public class StatsStorage {
 
-	private static final WhackMe plugin = JavaPlugin.getPlugin(WhackMe.class);
+	private static final WhackMe plugin = WhackMe.getInstance();
 
 	@NotNull
 	public static Map<UUID, Integer> getStats(StatisticType stat) {

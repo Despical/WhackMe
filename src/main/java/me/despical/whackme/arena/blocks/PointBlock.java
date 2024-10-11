@@ -19,7 +19,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import static me.despical.whackme.ConfigPreferences.*;
@@ -32,13 +31,13 @@ import static me.despical.whackme.api.StatsStorage.StatisticType.*;
  */
 public class PointBlock extends BukkitRunnable {
 
-	private static final WhackMe plugin = JavaPlugin.getPlugin(WhackMe.class);
+	private static final WhackMe plugin = WhackMe.getInstance();
 	private static final ChatManager chatManager = plugin.getChatManager();
 	private static final String PUNCH_ME = chatManager.message("point_blocks.punch_me"), DONT_PUNCH_ME = chatManager.message("point_blocks.dont_punch_me"), OUCH = chatManager.message("point_blocks.ouch");
 	private static final boolean async = plugin.getConfigPreferences().isAsync();
 
 	private double y;
-	private int waitedMs = ArenaOption.WAIT_MILLISECONDS.getDefaultValue();
+	private int waitedMs = ArenaOption.WAIT_MILLISECONDS.getDefault();
 	private boolean forward = true, waitedAbove = true;
 	private Listener listener;
 

@@ -38,6 +38,8 @@ import java.util.logging.Logger;
  */
 public class WhackMe extends JavaPlugin {
 
+	private static WhackMe instance;
+
 	private ChatManager chatManager;
 	private CommandFramework commandFramework;
 	private ConfigPreferences configPreferences;
@@ -94,6 +96,8 @@ public class WhackMe extends JavaPlugin {
 	}
 
 	private void initializeClasses() {
+		WhackMe.instance = this;
+
 		this.setupConfigurationFiles();
 
 		this.configPreferences = new ConfigPreferences();
@@ -194,6 +198,11 @@ public class WhackMe extends JavaPlugin {
 	@NotNull
 	public ReloadManager getReloadManager() {
 		return reloadManager;
+	}
+
+	@NotNull
+	public static WhackMe getInstance() {
+		return instance;
 	}
 
 	private void saveAllUserStatistics() {
