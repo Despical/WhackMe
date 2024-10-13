@@ -64,6 +64,8 @@ public class SkullManager {
 		}
 
 		for (String id : section.getKeys(false)) {
+			if (id.equals("default")) continue;
+
 			if (!plugin.getArenaRegistry().isArena(id)) {
 				plugin.getLogger().warning("Custom arena based skull loading failed! There is no arena called " + id + "!");
 				continue;

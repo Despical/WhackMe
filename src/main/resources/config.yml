@@ -8,7 +8,7 @@
 #                                                             #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-# In-game point blocks.
+# Point block settings.
 Point-Blocks:
   # Entity removal is still going to be executed in main thread.
   # This option may decrease the amount of lag if there are multiple

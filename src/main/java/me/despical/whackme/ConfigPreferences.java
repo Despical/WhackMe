@@ -1,13 +1,9 @@
 package me.despical.whackme;
 
-import me.despical.commons.compat.XMaterial;
-import me.despical.commons.item.ItemBuilder;
-import me.despical.commons.item.ItemUtils;
 import me.despical.commons.serializer.InventorySerializer;
 import me.despical.commons.string.StringUtils;
 import me.despical.whackme.api.Reloadable;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,8 +18,6 @@ import java.util.function.Function;
  */
 public class ConfigPreferences implements Reloadable {
 
-	public static ItemStack RED_BLOCK, GREEN_BLOCK, CYAN_BLOCK;
-
 	private final WhackMe plugin;
 	private final Map<Option, Boolean> options;
 
@@ -31,11 +25,10 @@ public class ConfigPreferences implements Reloadable {
 	private long ticks;
 	private boolean isAsync;
 
-	public ConfigPreferences() {
-		this.plugin = WhackMe.getInstance();
+	public ConfigPreferences(WhackMe plugin) {
+		this.plugin = plugin;
 		this.options = new HashMap<>();
 		this.loadOptions();
-		this.initializeItems();
 	}
 
 	@Override
@@ -43,7 +36,6 @@ public class ConfigPreferences implements Reloadable {
 		WhackMe.getInstance().reloadConfig();
 
 		this.loadOptions();
-		this.initializeItems();
 	}
 
 	public double getPointBlockMultiplier() {
@@ -109,20 +101,5 @@ public class ConfigPreferences implements Reloadable {
 			this.path = "";
 			this.def = supplier.apply(WhackMe.getInstance().getConfig());
 		}
-	}
-
-	private void initializeItems() {
-		final FileConfiguration config = plugin.getConfig();
-		final String greenBlockMsg = config.getString("Point-Blocks.Punch-Me");
-		final String redBlockMsg = config.getString("Point-Blocks.Dont-Punch-Me");
-		final String cyanBlockMsg = config.getString("Point-Blocks.Ouch");
-
-		GREEN_BLOCK = greenBlockMsg.startsWith("skull:") ? ItemUtils.getSkull(greenBlockMsg.substring(6)) : XMaterial.valueOf(greenBlockMsg).parseItem();
-		RED_BLOCK = redBlockMsg.startsWith("skull:") ? ItemUtils.getSkull(redBlockMsg.substring(6)) : XMaterial.valueOf(redBlockMsg).parseItem();
-		CYAN_BLOCK = cyanBlockMsg.startsWith("skull:") ? ItemUtils.getSkull(cyanBlockMsg.substring(6)) : XMaterial.valueOf(cyanBlockMsg).parseItem();
-
-		GREEN_BLOCK = new ItemBuilder(GREEN_BLOCK).lore("greenBlock").build();
-		RED_BLOCK = new ItemBuilder(RED_BLOCK).lore("redBlock").build();
-		CYAN_BLOCK = new ItemBuilder(CYAN_BLOCK).lore("cyanBlock").build();
 	}
 }

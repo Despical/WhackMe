@@ -102,7 +102,7 @@ public class WhackMe extends JavaPlugin {
 
 		this.setupConfigurationFiles();
 
-		this.configPreferences = new ConfigPreferences();
+		this.configPreferences = new ConfigPreferences(this);
 		this.chatManager = new ChatManager(this);
 		this.commandFramework = new CommandFramework(this);
 		this.userManager = new UserManager(this);
