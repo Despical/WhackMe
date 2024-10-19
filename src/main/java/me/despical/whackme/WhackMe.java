@@ -1,7 +1,6 @@
 package me.despical.whackme;
 
 import me.despical.commandframework.CommandFramework;
-import me.despical.commons.database.MysqlDatabase;
 import me.despical.commons.serializer.InventorySerializer;
 import me.despical.commons.util.Collections;
 import me.despical.commons.util.UpdateChecker;
@@ -44,7 +43,6 @@ public class WhackMe extends JavaPlugin {
 	private ChatManager chatManager;
 	private CommandFramework commandFramework;
 	private ConfigPreferences configPreferences;
-	private MysqlDatabase database;
 	private SoundManager soundManager;
 	private UserManager userManager;
 	private RewardsFactory rewardsFactory;
@@ -114,7 +112,6 @@ public class WhackMe extends JavaPlugin {
 		this.reloadManager = new ReloadManager(this);
 		this.skullManager = new SkullManager(this);
 
-		if (getOption(ConfigPreferences.Option.DATABASE_ENABLED)) database = new MysqlDatabase(this, "mysql");
 		if (chatManager.isPapiEnabled()) new PlaceholderManager(this);
 
 		new Events(this);
@@ -161,11 +158,6 @@ public class WhackMe extends JavaPlugin {
 	@NotNull
 	public ConfigPreferences getConfigPreferences() {
 		return configPreferences;
-	}
-
-	@NotNull
-	public MysqlDatabase getMysqlDatabase() {
-		return database;
 	}
 
 	@NotNull

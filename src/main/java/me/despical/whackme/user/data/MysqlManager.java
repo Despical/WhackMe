@@ -2,16 +2,15 @@ package me.despical.whackme.user.data;
 
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.database.MysqlDatabase;
-import me.despical.whackme.WhackMe;
 import me.despical.whackme.api.StatsStorage;
 import me.despical.whackme.user.User;
-import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
 
 /**
  * @author Despical
@@ -21,16 +20,13 @@ import java.sql.Statement;
 public class MysqlManager extends IUserDatabase {
 
 	private final String table;
+	private final MysqlDatabase database;
 
-	private MysqlDatabase database;
-
-	public MysqlManager(WhackMe plugin) {
-		super(plugin);
+	public MysqlManager() {
 		this.table = ConfigUtils.getConfig(plugin, "mysql").getString("table", "wm_stats");
+		this.database = new MysqlDatabase(plugin, "mysql");
 
 		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
-			this.database = plugin.getMysqlDatabase();
-
 			try (final Connection connection = database.getConnection()) {
 				final Statement statement = connection.createStatement();
 
@@ -44,10 +40,8 @@ public class MysqlManager extends IUserDatabase {
 						  "`whackedminuspointblocks` int(11) NOT NULL DEFAULT '0',\n" +
 						  "`longeststreak` int(11) NOT NULL DEFAULT '0');",
 					table));
-			} catch (SQLException exception) {
-				exception.fillInStackTrace();
-
-				plugin.getLogger().severe("Couldn't create statistics table on MySQL database!");
+			} catch (Exception exception) {
+				plugin.getLogger().log(Level.SEVERE, "Couldn't create statistics table on MySQL database!", exception);
 			}
 		});
 	}

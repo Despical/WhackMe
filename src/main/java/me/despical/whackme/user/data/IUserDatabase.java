@@ -13,11 +13,7 @@ import org.jetbrains.annotations.NotNull;
 public abstract class IUserDatabase {
 
 	@NotNull
-	protected final WhackMe plugin;
-
-	public IUserDatabase(final @NotNull WhackMe plugin) {
-		this.plugin = plugin;
-	}
+	protected static final WhackMe plugin = WhackMe.getInstance();
 
 	public abstract void saveStatistic(final @NotNull User user, final StatsStorage.StatisticType statisticType);
 

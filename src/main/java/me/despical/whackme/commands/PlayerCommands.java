@@ -214,9 +214,10 @@ public class PlayerCommands extends AbstractCommand {
 				UUID current = (UUID) stats.keySet().toArray()[stats.keySet().toArray().length - 1];
 
 				if (plugin.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-					String table = ((MysqlManager) plugin.getUserManager().getUserDatabase()).getTable();
+					MysqlManager mysqlManager = (MysqlManager) plugin.getUserManager().getUserDatabase();
+					String table = mysqlManager.getTable();
 
-					try (Connection connection = plugin.getMysqlDatabase().getConnection()) {
+					try (Connection connection = mysqlManager.getDatabase().getConnection()) {
 						Statement statement = connection.createStatement();
 						ResultSet set = statement.executeQuery(String.format("SELECT name FROM %s WHERE UUID='%s'", table, current.toString()));
 

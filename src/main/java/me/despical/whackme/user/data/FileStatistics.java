@@ -1,7 +1,6 @@
 package me.despical.whackme.user.data;
 
 import me.despical.commons.configuration.ConfigUtils;
-import me.despical.whackme.WhackMe;
 import me.despical.whackme.api.StatsStorage;
 import me.despical.whackme.user.User;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -16,8 +15,7 @@ public class FileStatistics extends IUserDatabase {
 
 	private final FileConfiguration config;
 
-	public FileStatistics(WhackMe plugin) {
-		super(plugin);
+	public FileStatistics() {
 		this.config = ConfigUtils.getConfig(plugin, "stats");
 	}
 
