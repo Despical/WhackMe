@@ -163,13 +163,17 @@ public class PlayerCommands extends AbstractCommand {
 
 		final User user = plugin.getUserManager().getUser(target);
 
-		chatManager.getStringList("commands.stats_command.messages").stream().map(message -> formatStats(message, player.equals(target) ? "header" : "header_other", user)).forEach(player::sendMessage);
+		chatManager.getStringList("commands.stats_command.messages")
+			.stream()
+			.map(message -> formatStats(message, player.equals(target) ? "header" : "header_other", user))
+			.forEach(player::sendMessage);
 	}
 
 	private String formatStats(String message, String header, User user) {
 		final int minusBlocks = user.getStat(MINUS_BLOCKS), plusBlocks = user.getStat(PLUS_BLOCKS);
 
-		message = message.replace("%header%", chatManager.message("commands.stats_command." + header));
+		message = message.replace("%player%", user.getName());
+		message = message.replace("%header%", chatManager.message("commands.stats_command." + header, user.getPlayer()));
 		message = message.replace("%tours_played%", TOURS_PLAYED.from(user));
 		message = message.replace("%record_score%", RECORD_SCORE.from(user));
 		message = message.replace("%whacked_point_blocks%", Integer.toString(plusBlocks));
