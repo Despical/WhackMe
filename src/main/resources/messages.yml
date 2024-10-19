@@ -18,7 +18,7 @@ Commands:
     Error-Occurred: "&cException occurred during the plugin reload!"
 
   Player-Not-Found: "&cWe couldn't find any player with that name matching!"
-  # %wm_{arena}_player_name% -> placeholder will return text below if arena player is null.
+  # %wm_{arena}_player_name% -> This placeholder returns the text below if arena player is null.
   Unknown-Player: "Unknown"
   Statistics:
     Type-Name: "&cPlease type statistic name to view!"
@@ -56,6 +56,7 @@ In-Game:
   Only-Command-Is-Leave: "&cYou have to leave the game first to perform commands."
   # Leave the actionbar message empty, if you do not want it.
   Action-Bar: "&a&l%timer% &6- &a&l%score%"
+  Timer-Format: "%02d:%02d"
 
 Point-Blocks:
   Punch-Me: "&aPunch Me!"
