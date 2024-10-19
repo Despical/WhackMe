@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>me.despical</groupId>
     <artifactId>whack-me</artifactId>
-    <version>1.6.0</version>
+    <version>1.6.1</version>
 
     <name>Whack Me</name>
     <inceptionYear>2022</inceptionYear>
@@ -55,7 +55,7 @@
         <dependency>
             <groupId>com.github.Despical</groupId>
             <artifactId>Commons</artifactId>
-            <version>1.8.6</version>
+            <version>1.8.7</version>
         </dependency>
         <dependency>
             <groupId>com.github.Despical</groupId>
