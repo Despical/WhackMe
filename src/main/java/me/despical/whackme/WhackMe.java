@@ -109,7 +109,7 @@ public class WhackMe extends JavaPlugin {
 		this.soundManager = new SoundManager(this);
 		this.rewardsFactory = new RewardsFactory(this);
 		this.arenaRegistry = new ArenaRegistry(this);
-		this.signManager = new SignManager(this);
+		this.signManager = new SignManager();
 		this.arenaManager = new ArenaManager(this);
 		this.reloadManager = new ReloadManager(this);
 		this.skullManager = new SkullManager(this);

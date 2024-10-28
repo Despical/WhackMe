@@ -2,7 +2,6 @@ package me.despical.whackme.handlers.sign;
 
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.serializer.LocationSerializer;
-import me.despical.whackme.WhackMe;
 import me.despical.whackme.api.Reloadable;
 import me.despical.whackme.arena.Arena;
 import me.despical.whackme.event.AbstractEventHandler;
@@ -30,8 +29,7 @@ public class SignManager extends AbstractEventHandler implements Reloadable {
 	private final Set<ArenaSign> arenaSigns;
 	private final List<String> signLines;
 
-	public SignManager(WhackMe plugin) {
-		super(plugin);
+	public SignManager() {
 		this.arenaSigns = new HashSet<>();
 		this.signLines = plugin.getChatManager().getStringList("Signs.Lines");
 
