@@ -1,19 +1,16 @@
-package me.despical.whackme.commands;
+package me.despical.whackme.command;
 
 import me.despical.commandframework.CommandArguments;
 import me.despical.commandframework.CommandFramework;
-import me.despical.commandframework.Message;
 import me.despical.commandframework.annotations.Command;
 import me.despical.commandframework.annotations.Param;
 import me.despical.commons.string.StringMatcher;
 import me.despical.commons.string.StringUtils;
-import me.despical.commons.util.Strings;
 import me.despical.whackme.ConfigPreferences;
-import me.despical.whackme.WhackMe;
 import me.despical.whackme.api.StatsStorage;
 import me.despical.whackme.arena.Arena;
 import me.despical.whackme.user.User;
-import me.despical.whackme.user.data.MysqlManager;
+import me.despical.whackme.user.data.MySQLManager;
 import me.despical.whackme.utils.Utils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -24,27 +21,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static me.despical.whackme.api.StatsStorage.StatisticType.*;
 
-public class PlayerCommands extends AbstractCommand {
-
-	public PlayerCommands(WhackMe plugin) {
-		super(plugin);
-
-		CommandFramework commandFramework = plugin.getCommandFramework();
-		commandFramework.addCustomParameter("Player", CommandArguments::<Player>getSender);
-		commandFramework.addCustomParameter("Arena", arguments -> plugin.getArenaRegistry().getArena(arguments.getArgument(0)));
-		commandFramework.addCustomParameter("pArena", arguments -> plugin.getArenaRegistry().getArena(arguments.<Player>getSender()));
-
-		Message.setColorFormatter(Strings::format);
-
-		Stream.of(Message.SHORT_ARG_SIZE, Message.LONG_ARG_SIZE).forEach(message -> message.setMessage((command, arguments) -> {
-			arguments.sendMessage(chatManager.prefixedMessage("commands.correct_usage").replace("%usage%", command.usage()));
-			return true;
-		}));
-	}
+public class PlayerCommands extends AbstractCommandHandler {
 
 	@Command(
 		name = "wm",
@@ -218,8 +198,8 @@ public class PlayerCommands extends AbstractCommand {
 				UUID current = (UUID) stats.keySet().toArray()[stats.keySet().toArray().length - 1];
 
 				if (plugin.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-					MysqlManager mysqlManager = (MysqlManager) plugin.getUserManager().getUserDatabase();
-					String table = mysqlManager.getTable();
+					MySQLManager mysqlManager = (MySQLManager) plugin.getUserManager().getUserDatabase();
+					String table = mysqlManager.getTableName();
 
 					try (Connection connection = mysqlManager.getDatabase().getConnection()) {
 						Statement statement = connection.createStatement();

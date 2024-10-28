@@ -1,12 +1,9 @@
-package me.despical.whackme.events;
+package me.despical.whackme.event;
 
 import me.despical.commons.compat.XMaterial;
 import me.despical.commons.serializer.InventorySerializer;
-import me.despical.commons.util.UpdateChecker;
 import me.despical.whackme.ConfigPreferences;
-import me.despical.whackme.WhackMe;
 import me.despical.whackme.arena.Arena;
-import me.despical.whackme.user.User;
 import me.despical.whackme.utils.Utils;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -19,16 +16,18 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 /**
  * @author Despical
  * <p>
  * Created at 21.06.2022
  */
-public class Events extends EventListener {
+public class GameEvents extends AbstractEventHandler {
 
-	public Events(WhackMe plugin) {
-		super(plugin);
-	}
+	private final Map<UUID, Arena> teleportToEnd = new HashMap<>();
 
 	@EventHandler
 	public void onCommandExecute(PlayerCommandPreprocessEvent event) {
@@ -121,32 +120,30 @@ public class Events extends EventListener {
 
 	@EventHandler
 	public void onJoin(PlayerJoinEvent event) {
-		final Player player = event.getPlayer();
-		final User user = plugin.getUserManager().getUser(player);
+		Player player = event.getPlayer();
 
-		plugin.getUserManager().loadStatistics(user);
+		plugin.getUserManager().addUser(player);
 
 		if (plugin.getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
 			InventorySerializer.loadInventory(plugin, player);
 		}
 
-		if (!plugin.getOption(ConfigPreferences.Option.UPDATE_NOTIFIER_ENABLED)) return;
-		if (!player.hasPermission("wm.update")) return;
+		Arena arena = teleportToEnd.get(player.getUniqueId());
 
-		UpdateChecker.init(plugin, 104912).requestUpdateCheck().whenComplete((result, exception) -> {
-			if (result.requiresUpdate()) {
-				player.sendMessage(chatManager.coloredRawMessage("&3[Whack Me] &bFound an update: v" + result.getNewestVersion()));
-			}
-		});
+		if (arena != null) {
+			plugin.getServer().getScheduler().runTaskLater(plugin, () -> player.teleport(arena.getEndLocation()), 1L);
+		}
 	}
 
 	@EventHandler
 	public void onQuit(PlayerQuitEvent event) {
-		final Player player = event.getPlayer();
-		final Arena arena = plugin.getArenaRegistry().getArena(player);
+		Player player = event.getPlayer();
+		Arena arena = plugin.getArenaRegistry().getArena(player);
 
 		if (arena != null) {
 			arena.removePlayer();
+
+			teleportToEnd.put(player.getUniqueId(), arena);
 		}
 
 		plugin.getUserManager().removeUser(player);

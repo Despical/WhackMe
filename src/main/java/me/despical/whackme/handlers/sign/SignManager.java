@@ -5,7 +5,7 @@ import me.despical.commons.serializer.LocationSerializer;
 import me.despical.whackme.WhackMe;
 import me.despical.whackme.api.Reloadable;
 import me.despical.whackme.arena.Arena;
-import me.despical.whackme.events.EventListener;
+import me.despical.whackme.event.AbstractEventHandler;
 import me.despical.whackme.user.User;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -25,7 +25,7 @@ import java.util.*;
  * <p>
  * Created at 31.01.2024
  */
-public class SignManager extends EventListener implements Reloadable {
+public class SignManager extends AbstractEventHandler implements Reloadable {
 
 	private final Set<ArenaSign> arenaSigns;
 	private final List<String> signLines;

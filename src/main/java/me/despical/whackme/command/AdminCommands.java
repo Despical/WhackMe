@@ -1,4 +1,4 @@
-package me.despical.whackme.commands;
+package me.despical.whackme.command;
 
 import me.despical.commandframework.CommandArguments;
 import me.despical.commandframework.annotations.Command;
@@ -7,7 +7,6 @@ import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.miscellaneous.MiscUtils;
 import me.despical.commons.serializer.LocationSerializer;
 import me.despical.commons.util.Strings;
-import me.despical.whackme.WhackMe;
 import me.despical.whackme.arena.Arena;
 import me.despical.whackme.handlers.setup.SetupInventory;
 import net.md_5.bungee.api.ChatColor;
@@ -23,11 +22,7 @@ import org.bukkit.util.StringUtil;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class AdminCommands extends AbstractCommand {
-
-	public AdminCommands(WhackMe plugin) {
-		super(plugin);
-	}
+public class AdminCommands extends AbstractCommandHandler {
 
 	@Command(
 		name = "wm.create",

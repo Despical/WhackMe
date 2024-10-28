@@ -8,9 +8,9 @@ import me.despical.whackme.api.StatsStorage;
 import me.despical.whackme.arena.Arena;
 import me.despical.whackme.arena.ArenaRegistry;
 import me.despical.whackme.arena.managers.ArenaManager;
-import me.despical.whackme.commands.AdminCommands;
-import me.despical.whackme.commands.PlayerCommands;
-import me.despical.whackme.events.Events;
+import me.despical.whackme.command.AdminCommands;
+import me.despical.whackme.command.PlayerCommands;
+import me.despical.whackme.event.GameEvents;
 import me.despical.whackme.handlers.ChatManager;
 import me.despical.whackme.handlers.PlaceholderManager;
 import me.despical.whackme.handlers.ReloadManager;
@@ -21,7 +21,8 @@ import me.despical.whackme.handlers.sign.SignManager;
 import me.despical.whackme.skulls.SkullManager;
 import me.despical.whackme.user.User;
 import me.despical.whackme.user.UserManager;
-import me.despical.whackme.user.data.MysqlManager;
+import me.despical.whackme.user.data.AbstractDatabase;
+import me.despical.whackme.user.data.MySQLManager;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
 import org.bukkit.entity.Player;
@@ -57,17 +58,17 @@ public class WhackMe extends JavaPlugin {
 		initializeClasses();
 		checkUpdate();
 
-		getLogger().info("Initialization finished. Consider donating: https://buymeacoffee.com/despical");
-		getLogger().info("Need help? Join our Discord server: https://discord.gg/uXVU8jmtpU");
+		getLogger().info("Initialization finished.");
+		getLogger().info("Join our Discord server: https://discord.gg/uXVU8jmtpU");
 	}
 
 	@Override
 	public void onDisable() {
 		for (Arena arena : arenaRegistry.getArenas()) {
 			Player player = arena.getPlayer();
-			
+
 			if (player == null) continue;
-			
+
 			User user = userManager.getUser(player);
 			user.addStat(StatsStorage.StatisticType.TOURS_PLAYED, 1);
 			user.resetAttackCooldown();
@@ -85,7 +86,8 @@ public class WhackMe extends JavaPlugin {
 			}
 
 			if (getOption(ConfigPreferences.Option.CLEAR_INVENTORY)) player.getInventory().clear();
-			if (getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) InventorySerializer.loadInventory(this, player);
+			if (getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED))
+				InventorySerializer.loadInventory(this, player);
 
 			arena.getBossBarManager().removePlayer();
 			arena.teleportToEndLocation();
@@ -96,7 +98,7 @@ public class WhackMe extends JavaPlugin {
 	}
 
 	private void initializeClasses() {
-		WhackMe.instance = this;
+		instance = this;
 
 		this.setupConfigurationFiles();
 
@@ -114,9 +116,9 @@ public class WhackMe extends JavaPlugin {
 
 		if (chatManager.isPapiEnabled()) new PlaceholderManager(this);
 
-		new Events(this);
-		new PlayerCommands(this);
-		new AdminCommands(this);
+		new GameEvents();
+		new PlayerCommands();
+		new AdminCommands();
 
 		User.cooldownHandlerTask();
 
@@ -126,7 +128,7 @@ public class WhackMe extends JavaPlugin {
 	}
 
 	private void setupConfigurationFiles() {
-		Collections.streamOf("config", "arenas", "stats", "mysql", "messages", "rewards").filter(name -> !new File(getDataFolder(),name + ".yml").exists()).forEach(name -> saveResource(name + ".yml", false));
+		Collections.streamOf("config", "arenas", "stats", "mysql", "messages", "rewards").filter(name -> !new File(getDataFolder(), name + ".yml").exists()).forEach(name -> saveResource(name + ".yml", false));
 	}
 
 	private void checkUpdate() {
@@ -206,18 +208,20 @@ public class WhackMe extends JavaPlugin {
 	}
 
 	private void saveAllUserStatistics() {
-		for (final Player player : getServer().getOnlinePlayers()) {
-			final User user = userManager.getUser(player);
+		AbstractDatabase database = userManager.getUserDatabase();
 
-			if (userManager.getUserDatabase() instanceof MysqlManager) {
-				final MysqlManager mysqlManager = (MysqlManager) userManager.getUserDatabase();
-				final StringBuilder builder = new StringBuilder(" SET ");
+		for (Player player : getServer().getOnlinePlayers()) {
+			User user = userManager.getUser(player);
 
-				for (final StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+			if (database instanceof MySQLManager) {
+				MySQLManager mysqlManager = (MySQLManager) database;
+				StringBuilder builder = new StringBuilder(" SET ");
+
+				for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
 					if (!stat.isPersistent()) continue;
 
-					final int value = user.getStat(stat);
-					final String name = stat.getName();
+					int value = user.getStat(stat);
+					String name = stat.getName();
 
 					if (builder.toString().equalsIgnoreCase(" SET ")) {
 						builder.append(name).append("=").append(value);
@@ -226,13 +230,15 @@ public class WhackMe extends JavaPlugin {
 					builder.append(", ").append(name).append("=").append(value);
 				}
 
-				final String update = builder.toString();
+				String update = builder.toString();
 
-				mysqlManager.getDatabase().executeUpdate(String.format("UPDATE %s%s WHERE UUID='%s';", mysqlManager.getTable(), update, user.getUniqueId().toString()));
+				mysqlManager.getDatabase().executeUpdate(String.format("UPDATE %s%s WHERE UUID='%s';", mysqlManager.getTableName(), update, user.getUniqueId().toString()));
 				continue;
 			}
 
-			userManager.getUserDatabase().saveStatistics(user);
+			database.saveStatistics(user);
 		}
+
+		database.shutdown();
 	}
 }

@@ -10,14 +10,17 @@ import org.jetbrains.annotations.NotNull;
  * <p>
  * Created at 20.06.2022
  */
-public abstract class IUserDatabase {
+public abstract class AbstractDatabase {
 
 	@NotNull
 	protected static final WhackMe plugin = WhackMe.getInstance();
 
-	public abstract void saveStatistic(final @NotNull User user, final StatsStorage.StatisticType statisticType);
+	public abstract void saveStatistic(@NotNull User user, StatsStorage.StatisticType statisticType);
 
-	public abstract void saveStatistics(final @NotNull User user);
+	public abstract void saveStatistics(@NotNull User user);
 
-	public abstract void loadStatistics(final @NotNull User user);
+	public abstract void loadStatistics(@NotNull User user);
+
+	public void shutdown() {
+	}
 }

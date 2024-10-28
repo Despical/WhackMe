@@ -3,14 +3,12 @@ package me.despical.whackme.user;
 import me.despical.whackme.ConfigPreferences;
 import me.despical.whackme.WhackMe;
 import me.despical.whackme.user.data.FileStatistics;
-import me.despical.whackme.user.data.IUserDatabase;
-import me.despical.whackme.user.data.MysqlManager;
+import me.despical.whackme.user.data.AbstractDatabase;
+import me.despical.whackme.user.data.MySQLManager;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @author Despical
@@ -19,50 +17,36 @@ import java.util.UUID;
  */
 public class UserManager {
 
-	@NotNull
-	private final Set<User> users;
-
-	@NotNull
-	private final IUserDatabase userDatabase;
+	private final Map<UUID, User> users;
+	private final AbstractDatabase userDatabase;
 
 	public UserManager(WhackMe plugin) {
-		this.users = new HashSet<>();
-		this.userDatabase = plugin.getOption(ConfigPreferences.Option.DATABASE_ENABLED) ? new MysqlManager() : new FileStatistics();
+		this.users = new HashMap<>();
+		this.userDatabase = plugin.getOption(ConfigPreferences.Option.DATABASE_ENABLED) ? new MySQLManager() : new FileStatistics();
 
-		plugin.getServer().getOnlinePlayers().stream().map(this::getUser).forEach(this::loadStatistics);
+		plugin.getServer().getOnlinePlayers().forEach(this::addUser);
 	}
 
 	@NotNull
 	public User addUser(final Player player) {
-		final User user = new User(player);
+		User user = new User(player);
+		users.put(player.getUniqueId(), user);
 
-		this.users.add(user);
+		userDatabase.loadStatistics(user);
 		return user;
 	}
 
 	public void removeUser(final Player player) {
-		this.users.remove(this.getUser(player));
+		users.remove(player.getUniqueId());
 	}
 
 	@NotNull
 	public User getUser(final Player player) {
-		final UUID uuid = player.getUniqueId();
-
-		for (final User user : this.users) {
-			if (uuid.equals(user.getUniqueId())) {
-				return user;
-			}
-		}
-
-        return this.addUser(player);
+		return users.getOrDefault(player.getUniqueId(), this.addUser(player));
 	}
 
 	@NotNull
-	public IUserDatabase getUserDatabase() {
+	public AbstractDatabase getUserDatabase() {
 		return this.userDatabase;
-	}
-
-	public void loadStatistics(final User user) {
-		this.userDatabase.loadStatistics(user);
 	}
 }
