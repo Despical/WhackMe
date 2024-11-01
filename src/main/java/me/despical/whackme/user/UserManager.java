@@ -28,7 +28,7 @@ public class UserManager {
 	}
 
 	@NotNull
-	public User addUser(final Player player) {
+	public User addUser(Player player) {
 		User user = new User(player);
 		users.put(player.getUniqueId(), user);
 
@@ -36,13 +36,19 @@ public class UserManager {
 		return user;
 	}
 
-	public void removeUser(final Player player) {
+	public void removeUser(Player player) {
 		users.remove(player.getUniqueId());
 	}
 
 	@NotNull
-	public User getUser(final Player player) {
-		return users.getOrDefault(player.getUniqueId(), this.addUser(player));
+	public User getUser(Player player) {
+		User user = users.get(player.getUniqueId());
+
+		if (user != null) {
+			return user;
+		}
+
+		return this.addUser(player);
 	}
 
 	@NotNull

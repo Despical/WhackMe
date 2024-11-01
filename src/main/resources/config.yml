@@ -89,9 +89,9 @@ Sounds:
   # The sound plays when player clicks the incorrect point block.
   Minus-Point: "NOTE_BASS"
 
-# The delay between hitting blocks.
-# 4 is the default value.
-Hit-Cooldown-Delay: 16
+# 20 = no hit cooldown, 4 is the default value.
+# The smaller value the slower hits.
+Hit-Cooldown-Delay: 20
 
 # Should players wait a certain amount of time before playing again Whack Me? (in seconds)
 Game-Cooldown: 0
