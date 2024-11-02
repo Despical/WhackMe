@@ -28,7 +28,7 @@ public class PlayerCommands extends AbstractCommandHandler {
 
 	@Command(
 		name = "wm",
-		usage = "/wm help",
+		usage = "/wm",
 		desc = "Main command of the Whack Me plugin."
 	)
 	public void mainCommand(CommandArguments arguments) {

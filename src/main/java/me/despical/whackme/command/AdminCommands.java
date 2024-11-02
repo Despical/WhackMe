@@ -280,6 +280,33 @@ public class AdminCommands extends AbstractCommandHandler {
 		}
 	}
 
+	@Command(
+		name = "wm.version",
+		usage = "/wm version",
+		desc = "Displays detailed information about the plugin and server environment.",
+		permission = "wm.admin.version",
+		senderType = Command.SenderType.PLAYER
+	)
+	public void infoCommand(CommandArguments arguments) {
+		Player player = arguments.getSender();
+
+		arguments.sendMessage("");
+		MiscUtils.sendCenteredMessage(player, "&b&l==== [ &3&lWhack Me &b&l] ==== ");
+		arguments.sendMessage("");
+		arguments.sendMessage(" &8• &3Plugin Version: &b{0}", plugin.getDescription().getVersion());
+		arguments.sendMessage(" &8• &3Server Version: &b{0}", plugin.getServer().getVersion());
+		arguments.sendMessage(" &8• &3Bukkit Version: &b{0}", plugin.getServer().getBukkitVersion());
+		arguments.sendMessage(" &8• &3Loaded Plugins: &b{0}", plugin.getServer().getPluginManager().getPlugins().length);
+		arguments.sendMessage("");
+		arguments.sendMessage(" &8• &3Java Version: &b{0}", System.getProperty("java.version"));
+		arguments.sendMessage(" &8• &3Java Vendor: &b{0}", System.getProperty("java.vendor"));
+		arguments.sendMessage(" &8• &3JVM Version: &b{0}", System.getProperty("java.vm.version"));
+		arguments.sendMessage(" &8• &3JVM Name: &b{0}", System.getProperty("java.vm.name"));
+		arguments.sendMessage("");
+		arguments.sendMessage(" &8• &3OS Name: &b{0} ({1})", System.getProperty("os.name"), System.getProperty("os.arch"));
+		arguments.sendMessage("");
+	}
+
 	@Completer(
 		name = "wm"
 	)
