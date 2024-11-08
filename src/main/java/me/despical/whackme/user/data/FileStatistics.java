@@ -28,7 +28,7 @@ public class FileStatistics extends AbstractDatabase {
 
 	@Override
 	public void saveStatistics(@NotNull User user) {
-		final String uuid = user.getUniqueId().toString();
+		String uuid = user.getUniqueId().toString();
 
 		for (StatisticType stat : StatisticType.values()) {
 			if (stat.isPersistent()) {
@@ -40,11 +40,31 @@ public class FileStatistics extends AbstractDatabase {
 	}
 
 	@Override
+	public void saveAllStatistics() {
+		for (User user : plugin.getUserManager().getUsers()) {
+			String uuid = user.getUniqueId().toString();
+
+			for (StatisticType stat : StatisticType.values()) {
+				if (stat.isPersistent()) {
+					config.set(uuid + "." + stat.getName(), user.getStat(stat));
+				}
+			}
+		}
+
+		ConfigUtils.saveConfig(plugin, config, "stats");
+	}
+
+	@Override
 	public void loadStatistics(@NotNull User user) {
-		final String uuid = user.getUniqueId().toString();
+		String uuid = user.getUniqueId().toString();
 
 		for (StatisticType stat : StatisticType.values()) {
 			user.setStat(stat, config.getInt(uuid + "." + stat.getName()));
 		}
+	}
+
+	@Override
+	public void shutdown() {
+		this.saveAllStatistics();
 	}
 }

@@ -23,8 +23,6 @@ import me.despical.whackme.leaderboard.LeaderboardManager;
 import me.despical.whackme.skulls.SkullManager;
 import me.despical.whackme.user.User;
 import me.despical.whackme.user.UserManager;
-import me.despical.whackme.user.data.AbstractDatabase;
-import me.despical.whackme.user.data.MySQLManager;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
 import org.bukkit.entity.Player;
@@ -102,7 +100,7 @@ public class WhackMe extends JavaPlugin {
 			arena.cleanGameArea();
 		}
 
-		saveAllUserStatistics();
+		userManager.getUserDatabase().shutdown();
 	}
 
 	private void initializeClasses() {
@@ -165,7 +163,7 @@ public class WhackMe extends JavaPlugin {
 
 		if (period > 0) {
 			getServer().getScheduler().runTaskTimerAsynchronously(this, () -> {
-//				userManager.getUserDatabase().saveAllStatistics();
+				userManager.getUserDatabase().saveAllStatistics();
 
 				Optional.ofNullable(leaderboardManager).ifPresent(LeaderboardManager::updateLeaderboards);
 			}, period, period * 20);
@@ -248,39 +246,5 @@ public class WhackMe extends JavaPlugin {
 	@NotNull
 	public static WhackMe getInstance() {
 		return instance;
-	}
-
-	private void saveAllUserStatistics() {
-		AbstractDatabase database = userManager.getUserDatabase();
-
-		for (User user : userManager.getUsers()) {
-
-			if (database instanceof MySQLManager) {
-				MySQLManager mysqlManager = (MySQLManager) database;
-				StringBuilder builder = new StringBuilder(" SET ");
-
-				for (StatisticType stat : StatisticType.values()) {
-					if (!stat.isPersistent()) continue;
-
-					int value = user.getStat(stat);
-					String name = stat.getName();
-
-					if (builder.toString().equalsIgnoreCase(" SET ")) {
-						builder.append(name).append("=").append(value);
-					}
-
-					builder.append(", ").append(name).append("=").append(value);
-				}
-
-				String update = builder.toString();
-
-				mysqlManager.getDatabase().executeUpdate(String.format("UPDATE %s%s WHERE UUID='%s';", mysqlManager.getTableName(), update, user.getUniqueId().toString()));
-				continue;
-			}
-
-			database.saveStatistics(user);
-		}
-
-		database.shutdown();
 	}
 }

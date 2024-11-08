@@ -19,8 +19,9 @@ public abstract class AbstractDatabase {
 
 	public abstract void saveStatistics(@NotNull User user);
 
+	public abstract void saveAllStatistics();
+
 	public abstract void loadStatistics(@NotNull User user);
 
-	public void shutdown() {
-	}
+	public abstract void shutdown();
 }

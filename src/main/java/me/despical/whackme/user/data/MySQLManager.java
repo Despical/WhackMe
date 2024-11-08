@@ -4,6 +4,7 @@ import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.database.MysqlDatabase;
 import me.despical.whackme.api.statistics.StatisticType;
 import me.despical.whackme.user.User;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.Connection;
@@ -51,27 +52,22 @@ public class MySQLManager extends AbstractDatabase {
 	}
 
 	@Override
-	public void saveStatistics(@NotNull User user) {
-		final StringBuilder builder = new StringBuilder(" SET ");
-
-		for (StatisticType stat : StatisticType.values()) {
-			if (!stat.isPersistent()) continue;
-
-			String name = stat.getName();
-			int value = user.getStat(stat);
-
-			if (builder.toString().equalsIgnoreCase(" SET ")) {
-				builder.append(name).append("=").append(value);
-				continue;
-			}
-
-			builder.append(", ").append(name).append("=").append(value);
-		}
-
-		String update = builder.toString();
+	public void saveStatistics(User user) {
+		String update = this.getUpdateStatement(user);
 
 		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> database.executeUpdate(String.format("UPDATE %s%s WHERE UUID='%s';", tableName, update, user.getUniqueId().toString())));
 	}
+
+	@Override
+	public void saveAllStatistics() {
+		for (Player player : plugin.getServer().getOnlinePlayers()) {
+			User user = plugin.getUserManager().getUser(player);
+			String update = this.getUpdateStatement(user);
+
+			database.executeUpdate(String.format("UPDATE %s%s WHERE UUID='%s';", tableName, update, user.getUniqueId().toString()));
+		}
+	}
+
 
 	@Override
 	public void loadStatistics(@NotNull User user) {
@@ -105,7 +101,8 @@ public class MySQLManager extends AbstractDatabase {
 
 	@Override
 	public void shutdown() {
-		database.shutdownConnPool();
+		this.saveAllStatistics();
+		this.database.shutdownConnPool();
 	}
 
 	@NotNull
@@ -116,5 +113,24 @@ public class MySQLManager extends AbstractDatabase {
 	@NotNull
 	public String getTableName() {
 		return tableName;
+	}
+
+	private String getUpdateStatement(User user) {
+		StringBuilder builder = new StringBuilder(" SET ");
+
+		for (StatisticType stat : StatisticType.values()) {
+			if (!stat.isPersistent()) continue;
+
+			String name = stat.getName();
+			int value = user.getStat(stat);
+
+			if (builder.toString().equalsIgnoreCase(" SET ")) {
+				builder.append(name).append("=").append(value);
+			}
+
+			builder.append(", ").append(name).append("=").append(value);
+		}
+
+		return builder.toString();
 	}
 }
