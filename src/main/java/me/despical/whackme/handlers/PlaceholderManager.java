@@ -1,11 +1,16 @@
 package me.despical.whackme.handlers;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import me.despical.commons.number.NumberUtils;
 import me.despical.whackme.WhackMe;
+import me.despical.whackme.api.statistics.StatisticType;
 import me.despical.whackme.arena.Arena;
 import me.despical.whackme.user.User;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Map;
+import java.util.UUID;
 
 import static me.despical.whackme.api.statistics.StatisticType.*;
 
@@ -51,7 +56,37 @@ public class PlaceholderManager extends PlaceholderExpansion {
 	public String onPlaceholderRequest(Player player, @NotNull String id) {
 		if (player == null) return null;
 
-		final User user = plugin.getUserManager().getUser(player);
+		if (id.startsWith("top:")) {
+			String[] split = id.split(":");
+
+			if (split.length != 4) {
+				return null;
+			}
+
+			String statName = split[1];
+			StatisticType statisticType = StatisticType.match(statName);
+
+			if (statisticType == null) {
+				return "No statistic like that: " + statName;
+			}
+
+			int position = NumberUtils.getInt(split[2], 1);
+			Map.Entry<UUID, Integer> entry = plugin.getLeaderboardManager().getEntry(statisticType, position);
+
+			boolean isName = "name".equals(split[3]);
+
+			if (entry == null) {
+				return plugin.getChatManager().message("Placeholders.Empty-" + (isName ? "Position" : "Value"));
+			}
+
+			if (isName) {
+				return plugin.getServer().getOfflinePlayer(entry.getKey()).getName();
+			}
+
+			return Integer.toString(entry.getValue());
+		}
+
+		User user = plugin.getUserManager().getUser(player);
 
 		switch (id.toLowerCase()) {
 			case "all_arenas":

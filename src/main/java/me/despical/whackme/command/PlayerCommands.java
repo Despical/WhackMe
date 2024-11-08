@@ -30,11 +30,11 @@ public class PlayerCommands extends AbstractCommandHandler {
 	@Command(
 		name = "wm",
 		usage = "/wm",
-		desc = "Main command of the Whack Me plugin."
+		desc = "Main command of the plugin."
 	)
 	public void mainCommand(CommandArguments arguments) {
 		if (arguments.isArgumentsEmpty()) {
-			arguments.sendMessage("&3This server is running &bWhack Me " + plugin.getDescription().getVersion() + " &3by &bDespical&3!");
+			arguments.sendMessage("&3This server is running &bWhack Me {0} &3by &bDespical&3.", plugin.getDescription().getVersion());
 
 			if (arguments.hasPermission("wm.admin")) {
 				arguments.sendMessage("&3Commands: &b/" + arguments.getLabel() + " help");
@@ -112,7 +112,11 @@ public class PlayerCommands extends AbstractCommandHandler {
 			return;
 		}
 
-		final List<Arena> arenas = plugin.getArenaRegistry().getArenas().stream().filter(arena -> arena.getPlayer() == null && arena.isReady()).collect(Collectors.toList());
+		List<Arena> arenas = plugin.getArenaRegistry().getArenas()
+			.stream()
+			.filter(arena -> arena.getPlayer() == null && arena.isReady())
+			.sorted()
+			.collect(Collectors.toList());
 
 		if (!arenas.isEmpty()) {
 			Arena arena = arenas.get(0);

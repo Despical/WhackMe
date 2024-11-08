@@ -86,7 +86,7 @@ public class Arena extends BukkitRunnable {
 	}
 
 	public String getPlayerName() {
-		return player == null ? plugin.getChatManager().message("commands.unknown_player") : player.getName();
+		return player == null ? plugin.getChatManager().message("Placeholders.Unknown-Player") : player.getName();
 	}
 
 	public void addPlayer(Player player) {

@@ -16,10 +16,7 @@ Commands:
     Initialized: "&aPlugin reload initialized by {0}."
     Finished: "&aPlugin reload finished successfully."
     Error-Occurred: "&cException occurred during the plugin reload!"
-
   Player-Not-Found: "&cWe couldn't find any player with that name matching!"
-  # %wm_{arena}_player_name% -> This placeholder returns the text below if arena player is null.
-  Unknown-Player: "Unknown"
   Statistics:
     Type-Name: "&cPlease type statistic name to view!"
     Invalid-Name: "&cName of statistic is invalid! Type: record_score or tours_played"
@@ -83,3 +80,9 @@ Signs:
     - "%state%"
     - "%arena%"
     - "&5[%player%]"
+
+Placeholders:
+  Empty-Position: "No Player"
+  Empty-Value: "NaN"
+  # %wm_{arena}_player_name% -> This placeholder returns the text below if arena player is null.
+  Unknown-Player: "Unknown"

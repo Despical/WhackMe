@@ -8,9 +8,7 @@ import me.despical.whackme.user.data.MySQLManager;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @author Despical
@@ -51,6 +49,10 @@ public class UserManager {
 		}
 
 		return this.addUser(player);
+	}
+
+	public Set<User> getUsers() {
+		return new HashSet<>(users.values());
 	}
 
 	@NotNull

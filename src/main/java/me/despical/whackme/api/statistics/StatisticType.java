@@ -2,6 +2,8 @@ package me.despical.whackme.api.statistics;
 
 import me.despical.whackme.user.User;
 
+import java.util.stream.Stream;
+
 /**
  * @author Despical
  * <p>
@@ -40,5 +42,9 @@ public enum StatisticType {
 
 	public String from(User user) {
 		return Integer.toString(user.getStat(this));
+	}
+
+	public static StatisticType match(String name) {
+		return Stream.of(values()).filter(statisticType -> statisticType.name.equals(name)).findFirst().orElse(null);
 	}
 }

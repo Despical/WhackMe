@@ -81,6 +81,9 @@ Chat-Format-Enabled: true
 # The gameplay time for each arena. Default is 30 seconds.
 Gameplay-Time: 30
 
+# The statistics saving rate, in seconds. (0 = save the stats on server shutdown/reload)
+Statistic-Saving-Period: 300
+
 # Set NONE to disable.
 Sounds:
   # The sound plays when player clicks the correct point block.

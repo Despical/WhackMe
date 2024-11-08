@@ -241,6 +241,10 @@ public class WhackMe extends JavaPlugin {
 		return reloadManager;
 	}
 
+	public LeaderboardManager getLeaderboardManager() {
+		return leaderboardManager;
+	}
+
 	@NotNull
 	public static WhackMe getInstance() {
 		return instance;
@@ -249,8 +253,7 @@ public class WhackMe extends JavaPlugin {
 	private void saveAllUserStatistics() {
 		AbstractDatabase database = userManager.getUserDatabase();
 
-		for (Player player : getServer().getOnlinePlayers()) {
-			User user = userManager.getUser(player);
+		for (User user : userManager.getUsers()) {
 
 			if (database instanceof MySQLManager) {
 				MySQLManager mysqlManager = (MySQLManager) database;
