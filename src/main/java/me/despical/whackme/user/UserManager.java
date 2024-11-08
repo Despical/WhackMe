@@ -2,13 +2,15 @@ package me.despical.whackme.user;
 
 import me.despical.whackme.ConfigPreferences;
 import me.despical.whackme.WhackMe;
-import me.despical.whackme.user.data.FileStatistics;
 import me.despical.whackme.user.data.AbstractDatabase;
+import me.despical.whackme.user.data.FileStatistics;
 import me.despical.whackme.user.data.MySQLManager;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author Despical

@@ -4,9 +4,9 @@ import me.despical.inventoryframework.Gui;
 import me.despical.inventoryframework.pane.PaginatedPane;
 import me.despical.whackme.WhackMe;
 import me.despical.whackme.arena.Arena;
+import me.despical.whackme.handlers.setup.components.MainComponents;
 import me.despical.whackme.handlers.setup.components.PointBlockAmountComponents;
 import me.despical.whackme.handlers.setup.components.SetupComponent;
-import me.despical.whackme.handlers.setup.components.MainComponents;
 import org.bukkit.entity.Player;
 
 /**

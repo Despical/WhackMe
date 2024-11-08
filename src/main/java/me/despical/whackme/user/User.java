@@ -2,8 +2,8 @@ package me.despical.whackme.user;
 
 import me.despical.commons.reflection.XReflection;
 import me.despical.whackme.WhackMe;
-import me.despical.whackme.api.StatsStorage;
 import me.despical.whackme.api.event.player.WMPlayerStatisticChangeEvent;
+import me.despical.whackme.api.statistics.StatisticType;
 import me.despical.whackme.arena.Arena;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
@@ -24,7 +24,7 @@ public class User {
 	private final UUID uuid;
 	private final String playerName;
 	private final Map<String, Double> cooldowns;
-	private final Map<StatsStorage.StatisticType, Integer> stats;
+	private final Map<StatisticType, Integer> stats;
 
 	private boolean editingMode;
 	private double attackCooldown;
@@ -33,7 +33,7 @@ public class User {
 		this.uuid = player.getUniqueId();
 		this.playerName = player.getName();
 		this.cooldowns = new HashMap<>();
-		this.stats = new EnumMap<>(StatsStorage.StatisticType.class);
+		this.stats = new EnumMap<>(StatisticType.class);
 	}
 
 	public Arena getArena() {
@@ -64,11 +64,11 @@ public class User {
 		getPlayer().sendMessage(plugin.getChatManager().coloredRawMessage(message));
 	}
 
-	public int getStat(StatsStorage.StatisticType statisticType) {
+	public int getStat(StatisticType statisticType) {
 		return stats.computeIfAbsent(statisticType, stat -> 0);
 	}
 
-	public void setStat(StatsStorage.StatisticType stat, int value) {
+	public void setStat(StatisticType stat, int value) {
 		stats.put(stat, value);
 
 		// When disable initialized you can no longer create a scheduler
@@ -76,12 +76,12 @@ public class User {
 			plugin.getServer().getScheduler().runTask(plugin, () -> plugin.getServer().getPluginManager().callEvent(new WMPlayerStatisticChangeEvent(getArena(), getPlayer(), stat, value)));
 	}
 
-	public void addStat(StatsStorage.StatisticType stat, int value) {
+	public void addStat(StatisticType stat, int value) {
 		setStat(stat, getStat(stat) + value);
 	}
 
 	public void resetStats() {
-		Stream.of(StatsStorage.StatisticType.values()).filter(stat -> !stat.isPersistent()).forEach(stat -> this.setStat(stat, 0));
+		Stream.of(StatisticType.values()).filter(stat -> !stat.isPersistent()).forEach(stat -> this.setStat(stat, 0));
 	}
 
 	public void updateAttackCooldown() {

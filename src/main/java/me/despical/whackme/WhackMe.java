@@ -4,7 +4,7 @@ import me.despical.commandframework.CommandFramework;
 import me.despical.commons.serializer.InventorySerializer;
 import me.despical.commons.util.Collections;
 import me.despical.commons.util.UpdateChecker;
-import me.despical.whackme.api.StatsStorage;
+import me.despical.whackme.api.statistics.StatisticType;
 import me.despical.whackme.arena.Arena;
 import me.despical.whackme.arena.ArenaRegistry;
 import me.despical.whackme.arena.managers.ArenaManager;
@@ -70,19 +70,19 @@ public class WhackMe extends JavaPlugin {
 			if (player == null) continue;
 
 			User user = userManager.getUser(player);
-			user.addStat(StatsStorage.StatisticType.TOURS_PLAYED, 1);
+			user.addStat(StatisticType.TOURS_PLAYED, 1);
 			user.resetAttackCooldown();
 
-			int score = user.getStat(StatsStorage.StatisticType.LOCAL_SCORE);
+			int score = user.getStat(StatisticType.LOCAL_SCORE);
 
-			if (score > user.getStat(StatsStorage.StatisticType.RECORD_SCORE)) {
-				user.setStat(StatsStorage.StatisticType.RECORD_SCORE, score);
+			if (score > user.getStat(StatisticType.RECORD_SCORE)) {
+				user.setStat(StatisticType.RECORD_SCORE, score);
 
 				rewardsFactory.performReward(player, Reward.RewardType.NEW_RECORD);
 
-				player.sendMessage(chatManager.message("in_game.finish_record_message").replace("%points%", Integer.toString(user.getStat(StatsStorage.StatisticType.LOCAL_SCORE))));
+				player.sendMessage(chatManager.message("in_game.finish_record_message").replace("%points%", Integer.toString(user.getStat(StatisticType.LOCAL_SCORE))));
 			} else {
-				player.sendMessage(chatManager.message("in_game.finish_message").replace("%points%", Integer.toString(user.getStat(StatsStorage.StatisticType.LOCAL_SCORE))));
+				player.sendMessage(chatManager.message("in_game.finish_message").replace("%points%", Integer.toString(user.getStat(StatisticType.LOCAL_SCORE))));
 			}
 
 			if (getOption(ConfigPreferences.Option.CLEAR_INVENTORY)) player.getInventory().clear();
@@ -219,7 +219,7 @@ public class WhackMe extends JavaPlugin {
 				MySQLManager mysqlManager = (MySQLManager) database;
 				StringBuilder builder = new StringBuilder(" SET ");
 
-				for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+				for (StatisticType stat : StatisticType.values()) {
 					if (!stat.isPersistent()) continue;
 
 					int value = user.getStat(stat);

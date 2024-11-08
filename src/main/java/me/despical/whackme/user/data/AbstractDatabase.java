@@ -1,7 +1,7 @@
 package me.despical.whackme.user.data;
 
 import me.despical.whackme.WhackMe;
-import me.despical.whackme.api.StatsStorage;
+import me.despical.whackme.api.statistics.StatisticType;
 import me.despical.whackme.user.User;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,7 +15,7 @@ public abstract class AbstractDatabase {
 	@NotNull
 	protected static final WhackMe plugin = WhackMe.getInstance();
 
-	public abstract void saveStatistic(@NotNull User user, StatsStorage.StatisticType statisticType);
+	public abstract void saveStatistic(@NotNull User user, StatisticType statisticType);
 
 	public abstract void saveStatistics(@NotNull User user);
 

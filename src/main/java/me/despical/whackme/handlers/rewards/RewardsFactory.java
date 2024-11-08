@@ -3,7 +3,7 @@ package me.despical.whackme.handlers.rewards;
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.whackme.WhackMe;
 import me.despical.whackme.api.Reloadable;
-import me.despical.whackme.api.StatsStorage;
+import me.despical.whackme.api.statistics.StatisticType;
 import me.despical.whackme.arena.Arena;
 import me.despical.whackme.user.User;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -37,7 +37,7 @@ public class RewardsFactory implements Reloadable {
 		if (rewardList.isEmpty()) return;
 
 		User user = plugin.getUserManager().getUser(player);
-		int points = user.getStat(StatsStorage.StatisticType.LOCAL_SCORE);
+		int points = user.getStat(StatisticType.LOCAL_SCORE);
 
 		for (Reward mainRewards : rewardList) {
 			for (Reward.SubReward reward : mainRewards.getRewards()){
@@ -63,9 +63,9 @@ public class RewardsFactory implements Reloadable {
 
 		formatted = formatted.replace("%arena%", arena.getId());
 		formatted = formatted.replace("%player%", user.getPlayer().getName());
-		formatted = formatted.replace("%points%", StatsStorage.StatisticType.LOCAL_SCORE.from(user));
-		formatted = formatted.replace("%point_streak%", StatsStorage.StatisticType.LOCAL_STREAK.from(user));
-		formatted = formatted.replace("%longest_point_streak%", StatsStorage.StatisticType.LOCAL_LONGEST_STREAK.from(user));
+		formatted = formatted.replace("%points%", StatisticType.LOCAL_SCORE.from(user));
+		formatted = formatted.replace("%point_streak%", StatisticType.LOCAL_STREAK.from(user));
+		formatted = formatted.replace("%longest_point_streak%", StatisticType.LOCAL_LONGEST_STREAK.from(user));
 		return formatted;
 	}
 

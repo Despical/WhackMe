@@ -3,7 +3,8 @@ package me.despical.whackme.arena.blocks;
 import me.despical.commons.compat.ActionBar;
 import me.despical.commons.string.StringFormatUtils;
 import me.despical.whackme.WhackMe;
-import me.despical.whackme.api.StatsStorage;
+import me.despical.whackme.api.statistics.StatisticType;
+import me.despical.whackme.api.statistics.StatsStorage;
 import me.despical.whackme.arena.Arena;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -53,7 +54,7 @@ public class PointHandler extends BukkitRunnable {
 		if (message.isEmpty()) return;
 
 		message = message.replace("%player%", player.getName());
-		message = message.replace("%score%", Integer.toString(StatsStorage.getUserStats(player, StatsStorage.StatisticType.LOCAL_SCORE)));
+		message = message.replace("%score%", Integer.toString(StatsStorage.getUserStats(player, StatisticType.LOCAL_SCORE)));
 		message = message.replace("%timer%", StringFormatUtils.formatIntoMMSS(arena.getTimer()));
 
 		ActionBar.sendActionBar(player, message);

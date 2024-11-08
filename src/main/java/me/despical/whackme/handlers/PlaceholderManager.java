@@ -7,7 +7,7 @@ import me.despical.whackme.user.User;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import static me.despical.whackme.api.StatsStorage.StatisticType.*;
+import static me.despical.whackme.api.statistics.StatisticType.*;
 
 /**
  * @author Despical

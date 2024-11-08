@@ -1,0 +1,44 @@
+package me.despical.whackme.api.statistics;
+
+import me.despical.whackme.user.User;
+
+/**
+ * @author Despical
+ * <p>
+ * Created at 8.11.2024
+ */
+public enum StatisticType {
+
+	TOURS_PLAYED("toursplayed"),
+	RECORD_SCORE("recordscore"),
+	PLUS_BLOCKS("whackedpluspointblocks"),
+	MINUS_BLOCKS("whackedminuspointblocks"),
+	LONGEST_STREAK("longeststreak"),
+	LOCAL_STREAK("local_streak", false),
+	LOCAL_LONGEST_STREAK("local_longest_streak", false),
+	LOCAL_SCORE("local_score", false);
+
+	final String name;
+	final boolean persistent;
+
+	StatisticType(String name) {
+		this(name, true);
+	}
+
+	StatisticType(String name, boolean persistent) {
+		this.name = name;
+		this.persistent = persistent;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public boolean isPersistent() {
+		return persistent;
+	}
+
+	public String from(User user) {
+		return Integer.toString(user.getStat(this));
+	}
+}

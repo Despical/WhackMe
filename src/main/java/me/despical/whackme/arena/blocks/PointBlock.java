@@ -20,7 +20,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import static me.despical.whackme.api.StatsStorage.StatisticType.*;
+import static me.despical.whackme.api.statistics.StatisticType.*;
 
 /**
  * @author Despical

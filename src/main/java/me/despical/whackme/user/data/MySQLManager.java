@@ -2,7 +2,7 @@ package me.despical.whackme.user.data;
 
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.database.MysqlDatabase;
-import me.despical.whackme.api.StatsStorage;
+import me.despical.whackme.api.statistics.StatisticType;
 import me.despical.whackme.user.User;
 import org.jetbrains.annotations.NotNull;
 
@@ -46,7 +46,7 @@ public class MySQLManager extends AbstractDatabase {
 	}
 
 	@Override
-	public void saveStatistic(@NotNull User user, StatsStorage.StatisticType statisticType) {
+	public void saveStatistic(@NotNull User user, StatisticType statisticType) {
 		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> database.executeUpdate(String.format("UPDATE %s SET %s=%d WHERE UUID='%s';", tableName, statisticType.getName(), user.getStat(statisticType), user.getUniqueId().toString())));
 	}
 
@@ -54,7 +54,7 @@ public class MySQLManager extends AbstractDatabase {
 	public void saveStatistics(@NotNull User user) {
 		final StringBuilder builder = new StringBuilder(" SET ");
 
-		for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+		for (StatisticType stat : StatisticType.values()) {
 			if (!stat.isPersistent()) continue;
 
 			String name = stat.getName();
@@ -83,7 +83,7 @@ public class MySQLManager extends AbstractDatabase {
 				ResultSet result = statement.executeQuery(String.format("SELECT * from %s WHERE UUID='%s';", tableName, uuid));
 
 				if (result.next()) {
-					for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+					for (StatisticType stat : StatisticType.values()) {
 						if (!stat.isPersistent()) continue;
 
 						user.setStat(stat, result.getInt(stat.getName()));
@@ -91,7 +91,7 @@ public class MySQLManager extends AbstractDatabase {
 				} else {
 					statement.executeUpdate(String.format("INSERT INTO %s (UUID,name) VALUES ('%s','%s');", tableName, uuid, user.getName()));
 
-					for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+					for (StatisticType stat : StatisticType.values()) {
 						if (!stat.isPersistent()) continue;
 
 						user.setStat(stat, 0);

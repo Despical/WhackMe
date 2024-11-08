@@ -1,7 +1,7 @@
 package me.despical.whackme.api.event.player;
 
-import me.despical.whackme.api.StatsStorage;
 import me.despical.whackme.api.event.WMEvent;
+import me.despical.whackme.api.statistics.StatisticType;
 import me.despical.whackme.arena.Arena;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
@@ -17,10 +17,10 @@ public class WMPlayerStatisticChangeEvent extends WMEvent {
 	private static final HandlerList handlers = new HandlerList();
 
 	private final Player player;
-	private final StatsStorage.StatisticType statisticType;
+	private final StatisticType statisticType;
 	private final int value;
 
-	public WMPlayerStatisticChangeEvent(Arena arena, Player player, StatsStorage.StatisticType statisticType, int value) {
+	public WMPlayerStatisticChangeEvent(Arena arena, Player player, StatisticType statisticType, int value) {
 		super(arena);
 		this.player = player;
 		this.statisticType = statisticType;
@@ -41,7 +41,7 @@ public class WMPlayerStatisticChangeEvent extends WMEvent {
 		return player;
 	}
 
-	public StatsStorage.StatisticType getStatisticType() {
+	public StatisticType getStatisticType() {
 		return statisticType;
 	}
 

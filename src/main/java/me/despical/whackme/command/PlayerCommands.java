@@ -7,7 +7,8 @@ import me.despical.commandframework.annotations.Param;
 import me.despical.commons.string.StringMatcher;
 import me.despical.commons.string.StringUtils;
 import me.despical.whackme.ConfigPreferences;
-import me.despical.whackme.api.StatsStorage;
+import me.despical.whackme.api.statistics.StatisticType;
+import me.despical.whackme.api.statistics.StatsStorage;
 import me.despical.whackme.arena.Arena;
 import me.despical.whackme.user.User;
 import me.despical.whackme.user.data.MySQLManager;
@@ -22,7 +23,7 @@ import java.sql.Statement;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static me.despical.whackme.api.StatsStorage.StatisticType.*;
+import static me.despical.whackme.api.statistics.StatisticType.*;
 
 public class PlayerCommands extends AbstractCommandHandler {
 
@@ -175,13 +176,13 @@ public class PlayerCommands extends AbstractCommandHandler {
 		}
 
 		try {
-			printLeaderboard(arguments.getSender(), StatsStorage.StatisticType.valueOf(arguments.getArgument(0).toUpperCase(java.util.Locale.ENGLISH)));
+			printLeaderboard(arguments.getSender(), StatisticType.valueOf(arguments.getArgument(0).toUpperCase(java.util.Locale.ENGLISH)));
 		} catch (IllegalArgumentException exception) {
 			arguments.sendMessage(chatManager.prefixedMessage("commands.statistics.invalid_name"));
 		}
 	}
 
-	private void printLeaderboard(CommandSender sender, StatsStorage.StatisticType statisticType) {
+	private void printLeaderboard(CommandSender sender, StatisticType statisticType) {
 		sender.sendMessage(chatManager.message("commands.statistics.header"));
 
 		final Map<UUID, Integer> stats = StatsStorage.getStats(statisticType);

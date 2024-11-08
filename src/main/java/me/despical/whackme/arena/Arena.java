@@ -3,8 +3,9 @@ package me.despical.whackme.arena;
 import me.despical.commons.serializer.InventorySerializer;
 import me.despical.whackme.ConfigPreferences;
 import me.despical.whackme.WhackMe;
-import me.despical.whackme.api.StatsStorage;
-import me.despical.whackme.api.event.arena.*;
+import me.despical.whackme.api.event.arena.WMJoinEvent;
+import me.despical.whackme.api.event.arena.WMLeaveEvent;
+import me.despical.whackme.api.statistics.StatisticType;
 import me.despical.whackme.arena.blocks.PointBlock;
 import me.despical.whackme.arena.blocks.PointHandler;
 import me.despical.whackme.arena.managers.BossBarManager;
@@ -19,7 +20,10 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
@@ -132,25 +136,25 @@ public class Arena extends BukkitRunnable {
 
 		User user = plugin.getUserManager().getUser(player);
 		ChatManager chatManager = plugin.getChatManager();
-		int score = user.getStat(StatsStorage.StatisticType.LOCAL_SCORE);
+		int score = user.getStat(StatisticType.LOCAL_SCORE);
 
-		if (score > user.getStat(StatsStorage.StatisticType.RECORD_SCORE)) {
-			user.setStat(StatsStorage.StatisticType.RECORD_SCORE, score);
+		if (score > user.getStat(StatisticType.RECORD_SCORE)) {
+			user.setStat(StatisticType.RECORD_SCORE, score);
 
 			plugin.getRewardsFactory().performReward(player, Reward.RewardType.NEW_RECORD);
 
-			if (teleportToEnd) player.sendMessage(chatManager.message("in_game.finish_record_message").replace("%points%", Integer.toString(user.getStat(StatsStorage.StatisticType.LOCAL_SCORE))));
+			if (teleportToEnd) player.sendMessage(chatManager.message("in_game.finish_record_message").replace("%points%", Integer.toString(user.getStat(StatisticType.LOCAL_SCORE))));
 		} else {
-			if (teleportToEnd) player.sendMessage(chatManager.message("in_game.finish_message").replace("%points%", Integer.toString(user.getStat(StatsStorage.StatisticType.LOCAL_SCORE))));
+			if (teleportToEnd) player.sendMessage(chatManager.message("in_game.finish_message").replace("%points%", Integer.toString(user.getStat(StatisticType.LOCAL_SCORE))));
 		}
 
-		int localStreak = user.getStat(StatsStorage.StatisticType.LOCAL_LONGEST_STREAK);
+		int localStreak = user.getStat(StatisticType.LOCAL_LONGEST_STREAK);
 
-		if (localStreak > user.getStat(StatsStorage.StatisticType.LONGEST_STREAK)) {
-			user.setStat(StatsStorage.StatisticType.LONGEST_STREAK, localStreak);
+		if (localStreak > user.getStat(StatisticType.LONGEST_STREAK)) {
+			user.setStat(StatisticType.LONGEST_STREAK, localStreak);
 		}
 
-		user.addStat(StatsStorage.StatisticType.TOURS_PLAYED, 1);
+		user.addStat(StatisticType.TOURS_PLAYED, 1);
 		user.resetAttackCooldown();
 		user.resetStats();
 		user.setCooldown("play_again", plugin.getConfig().getInt("Game-Cooldown"));
