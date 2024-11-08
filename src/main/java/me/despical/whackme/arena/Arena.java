@@ -92,9 +92,9 @@ public class Arena extends BukkitRunnable {
 	public void addPlayer(Player player) {
 		if (player == null) return;
 
-		final WMJoinEvent event = new WMJoinEvent(player, this);
+		WMJoinEvent event = new WMJoinEvent(player, this);
 
-		plugin.getServer().getPluginManager().callEvent(event);
+		plugin.callEvent(event);
 
 		if (event.isCancelled()) return;
 
@@ -132,7 +132,7 @@ public class Arena extends BukkitRunnable {
 	}
 
 	public void removePlayer(boolean teleportToEnd) {
-		plugin.getServer().getPluginManager().callEvent(new WMLeaveEvent(player, this));
+		plugin.callEvent(new WMLeaveEvent(player, this));
 
 		User user = plugin.getUserManager().getUser(player);
 		ChatManager chatManager = plugin.getChatManager();

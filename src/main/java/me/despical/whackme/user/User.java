@@ -71,9 +71,7 @@ public class User {
 	public void setStat(StatisticType stat, int value) {
 		stats.put(stat, value);
 
-		// When disable initialized you can no longer create a scheduler
-		if (plugin.isEnabled())
-			plugin.getServer().getScheduler().runTask(plugin, () -> plugin.getServer().getPluginManager().callEvent(new WMPlayerStatisticChangeEvent(getArena(), getPlayer(), stat, value)));
+		plugin.callEvent(() -> new WMPlayerStatisticChangeEvent(getArena(), getPlayer(), stat, value));
 	}
 
 	public void addStat(StatisticType stat, int value) {
