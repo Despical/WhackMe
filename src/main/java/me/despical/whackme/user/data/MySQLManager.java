@@ -4,7 +4,6 @@ import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.database.MysqlDatabase;
 import me.despical.whackme.api.statistics.StatisticType;
 import me.despical.whackme.user.User;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.Connection;
@@ -52,7 +51,7 @@ public class MySQLManager extends AbstractDatabase {
 	}
 
 	@Override
-	public void saveStatistics(User user) {
+	public void saveStatistics(@NotNull User user) {
 		String update = this.getUpdateStatement(user);
 
 		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> database.executeUpdate(String.format("UPDATE %s%s WHERE UUID='%s';", tableName, update, user.getUniqueId().toString())));
@@ -60,8 +59,7 @@ public class MySQLManager extends AbstractDatabase {
 
 	@Override
 	public void saveAllStatistics() {
-		for (Player player : plugin.getServer().getOnlinePlayers()) {
-			User user = plugin.getUserManager().getUser(player);
+		for (User user : plugin.getUserManager().getUsers()) {
 			String update = this.getUpdateStatement(user);
 
 			database.executeUpdate(String.format("UPDATE %s%s WHERE UUID='%s';", tableName, update, user.getUniqueId().toString()));
