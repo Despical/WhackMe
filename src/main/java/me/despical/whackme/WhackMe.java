@@ -32,7 +32,6 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.util.Optional;
 import java.util.function.Supplier;
-import java.util.logging.Logger;
 
 /**
  * @author Despical
@@ -60,7 +59,9 @@ public class WhackMe extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		initializeClasses();
-		checkUpdate();
+
+		UpdateChecker.setEnabled(this.getOption(ConfigPreferences.Option.UPDATE_NOTIFIER_ENABLED));
+		UpdateChecker.init(this, 104912).onNewUpdate(result -> getLogger().info("Found a new version available: v" + result.getNewestVersion()));
 
 		getLogger().info("Initialization finished.");
 		getLogger().info("Join our Discord server: https://discord.gg/uXVU8jmtpU");
@@ -144,18 +145,6 @@ public class WhackMe extends JavaPlugin {
 		saveDefaultConfig();
 
 		Collections.streamOf("arenas", "stats", "mysql", "messages", "rewards").filter(name -> !new File(getDataFolder(), name + ".yml").exists()).forEach(name -> saveResource(name + ".yml", false));
-	}
-
-	private void checkUpdate() {
-		if (!getOption(ConfigPreferences.Option.UPDATE_NOTIFIER_ENABLED)) return;
-
-		UpdateChecker.init(this, 104912).requestUpdateCheck().whenComplete((result, exception) -> {
-			if (result.requiresUpdate()) {
-				final Logger logger = getLogger();
-
-				logger.info("Found a new version available: v" + result.getNewestVersion());
-			}
-		});
 	}
 
 	private void handleAutoDataSaving() {
