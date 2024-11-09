@@ -241,7 +241,7 @@ public class AdminCommands extends AbstractCommandHandler {
 		name = "wm.time",
 		usage = "/wm time <arena> <add | remove | set> <value>",
 		desc = "Manipulates the timer of target arena.",
-		senderType = Command.SenderType.CONSOLE
+		onlyOp = true
 	)
 	public void timeCommand(Arena arena, CommandArguments arguments) {
 		String usage = chatManager.prefixedMessage("commands.time_command.usage");
