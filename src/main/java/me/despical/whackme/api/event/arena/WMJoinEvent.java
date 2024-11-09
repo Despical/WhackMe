@@ -9,35 +9,35 @@ import org.jetbrains.annotations.NotNull;
 
 public class WMJoinEvent extends WMEvent implements Cancellable {
 
-	private static final HandlerList HANDLERS = new HandlerList();
+    private static final HandlerList HANDLERS = new HandlerList();
 
-	private final Player player;
+    private final Player player;
 
-	private boolean isCancelled;
+    private boolean isCancelled;
 
-	public WMJoinEvent(Player player, Arena arena) {
-		super(arena);
-		this.player = player;
-		this.isCancelled = false;
-	}
+    public WMJoinEvent(Player player, Arena arena) {
+        super(arena);
+        this.player = player;
+        this.isCancelled = false;
+    }
 
-	public boolean isCancelled() {
-		return this.isCancelled;
-	}
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
+    }
 
-	public void setCancelled(boolean isCancelled) {
-		this.isCancelled = isCancelled;
-	}
+    public boolean isCancelled() {
+        return this.isCancelled;
+    }
 
-	public Player getPlayer() {
-		return player;
-	}
+    public void setCancelled(boolean isCancelled) {
+        this.isCancelled = isCancelled;
+    }
 
-	public static HandlerList getHandlerList() {
-		return HANDLERS;
-	}
+    public Player getPlayer() {
+        return player;
+    }
 
-	public @NotNull HandlerList getHandlers() {
-		return HANDLERS;
-	}
+    public @NotNull HandlerList getHandlers() {
+        return HANDLERS;
+    }
 }

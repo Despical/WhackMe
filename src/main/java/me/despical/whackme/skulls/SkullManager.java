@@ -19,71 +19,71 @@ import java.util.Map;
  */
 public class SkullManager {
 
-	private final WhackMe plugin;
-	private final Map<String, PointBlockData> blockData;
+    private final WhackMe plugin;
+    private final Map<String, PointBlockData> blockData;
 
-	public SkullManager(WhackMe plugin) {
-		this.plugin = plugin;
-		this.blockData = new HashMap<>();
-		this.registerDefaultBlocks();
-		this.registerCustomBlocks();
-	}
+    public SkullManager(WhackMe plugin) {
+        this.plugin = plugin;
+        this.blockData = new HashMap<>();
+        this.registerDefaultBlocks();
+        this.registerCustomBlocks();
+    }
 
-	public ItemStack getPointBlock(Arena arena, PointBlockType type) {
-		PointBlockData data = this.blockData.get(arena.getId());
+    public ItemStack getPointBlock(Arena arena, PointBlockType type) {
+        PointBlockData data = this.blockData.get(arena.getId());
 
-		if (data == null) {
-			return this.blockData.get(null).getPointBlock(type);
-		}
+        if (data == null) {
+            return this.blockData.get(null).getPointBlock(type);
+        }
 
-		return data.getPointBlock(type);
-	}
+        return data.getPointBlock(type);
+    }
 
-	private void registerDefaultBlocks() {
-		PointBlockData data = new PointBlockData();
+    private void registerDefaultBlocks() {
+        PointBlockData data = new PointBlockData();
 
-		for (PointBlockType type : PointBlockType.values()) {
-			String blockName = plugin.getConfig().getString("Point-Blocks.Default." + type.getPath(), "");
+        for (PointBlockType type : PointBlockType.values()) {
+            String blockName = plugin.getConfig().getString("Point-Blocks.Default." + type.getPath(), "");
 
-			ItemStack pointBlock = blockName.startsWith("skull:") ? ItemUtils.getSkull(blockName.substring(6)) :
-				XMaterial.matchXMaterial(blockName).orElseThrow(NullPointerException::new).parseItem();
+            ItemStack pointBlock = blockName.startsWith("skull:") ? ItemUtils.getSkull(blockName.substring(6)) :
+                XMaterial.matchXMaterial(blockName).orElseThrow(NullPointerException::new).parseItem();
 
-			pointBlock = new ItemBuilder(pointBlock).lore(type.getTag()).build();
+            pointBlock = new ItemBuilder(pointBlock).lore(type.getTag()).build();
 
-			data.addPointBlock(type, pointBlock);
-		}
+            data.addPointBlock(type, pointBlock);
+        }
 
-		this.blockData.put(null, data);
-	}
+        this.blockData.put(null, data);
+    }
 
-	private void registerCustomBlocks() {
-		ConfigurationSection section = plugin.getConfig().getConfigurationSection("Point-Blocks.Custom");
+    private void registerCustomBlocks() {
+        ConfigurationSection section = plugin.getConfig().getConfigurationSection("Point-Blocks.Custom");
 
-		if (section == null) {
-			return;
-		}
+        if (section == null) {
+            return;
+        }
 
-		for (String id : section.getKeys(false)) {
-			if (id.equals("default")) continue;
+        for (String id : section.getKeys(false)) {
+            if (id.equals("default")) continue;
 
-			if (!plugin.getArenaRegistry().isArena(id)) {
-				plugin.getLogger().warning("Custom arena based skull loading failed! There is no arena called " + id + "!");
-				continue;
-			}
+            if (!plugin.getArenaRegistry().isArena(id)) {
+                plugin.getLogger().warning("Custom arena based skull loading failed! There is no arena called " + id + "!");
+                continue;
+            }
 
-			PointBlockData data = new PointBlockData();
+            PointBlockData data = new PointBlockData();
 
-			for (PointBlockType type : PointBlockType.values()) {
-				String blockName = plugin.getConfig().getString(String.format("Point-Blocks.Custom.%s.%s", id, type.getPath()));
-				ItemStack pointBlock = blockName.startsWith("skull:") ? ItemUtils.getSkull(blockName.substring(6)) :
-					XMaterial.matchXMaterial(blockName).orElseThrow(NullPointerException::new).parseItem();
+            for (PointBlockType type : PointBlockType.values()) {
+                String blockName = plugin.getConfig().getString(String.format("Point-Blocks.Custom.%s.%s", id, type.getPath()));
+                ItemStack pointBlock = blockName.startsWith("skull:") ? ItemUtils.getSkull(blockName.substring(6)) :
+                    XMaterial.matchXMaterial(blockName).orElseThrow(NullPointerException::new).parseItem();
 
-				pointBlock = new ItemBuilder(pointBlock).lore(type.getTag()).build();
+                pointBlock = new ItemBuilder(pointBlock).lore(type.getTag()).build();
 
-				data.addPointBlock(type, pointBlock);
-			}
+                data.addPointBlock(type, pointBlock);
+            }
 
-			this.blockData.put(id, data);
-		}
-	}
+            this.blockData.put(id, data);
+        }
+    }
 }

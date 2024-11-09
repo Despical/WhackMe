@@ -10,19 +10,19 @@ import org.bukkit.block.Sign;
  */
 public class ArenaSign {
 
-	private final Sign sign;
-	private final Arena arena;
+    private final Sign sign;
+    private final Arena arena;
 
-	public ArenaSign(Sign sign, Arena arena) {
-		this.sign = sign;
-		this.arena = arena;
-	}
+    public ArenaSign(Sign sign, Arena arena) {
+        this.sign = sign;
+        this.arena = arena;
+    }
 
-	public Sign getSign() {
-		return (Sign) sign.getBlock().getState();
-	}
+    public Sign getSign() {
+        return (Sign) sign.getBlock().getState();
+    }
 
-	public Arena getArena() {
-		return arena;
-	}
+    public Arena getArena() {
+        return arena;
+    }
 }

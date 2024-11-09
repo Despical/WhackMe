@@ -20,90 +20,89 @@ import java.util.List;
  */
 public class ChatManager implements Reloadable {
 
-	private String prefix;
-	private boolean papiEnabled;
-	private FileConfiguration config;
+    private final WhackMe plugin;
+    private String prefix;
+    private boolean papiEnabled;
+    private FileConfiguration config;
 
-	private final WhackMe plugin;
+    public ChatManager(WhackMe plugin) {
+        this.plugin = plugin;
+        this.reload();
 
-	public ChatManager(WhackMe plugin) {
-		this.plugin = plugin;
-		this.reload();
+        Message.NO_PERMISSION.setMessage((cmd, args) -> {
+            String message = this.message("Commands.No-Permission");
 
-		Message.NO_PERMISSION.setMessage((cmd, args) -> {
-			String message = this.message("Commands.No-Permission");
+            if (!message.isEmpty()) {
+                args.sendMessage(message);
+            }
 
-			if (!message.isEmpty()) {
-				args.sendMessage(message);
-			}
+            return true;
+        });
+    }
 
-			return true;
-		});
-	}
+    public boolean isPapiEnabled() {
+        return papiEnabled;
+    }
 
-	public boolean isPapiEnabled() {
-		return papiEnabled;
-	}
+    public String coloredRawMessage(String message) {
+        return Strings.format(message);
+    }
 
-	public String coloredRawMessage(String message) {
-		return Strings.format(message);
-	}
+    public String prefixedRawMessage(String message) {
+        return prefix + coloredRawMessage(message);
+    }
 
-	public String prefixedRawMessage(String message) {
-		return prefix + coloredRawMessage(message);
-	}
+    public String message(String path) {
+        path = me.despical.commons.string.StringUtils.capitalize(path.replace('_', '-'), '-', '.');
+        return coloredRawMessage(config.getString(path));
+    }
 
-	public String message(String path) {
-		path = me.despical.commons.string.StringUtils.capitalize(path.replace('_', '-'), '-', '.');
-		return coloredRawMessage(config.getString(path));
-	}
+    public String getPrefix() {
+        return prefix;
+    }
 
-	public String getPrefix() {
-		return prefix;
-	}
+    public String prefixedMessage(String path) {
+        return prefix + message(path);
+    }
 
-	public String prefixedMessage(String path) {
-		return prefix + message(path);
-	}
+    public String message(String path, Player player) {
+        String returnString = message(path);
+        returnString = formatPlaceholders(returnString, player);
 
-	public String message(String path, Player player) {
-		String returnString = message(path);
-		returnString = formatPlaceholders(returnString, player);
+        return returnString;
+    }
 
-		return returnString;
-	}
+    public String prefixedMessage(String message, Object... params) {
+        return prefix + this.message(message, params);
+    }
 
-	public String prefixedMessage(String message, Object... params) {
-		return prefix + this.message(message, params);
-	}
+    public String message(String path, Object... params) {
+        String message = this.message(path);
+        return MessageFormat.format(message, params);
+    }
 
-	public String message(String path, Object... params) {
-		String message = this.message(path);
-		return MessageFormat.format(message, params);
-	}
+    public String formatPlaceholders(String message, Player player) {
+        String returnString = message;
+        returnString = returnString.replace("%player%", player.getName());
 
-	public String formatPlaceholders(String message, Player player) {
-		String returnString = message;
-		returnString = returnString.replace("%player%", player.getName());
+        if (papiEnabled) {
+            returnString = PlaceholderAPI.setPlaceholders(player, returnString);
+        }
 
-		if (papiEnabled) {
-			returnString = PlaceholderAPI.setPlaceholders(player, returnString);
-		}
+        return coloredRawMessage(returnString);
+    }
 
-		return coloredRawMessage(returnString);
-	}
+    public List<String> getStringList(String path) {
+        path = me.despical.commons.string.StringUtils.capitalize(path.replace('_', '-'), '-', '.');
+        return config.getStringList(path);
+    }
 
-	public List<String> getStringList(String path) {
-		path = me.despical.commons.string.StringUtils.capitalize(path.replace('_', '-'), '-', '.');
-		return config.getStringList(path);
-	}
+    @Override
+    public void reload() {
+        this.config = ConfigUtils.getConfig(plugin, "messages");
+        this.prefix = message("in_game.plugin_prefix");
+        this.papiEnabled = plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI");
 
-	@Override
-	public void reload() {
-		this.config = ConfigUtils.getConfig(plugin, "messages");
-		this.prefix = message("in_game.plugin_prefix");
-		this.papiEnabled = plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI");
-
-		StringFormatUtils.setTimeFormat(this.message("In-Game.Timer-Format"));
-	}
+        StringFormatUtils.setTimeFormat(this.message("In-Game.Timer-Format"));
+    }
 }

@@ -12,26 +12,26 @@ import java.util.function.Function;
  */
 public enum ArenaOption {
 
-	TIMER(config -> config.getInt("Gameplay-Time", 30)),
+    TIMER(config -> config.getInt("Gameplay-Time", 30)),
 
-	MINIMUM_POINTS(4),
+    MINIMUM_POINTS(4),
 
-	MAXIMUM_POINTS(8),
+    MAXIMUM_POINTS(8),
 
-	WAIT_MILLISECONDS(config -> config.getInt("Point-Blocks.Wait-Ms", 12));
+    WAIT_MILLISECONDS(config -> config.getInt("Point-Blocks.Wait-Ms", 12));
 
-	private final Object value;
+    private final Object value;
 
-	ArenaOption(int defaultValue) {
-		this.value = defaultValue;
-	}
+    ArenaOption(int defaultValue) {
+        this.value = defaultValue;
+    }
 
-	ArenaOption(Function<FileConfiguration, Object> function) {
-		this.value = function.apply(WhackMe.getInstance().getConfig());
-	}
+    ArenaOption(Function<FileConfiguration, Object> function) {
+        this.value = function.apply(WhackMe.getInstance().getConfig());
+    }
 
-	@SuppressWarnings("unchecked")
-	public <T> T getDefault() {
-		return (T) this.value;
-	}
+    @SuppressWarnings("unchecked")
+    public <T> T getDefault() {
+        return (T) this.value;
+    }
 }

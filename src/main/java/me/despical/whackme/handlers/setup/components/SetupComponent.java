@@ -16,24 +16,24 @@ import org.bukkit.entity.Player;
  */
 public abstract class SetupComponent {
 
-	protected final String path;
-	protected final Arena arena;
-	protected final Player player;
-	protected final WhackMe plugin;
-	protected final SetupInventory setup;
+    protected final String path;
+    protected final Arena arena;
+    protected final Player player;
+    protected final WhackMe plugin;
+    protected final SetupInventory setup;
 
-	public SetupComponent(SetupInventory setup) {
-		this.setup  = setup;
-		this.plugin = WhackMe.getInstance();
-		this.player = setup.getPlayer();
-		this.arena  = setup.getArena();
-		this.path = String.format("instances.%s.", arena.getId());
-	}
+    public SetupComponent(SetupInventory setup) {
+        this.setup = setup;
+        this.plugin = WhackMe.getInstance();
+        this.player = setup.getPlayer();
+        this.arena = setup.getArena();
+        this.path = String.format("instances.%s.", arena.getId());
+    }
 
-	public abstract void injectComponents(PaginatedPane paginatedPane);
+    public abstract void injectComponents(PaginatedPane paginatedPane);
 
-	protected final String isOptionDoneBool(String path) {
-		FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-		return config.isSet(path) ? LocationSerializer.isDefaultLocation(config.getString(path)) ? "&c✘ &lNot Completed" : "&a✔ &lCompleted" : "&c✘ &lNot Completed";
-	}
+    protected final String isOptionDoneBool(String path) {
+        FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+        return config.isSet(path) ? LocationSerializer.isDefaultLocation(config.getString(path)) ? "&c✘ &lNot Completed" : "&a✔ &lCompleted" : "&c✘ &lNot Completed";
+    }
 }

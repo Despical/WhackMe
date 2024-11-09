@@ -18,111 +18,111 @@ import java.util.stream.Stream;
  */
 public class User {
 
-	private static final WhackMe plugin = WhackMe.getInstance();
-	private static long cooldownCounter;
+    private static final WhackMe plugin = WhackMe.getInstance();
+    private static long cooldownCounter;
 
-	private final UUID uuid;
-	private final String playerName;
-	private final Map<String, Double> cooldowns;
-	private final Map<StatisticType, Integer> stats;
+    private final UUID uuid;
+    private final String playerName;
+    private final Map<String, Double> cooldowns;
+    private final Map<StatisticType, Integer> stats;
 
-	private boolean editingMode;
-	private double attackCooldown;
+    private boolean editingMode;
+    private double attackCooldown;
 
-	public User(Player player) {
-		this.uuid = player.getUniqueId();
-		this.playerName = player.getName();
-		this.cooldowns = new HashMap<>();
-		this.stats = new EnumMap<>(StatisticType.class);
-	}
+    public User(Player player) {
+        this.uuid = player.getUniqueId();
+        this.playerName = player.getName();
+        this.cooldowns = new HashMap<>();
+        this.stats = new EnumMap<>(StatisticType.class);
+    }
 
-	public Arena getArena() {
-		return plugin.getArenaRegistry().getArena(getPlayer());
-	}
+    public static void cooldownHandlerTask() {
+        plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, () -> cooldownCounter++, 20, 20);
+    }
 
-	public Player getPlayer() {
-		return plugin.getServer().getPlayer(uuid);
-	}
+    public Arena getArena() {
+        return plugin.getArenaRegistry().getArena(getPlayer());
+    }
 
-	public UUID getUniqueId() {
-		return uuid;
-	}
+    public Player getPlayer() {
+        return plugin.getServer().getPlayer(uuid);
+    }
 
-	public String getName() {
-		return playerName;
-	}
+    public UUID getUniqueId() {
+        return uuid;
+    }
 
-	public boolean isInEditingMode() {
-		return editingMode;
-	}
+    public String getName() {
+        return playerName;
+    }
 
-	public void setEditingMode(boolean editingMode) {
-		this.editingMode = editingMode;
-	}
+    public boolean isInEditingMode() {
+        return editingMode;
+    }
 
-	public void sendRawMessage(final String message) {
-		getPlayer().sendMessage(plugin.getChatManager().coloredRawMessage(message));
-	}
+    public void setEditingMode(boolean editingMode) {
+        this.editingMode = editingMode;
+    }
 
-	public int getStat(StatisticType statisticType) {
-		return stats.computeIfAbsent(statisticType, stat -> 0);
-	}
+    public void sendRawMessage(final String message) {
+        getPlayer().sendMessage(plugin.getChatManager().coloredRawMessage(message));
+    }
 
-	public void setStat(StatisticType stat, int value) {
-		stats.put(stat, value);
+    public int getStat(StatisticType statisticType) {
+        return stats.computeIfAbsent(statisticType, stat -> 0);
+    }
 
-		plugin.callEvent(() -> new WMPlayerStatisticChangeEvent(getArena(), getPlayer(), stat, value));
-	}
+    public void setStat(StatisticType stat, int value) {
+        stats.put(stat, value);
 
-	public void addStat(StatisticType stat, int value) {
-		setStat(stat, getStat(stat) + value);
-	}
+        plugin.callEvent(() -> new WMPlayerStatisticChangeEvent(getArena(), getPlayer(), stat, value));
+    }
 
-	public void resetStats() {
-		Stream.of(StatisticType.values()).filter(stat -> !stat.isPersistent()).forEach(stat -> this.setStat(stat, 0));
-	}
+    public void addStat(StatisticType stat, int value) {
+        setStat(stat, getStat(stat) + value);
+    }
 
-	public void updateAttackCooldown() {
-		if (!XReflection.supports(9)) return;
+    public void resetStats() {
+        Stream.of(StatisticType.values()).filter(stat -> !stat.isPersistent()).forEach(stat -> this.setStat(stat, 0));
+    }
 
-		Player player = this.getPlayer();
+    public void updateAttackCooldown() {
+        if (!XReflection.supports(9)) return;
 
-		if (player == null) return;
+        Player player = this.getPlayer();
 
-		Optional.ofNullable(player.getAttribute(Attribute.GENERIC_ATTACK_SPEED)).ifPresent(attribute -> {
-			this.attackCooldown = attribute.getBaseValue();
+        if (player == null) return;
 
-			attribute.setBaseValue(plugin.getConfig().getDouble("Hit-Cooldown-Delay", 20));
-		});
-	}
+        Optional.ofNullable(player.getAttribute(Attribute.GENERIC_ATTACK_SPEED)).ifPresent(attribute -> {
+            this.attackCooldown = attribute.getBaseValue();
 
-	public void resetAttackCooldown() {
-		if (!XReflection.supports(9)) return;
+            attribute.setBaseValue(plugin.getConfig().getDouble("Hit-Cooldown-Delay", 20));
+        });
+    }
 
-		Player player = this.getPlayer();
+    public void resetAttackCooldown() {
+        if (!XReflection.supports(9)) return;
 
-		if (player == null) return;
+        Player player = this.getPlayer();
 
-		Optional.ofNullable(player.getAttribute(Attribute.GENERIC_ATTACK_SPEED)).ifPresent(attribute -> {
-			if (attackCooldown == 0) {
-				attackCooldown = attribute.getDefaultValue();
-			}
+        if (player == null) return;
 
-			attribute.setBaseValue(attackCooldown);
-		});
-	}
+        Optional.ofNullable(player.getAttribute(Attribute.GENERIC_ATTACK_SPEED)).ifPresent(attribute -> {
+            if (attackCooldown == 0) {
+                attackCooldown = attribute.getDefaultValue();
+            }
 
-	public void setCooldown(String cooldown, double seconds) {
-		cooldowns.put(cooldown, seconds + cooldownCounter);
-	}
+            attribute.setBaseValue(attackCooldown);
+        });
+    }
 
-	public double getCooldown(String cooldown) {
-		final Double remainingTime = cooldowns.get(cooldown);
+    public void setCooldown(String cooldown, double seconds) {
+        cooldowns.put(cooldown, seconds + cooldownCounter);
+    }
 
-		return (remainingTime == null || remainingTime <= cooldownCounter) ? 0 : remainingTime - cooldownCounter;
-	}
+    public double getCooldown(String cooldown) {
+        final Double remainingTime = cooldowns.get(cooldown);
 
-	public static void cooldownHandlerTask() {
-		plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, () -> cooldownCounter++, 20, 20);
-	}
+        return (remainingTime == null || remainingTime <= cooldownCounter) ? 0 : remainingTime - cooldownCounter;
+    }
 }

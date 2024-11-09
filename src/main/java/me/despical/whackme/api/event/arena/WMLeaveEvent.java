@@ -8,24 +8,24 @@ import org.jetbrains.annotations.NotNull;
 
 public class WMLeaveEvent extends WMEvent {
 
-	private static final HandlerList HANDLERS = new HandlerList();
+    private static final HandlerList HANDLERS = new HandlerList();
 
-	private final Player player;
+    private final Player player;
 
-	public WMLeaveEvent(Player player, Arena arena) {
-		super(arena);
-		this.player = player;
-	}
+    public WMLeaveEvent(Player player, Arena arena) {
+        super(arena);
+        this.player = player;
+    }
 
-	public Player getPlayer() {
-		return player;
-	}
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
+    }
 
-	public static HandlerList getHandlerList() {
-		return HANDLERS;
-	}
+    public Player getPlayer() {
+        return player;
+    }
 
-	public @NotNull HandlerList getHandlers() {
-		return HANDLERS;
-	}
+    public @NotNull HandlerList getHandlers() {
+        return HANDLERS;
+    }
 }

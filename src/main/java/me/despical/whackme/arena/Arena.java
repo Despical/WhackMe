@@ -34,270 +34,270 @@ import java.util.stream.Collectors;
  */
 public class Arena extends BukkitRunnable {
 
-	private static final WhackMe plugin = WhackMe.getInstance();
+    private static final WhackMe plugin = WhackMe.getInstance();
+    private final String id;
+    private final PointHandler pointHandler;
+    private final BossBarManager bossBarManager;
+    private final List<PointBlock> pointBlocks;
+    private final Map<ArenaOption, Object> arenaOptions;
+    private final Map<GameLocation, Location> gameLocations;
+    private Player player;
+    private boolean ready, custom, started;
+    private List<Location> locations;
+
+    public Arena(String id) {
+        this.id = id;
+        this.pointHandler = new PointHandler(this);
+        this.bossBarManager = new BossBarManager(this);
+        this.pointBlocks = new ArrayList<>();
+        this.locations = new ArrayList<>();
+        this.arenaOptions = new EnumMap<>(ArenaOption.class);
+        this.gameLocations = new EnumMap<>(GameLocation.class);
+
+        for (ArenaOption option : ArenaOption.values()) {
+            arenaOptions.put(option, option.getDefault());
+        }
+    }
+
+    public String getId() {
+        return id;
+    }
 
-	private Player player;
-	private boolean ready, custom, started;
-	private List<Location> locations;
+    public boolean isReady() {
+        return ready;
+    }
 
-	private final String id;
-	private final PointHandler pointHandler;
-	private final BossBarManager bossBarManager;
-	private final List<PointBlock> pointBlocks;
-	private final Map<ArenaOption, Object> arenaOptions;
-	private final Map<GameLocation, Location> gameLocations;
+    public void setReady(boolean ready) {
+        this.ready = ready;
+    }
+
+    public boolean isCustom() {
+        return custom;
+    }
 
-	public Arena(String id) {
-		this.id = id;
-		this.pointHandler = new PointHandler(this);
-		this.bossBarManager = new BossBarManager(this);
-		this.pointBlocks = new ArrayList<>();
-		this.locations = new ArrayList<>();
-		this.arenaOptions = new EnumMap<>(ArenaOption.class);
-		this.gameLocations = new EnumMap<>(GameLocation.class);
+    public void setCustom(boolean custom) {
+        this.custom = custom;
+    }
 
-		for (ArenaOption option : ArenaOption.values()) {
-			arenaOptions.put(option, option.getDefault());
-		}
-	}
+    public Player getPlayer() {
+        return player;
+    }
 
-	public String getId() {
-		return id;
-	}
+    public String getPlayerName() {
+        return player == null ? plugin.getChatManager().message("Placeholders.Unknown-Player") : player.getName();
+    }
 
-	public boolean isReady() {
-		return ready;
-	}
+    public void addPlayer(Player player) {
+        if (player == null) return;
 
-	public void setReady(boolean ready) {
-		this.ready = ready;
-	}
+        WMJoinEvent event = new WMJoinEvent(player, this);
 
-	public boolean isCustom() {
-		return custom;
-	}
+        plugin.callEvent(event);
 
-	public void setCustom(boolean custom) {
-		this.custom = custom;
-	}
+        if (event.isCancelled()) return;
 
-	public Player getPlayer() {
-		return player;
-	}
+        if (plugin.getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
+            InventorySerializer.saveInventoryToFile(plugin, player);
+        }
 
-	public String getPlayerName() {
-		return player == null ? plugin.getChatManager().message("Placeholders.Unknown-Player") : player.getName();
-	}
+        if (plugin.getOption(ConfigPreferences.Option.CLEAR_INVENTORY)) {
+            player.getInventory().clear();
+        }
 
-	public void addPlayer(Player player) {
-		if (player == null) return;
+        if (plugin.getOption(ConfigPreferences.Option.CLEAR_EFFECTS)) {
+            player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
+        }
 
-		WMJoinEvent event = new WMJoinEvent(player, this);
+        this.player = player;
+        this.setTimer(ArenaOption.TIMER.getDefault());
 
-		plugin.callEvent(event);
+        bossBarManager.addPlayer();
 
-		if (event.isCancelled()) return;
+        User user = plugin.getUserManager().getUser(player);
+        user.resetStats();
+        user.updateAttackCooldown();
 
-		if (plugin.getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
-			InventorySerializer.saveInventoryToFile(plugin, player);
-		}
+        plugin.getSignManager().updateSign(this);
 
-		if (plugin.getOption(ConfigPreferences.Option.CLEAR_INVENTORY)) {
-			player.getInventory().clear();
-		}
+        player.setFoodLevel(20);
+        player.setGameMode(GameMode.ADVENTURE);
+        player.teleport(getStartLocation());
+        player.sendMessage(plugin.getChatManager().message("in_game.start_message"));
+    }
 
-		if (plugin.getOption(ConfigPreferences.Option.CLEAR_EFFECTS)) {
-			player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
-		}
+    public void removePlayer() {
+        this.removePlayer(true);
+    }
 
-		this.player = player;
-		this.setTimer(ArenaOption.TIMER.getDefault());
+    public void removePlayer(boolean teleportToEnd) {
+        plugin.callEvent(new WMLeaveEvent(player, this));
 
-		bossBarManager.addPlayer();
+        User user = plugin.getUserManager().getUser(player);
+        ChatManager chatManager = plugin.getChatManager();
+        int score = user.getStat(StatisticType.LOCAL_SCORE);
 
-		User user = plugin.getUserManager().getUser(player);
-		user.resetStats();
-		user.updateAttackCooldown();
+        if (score > user.getStat(StatisticType.RECORD_SCORE)) {
+            user.setStat(StatisticType.RECORD_SCORE, score);
 
-		plugin.getSignManager().updateSign(this);
+            plugin.getRewardsFactory().performReward(player, Reward.RewardType.NEW_RECORD);
 
-		player.setFoodLevel(20);
-		player.setGameMode(GameMode.ADVENTURE);
-		player.teleport(getStartLocation());
-		player.sendMessage(plugin.getChatManager().message("in_game.start_message"));
-	}
+            if (teleportToEnd)
+                player.sendMessage(chatManager.message("in_game.finish_record_message").replace("%points%", Integer.toString(user.getStat(StatisticType.LOCAL_SCORE))));
+        } else {
+            if (teleportToEnd)
+                player.sendMessage(chatManager.message("in_game.finish_message").replace("%points%", Integer.toString(user.getStat(StatisticType.LOCAL_SCORE))));
+        }
 
-	public void removePlayer() {
-		this.removePlayer(true);
-	}
+        int localStreak = user.getStat(StatisticType.LOCAL_LONGEST_STREAK);
 
-	public void removePlayer(boolean teleportToEnd) {
-		plugin.callEvent(new WMLeaveEvent(player, this));
+        if (localStreak > user.getStat(StatisticType.LONGEST_STREAK)) {
+            user.setStat(StatisticType.LONGEST_STREAK, localStreak);
+        }
 
-		User user = plugin.getUserManager().getUser(player);
-		ChatManager chatManager = plugin.getChatManager();
-		int score = user.getStat(StatisticType.LOCAL_SCORE);
+        user.addStat(StatisticType.TOURS_PLAYED, 1);
+        user.resetAttackCooldown();
+        user.resetStats();
+        user.setCooldown("play_again", plugin.getConfig().getInt("Game-Cooldown"));
 
-		if (score > user.getStat(StatisticType.RECORD_SCORE)) {
-			user.setStat(StatisticType.RECORD_SCORE, score);
+        plugin.getUserManager().getUserDatabase().saveStatistics(user);
 
-			plugin.getRewardsFactory().performReward(player, Reward.RewardType.NEW_RECORD);
+        if (plugin.getOption(ConfigPreferences.Option.CLEAR_INVENTORY)) {
+            player.getInventory().clear();
+        }
 
-			if (teleportToEnd) player.sendMessage(chatManager.message("in_game.finish_record_message").replace("%points%", Integer.toString(user.getStat(StatisticType.LOCAL_SCORE))));
-		} else {
-			if (teleportToEnd) player.sendMessage(chatManager.message("in_game.finish_message").replace("%points%", Integer.toString(user.getStat(StatisticType.LOCAL_SCORE))));
-		}
+        if (plugin.getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
+            InventorySerializer.loadInventory(plugin, player);
+        } else {
+            player.setGameMode(GameMode.SURVIVAL);
+        }
 
-		int localStreak = user.getStat(StatisticType.LOCAL_LONGEST_STREAK);
+        bossBarManager.removePlayer();
 
-		if (localStreak > user.getStat(StatisticType.LONGEST_STREAK)) {
-			user.setStat(StatisticType.LONGEST_STREAK, localStreak);
-		}
+        if (teleportToEnd) teleportToEndLocation();
+        cleanGameArea();
 
-		user.addStat(StatisticType.TOURS_PLAYED, 1);
-		user.resetAttackCooldown();
-		user.resetStats();
-		user.setCooldown("play_again", plugin.getConfig().getInt("Game-Cooldown"));
+        player = null;
 
-		plugin.getUserManager().getUserDatabase().saveStatistics(user);
+        plugin.getSignManager().updateSign(this);
+    }
 
-		if (plugin.getOption(ConfigPreferences.Option.CLEAR_INVENTORY)) {
-			player.getInventory().clear();
-		}
+    public void cleanGameArea() {
+        this.pointBlocks.forEach(PointBlock::clear);
+        this.pointBlocks.clear();
+    }
 
-		if (plugin.getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
-			InventorySerializer.loadInventory(plugin, player);
-		} else {
-			player.setGameMode(GameMode.SURVIVAL);
-		}
+    public BossBarManager getBossBarManager() {
+        return bossBarManager;
+    }
 
-		bossBarManager.removePlayer();
+    public boolean containPlayer(Player player) {
+        return this.player != null && this.player.getUniqueId().equals(player.getUniqueId());
+    }
 
-		if (teleportToEnd) teleportToEndLocation();
-		cleanGameArea();
+    public Location getStartLocation() {
+        return gameLocations.get(GameLocation.START);
+    }
 
-		player = null;
+    public void setStartLocation(Location location) {
+        gameLocations.put(GameLocation.START, location);
 
-		plugin.getSignManager().updateSign(this);
-	}
+        if (Utils.isSurroundedBy(location))
+            locations = Utils.getBlocksSurroundedBy(location).stream().map(Block::getLocation).collect(Collectors.toList());
+    }
 
-	public void cleanGameArea() {
-		this.pointBlocks.forEach(PointBlock::clear);
-		this.pointBlocks.clear();
-	}
+    public Location getEndLocation() {
+        return gameLocations.get(GameLocation.END);
+    }
 
-	public BossBarManager getBossBarManager() {
-		return bossBarManager;
-	}
+    public void setEndLocation(Location location) {
+        gameLocations.put(GameLocation.END, location);
+    }
 
-	public boolean containPlayer(Player player) {
-		return this.player != null && this.player.getUniqueId().equals(player.getUniqueId());
-	}
+    public int getTimer() {
+        return getOption(ArenaOption.TIMER);
+    }
 
-	public Location getStartLocation() {
-		return gameLocations.get(GameLocation.START);
-	}
+    public void setTimer(int timer) {
+        setOptionValue(ArenaOption.TIMER, timer);
+    }
 
-	public void setStartLocation(Location location) {
-		gameLocations.put(GameLocation.START, location);
+    public int getMinimumPoints() {
+        return getOption(ArenaOption.MINIMUM_POINTS);
+    }
 
-		if (Utils.isSurroundedBy(location))
-			locations = Utils.getBlocksSurroundedBy(location).stream().map(Block::getLocation).collect(Collectors.toList());
-	}
+    public void setMinimumPoints(int points) {
+        this.setOptionValue(ArenaOption.MINIMUM_POINTS, points);
+    }
 
-	public Location getEndLocation() {
-		return gameLocations.get(GameLocation.END);
-	}
+    public int getMaximumPoints() {
+        return getOption(ArenaOption.MAXIMUM_POINTS);
+    }
 
-	public void setEndLocation(Location location) {
-		gameLocations.put(GameLocation.END, location);
-	}
+    public void setMaximumPoints(int points) {
+        this.setOptionValue(ArenaOption.MAXIMUM_POINTS, points);
+    }
 
-	public void setLocations(List<Location> locations) {
-		this.locations = locations;
-	}
+    private int getOption(ArenaOption option) {
+        return (int) arenaOptions.get(option);
+    }
 
-	public int getTimer() {
-		return getOption(ArenaOption.TIMER);
-	}
+    private void setOptionValue(ArenaOption option, int value) {
+        arenaOptions.put(option, value);
+    }
 
-	public void setTimer(int timer) {
-		setOptionValue(ArenaOption.TIMER, timer);
-	}
+    public void teleportToEndLocation() {
+        if (player != null) {
+            player.teleport(getEndLocation());
+        }
+    }
 
-	public int getMinimumPoints() {
-		return getOption(ArenaOption.MINIMUM_POINTS);
-	}
+    public List<PointBlock> getPointBlocks() {
+        return pointBlocks;
+    }
 
-	public void setMinimumPoints(int points) {
-		this.setOptionValue(ArenaOption.MINIMUM_POINTS, points);
-	}
+    public List<Location> getLocations() {
+        return locations;
+    }
 
-	public int getMaximumPoints() {
-		return getOption(ArenaOption.MAXIMUM_POINTS);
-	}
+    public void setLocations(List<Location> locations) {
+        this.locations = locations;
+    }
 
-	public void setMaximumPoints(int points) {
-		this.setOptionValue(ArenaOption.MAXIMUM_POINTS, points);
-	}
+    public void start() {
+        if (started) return;
 
-	private int getOption(ArenaOption option) {
-		return (int) arenaOptions.get(option);
-	}
+        started = true;
 
-	private void setOptionValue(ArenaOption option, int value) {
-		arenaOptions.put(option, value);
-	}
+        pointHandler.handleTask();
 
-	public void teleportToEndLocation() {
-		if (player != null) {
-			player.teleport(getEndLocation());
-		}
-	}
+        runTaskTimer(plugin, 20L, 20L);
+    }
 
-	public List<PointBlock> getPointBlocks() {
-		return pointBlocks;
-	}
-
-	public List<Location> getLocations() {
-		return locations;
-	}
-
-	public void start() {
-		if (started) return;
-
-		started = true;
-
-		pointHandler.handleTask();
-
-		runTaskTimer(plugin, 20L, 20L);
-	}
-
-	public Location getAvailableLocation() {
+    public Location getAvailableLocation() {
         return locations.isEmpty() ? null : locations.get(ThreadLocalRandom.current().nextInt(locations.size()));
-	}
+    }
 
-	@Override
-	public void run() {
-		if (player == null) return;
+    @Override
+    public void run() {
+        if (player == null) return;
 
-		int timer = getTimer() - 1;
+        int timer = getTimer() - 1;
 
-		setTimer(timer);
+        setTimer(timer);
 
-		if (timer == -1) {
-			plugin.getRewardsFactory().performReward(player, Reward.RewardType.END_GAME);
+        if (timer == -1) {
+            plugin.getRewardsFactory().performReward(player, Reward.RewardType.END_GAME);
 
-			removePlayer();
-		}
-	}
+            removePlayer();
+        }
+    }
 
-	@Override
-	public String toString() {
-		return id;
-	}
+    @Override
+    public String toString() {
+        return id;
+    }
 
-	public enum GameLocation {
-		START, END
-	}
+    public enum GameLocation {
+        START, END
+    }
 }

@@ -17,46 +17,46 @@ import java.util.*;
  */
 public class UserManager {
 
-	private final Map<UUID, User> users;
-	private final AbstractDatabase userDatabase;
+    private final Map<UUID, User> users;
+    private final AbstractDatabase userDatabase;
 
-	public UserManager(WhackMe plugin) {
-		this.users = new HashMap<>();
-		this.userDatabase = plugin.getOption(ConfigPreferences.Option.DATABASE_ENABLED) ? new MySQLManager() : new FileStatistics();
+    public UserManager(WhackMe plugin) {
+        this.users = new HashMap<>();
+        this.userDatabase = plugin.getOption(ConfigPreferences.Option.DATABASE_ENABLED) ? new MySQLManager() : new FileStatistics();
 
-		plugin.getServer().getOnlinePlayers().forEach(this::addUser);
-	}
+        plugin.getServer().getOnlinePlayers().forEach(this::addUser);
+    }
 
-	@NotNull
-	public User addUser(Player player) {
-		User user = new User(player);
-		users.put(player.getUniqueId(), user);
+    @NotNull
+    public User addUser(Player player) {
+        User user = new User(player);
+        users.put(player.getUniqueId(), user);
 
-		userDatabase.loadStatistics(user);
-		return user;
-	}
+        userDatabase.loadStatistics(user);
+        return user;
+    }
 
-	public void removeUser(Player player) {
-		users.remove(player.getUniqueId());
-	}
+    public void removeUser(Player player) {
+        users.remove(player.getUniqueId());
+    }
 
-	@NotNull
-	public User getUser(Player player) {
-		User user = users.get(player.getUniqueId());
+    @NotNull
+    public User getUser(Player player) {
+        User user = users.get(player.getUniqueId());
 
-		if (user != null) {
-			return user;
-		}
+        if (user != null) {
+            return user;
+        }
 
-		return this.addUser(player);
-	}
+        return this.addUser(player);
+    }
 
-	public Set<User> getUsers() {
-		return new HashSet<>(users.values());
-	}
+    public Set<User> getUsers() {
+        return new HashSet<>(users.values());
+    }
 
-	@NotNull
-	public AbstractDatabase getUserDatabase() {
-		return this.userDatabase;
-	}
+    @NotNull
+    public AbstractDatabase getUserDatabase() {
+        return this.userDatabase;
+    }
 }

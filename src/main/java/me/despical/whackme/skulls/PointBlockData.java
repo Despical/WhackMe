@@ -13,17 +13,17 @@ import java.util.Map;
  */
 public class PointBlockData {
 
-	private final Map<PointBlockType, ItemStack> pointBlocks;
+    private final Map<PointBlockType, ItemStack> pointBlocks;
 
-	PointBlockData() {
-		this.pointBlocks = new EnumMap<>(PointBlockType.class);
-	}
+    PointBlockData() {
+        this.pointBlocks = new EnumMap<>(PointBlockType.class);
+    }
 
-	void addPointBlock(PointBlockType type, ItemStack item) {
-		this.pointBlocks.put(type, item);
-	}
+    void addPointBlock(PointBlockType type, ItemStack item) {
+        this.pointBlocks.put(type, item);
+    }
 
-	public ItemStack getPointBlock(PointBlockType type) {
-		return this.pointBlocks.get(type);
-	}
+    public ItemStack getPointBlock(PointBlockType type) {
+        return this.pointBlocks.get(type);
+    }
 }

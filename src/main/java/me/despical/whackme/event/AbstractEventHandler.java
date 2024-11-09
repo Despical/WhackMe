@@ -11,10 +11,10 @@ import org.bukkit.event.Listener;
  */
 public abstract class AbstractEventHandler implements Listener {
 
-	protected static final WhackMe plugin = WhackMe.getInstance();
-	protected static final ChatManager chatManager = plugin.getChatManager();
+    protected static final WhackMe plugin = WhackMe.getInstance();
+    protected static final ChatManager chatManager = plugin.getChatManager();
 
-	public AbstractEventHandler() {
-		plugin.getServer().getPluginManager().registerEvents(this, plugin);
-	}
+    public AbstractEventHandler() {
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+    }
 }

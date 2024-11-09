@@ -18,49 +18,49 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class PointHandler extends BukkitRunnable {
 
-	private final Arena arena;
-	private final WhackMe plugin;
+    private final Arena arena;
+    private final WhackMe plugin;
 
-	public PointHandler(Arena arena) {
-		this.arena = arena;
-		this.plugin = WhackMe.getInstance();
-	}
+    public PointHandler(Arena arena) {
+        this.arena = arena;
+        this.plugin = WhackMe.getInstance();
+    }
 
-	@Override
-	public void run() {
-		Player player = arena.getPlayer();
+    @Override
+    public void run() {
+        Player player = arena.getPlayer();
 
-		if (player == null) return;
+        if (player == null) return;
 
-		sendActionBar(player);
+        sendActionBar(player);
 
-		int size = arena.getPointBlocks().size();
-		int maximumPoints = arena.getMaximumPoints();
+        int size = arena.getPointBlocks().size();
+        int maximumPoints = arena.getMaximumPoints();
 
-		if (size <= maximumPoints && size < random(maximumPoints + 1)) {
-			new PointBlock(arena).handleItself();
-		}
-	}
+        if (size <= maximumPoints && size < random(maximumPoints + 1)) {
+            new PointBlock(arena).handleItself();
+        }
+    }
 
-	private int random(int max) {
-		int min = arena.getMinimumPoints();
+    private int random(int max) {
+        int min = arena.getMinimumPoints();
 
-		return min == max ? min : ThreadLocalRandom.current().nextInt(min, max);
-	}
+        return min == max ? min : ThreadLocalRandom.current().nextInt(min, max);
+    }
 
-	private void sendActionBar(Player player) {
-		String message = plugin.getChatManager().message("in_game.action_bar");
+    private void sendActionBar(Player player) {
+        String message = plugin.getChatManager().message("in_game.action_bar");
 
-		if (message.isEmpty()) return;
+        if (message.isEmpty()) return;
 
-		message = message.replace("%player%", player.getName());
-		message = message.replace("%score%", Integer.toString(StatsStorage.getUserStats(player, StatisticType.LOCAL_SCORE)));
-		message = message.replace("%timer%", StringFormatUtils.formatIntoMMSS(arena.getTimer()));
+        message = message.replace("%player%", player.getName());
+        message = message.replace("%score%", Integer.toString(StatsStorage.getUserStats(player, StatisticType.LOCAL_SCORE)));
+        message = message.replace("%timer%", StringFormatUtils.formatIntoMMSS(arena.getTimer()));
 
-		ActionBar.sendActionBar(player, message);
-	}
+        ActionBar.sendActionBar(player, message);
+    }
 
-	public void handleTask() {
-		runTaskTimer(plugin, 8L, plugin.getConfigPreferences().getTicks());
-	}
+    public void handleTask() {
+        runTaskTimer(plugin, 8L, plugin.getConfigPreferences().getTicks());
+    }
 }

@@ -12,114 +12,114 @@ import java.util.List;
  */
 public class Reward {
 
-	private final RewardType type;
-	private final List<SubReward> rewards;
+    private final RewardType type;
+    private final List<SubReward> rewards;
 
-	public Reward(WhackMe plugin, RewardType type, List<String> rawCodes) {
-		this.type = type;
-		this.rewards = new ArrayList<>();
+    public Reward(WhackMe plugin, RewardType type, List<String> rawCodes) {
+        this.type = type;
+        this.rewards = new ArrayList<>();
 
-		for (final String rawCode : rawCodes) {
-			this.rewards.add(new SubReward(plugin, rawCode));
-		}
-	}
+        for (final String rawCode : rawCodes) {
+            this.rewards.add(new SubReward(plugin, rawCode));
+        }
+    }
 
-	List<SubReward> getRewards() {
-		return rewards;
-	}
+    List<SubReward> getRewards() {
+        return rewards;
+    }
 
-	public RewardType getType() {
-		return type;
-	}
+    public RewardType getType() {
+        return type;
+    }
 
-	 static final class SubReward {
+    public enum RewardType {
 
-		private String executableCode;
-		private final int chance, executor, minimumPoints;
+        SUCCESSFUL_POINT("successful-point"),
+        WRONG_POINT("wrong-point"),
+        END_GAME("end-game"),
+        NEW_RECORD("new-record");
 
-		public SubReward(final WhackMe plugin, final String rawCode) {
-			String processedCode = rawCode;
+        final String path;
 
-			if (rawCode.contains("p:")) {
-				this.executor = 2;
+        RewardType(String path) {
+            this.path = "rewards." + path;
+        }
+    }
 
-				processedCode = processedCode.replace("p:", "");
-			} else {
-				this.executor = 1;
-			}
+    static final class SubReward {
 
-			chance:
-			if (processedCode.contains("chance(")) {
-				int loc = processedCode.indexOf(")", processedCode.indexOf("chance("));
+        private final int chance, executor, minimumPoints;
+        private String executableCode;
 
-				if (loc == -1) {
-					plugin.getLogger().warning(String.format("Second '')'' is not found in chance condition! Command: %s", rawCode));
+        public SubReward(final WhackMe plugin, final String rawCode) {
+            String processedCode = rawCode;
 
-					this.chance = 101;
-					break chance;
-				}
+            if (rawCode.contains("p:")) {
+                this.executor = 2;
 
-				String chanceStr = processedCode;
-				chanceStr = chanceStr.substring(processedCode.indexOf("chance("), loc).replaceAll("[^0-9]+", "");
+                processedCode = processedCode.replace("p:", "");
+            } else {
+                this.executor = 1;
+            }
 
-				processedCode = processedCode.replace(String.format("chance(%s):", chanceStr), "");
+            chance:
+            if (processedCode.contains("chance(")) {
+                int loc = processedCode.indexOf(")", processedCode.indexOf("chance("));
 
-				this.chance = Integer.parseInt(chanceStr);
-			} else {
-				this.chance = 100;
-			}
+                if (loc == -1) {
+                    plugin.getLogger().warning(String.format("Second '')'' is not found in chance condition! Command: %s", rawCode));
 
-			if (processedCode.contains("points(")) {
-				int loc = processedCode.indexOf(")", processedCode.indexOf("points("));
+                    this.chance = 101;
+                    break chance;
+                }
 
-				if (loc == -1) {
-					plugin.getLogger().warning(String.format("Second '')'' is not found in points condition! Command: %s", rawCode));
+                String chanceStr = processedCode;
+                chanceStr = chanceStr.substring(processedCode.indexOf("chance("), loc).replaceAll("[^0-9]+", "");
 
-					this.minimumPoints = -1;
-					return;
-				}
+                processedCode = processedCode.replace(String.format("chance(%s):", chanceStr), "");
 
-				String pointsStr = processedCode;
-				pointsStr = pointsStr.substring(processedCode.indexOf("points("), loc).replaceAll("[^0-9]+", "");
+                this.chance = Integer.parseInt(chanceStr);
+            } else {
+                this.chance = 100;
+            }
 
-				processedCode = processedCode.replace(String.format("points(%s):", pointsStr), "");
+            if (processedCode.contains("points(")) {
+                int loc = processedCode.indexOf(")", processedCode.indexOf("points("));
 
-				this.minimumPoints = Integer.parseInt(pointsStr);
-			} else {
-				this.minimumPoints = -1;
-			}
+                if (loc == -1) {
+                    plugin.getLogger().warning(String.format("Second '')'' is not found in points condition! Command: %s", rawCode));
 
-			this.executableCode = processedCode;
-		}
+                    this.minimumPoints = -1;
+                    return;
+                }
 
-		public String getExecutableCode() {
-			return executableCode;
-		}
+                String pointsStr = processedCode;
+                pointsStr = pointsStr.substring(processedCode.indexOf("points("), loc).replaceAll("[^0-9]+", "");
 
-		public int getExecutor() {
-			return executor;
-		}
+                processedCode = processedCode.replace(String.format("points(%s):", pointsStr), "");
 
-		public int getChance() {
-			return chance;
-		}
+                this.minimumPoints = Integer.parseInt(pointsStr);
+            } else {
+                this.minimumPoints = -1;
+            }
 
-		 public boolean testPoints(int points) {
-			 return minimumPoints == -1 || points >= minimumPoints;
-		 }
-	 }
+            this.executableCode = processedCode;
+        }
 
-	public enum RewardType {
+        public String getExecutableCode() {
+            return executableCode;
+        }
 
-		SUCCESSFUL_POINT("successful-point"),
-		WRONG_POINT("wrong-point"),
-		END_GAME("end-game"),
-		NEW_RECORD("new-record");
+        public int getExecutor() {
+            return executor;
+        }
 
-		final String path;
+        public int getChance() {
+            return chance;
+        }
 
-		RewardType(String path) {
-			this.path = "rewards." + path;
-		}
-	}
+        public boolean testPoints(int points) {
+            return minimumPoints == -1 || points >= minimumPoints;
+        }
+    }
 }

@@ -20,46 +20,45 @@ import java.util.List;
  */
 public class BossBarManager extends BukkitRunnable {
 
-	private int queue = 0;
-	private BossBar bossBar;
-	private List<String> messages;
+    private final Arena arena;
+    private final WhackMe plugin;
+    private final boolean enabled;
+    private int queue = 0;
+    private BossBar bossBar;
+    private List<String> messages;
 
-	private final Arena arena;
-	private final WhackMe plugin;
-	private final boolean enabled;
+    public BossBarManager(Arena arena) {
+        this.arena = arena;
+        this.plugin = WhackMe.getInstance();
+        this.enabled = plugin.getOption(ConfigPreferences.Option.BOSS_BAR_ENABLED) && XReflection.supports(13);
 
-	public BossBarManager(Arena arena) {
-		this.arena = arena;
-		this.plugin = WhackMe.getInstance();
-		this.enabled = plugin.getOption(ConfigPreferences.Option.BOSS_BAR_ENABLED) && XReflection.supports(13);
+        if (enabled) {
+            ChatManager chatManager = plugin.getChatManager();
 
-		if (enabled) {
-			ChatManager chatManager = plugin.getChatManager();
+            this.bossBar = plugin.getServer().createBossBar(chatManager.message("boss_bar.game_info"), BarColor.valueOf(chatManager.message("boss_bar.color")), BarStyle.valueOf(chatManager.message("boss_bar.style")));
+            this.messages = chatManager.getStringList("boss_bar.messages");
+            this.runTaskTimer(plugin, 20, NumberUtils.getInt(chatManager.message("boss_bar.interval"), 300));
+        }
+    }
 
-			this.bossBar = plugin.getServer().createBossBar(chatManager.message("boss_bar.game_info"), BarColor.valueOf(chatManager.message("boss_bar.color")), BarStyle.valueOf(chatManager.message("boss_bar.style")));
-			this.messages = chatManager.getStringList("boss_bar.messages");
-			this.runTaskTimer(plugin, 20, NumberUtils.getInt(chatManager.message("boss_bar.interval"), 300));
-		}
-	}
+    public void addPlayer() {
+        if (!enabled) return;
+        if (arena.getPlayer() == null) return;
 
-	public void addPlayer() {
-		if (!enabled) return;
-		if (arena.getPlayer() == null) return;
+        this.bossBar.addPlayer(arena.getPlayer());
+    }
 
-		this.bossBar.addPlayer(arena.getPlayer());
-	}
+    public void removePlayer() {
+        if (!enabled) return;
+        if (arena.getPlayer() == null) return;
 
-	public void removePlayer() {
-		if (!enabled) return;
-		if (arena.getPlayer() == null) return;
+        this.bossBar.removePlayer(arena.getPlayer());
+    }
 
-		this.bossBar.removePlayer(arena.getPlayer());
-	}
+    @Override
+    public void run() {
+        if (queue + 1 > messages.size()) queue = 0;
 
-	@Override
-	public void run() {
-		if (queue + 1 > messages.size()) queue = 0;
-
-		this.bossBar.setTitle(plugin.getChatManager().coloredRawMessage(messages.get(queue++)));
-	}
+        this.bossBar.setTitle(plugin.getChatManager().coloredRawMessage(messages.get(queue++)));
+    }
 }

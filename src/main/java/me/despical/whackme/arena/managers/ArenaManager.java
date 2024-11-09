@@ -13,41 +13,41 @@ import org.bukkit.entity.Player;
  */
 public class ArenaManager {
 
-	private final WhackMe plugin;
+    private final WhackMe plugin;
 
-	public ArenaManager(WhackMe plugin) {
-		this.plugin = plugin;
-	}
+    public ArenaManager(WhackMe plugin) {
+        this.plugin = plugin;
+    }
 
-	public void joinAttempt(Player player, Arena arena) {
-		if (!arena.isReady()) {
-			player.sendMessage(plugin.getChatManager().prefixedMessage("commands.arena_not_configured"));
-			return;
-		}
+    public void joinAttempt(Player player, Arena arena) {
+        if (!arena.isReady()) {
+            player.sendMessage(plugin.getChatManager().prefixedMessage("commands.arena_not_configured"));
+            return;
+        }
 
-		if (arena.containPlayer(player)) {
-			player.sendMessage(plugin.getChatManager().prefixedMessage("in_game.already_playing"));
-			return;
-		}
+        if (arena.containPlayer(player)) {
+            player.sendMessage(plugin.getChatManager().prefixedMessage("in_game.already_playing"));
+            return;
+        }
 
-		if (arena.getPlayer() != null) {
-			player.sendMessage(plugin.getChatManager().prefixedMessage("in_game.someone_is_already_playing"));
-			return;
-		}
+        if (arena.getPlayer() != null) {
+            player.sendMessage(plugin.getChatManager().prefixedMessage("in_game.someone_is_already_playing"));
+            return;
+        }
 
-		if (!Utils.hasJoinPermission(player)) {
-			player.sendMessage(plugin.getChatManager().prefixedMessage("commands.no_permission"));
-			return;
-		}
+        if (!Utils.hasJoinPermission(player)) {
+            player.sendMessage(plugin.getChatManager().prefixedMessage("commands.no_permission"));
+            return;
+        }
 
-		User user = plugin.getUserManager().getUser(player);
+        User user = plugin.getUserManager().getUser(player);
 
-		// FEATURE - Add option to bypass cooldown.
-		if (user.getCooldown("play_again") > 0) {
-			player.sendMessage(plugin.getChatManager().prefixedMessage("commands.wait_for_cooldown"));
-			return;
-		}
+        // FEATURE - Add option to bypass cooldown.
+        if (user.getCooldown("play_again") > 0) {
+            player.sendMessage(plugin.getChatManager().prefixedMessage("commands.wait_for_cooldown"));
+            return;
+        }
 
-		arena.addPlayer(player);
-	}
+        arena.addPlayer(player);
+    }
 }

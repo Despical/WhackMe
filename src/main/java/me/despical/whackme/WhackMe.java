@@ -40,200 +40,200 @@ import java.util.function.Supplier;
  */
 public class WhackMe extends JavaPlugin {
 
-	private static WhackMe instance;
+    private static WhackMe instance;
 
-	private ChatManager chatManager;
-	private CommandFramework commandFramework;
-	private ConfigPreferences configPreferences;
-	private SoundManager soundManager;
-	private UserManager userManager;
-	private RewardsFactory rewardsFactory;
-	private ArenaRegistry arenaRegistry;
-	private SignManager signManager;
-	private ArenaManager arenaManager;
-	private SkullManager skullManager;
-	private ReloadManager reloadManager;
-	private LeaderboardManager leaderboardManager;
-	private boolean initialized;
+    private ChatManager chatManager;
+    private CommandFramework commandFramework;
+    private ConfigPreferences configPreferences;
+    private SoundManager soundManager;
+    private UserManager userManager;
+    private RewardsFactory rewardsFactory;
+    private ArenaRegistry arenaRegistry;
+    private SignManager signManager;
+    private ArenaManager arenaManager;
+    private SkullManager skullManager;
+    private ReloadManager reloadManager;
+    private LeaderboardManager leaderboardManager;
+    private boolean initialized;
 
-	@Override
-	public void onEnable() {
-		initializeClasses();
+    @NotNull
+    public static WhackMe getInstance() {
+        return instance;
+    }
 
-		UpdateChecker.setEnabled(this.getOption(ConfigPreferences.Option.UPDATE_NOTIFIER_ENABLED));
-		UpdateChecker.init(this, 104912).onNewUpdate(result -> getLogger().info("Found a new version available: v" + result.getNewestVersion()));
+    @Override
+    public void onEnable() {
+        initializeClasses();
 
-		getLogger().info("Initialization finished.");
-		getLogger().info("Join our Discord server: https://discord.gg/uXVU8jmtpU");
-	}
+        UpdateChecker.setEnabled(this.getOption(ConfigPreferences.Option.UPDATE_NOTIFIER_ENABLED));
+        UpdateChecker.init(this, 104912).onNewUpdate(result -> getLogger().info("Found a new version available: v" + result.getNewestVersion()));
 
-	@Override
-	public void onDisable() {
-		this.initialized = false;
+        getLogger().info("Initialization finished.");
+        getLogger().info("Join our Discord server: https://discord.gg/uXVU8jmtpU");
+    }
 
-		for (Arena arena : arenaRegistry.getArenas()) {
-			Player player = arena.getPlayer();
+    @Override
+    public void onDisable() {
+        this.initialized = false;
 
-			if (player == null) continue;
+        for (Arena arena : arenaRegistry.getArenas()) {
+            Player player = arena.getPlayer();
 
-			User user = userManager.getUser(player);
-			user.addStat(StatisticType.TOURS_PLAYED, 1);
-			user.resetAttackCooldown();
+            if (player == null) continue;
 
-			int score = user.getStat(StatisticType.LOCAL_SCORE);
+            User user = userManager.getUser(player);
+            user.addStat(StatisticType.TOURS_PLAYED, 1);
+            user.resetAttackCooldown();
 
-			if (score > user.getStat(StatisticType.RECORD_SCORE)) {
-				user.setStat(StatisticType.RECORD_SCORE, score);
+            int score = user.getStat(StatisticType.LOCAL_SCORE);
 
-				rewardsFactory.performReward(player, Reward.RewardType.NEW_RECORD);
+            if (score > user.getStat(StatisticType.RECORD_SCORE)) {
+                user.setStat(StatisticType.RECORD_SCORE, score);
 
-				player.sendMessage(chatManager.message("in_game.finish_record_message").replace("%points%", Integer.toString(user.getStat(StatisticType.LOCAL_SCORE))));
-			} else {
-				player.sendMessage(chatManager.message("in_game.finish_message").replace("%points%", Integer.toString(user.getStat(StatisticType.LOCAL_SCORE))));
-			}
+                rewardsFactory.performReward(player, Reward.RewardType.NEW_RECORD);
 
-			if (getOption(ConfigPreferences.Option.CLEAR_INVENTORY)) player.getInventory().clear();
-			if (getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED))
-				InventorySerializer.loadInventory(this, player);
+                player.sendMessage(chatManager.message("in_game.finish_record_message").replace("%points%", Integer.toString(user.getStat(StatisticType.LOCAL_SCORE))));
+            } else {
+                player.sendMessage(chatManager.message("in_game.finish_message").replace("%points%", Integer.toString(user.getStat(StatisticType.LOCAL_SCORE))));
+            }
 
-			arena.getBossBarManager().removePlayer();
-			arena.teleportToEndLocation();
-			arena.cleanGameArea();
-		}
+            if (getOption(ConfigPreferences.Option.CLEAR_INVENTORY)) player.getInventory().clear();
+            if (getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED))
+                InventorySerializer.loadInventory(this, player);
 
-		userManager.getUserDatabase().shutdown();
-	}
+            arena.getBossBarManager().removePlayer();
+            arena.teleportToEndLocation();
+            arena.cleanGameArea();
+        }
 
-	private void initializeClasses() {
-		instance = this;
+        userManager.getUserDatabase().shutdown();
+    }
 
-		this.setupConfigurationFiles();
+    private void initializeClasses() {
+        instance = this;
 
-		this.configPreferences = new ConfigPreferences(this);
-		this.chatManager = new ChatManager(this);
-		this.commandFramework = new CommandFramework(this);
-		this.userManager = new UserManager(this);
-		this.soundManager = new SoundManager(this);
-		this.rewardsFactory = new RewardsFactory(this);
-		this.arenaRegistry = new ArenaRegistry(this);
-		this.signManager = new SignManager();
-		this.arenaManager = new ArenaManager(this);
-		this.reloadManager = new ReloadManager(this);
-		this.skullManager = new SkullManager(this);
+        this.setupConfigurationFiles();
 
-		if (chatManager.isPapiEnabled()) {
-			this.leaderboardManager = new LeaderboardManager(this);
+        this.configPreferences = new ConfigPreferences(this);
+        this.chatManager = new ChatManager(this);
+        this.commandFramework = new CommandFramework(this);
+        this.userManager = new UserManager(this);
+        this.soundManager = new SoundManager(this);
+        this.rewardsFactory = new RewardsFactory(this);
+        this.arenaRegistry = new ArenaRegistry(this);
+        this.signManager = new SignManager();
+        this.arenaManager = new ArenaManager(this);
+        this.reloadManager = new ReloadManager(this);
+        this.skullManager = new SkullManager(this);
 
-			new PlaceholderManager(this);
-		}
+        if (chatManager.isPapiEnabled()) {
+            this.leaderboardManager = new LeaderboardManager(this);
 
-		new GameEvents();
-		new PlayerCommands();
-		new AdminCommands();
+            new PlaceholderManager(this);
+        }
 
-		User.cooldownHandlerTask();
+        new GameEvents();
+        new PlayerCommands();
+        new AdminCommands();
 
-		Metrics metrics = new Metrics(this, 15722);
-		metrics.addCustomChart(new SimplePie("database_enabled", () -> getOption(ConfigPreferences.Option.DATABASE_ENABLED) ? "Enabled" : "Disabled"));
-		metrics.addCustomChart(new SimplePie("update_notifier", () -> getOption(ConfigPreferences.Option.UPDATE_NOTIFIER_ENABLED) ? "Enabled" : "Disabled"));
+        User.cooldownHandlerTask();
 
-		this.handleAutoDataSaving();
-		this.initialized = true;
-	}
+        Metrics metrics = new Metrics(this, 15722);
+        metrics.addCustomChart(new SimplePie("database_enabled", () -> getOption(ConfigPreferences.Option.DATABASE_ENABLED) ? "Enabled" : "Disabled"));
+        metrics.addCustomChart(new SimplePie("update_notifier", () -> getOption(ConfigPreferences.Option.UPDATE_NOTIFIER_ENABLED) ? "Enabled" : "Disabled"));
 
-	private void setupConfigurationFiles() {
-		saveDefaultConfig();
+        this.handleAutoDataSaving();
+        this.initialized = true;
+    }
 
-		Collections.streamOf("arenas", "stats", "mysql", "messages", "rewards").filter(name -> !new File(getDataFolder(), name + ".yml").exists()).forEach(name -> saveResource(name + ".yml", false));
-	}
+    private void setupConfigurationFiles() {
+        saveDefaultConfig();
 
-	private void handleAutoDataSaving() {
-		long period = getConfig().getLong("Statistic-Saving-Period", 300);
+        Collections.streamOf("arenas", "stats", "mysql", "messages", "rewards").filter(name -> !new File(getDataFolder(), name + ".yml").exists()).forEach(name -> saveResource(name + ".yml", false));
+    }
 
-		if (period > 0) {
-			getServer().getScheduler().runTaskTimerAsynchronously(this, () -> {
-				userManager.getUserDatabase().saveAllStatistics();
+    private void handleAutoDataSaving() {
+        long period = getConfig().getLong("Statistic-Saving-Period", 300);
 
-				Optional.ofNullable(leaderboardManager).ifPresent(LeaderboardManager::updateLeaderboards);
-			}, period, period * 20);
-		}
-	}
+        if (period > 0) {
+            getServer().getScheduler().runTaskTimerAsynchronously(this, () -> {
+                userManager.getUserDatabase().saveAllStatistics();
 
-	public boolean getOption(ConfigPreferences.Option option) {
-		return configPreferences.getOption(option);
-	}
+                Optional.ofNullable(leaderboardManager).ifPresent(LeaderboardManager::updateLeaderboards);
+            }, period, period * 20);
+        }
+    }
 
-	public void callEvent(WMEvent event) {
-		this.callEvent(() -> event);
-	}
+    public boolean getOption(ConfigPreferences.Option option) {
+        return configPreferences.getOption(option);
+    }
 
-	public void callEvent(Supplier<WMEvent> eventSupplier) {
-		if (initialized && isEnabled()) {
-			getServer().getScheduler().runTask(this, () -> getServer().getPluginManager().callEvent(eventSupplier.get()));
-		}
-	}
+    public void callEvent(WMEvent event) {
+        this.callEvent(() -> event);
+    }
 
-	@NotNull
-	public ChatManager getChatManager() {
-		return chatManager;
-	}
+    public void callEvent(Supplier<WMEvent> eventSupplier) {
+        if (initialized && isEnabled()) {
+            getServer().getScheduler().runTask(this, () -> getServer().getPluginManager().callEvent(eventSupplier.get()));
+        }
+    }
 
-	@NotNull
-	public CommandFramework getCommandFramework() {
-		return commandFramework;
-	}
+    @NotNull
+    public ChatManager getChatManager() {
+        return chatManager;
+    }
 
-	@NotNull
-	public ConfigPreferences getConfigPreferences() {
-		return configPreferences;
-	}
+    @NotNull
+    public CommandFramework getCommandFramework() {
+        return commandFramework;
+    }
 
-	@NotNull
-	public SoundManager getSoundManager() {
-		return soundManager;
-	}
+    @NotNull
+    public ConfigPreferences getConfigPreferences() {
+        return configPreferences;
+    }
 
-	@NotNull
-	public UserManager getUserManager() {
-		return userManager;
-	}
+    @NotNull
+    public SoundManager getSoundManager() {
+        return soundManager;
+    }
 
-	@NotNull
-	public RewardsFactory getRewardsFactory() {
-		return rewardsFactory;
-	}
+    @NotNull
+    public UserManager getUserManager() {
+        return userManager;
+    }
 
-	@NotNull
-	public ArenaRegistry getArenaRegistry() {
-		return arenaRegistry;
-	}
+    @NotNull
+    public RewardsFactory getRewardsFactory() {
+        return rewardsFactory;
+    }
 
-	@NotNull
-	public SignManager getSignManager() {
-		return signManager;
-	}
+    @NotNull
+    public ArenaRegistry getArenaRegistry() {
+        return arenaRegistry;
+    }
 
-	@NotNull
-	public ArenaManager getArenaManager() {
-		return arenaManager;
-	}
+    @NotNull
+    public SignManager getSignManager() {
+        return signManager;
+    }
 
-	@NotNull
-	public SkullManager getSkullManager() {
-		return skullManager;
-	}
+    @NotNull
+    public ArenaManager getArenaManager() {
+        return arenaManager;
+    }
 
-	@NotNull
-	public ReloadManager getReloadManager() {
-		return reloadManager;
-	}
+    @NotNull
+    public SkullManager getSkullManager() {
+        return skullManager;
+    }
 
-	public LeaderboardManager getLeaderboardManager() {
-		return leaderboardManager;
-	}
+    @NotNull
+    public ReloadManager getReloadManager() {
+        return reloadManager;
+    }
 
-	@NotNull
-	public static WhackMe getInstance() {
-		return instance;
-	}
+    public LeaderboardManager getLeaderboardManager() {
+        return leaderboardManager;
+    }
 }

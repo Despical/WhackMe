@@ -7,5 +7,5 @@ package me.despical.whackme.api;
  */
 public interface Reloadable {
 
-	void reload();
+    void reload();
 }

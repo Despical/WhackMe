@@ -16,62 +16,62 @@ import org.bukkit.entity.Player;
  */
 public class SetupInventory {
 
-	private final PaginatedPane paginatedPane;
-	private final Gui gui;
-	private final Player player;
-	private final Arena arena;
-	private final WhackMe plugin;
+    private final PaginatedPane paginatedPane;
+    private final Gui gui;
+    private final Player player;
+    private final Arena arena;
+    private final WhackMe plugin;
 
-	public SetupInventory(WhackMe plugin, Arena arena, Player player) {
-		this.plugin = plugin;
-		this.arena = arena;
-		this.player = player;
-		this.gui = new Gui(plugin, 4, "       Whack Me Arena Editor");
-		this.gui.setOnGlobalClick(e -> e.setCancelled(true));
-		this.paginatedPane = new PaginatedPane(9, 3);
-		this.prepareGui();
-		this.gui.show(player);
-	}
+    public SetupInventory(WhackMe plugin, Arena arena, Player player) {
+        this.plugin = plugin;
+        this.arena = arena;
+        this.player = player;
+        this.gui = new Gui(plugin, 4, "       Whack Me Arena Editor");
+        this.gui.setOnGlobalClick(e -> e.setCancelled(true));
+        this.paginatedPane = new PaginatedPane(9, 3);
+        this.prepareGui();
+        this.gui.show(player);
+    }
 
-	public SetupInventory(WhackMe plugin, Arena arena, Player player, String title) {
-		this.plugin = plugin;
-		this.arena = arena;
-		this.player = player;
-		this.gui = new Gui(plugin, 3, title);
-		this.gui.setOnGlobalClick(e -> e.setCancelled(true));
-		this.paginatedPane = new PaginatedPane(9, 3);
-		this.prepareGui();
-		this.paginatedPane.setPage(1);
-		this.gui.show(player);
-	}
+    public SetupInventory(WhackMe plugin, Arena arena, Player player, String title) {
+        this.plugin = plugin;
+        this.arena = arena;
+        this.player = player;
+        this.gui = new Gui(plugin, 3, title);
+        this.gui.setOnGlobalClick(e -> e.setCancelled(true));
+        this.paginatedPane = new PaginatedPane(9, 3);
+        this.prepareGui();
+        this.paginatedPane.setPage(1);
+        this.gui.show(player);
+    }
 
-	private void prepareGui() {
-		this.gui.addPane(paginatedPane);
+    private void prepareGui() {
+        this.gui.addPane(paginatedPane);
 
-		SetupComponent spawnComponents = new MainComponents(this);
-		spawnComponents.injectComponents(paginatedPane);
+        SetupComponent spawnComponents = new MainComponents(this);
+        spawnComponents.injectComponents(paginatedPane);
 
-		SetupComponent amountComponents = new PointBlockAmountComponents(this);
-		amountComponents.injectComponents(paginatedPane);
-	}
+        SetupComponent amountComponents = new PointBlockAmountComponents(this);
+        amountComponents.injectComponents(paginatedPane);
+    }
 
-	public WhackMe getPlugin() {
-		return plugin;
-	}
+    public WhackMe getPlugin() {
+        return plugin;
+    }
 
-	public Arena getArena() {
-		return arena;
-	}
+    public Arena getArena() {
+        return arena;
+    }
 
-	public Player getPlayer() {
-		return player;
-	}
+    public Player getPlayer() {
+        return player;
+    }
 
-	public Gui getGui() {
-		return gui;
-	}
+    public Gui getGui() {
+        return gui;
+    }
 
-	public void closeInventory() {
-		plugin.getServer().getScheduler().runTaskLater(plugin, () -> player.closeInventory(), 1L);
-	}
+    public void closeInventory() {
+        plugin.getServer().getScheduler().runTaskLater(plugin, () -> player.closeInventory(), 1L);
+    }
 }

@@ -14,38 +14,38 @@ import org.jetbrains.annotations.NotNull;
  */
 public class WMPlayerStatisticChangeEvent extends WMEvent {
 
-	private static final HandlerList handlers = new HandlerList();
+    private static final HandlerList handlers = new HandlerList();
 
-	private final Player player;
-	private final StatisticType statisticType;
-	private final int value;
+    private final Player player;
+    private final StatisticType statisticType;
+    private final int value;
 
-	public WMPlayerStatisticChangeEvent(Arena arena, Player player, StatisticType statisticType, int value) {
-		super(arena);
-		this.player = player;
-		this.statisticType = statisticType;
-		this.value = value;
-	}
+    public WMPlayerStatisticChangeEvent(Arena arena, Player player, StatisticType statisticType, int value) {
+        super(arena);
+        this.player = player;
+        this.statisticType = statisticType;
+        this.value = value;
+    }
 
-	public static HandlerList getHandlerList() {
-		return handlers;
-	}
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
 
-	@NotNull
-	@Override
-	public HandlerList getHandlers() {
-		return handlers;
-	}
+    @NotNull
+    @Override
+    public HandlerList getHandlers() {
+        return handlers;
+    }
 
-	public Player getPlayer() {
-		return player;
-	}
+    public Player getPlayer() {
+        return player;
+    }
 
-	public StatisticType getStatisticType() {
-		return statisticType;
-	}
+    public StatisticType getStatisticType() {
+        return statisticType;
+    }
 
-	public int getValue() {
-		return value;
-	}
+    public int getValue() {
+        return value;
+    }
 }

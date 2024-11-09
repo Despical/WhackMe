@@ -10,13 +10,13 @@ import org.bukkit.event.Event;
  */
 public abstract class WMEvent extends Event {
 
-	protected final Arena arena;
+    protected final Arena arena;
 
-	public WMEvent(Arena arena) {
-		this.arena = arena;
-	}
+    public WMEvent(Arena arena) {
+        this.arena = arena;
+    }
 
-	public Arena getArena() {
-		return arena;
-	}
+    public Arena getArena() {
+        return arena;
+    }
 }

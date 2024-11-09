@@ -19,77 +19,76 @@ import java.util.Set;
  */
 public class Utils {
 
-	private static final WhackMe plugin = WhackMe.getInstance();
+    public static final ItemStack END_PORTAL_FRAME = XMaterial.END_PORTAL_FRAME.parseItem();
+    public static final int[][] DIRECTIONS = {{1, 0}, {-1, 0}, {1, 1}, {-1, 1}, {1, -1}, {-1, -1}, {0, 1}, {0, -1}};
+    private static final WhackMe plugin = WhackMe.getInstance();
 
-	public static final ItemStack END_PORTAL_FRAME = XMaterial.END_PORTAL_FRAME.parseItem();
-	public static final int[][] DIRECTIONS = {{1, 0}, {-1, 0}, {1, 1}, {-1, 1}, {1, -1}, {-1, -1}, {0, 1}, {0, -1}};
+    private Utils() {
+    }
 
-	private Utils() {
-	}
+    public static boolean isSurroundedBy(Location center) {
+        if (center == null) return false;
 
-	public static boolean isSurroundedBy(Location center) {
-		if (center == null) return false;
+        center = new Location(center.getWorld(), center.getX(), center.getY(), center.getZ());
 
-		center = new Location(center.getWorld(), center.getX(), center.getY(), center.getZ());
+        for (final Block block : getBlocksSurroundedBy(center)) {
+            if (block.getType() != END_PORTAL_FRAME.getType()) return false;
+        }
 
-		for (final Block block : getBlocksSurroundedBy(center)) {
-			if (block.getType() != END_PORTAL_FRAME.getType()) return false;
-		}
+        return true;
+    }
 
-		return true;
-	}
+    public static Set<Block> getBlocksSurroundedBy(Location center) {
+        final Set<Block> blocks = new HashSet<>();
 
-	public static Set<Block> getBlocksSurroundedBy(Location center) {
-		final Set<Block> blocks = new HashSet<>();
+        for (int[] array : DIRECTIONS) {
+            final Block block = center.clone().add(array[0], 0, array[1]).getBlock();
 
-		for (int[] array : DIRECTIONS) {
-			final Block block = center.clone().add(array[0], 0, array[1]).getBlock();
+            blocks.add(block);
+        }
 
-			blocks.add(block);
-		}
+        return blocks;
+    }
 
-		return blocks;
-	}
+    public static void trySilently(Runnable... runnables) {
+        for (Runnable runnable : runnables) {
+            try {
+                runnable.run();
+            } catch (Exception | Error ignored) {
+            }
+        }
+    }
 
-	public static void trySilently(Runnable... runnables) {
-		for (Runnable runnable : runnables) {
-			try {
-				runnable.run();
-			} catch (Exception | Error ignored) {
-			}
-		}
-	}
+    public static boolean hasJoinPermission(Player player) {
+        final String permission = plugin.getConfig().getString("Join-Permission");
 
-	public static boolean hasJoinPermission(Player player) {
-		final String permission = plugin.getConfig().getString("Join-Permission");
+        return permission == null || permission.isEmpty() || player != null && player.hasPermission(permission);
+    }
 
-		return permission == null || permission.isEmpty() || player != null && player.hasPermission(permission);
-	}
+    public static void rotateGameBlocks(ArmorStand stand, Location availableLocation, Location center, String path) {
+        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
+            String[] yaws = plugin.getConfig().getString("Point-Blocks.Rotations." + path, "").split(":");
 
-	public static void rotateGameBlocks(ArmorStand stand, Location availableLocation, Location center, String path) {
-		plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
-			String[] yaws = plugin.getConfig().getString("Point-Blocks.Rotations." + path, "").split(":");
+            Location newCenter = new Location(center.getWorld(), center.getX(), center.getY(), center.getZ());
+            Set<Block> locations = getBlocksSurroundedBy(newCenter);
+            int i = -1;
 
-			Location newCenter = new Location(center.getWorld(), center.getX(), center.getY(), center.getZ());
-			Set<Block> locations = getBlocksSurroundedBy(newCenter);
-			int i = -1;
+            for (Block block : locations) {
+                i++;
 
-			for (Block block : locations) {
-				i++;
+                if (block.getLocation().equals(availableLocation)) {
+                    break;
+                }
+            }
 
-				if (block.getLocation().equals(availableLocation)) {
-					break;
-				}
-			}
+            if (i >= yaws.length) return;
 
-			if (i >= yaws.length) return;
+            int yaw = NumberUtils.getInt(yaws[i]);
 
-			int yaw = NumberUtils.getInt(yaws[i]);
+            Location location = stand.getLocation().clone();
+            location.setYaw(yaw);
 
-			Location location = stand.getLocation().clone();
-			location.setYaw(yaw);
-
-			stand.teleport(location);
-		}, 1);
-	}
+            stand.teleport(location);
+        }, 1);
+    }
 }

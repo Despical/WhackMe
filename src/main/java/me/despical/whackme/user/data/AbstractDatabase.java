@@ -12,16 +12,16 @@ import org.jetbrains.annotations.NotNull;
  */
 public abstract class AbstractDatabase {
 
-	@NotNull
-	protected static final WhackMe plugin = WhackMe.getInstance();
+    @NotNull
+    protected static final WhackMe plugin = WhackMe.getInstance();
 
-	public abstract void saveStatistic(@NotNull User user, StatisticType statisticType);
+    public abstract void saveStatistic(@NotNull User user, StatisticType statisticType);
 
-	public abstract void saveStatistics(@NotNull User user);
+    public abstract void saveStatistics(@NotNull User user);
 
-	public abstract void saveAllStatistics();
+    public abstract void saveAllStatistics();
 
-	public abstract void loadStatistics(@NotNull User user);
+    public abstract void loadStatistics(@NotNull User user);
 
-	public abstract void shutdown();
+    public abstract void shutdown();
 }

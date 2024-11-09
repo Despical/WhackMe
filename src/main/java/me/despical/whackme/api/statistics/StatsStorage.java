@@ -23,40 +23,40 @@ import java.util.UUID;
  */
 public class StatsStorage {
 
-	private static final WhackMe plugin = WhackMe.getInstance();
+    private static final WhackMe plugin = WhackMe.getInstance();
 
-	@NotNull
-	public static Map<UUID, Integer> getStats(StatisticType stat) {
-		if (plugin.getUserManager().getUserDatabase() instanceof MySQLManager) {
-			MySQLManager mysqlManager = (MySQLManager) plugin.getUserManager().getUserDatabase();
+    @NotNull
+    public static Map<UUID, Integer> getStats(StatisticType stat) {
+        if (plugin.getUserManager().getUserDatabase() instanceof MySQLManager) {
+            MySQLManager mysqlManager = (MySQLManager) plugin.getUserManager().getUserDatabase();
 
-			try (Connection connection = mysqlManager.getDatabase().getConnection()) {
-				Statement statement = connection.createStatement();
-				ResultSet set = statement.executeQuery(String.format("SELECT UUID, %s FROM %s ORDER BY %s", stat.getName(), mysqlManager.getTableName(), stat.getName()));
-				Map<UUID, Integer> column = new LinkedHashMap<>();
+            try (Connection connection = mysqlManager.getDatabase().getConnection()) {
+                Statement statement = connection.createStatement();
+                ResultSet set = statement.executeQuery(String.format("SELECT UUID, %s FROM %s ORDER BY %s", stat.getName(), mysqlManager.getTableName(), stat.getName()));
+                Map<UUID, Integer> column = new LinkedHashMap<>();
 
-				while (set.next()) {
-					column.put(UUID.fromString(set.getString("UUID")), set.getInt(stat.getName()));
-				}
+                while (set.next()) {
+                    column.put(UUID.fromString(set.getString("UUID")), set.getInt(stat.getName()));
+                }
 
-				return column;
-			} catch (SQLException e) {
-				plugin.getLogger().warning("SQLException occurred during getting statistics from database!");
-				return new LinkedHashMap<>();
-			}
-		}
+                return column;
+            } catch (SQLException e) {
+                plugin.getLogger().warning("SQLException occurred during getting statistics from database!");
+                return new LinkedHashMap<>();
+            }
+        }
 
-		FileConfiguration config = ConfigUtils.getConfig(plugin, "stats");
-		Map<UUID, Integer> stats = new LinkedHashMap<>();
+        FileConfiguration config = ConfigUtils.getConfig(plugin, "stats");
+        Map<UUID, Integer> stats = new LinkedHashMap<>();
 
-		for (String string : config.getKeys(false)) {
-			stats.put(UUID.fromString(string), config.getInt(string + "." + stat.getName()));
-		}
+        for (String string : config.getKeys(false)) {
+            stats.put(UUID.fromString(string), config.getInt(string + "." + stat.getName()));
+        }
 
-		return SortUtils.sortByValue(stats);
-	}
+        return SortUtils.sortByValue(stats);
+    }
 
-	public static int getUserStats(Player player, StatisticType statisticType) {
-		return plugin.getUserManager().getUser(player).getStat(statisticType);
-	}
+    public static int getUserStats(Player player, StatisticType statisticType) {
+        return plugin.getUserManager().getUser(player).getStat(statisticType);
+    }
 }
