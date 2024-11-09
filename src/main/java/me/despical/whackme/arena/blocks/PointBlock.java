@@ -87,7 +87,7 @@ public class PointBlock extends BukkitRunnable {
 	}
 
 	private PointBlockType getPointBlockType() {
-		final int greenSize = (int) arena.getPointBlocks().stream().filter(pointBlock -> pointBlock.stand.getCustomName().equalsIgnoreCase(PUNCH_ME)).count(),
+		int greenSize = (int) arena.getPointBlocks().stream().filter(pointBlock -> pointBlock.stand.getCustomName().equalsIgnoreCase(PUNCH_ME)).count(),
 			redSize = (int) arena.getPointBlocks().stream().filter(pointBlock -> pointBlock.stand.getCustomName().equalsIgnoreCase(DONT_PUNCH_ME)).count();
 
 		if (greenSize > redSize) {
@@ -108,11 +108,11 @@ public class PointBlock extends BukkitRunnable {
 
 			@EventHandler
 			public void onArmorStandManipulate(PlayerArmorStandManipulateEvent event) {
-				final Player player = event.getPlayer();
+				Player player = event.getPlayer();
 
 				if (!arena.containPlayer(player)) return;
 
-				final ArmorStand armorStand = event.getRightClicked();
+				ArmorStand armorStand = event.getRightClicked();
 
 				if (!armorStand.equals(stand)) return;
 
@@ -130,8 +130,8 @@ public class PointBlock extends BukkitRunnable {
 				if (!arena.containPlayer(player)) return;
 				if (!armorStand.equals(stand)) return;
 
-				final User user = plugin.getUserManager().getUser(player);
-				final String name = stand.getCustomName();
+				User user = plugin.getUserManager().getUser(player);
+				String name = stand.getCustomName();
 
 				if (name == null) return;
 				if (stand.getCustomName().equals(OUCH)) return;
@@ -213,7 +213,7 @@ public class PointBlock extends BukkitRunnable {
 		}
 	}
 
-	private void handleEntityTeleportation(final Location destination) {
+	private void handleEntityTeleportation(Location destination) {
 		if (async) {
 			if (XReflection.supports(16)) {
 				stand.teleportAsync(destination);

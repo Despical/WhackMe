@@ -57,9 +57,9 @@ public class ConfigPreferences implements Reloadable {
 	private void loadOptions() {
 		this.options.clear();
 
-		final FileConfiguration config = plugin.getConfig();
+		FileConfiguration config = plugin.getConfig();
 
-		for (final Option option : Option.values()) {
+		for (Option option : Option.values()) {
 			options.put(option, config.getBoolean(option.path, option.def));
 		}
 
@@ -78,7 +78,7 @@ public class ConfigPreferences implements Reloadable {
 		CLEAR_INVENTORY,
 		DATABASE_ENABLED(false),
 		INVENTORY_MANAGER_ENABLED((config) -> {
-			final List<String> list = config.getStringList("Inventory-Manager.Do-Not-Restore");
+			List<String> list = config.getStringList("Inventory-Manager.Do-Not-Restore");
 			list.forEach(InventorySerializer::addNonSerializableElements);
 
 			return config.getBoolean("Inventory-Manager.Enabled");

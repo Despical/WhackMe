@@ -31,7 +31,7 @@ public class GameEvents extends AbstractEventHandler {
 
 	@EventHandler
 	public void onCommandExecute(PlayerCommandPreprocessEvent event) {
-		final Player player = event.getPlayer();
+		Player player = event.getPlayer();
 
 		if (!plugin.getArenaRegistry().isInArena(player)) {
 			return;
@@ -41,7 +41,7 @@ public class GameEvents extends AbstractEventHandler {
 			return;
 		}
 
-		final String message = event.getMessage();
+		String message = event.getMessage();
 
 		if (plugin.getConfig().getStringList("Whitelisted-Commands").contains(message)) {
 			return;

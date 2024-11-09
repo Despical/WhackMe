@@ -34,7 +34,7 @@ public class BossBarManager extends BukkitRunnable {
 		this.enabled = plugin.getOption(ConfigPreferences.Option.BOSS_BAR_ENABLED) && XReflection.supports(13);
 
 		if (enabled) {
-			final ChatManager chatManager = plugin.getChatManager();
+			ChatManager chatManager = plugin.getChatManager();
 
 			this.bossBar = plugin.getServer().createBossBar(chatManager.message("boss_bar.game_info"), BarColor.valueOf(chatManager.message("boss_bar.color")), BarStyle.valueOf(chatManager.message("boss_bar.style")));
 			this.messages = chatManager.getStringList("boss_bar.messages");

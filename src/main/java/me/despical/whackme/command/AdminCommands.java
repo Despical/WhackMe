@@ -131,16 +131,16 @@ public class AdminCommands extends AbstractCommandHandler {
 		permission = "wm.admin.help"
 	)
 	public void helpCommand(CommandArguments arguments) {
-		final boolean isPlayer = arguments.isSenderPlayer();
-		final CommandSender sender = arguments.getSender();
+		boolean isPlayer = arguments.isSenderPlayer();
+		CommandSender sender = arguments.getSender();
 
 		arguments.sendMessage("");
 		MiscUtils.sendCenteredMessage(sender, "&3&lWhack Me");
 		MiscUtils.sendCenteredMessage(arguments.getSender(), "&3[&boptional argument&3] &b- &3<&brequired argument&3>");
 		arguments.sendMessage("");
 
-		for (final Command command : plugin.getCommandFramework().getSubCommands()) {
-			final String usage = formatCommandUsage("&3" + command.usage()), desc = command.desc();
+		for (Command command : plugin.getCommandFramework().getSubCommands()) {
+			String usage = formatCommandUsage("&3" + command.usage()), desc = command.desc();
 
 			if (desc.isEmpty()) continue;
 
@@ -158,7 +158,7 @@ public class AdminCommands extends AbstractCommandHandler {
 		}
 
 		if (isPlayer) {
-			final Player player = arguments.getSender();
+			Player player = arguments.getSender();
 
 			player.sendMessage("");
 			player.spigot().sendMessage(new ComponentBuilder("TIP:").color(ChatColor.YELLOW).bold(true)
@@ -180,7 +180,7 @@ public class AdminCommands extends AbstractCommandHandler {
 		permission = "wm.admin.list"
 	)
 	public void listCommand(CommandArguments arguments) {
-		final Set<Arena> arenas = plugin.getArenaRegistry().getArenas();
+		Set<Arena> arenas = plugin.getArenaRegistry().getArenas();
 
 		if (arenas.isEmpty()) {
 			arguments.sendMessage(chatManager.prefixedMessage("commands.list_command.no_arenas_created"));
@@ -223,7 +223,7 @@ public class AdminCommands extends AbstractCommandHandler {
 		plugin.getReloadManager().initializeReload(arguments.getSender());
 
 		for (Arena arena : plugin.getArenaRegistry().getArenas()) {
-			final Player player = arena.getPlayer();
+			Player player = arena.getPlayer();
 
 			if (player != null) {
 				player.setFlySpeed(.1F);
@@ -311,8 +311,8 @@ public class AdminCommands extends AbstractCommandHandler {
 		name = "wm"
 	)
 	public List<String> onTabComplete(CommandArguments arguments) {
-		final List<String> completions = new ArrayList<>(), commands = plugin.getCommandFramework().getSubCommands().stream().map(cmd -> cmd.name().replace(arguments.getLabel() + '.', "")).collect(Collectors.toList());
-		final String[] args = arguments.getArguments();
+		List<String> completions = new ArrayList<>(), commands = plugin.getCommandFramework().getSubCommands().stream().map(cmd -> cmd.name().replace(arguments.getLabel() + '.', "")).collect(Collectors.toList());
+		String[] args = arguments.getArguments();
 
 		if (args.length > 0) {
 			if (Arrays.asList("create", "list", "help", "reload", "leave", "randomjoin").contains(args[0])) {
@@ -324,7 +324,7 @@ public class AdminCommands extends AbstractCommandHandler {
 			return StringUtil.copyPartialMatches(args[0], arguments.hasPermission("wm.admin") ? commands : Arrays.asList("join", "randomjoin", "leave", "top", "stats"), completions);
 		}
 
-		final String arg = args[0];
+		String arg = args[0];
 
 		if (args.length == 2) {
 			if (arg.equalsIgnoreCase("top")) {
@@ -350,8 +350,8 @@ public class AdminCommands extends AbstractCommandHandler {
 	}
 
 	private String formatCommandUsage(String usage) {
-		final char[] array = usage.toCharArray();
-		final StringBuilder buffer = new StringBuilder(usage);
+		char[] array = usage.toCharArray();
+		StringBuilder buffer = new StringBuilder(usage);
 
 		for (int i = 0; i < array.length; i++) {
 			if (array[i] == '[' || array[i] == '<') {

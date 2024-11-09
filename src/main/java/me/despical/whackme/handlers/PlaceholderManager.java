@@ -120,8 +120,8 @@ public class PlaceholderManager extends PlaceholderExpansion {
 	}
 
 	private String handleArenaPlaceholderRequest(String id) {
-		final String[] data = id.split(":");
-		final Arena arena = plugin.getArenaRegistry().getArena(data[0]);
+		String[] data = id.split(":");
+		Arena arena = plugin.getArenaRegistry().getArena(data[0]);
 
 		if (arena == null) return null;
 

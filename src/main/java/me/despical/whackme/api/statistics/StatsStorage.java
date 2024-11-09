@@ -30,10 +30,10 @@ public class StatsStorage {
 		if (plugin.getUserManager().getUserDatabase() instanceof MySQLManager) {
 			MySQLManager mysqlManager = (MySQLManager) plugin.getUserManager().getUserDatabase();
 
-			try (final Connection connection = mysqlManager.getDatabase().getConnection()) {
-				final Statement statement = connection.createStatement();
-				final ResultSet set = statement.executeQuery(String.format("SELECT UUID, %s FROM %s ORDER BY %s", stat.getName(), mysqlManager.getTableName(), stat.getName()));
-				final Map<UUID, Integer> column = new LinkedHashMap<>();
+			try (Connection connection = mysqlManager.getDatabase().getConnection()) {
+				Statement statement = connection.createStatement();
+				ResultSet set = statement.executeQuery(String.format("SELECT UUID, %s FROM %s ORDER BY %s", stat.getName(), mysqlManager.getTableName(), stat.getName()));
+				Map<UUID, Integer> column = new LinkedHashMap<>();
 
 				while (set.next()) {
 					column.put(UUID.fromString(set.getString("UUID")), set.getInt(stat.getName()));
@@ -46,8 +46,8 @@ public class StatsStorage {
 			}
 		}
 
-		final FileConfiguration config = ConfigUtils.getConfig(plugin, "stats");
-		final Map<UUID, Integer> stats = new LinkedHashMap<>();
+		FileConfiguration config = ConfigUtils.getConfig(plugin, "stats");
+		Map<UUID, Integer> stats = new LinkedHashMap<>();
 
 		for (String string : config.getKeys(false)) {
 			stats.put(UUID.fromString(string), config.getInt(string + "." + stat.getName()));

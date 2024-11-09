@@ -28,7 +28,7 @@ public class PointHandler extends BukkitRunnable {
 
 	@Override
 	public void run() {
-		final Player player = arena.getPlayer();
+		Player player = arena.getPlayer();
 
 		if (player == null) return;
 
@@ -48,7 +48,7 @@ public class PointHandler extends BukkitRunnable {
 		return min == max ? min : ThreadLocalRandom.current().nextInt(min, max);
 	}
 
-	private void sendActionBar(final Player player) {
+	private void sendActionBar(Player player) {
 		String message = plugin.getChatManager().message("in_game.action_bar");
 
 		if (message.isEmpty()) return;

@@ -26,7 +26,7 @@ public final class ReloadManager {
 		try {
 			plugin.reloadConfig();
 
-			for (final Field field : plugin.getClass().getDeclaredFields()) {
+			for (Field field : plugin.getClass().getDeclaredFields()) {
 				if (Reloadable.class.isAssignableFrom(field.getType())) {
 					field.setAccessible(true);
 

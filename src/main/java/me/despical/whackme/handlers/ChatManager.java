@@ -31,7 +31,7 @@ public class ChatManager implements Reloadable {
 		this.reload();
 
 		Message.NO_PERMISSION.setMessage((cmd, args) -> {
-			final String message = this.message("Commands.No-Permission");
+			String message = this.message("Commands.No-Permission");
 
 			if (!message.isEmpty()) {
 				args.sendMessage(message);

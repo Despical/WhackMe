@@ -139,14 +139,14 @@ public class PlayerCommands extends AbstractCommandHandler {
 		senderType = Command.SenderType.PLAYER
 	)
 	public void statsCommand(Player player, CommandArguments argument) {
-		final Player target = argument.isArgumentsEmpty() ? player : plugin.getServer().getPlayer(argument.getArgument(0));
+		Player target = argument.isArgumentsEmpty() ? player : plugin.getServer().getPlayer(argument.getArgument(0));
 
 		if (target == null) {
 			player.sendMessage(chatManager.prefixedMessage("commands.player_not_found"));
 			return;
 		}
 
-		final User user = plugin.getUserManager().getUser(target);
+		User user = plugin.getUserManager().getUser(target);
 
 		chatManager.getStringList("commands.stats_command.messages")
 			.stream()
@@ -155,7 +155,7 @@ public class PlayerCommands extends AbstractCommandHandler {
 	}
 
 	private String formatStats(String message, String header, User user) {
-		final int minusBlocks = user.getStat(MINUS_BLOCKS), plusBlocks = user.getStat(PLUS_BLOCKS);
+		int minusBlocks = user.getStat(MINUS_BLOCKS), plusBlocks = user.getStat(PLUS_BLOCKS);
 
 		message = message.replace("%player%", user.getName());
 		message = message.replace("%header%", chatManager.message("commands.stats_command." + header, user.getPlayer()));
@@ -189,8 +189,8 @@ public class PlayerCommands extends AbstractCommandHandler {
 	private void printLeaderboard(CommandSender sender, StatisticType statisticType) {
 		sender.sendMessage(chatManager.message("commands.statistics.header"));
 
-		final Map<UUID, Integer> stats = StatsStorage.getStats(statisticType);
-		final String statistic = StringUtils.capitalize(statisticType.name().toLowerCase(java.util.Locale.ENGLISH).replace("_", " "));
+		Map<UUID, Integer> stats = StatsStorage.getStats(statisticType);
+		String statistic = StringUtils.capitalize(statisticType.name().toLowerCase(java.util.Locale.ENGLISH).replace("_", " "));
 
 		for (int i = 0; i < 10; i++) {
 			try {
