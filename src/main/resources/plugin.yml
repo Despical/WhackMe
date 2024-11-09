@@ -2,15 +2,18 @@ name: WhackMe
 main: me.despical.whackme.WhackMe
 author: Despical
 version: ${project.version}
-api-version: 1.13
-softdepend: [ Multiverse-Core, PlaceholderAPI ]
 website: https://www.spigotmc.org/resources/104912
+
+api-version: 1.13
+softdepend:
+  - Multiverse-Core
+  - PlaceholderAPI
+  - MultiWorld
 
 permissions:
   wm.admin.*:
     default: op
     children:
-      wm.update: true
       wm.admin: true
       wm.admin.create: true
       wm.admin.delete: true
