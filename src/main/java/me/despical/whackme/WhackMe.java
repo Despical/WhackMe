@@ -65,11 +65,12 @@ public class WhackMe extends JavaPlugin {
     public void onEnable() {
         initializeClasses();
 
-        UpdateChecker.setEnabled(this.getOption(ConfigPreferences.Option.UPDATE_NOTIFIER_ENABLED));
-        UpdateChecker.init(this, 104912).onNewUpdate(result -> getLogger().info("Found a new version available: v" + result.getNewestVersion()));
-
         getLogger().info("Initialization finished.");
         getLogger().info("Join our Discord server: https://discord.gg/uXVU8jmtpU");
+
+        if (this.getOption(ConfigPreferences.Option.UPDATE_NOTIFIER_ENABLED)) {
+            UpdateChecker.init(this, 104912).onNewUpdate(result -> getLogger().info("Found a new version available: v" + result.getNewestVersion()));
+        }
     }
 
     @Override
