@@ -154,14 +154,14 @@ public class WhackMe extends JavaPlugin {
     }
 
     private void handleAutoDataSaving() {
-        long period = getConfig().getLong("Statistic-Saving-Period", 300);
+        long period = getConfig().getLong("Statistic-Saving-Period", 300) * 20;
 
         if (period > 0) {
             getServer().getScheduler().runTaskTimerAsynchronously(this, () -> {
                 userManager.getUserDatabase().saveAllStatistics();
 
                 Optional.ofNullable(leaderboardManager).ifPresent(LeaderboardManager::updateLeaderboards);
-            }, period, period * 20);
+            }, period, period);
         }
     }
 
