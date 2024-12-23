@@ -23,8 +23,6 @@ public class UserManager {
     public UserManager(WhackMe plugin) {
         this.users = new HashMap<>();
         this.userDatabase = plugin.getOption(ConfigPreferences.Option.DATABASE_ENABLED) ? new MySQLManager() : new FileStatistics();
-
-        plugin.getServer().getOnlinePlayers().forEach(this::addUser);
     }
 
     @NotNull
