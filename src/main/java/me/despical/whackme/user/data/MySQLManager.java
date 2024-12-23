@@ -66,7 +66,6 @@ public class MySQLManager extends AbstractDatabase {
         }
     }
 
-
     @Override
     public void loadStatistics(@NotNull User user) {
         String uuid = user.getUniqueId().toString();
@@ -77,19 +76,16 @@ public class MySQLManager extends AbstractDatabase {
                 ResultSet result = statement.executeQuery(String.format("SELECT * from %s WHERE UUID='%s';", tableName, uuid));
 
                 if (result.next()) {
-                    for (StatisticType stat : StatisticType.values()) {
-                        if (!stat.isPersistent()) continue;
-
+                    for (StatisticType stat : StatisticType.PERSISTENT_STATS) {
                         user.setStat(stat, result.getInt(stat.getName()));
                     }
-                } else {
-                    statement.executeUpdate(String.format("INSERT INTO %s (UUID,name) VALUES ('%s','%s');", tableName, uuid, user.getName()));
 
-                    for (StatisticType stat : StatisticType.values()) {
-                        if (!stat.isPersistent()) continue;
+                    return;
+                }
+                statement.executeUpdate(String.format("INSERT INTO %s (UUID,name) VALUES ('%s','%s');", tableName, uuid, user.getName()));
 
-                        user.setStat(stat, 0);
-                    }
+                for (StatisticType stat : StatisticType.PERSISTENT_STATS) {
+                    user.setStat(stat, 0);
                 }
             } catch (SQLException exception) {
                 exception.printStackTrace();
@@ -99,8 +95,9 @@ public class MySQLManager extends AbstractDatabase {
 
     @Override
     public void shutdown() {
-        this.saveAllStatistics();
-        this.database.shutdownConnPool();
+        saveAllStatistics();
+
+        database.shutdownConnPool();
     }
 
     @NotNull
@@ -116,9 +113,7 @@ public class MySQLManager extends AbstractDatabase {
     private String getUpdateStatement(User user) {
         StringBuilder builder = new StringBuilder(" SET ");
 
-        for (StatisticType stat : StatisticType.values()) {
-            if (!stat.isPersistent()) continue;
-
+        for (StatisticType stat : StatisticType.PERSISTENT_STATS) {
             String name = stat.getName();
             int value = user.getStat(stat);
 

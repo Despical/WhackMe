@@ -20,6 +20,8 @@ public enum StatisticType {
     LOCAL_LONGEST_STREAK("local_longest_streak", false),
     LOCAL_SCORE("local_score", false);
 
+    public static final StatisticType[] PERSISTENT_STATS = Stream.of(values()).filter(StatisticType::isPersistent).toArray(StatisticType[]::new);
+
     final String name;
     final boolean persistent;
 
