@@ -29,6 +29,7 @@ public class PlayerCommands extends AbstractCommandHandler {
 
     @Command(
         name = "wm",
+        fallbackPrefix = "whackme",
         usage = "/wm",
         desc = "Main command of the plugin."
     )
