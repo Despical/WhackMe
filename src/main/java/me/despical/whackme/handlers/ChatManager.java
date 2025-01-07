@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * @author Despical
@@ -29,15 +30,7 @@ public class ChatManager implements Reloadable {
         this.plugin = plugin;
         this.reload();
 
-        Message.NO_PERMISSION.setMessage((cmd, args) -> {
-            String message = this.message("Commands.No-Permission");
-
-            if (!message.isEmpty()) {
-                args.sendMessage(message);
-            }
-
-            return true;
-        });
+        Message.setColorFormatter(Strings::format);
     }
 
     public boolean isPapiEnabled() {
@@ -102,6 +95,21 @@ public class ChatManager implements Reloadable {
         this.config = ConfigUtils.getConfig(plugin, "messages");
         this.prefix = message("in_game.plugin_prefix");
         this.papiEnabled = plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI");
+
+        Stream.of(Message.SHORT_ARG_SIZE, Message.LONG_ARG_SIZE).forEach(message -> message.setMessage((command, arguments) -> {
+            arguments.sendMessage(this.prefixedMessage("commands.correct_usage").replace("%usage%", command.usage()));
+            return true;
+        }));
+
+        Message.NO_PERMISSION.setMessage((cmd, args) -> {
+            String message = this.message("Commands.No-Permission");
+
+            if (!message.isEmpty()) {
+                args.sendMessage(message);
+            }
+
+            return true;
+        });
 
         StringFormatUtils.setTimeFormat(this.message("In-Game.Timer-Format"));
     }
