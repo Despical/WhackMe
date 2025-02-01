@@ -2,7 +2,7 @@ package me.despical.whackme.user;
 
 import me.despical.whackme.ConfigPreferences;
 import me.despical.whackme.WhackMe;
-import me.despical.whackme.user.data.AbstractDatabase;
+import me.despical.whackme.user.data.UserDatabase;
 import me.despical.whackme.user.data.FileStatistics;
 import me.despical.whackme.user.data.MySQLManager;
 import org.bukkit.entity.Player;
@@ -18,7 +18,7 @@ import java.util.*;
 public class UserManager {
 
     private final Map<UUID, User> users;
-    private final AbstractDatabase userDatabase;
+    private final UserDatabase userDatabase;
 
     public UserManager(WhackMe plugin) {
         this.users = new HashMap<>();
@@ -46,7 +46,7 @@ public class UserManager {
             return user;
         }
 
-        return this.addUser(player);
+        return addUser(player);
     }
 
     public Set<User> getUsers() {
@@ -54,7 +54,7 @@ public class UserManager {
     }
 
     @NotNull
-    public AbstractDatabase getUserDatabase() {
-        return this.userDatabase;
+    public UserDatabase getUserDatabase() {
+        return userDatabase;
     }
 }

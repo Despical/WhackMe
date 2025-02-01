@@ -6,7 +6,7 @@ import me.despical.whackme.WhackMe;
 import me.despical.whackme.handlers.ChatManager;
 import org.bukkit.entity.Player;
 
-public abstract class AbstractCommandHandler {
+public abstract class CommandHandler {
 
     protected static final WhackMe plugin = WhackMe.getInstance();
     protected static final ChatManager chatManager = plugin.getChatManager();
@@ -18,7 +18,7 @@ public abstract class AbstractCommandHandler {
         commandFramework.addCustomParameter("pArena", arguments -> plugin.getArenaRegistry().getArena(arguments.<Player>getSender()));
     }
 
-    public AbstractCommandHandler() {
+    public CommandHandler() {
         plugin.getCommandFramework().registerCommands(this);
     }
 }

@@ -1,7 +1,7 @@
 package me.despical.whackme.user.data;
 
 import me.despical.commons.configuration.ConfigUtils;
-import me.despical.commons.database.MysqlDatabase;
+import me.despical.commons.database.MySQLDatabase;
 import me.despical.whackme.api.statistics.StatisticType;
 import me.despical.whackme.user.User;
 import org.jetbrains.annotations.NotNull;
@@ -16,14 +16,14 @@ import java.sql.Statement;
  * <p>
  * Created at 20.06.2022
  */
-public class MySQLManager extends AbstractDatabase {
+public class MySQLManager extends UserDatabase {
 
     private final String tableName;
-    private final MysqlDatabase database;
+    private final MySQLDatabase database;
 
     public MySQLManager() {
         this.tableName = ConfigUtils.getConfig(plugin, "mysql").getString("table", "wm_stats");
-        this.database = new MysqlDatabase(plugin, "mysql");
+        this.database = new MySQLDatabase(plugin, "mysql");
 
         plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
             try (Connection connection = database.getConnection()) {
@@ -33,11 +33,11 @@ public class MySQLManager extends AbstractDatabase {
                     "CREATE TABLE IF NOT EXISTS `%s` (\n" +
                         "`UUID` char(36) NOT NULL PRIMARY KEY,\n" +
                         "`name` varchar(32) NOT NULL,\n" +
-                        "`recordscore` int(11) NOT NULL DEFAULT '0',\n" +
-                        "`toursplayed` int(11) NOT NULL DEFAULT '0',\n" +
-                        "`whackedpluspointblocks` int(11) NOT NULL DEFAULT '0',\n" +
-                        "`whackedminuspointblocks` int(11) NOT NULL DEFAULT '0',\n" +
-                        "`longeststreak` int(11) NOT NULL DEFAULT '0');",
+                        "`recordscore` int(11) NOT NULL DEFAULT 0,\n" +
+                        "`toursplayed` int(11) NOT NULL DEFAULT 0,\n" +
+                        "`whackedpluspointblocks` int(11) NOT NULL DEFAULT 0,\n" +
+                        "`whackedminuspointblocks` int(11) NOT NULL DEFAULT 0,\n" +
+                        "`longeststreak` int(11) NOT NULL DEFAULT 0);",
                     tableName));
             } catch (SQLException exception) {
                 exception.printStackTrace();
@@ -101,7 +101,7 @@ public class MySQLManager extends AbstractDatabase {
     }
 
     @NotNull
-    public MysqlDatabase getDatabase() {
+    public MySQLDatabase getDatabase() {
         return database;
     }
 

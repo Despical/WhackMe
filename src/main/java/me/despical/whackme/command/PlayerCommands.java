@@ -1,10 +1,8 @@
 package me.despical.whackme.command;
 
 import me.despical.commandframework.CommandArguments;
-import me.despical.commandframework.CommandFramework;
 import me.despical.commandframework.annotations.Command;
 import me.despical.commandframework.annotations.Param;
-import me.despical.commons.string.StringMatcher;
 import me.despical.commons.string.StringUtils;
 import me.despical.whackme.ConfigPreferences;
 import me.despical.whackme.api.statistics.StatisticType;
@@ -25,7 +23,7 @@ import java.util.stream.Collectors;
 
 import static me.despical.whackme.api.statistics.StatisticType.*;
 
-public class PlayerCommands extends AbstractCommandHandler {
+public class PlayerCommands extends CommandHandler {
 
     @Command(
         name = "wm",
@@ -44,29 +42,7 @@ public class PlayerCommands extends AbstractCommandHandler {
             return;
         }
 
-        CommandFramework commandFramework = plugin.getCommandFramework();
-        String label = arguments.getLabel(), arg = arguments.getArgument(0);
-        List<String> commands = commandFramework.getSubCommands().stream().map(cmd -> cmd.name().replace(label + ".", "")).collect(Collectors.toList());
-        List<StringMatcher.Match> matches = StringMatcher.match(arg, commands);
-
-        if (!matches.isEmpty()) {
-            Optional<Command> optionalMatch = commandFramework.getSubCommands().stream().filter(cmd -> cmd.name().equals(label + "." + matches.get(0).getMatch())).findFirst();
-
-            if (optionalMatch.isPresent()) {
-                String matchedName = getMatchingParts(optionalMatch.get().name(), label + "." + String.join(".", arguments.getArguments()));
-                Optional<Command> matchedCommand = commandFramework.getSubCommands().stream().filter(cmd -> cmd.name().equals(matchedName)).findFirst();
-
-                if (matchedCommand.isPresent()) {
-                    arguments.sendMessage(chatManager.prefixedMessage("commands.correct_usage").replace("%usage%", matchedCommand.get().usage()));
-                    return;
-                }
-
-                arguments.sendMessage(chatManager.prefixedMessage("commands.did_you_mean").replace("%command%", optionalMatch.get().usage()));
-                return;
-            }
-
-            arguments.sendMessage(chatManager.prefixedMessage("commands.did_you_mean").replace("%command%", "/" + label));
-        }
+        arguments.sendMessage("&cUnrecognized arguments: /{0} {1}", arguments.getLabel(), arguments.concatArguments());
     }
 
     @Command(

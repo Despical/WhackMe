@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>me.despical</groupId>
     <artifactId>whack-me</artifactId>
-    <version>1.7.0</version>
+    <version>1.7.1</version>
 
     <name>Whack Me</name>
     <inceptionYear>2022</inceptionYear>
@@ -33,7 +33,7 @@
     <repositories>
         <repository>
             <id>papermc</id>
-            <url>https://papermc.io/repo/repository/maven-public/</url>
+            <url>https://repo.papermc.io/repository/maven-public/</url>
         </repository>
         <repository>
             <id>jitpack.io</id>
@@ -55,7 +55,7 @@
         <dependency>
             <groupId>com.github.Despical</groupId>
             <artifactId>Commons</artifactId>
-            <version>1.8.85</version>
+            <version>1.8.9</version>
         </dependency>
         <dependency>
             <groupId>com.github.Despical</groupId>

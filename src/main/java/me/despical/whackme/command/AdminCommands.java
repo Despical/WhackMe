@@ -22,7 +22,7 @@ import org.bukkit.util.StringUtil;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class AdminCommands extends AbstractCommandHandler {
+public class AdminCommands extends CommandHandler {
 
     @Command(
         name = "wm.create",
@@ -56,7 +56,17 @@ public class AdminCommands extends AbstractCommandHandler {
         MiscUtils.sendCenteredMessage(player, "&7https://www.youtube.com/watch?v=fOw5AQ8A-Jk");
         arguments.sendMessage("&l--------------------------------------------");
 
-        String path = String.format("instances.%s.", id);
+        Arena arena = new Arena(id);
+        arena.setEndLocation(LocationSerializer.DEFAULT_LOCATION);
+        arena.setStartLocation(LocationSerializer.DEFAULT_LOCATION);
+
+        saveArenaData(arena);
+
+        plugin.getArenaRegistry().registerArena(arena);
+    }
+
+    private void saveArenaData(Arena arena) {
+        String path = String.format("instances.%s.", arena.getId());
         FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
 
         config.set(path + "ready", false);
@@ -69,13 +79,6 @@ public class AdminCommands extends AbstractCommandHandler {
         config.set(path + "signs", Collections.EMPTY_LIST);
 
         ConfigUtils.saveConfig(plugin, config, "arenas");
-
-        Arena arena = new Arena(id);
-        arena.setReady(false);
-        arena.setEndLocation(LocationSerializer.DEFAULT_LOCATION);
-        arena.setStartLocation(LocationSerializer.DEFAULT_LOCATION);
-
-        plugin.getArenaRegistry().registerArena(arena);
     }
 
     @Command(
@@ -87,7 +90,7 @@ public class AdminCommands extends AbstractCommandHandler {
     )
     public void deleteCommand(Arena arena, CommandArguments arguments) {
         if (arena == null) {
-            arguments.sendMessage(chatManager.prefixedMessage("commands.no_arena_like_that"));
+            arguments.sendMessage(chatManager.prefixedMessage("Commands.No-Arena-Like-That"));
             return;
         }
 
@@ -104,7 +107,7 @@ public class AdminCommands extends AbstractCommandHandler {
         config.set("instances." + arguments.getArgument(0), null);
         ConfigUtils.saveConfig(plugin, config, "arenas");
 
-        arguments.sendMessage(chatManager.prefixedMessage("commands.removed_game_instance"));
+        arguments.sendMessage(chatManager.prefixedMessage("Commands.Removed-Game-Instance"));
     }
 
     @Command(
@@ -117,7 +120,7 @@ public class AdminCommands extends AbstractCommandHandler {
     )
     public void editCommand(Arena arena, CommandArguments arguments) {
         if (arena == null) {
-            arguments.sendMessage(chatManager.prefixedMessage("commands.no_arena_like_that"));
+            arguments.sendMessage(chatManager.prefixedMessage("Commands.No-Arena-Like-That"));
             return;
         }
 
@@ -284,14 +287,13 @@ public class AdminCommands extends AbstractCommandHandler {
         name = "wm.version",
         usage = "/wm version",
         desc = "Displays detailed information about the plugin and server environment.",
-        permission = "wm.admin.version",
-        senderType = Command.SenderType.PLAYER
+        permission = "wm.admin.version"
     )
     public void infoCommand(CommandArguments arguments) {
-        Player player = arguments.getSender();
+        CommandSender sender = arguments.getSender();
 
         arguments.sendMessage("");
-        MiscUtils.sendCenteredMessage(player, "&b&l==== [ &3&lWhack Me &b&l] ==== ");
+        MiscUtils.sendCenteredMessage(sender, "&b&l==== [ &3&lWhack Me &b&l] ==== ");
         arguments.sendMessage("");
         arguments.sendMessage(" &8• &3Plugin Version: &b{0}", plugin.getDescription().getVersion());
         arguments.sendMessage(" &8• &3Server Version: &b{0}", plugin.getServer().getVersion());

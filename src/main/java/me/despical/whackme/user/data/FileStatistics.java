@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
  * <p>
  * Created at 20.06.2022
  */
-public class FileStatistics extends AbstractDatabase {
+public class FileStatistics extends UserDatabase {
 
     private final FileConfiguration config;
 

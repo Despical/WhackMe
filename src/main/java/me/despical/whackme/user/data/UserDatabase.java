@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
  * <p>
  * Created at 20.06.2022
  */
-public abstract class AbstractDatabase {
+public abstract class UserDatabase {
 
     @NotNull
     protected static final WhackMe plugin = WhackMe.getInstance();

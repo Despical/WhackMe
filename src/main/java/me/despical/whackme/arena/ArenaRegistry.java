@@ -8,7 +8,9 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
@@ -21,16 +23,17 @@ import java.util.stream.Collectors;
 public class ArenaRegistry {
 
     private final WhackMe plugin;
-    private final Set<Arena> arenas;
+    private final Map<String, Arena> arenas;
 
-    public ArenaRegistry(final WhackMe plugin) {
+    public ArenaRegistry(WhackMe plugin) {
         this.plugin = plugin;
-        this.arenas = new HashSet<>();
-        this.registerArenas();
+        this.arenas = new HashMap<>();
+
+        registerArenas();
     }
 
     public Set<Arena> getArenas() {
-        return new HashSet<>(arenas);
+        return new HashSet<>(arenas.values());
     }
 
     public boolean isInArena(Player player) {
@@ -42,37 +45,42 @@ public class ArenaRegistry {
     }
 
     public Arena getArena(String id) {
-        return arenas.stream().filter(arena -> arena.getId().equals(id)).findFirst().orElse(null);
+        return arenas.get(id);
     }
 
     public Arena getArena(Player player) {
-        return arenas.stream().filter(arena -> arena.containPlayer(player)).findFirst().orElse(null);
+        return arenas.values()
+            .stream()
+            .filter(arena -> arena.containPlayer(player))
+            .findFirst()
+            .orElse(null);
     }
 
     public void registerArena(Arena arena) {
-        arenas.add(arena);
+        arenas.put(arena.getId(), arena);
     }
 
     public void unregisterArena(Arena arena) {
-        arenas.remove(arena);
+        arenas.remove(arena.getId());
     }
 
     public void registerArenas() {
-        this.arenas.clear();
-
-        final FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-        final ConfigurationSection section = config.getConfigurationSection("instances");
+        FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+        ConfigurationSection section = config.getConfigurationSection("instances");
 
         if (section == null) {
             plugin.getLogger().warning("Couldn't find 'instance' section in arena.yml, delete the file to regenerate it!");
             return;
         }
 
+        arenas.clear();
+
         for (String id : section.getKeys(false)) {
             if (id.equals("default")) continue;
 
-            final String path = String.format("instances.%s.", id);
-            final Arena arena = new Arena(id);
+            String path = String.format("instances.%s.", id);
+
+            Arena arena = new Arena(id);
             arena.setReady(true);
             arena.setCustom(config.getBoolean(path + "custom"));
             arena.setStartLocation(LocationSerializer.fromString(config.getString(path + "startLocation")));
