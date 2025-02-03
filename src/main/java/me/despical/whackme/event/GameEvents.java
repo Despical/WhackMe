@@ -1,6 +1,6 @@
 package me.despical.whackme.event;
 
-import me.despical.commons.compat.XMaterial;
+import me.despical.commons.XMaterial;
 import me.despical.commons.serializer.InventorySerializer;
 import me.despical.whackme.ConfigPreferences;
 import me.despical.whackme.arena.Arena;

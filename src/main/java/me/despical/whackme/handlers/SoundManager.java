@@ -1,6 +1,6 @@
 package me.despical.whackme.handlers;
 
-import me.despical.commons.compat.XSound;
+import me.despical.commons.XSound;
 import me.despical.whackme.WhackMe;
 import me.despical.whackme.api.Reloadable;
 import org.bukkit.entity.Player;

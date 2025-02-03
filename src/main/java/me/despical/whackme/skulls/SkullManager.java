@@ -1,6 +1,6 @@
 package me.despical.whackme.skulls;
 
-import me.despical.commons.compat.XMaterial;
+import me.despical.commons.XMaterial;
 import me.despical.commons.item.ItemBuilder;
 import me.despical.commons.item.ItemUtils;
 import me.despical.whackme.WhackMe;

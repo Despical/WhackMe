@@ -1,6 +1,6 @@
 package me.despical.whackme.utils;
 
-import me.despical.commons.compat.XMaterial;
+import me.despical.commons.XMaterial;
 import me.despical.commons.number.NumberUtils;
 import me.despical.whackme.WhackMe;
 import org.bukkit.Location;

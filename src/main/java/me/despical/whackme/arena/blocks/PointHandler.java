@@ -1,6 +1,6 @@
 package me.despical.whackme.arena.blocks;
 
-import me.despical.commons.compat.ActionBar;
+import me.despical.commons.messages.ActionBar;
 import me.despical.commons.string.StringFormatUtils;
 import me.despical.whackme.WhackMe;
 import me.despical.whackme.api.statistics.StatisticType;
