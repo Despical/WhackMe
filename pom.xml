@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>me.despical</groupId>
     <artifactId>whack-me</artifactId>
-    <version>1.7.2</version>
+    <version>1.7.3</version>
 
     <name>Whack Me</name>
     <inceptionYear>2022</inceptionYear>
@@ -123,7 +123,7 @@
                             <relocations>
                                 <relocation>
                                     <pattern>me.despical.commandframework</pattern>
-                                    <shadedPattern>me.despical.whackme.command</shadedPattern>
+                                    <shadedPattern>me.despical.whackme.commandframework</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>org.bstats</pattern>
