@@ -91,7 +91,7 @@ public class WhackMe extends JavaPlugin {
             if (score > user.getStat(StatisticType.RECORD_SCORE)) {
                 user.setStat(StatisticType.RECORD_SCORE, score);
 
-                rewardsFactory.performReward(player, Reward.RewardType.NEW_RECORD);
+                rewardsFactory.performReward(arena, Reward.RewardType.NEW_RECORD);
 
                 player.sendMessage(chatManager.message("in_game.finish_record_message").replace("%points%", Integer.toString(user.getStat(StatisticType.LOCAL_SCORE))));
             } else {

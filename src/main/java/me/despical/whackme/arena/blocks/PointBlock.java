@@ -146,14 +146,14 @@ public class PointBlock extends BukkitRunnable {
                     }
 
                     plugin.getSoundManager().playSound(player, SoundManager.GameSound.POINT_SOUND);
-                    plugin.getRewardsFactory().performReward(player, Reward.RewardType.SUCCESSFUL_POINT);
+                    plugin.getRewardsFactory().performReward(arena, Reward.RewardType.SUCCESSFUL_POINT);
                 } else if (name.equalsIgnoreCase(DONT_PUNCH_ME)) {
                     user.addStat(LOCAL_SCORE, -1);
                     user.addStat(MINUS_BLOCKS, 1);
                     user.setStat(LOCAL_STREAK, 0);
 
                     plugin.getSoundManager().playSound(player, SoundManager.GameSound.MINUS_POINT_SOUND);
-                    plugin.getRewardsFactory().performReward(player, Reward.RewardType.WRONG_POINT);
+                    plugin.getRewardsFactory().performReward(arena, Reward.RewardType.WRONG_POINT);
                 }
 
                 event.setCancelled(true);

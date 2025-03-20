@@ -139,7 +139,7 @@ public class Arena extends BukkitRunnable {
         if (score > user.getStat(StatisticType.RECORD_SCORE)) {
             user.setStat(StatisticType.RECORD_SCORE, score);
 
-            plugin.getRewardsFactory().performReward(player, Reward.RewardType.NEW_RECORD);
+            plugin.getRewardsFactory().performReward(this, Reward.RewardType.NEW_RECORD);
 
             if (teleportToEnd)
                 player.sendMessage(chatManager.message("in_game.finish_record_message").replace("%points%", Integer.toString(user.getStat(StatisticType.LOCAL_SCORE))));
@@ -286,7 +286,7 @@ public class Arena extends BukkitRunnable {
         setTimer(timer);
 
         if (timer == -1) {
-            plugin.getRewardsFactory().performReward(player, Reward.RewardType.END_GAME);
+            plugin.getRewardsFactory().performReward(this, Reward.RewardType.END_GAME);
 
             removePlayer();
         }
