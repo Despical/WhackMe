@@ -46,7 +46,7 @@ public class SetupInventory {
     }
 
     private void prepareGui() {
-        this.gui.addPane(paginatedPane);
+        gui.addPane(paginatedPane);
 
         SetupComponent spawnComponents = new MainComponents(this);
         spawnComponents.injectComponents(paginatedPane);
@@ -72,6 +72,6 @@ public class SetupInventory {
     }
 
     public void closeInventory() {
-        plugin.getServer().getScheduler().runTaskLater(plugin, () -> player.closeInventory(), 1L);
+        plugin.getServer().getScheduler().runTask(plugin, () -> player.closeInventory());
     }
 }

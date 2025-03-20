@@ -131,7 +131,7 @@ public class GameEvents extends AbstractEventHandler {
         Arena arena = teleportToEnd.get(player.getUniqueId());
 
         if (arena != null) {
-            plugin.getServer().getScheduler().runTaskLater(plugin, () -> player.teleport(arena.getEndLocation()), 1L);
+            plugin.getServer().getScheduler().runTask(plugin, () -> player.teleport(arena.getEndLocation()));
         }
     }
 
