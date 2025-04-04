@@ -1,14 +1,17 @@
 name: WhackMe
-main: me.despical.whackme.WhackMe
 author: Despical
 version: ${project.version}
+main: me.despical.whackme.WhackMe
 website: https://www.spigotmc.org/resources/104912
 
 api-version: 1.13
 softdepend:
   - Multiverse-Core
-  - PlaceholderAPI
+  - SlimeWorldManager
+  - SlimeWorldPlugin
   - MultiWorld
+  - My_Worlds
+  - PlaceholderAPI
 
 permissions:
   wm.admin.*:
