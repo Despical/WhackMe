@@ -3,8 +3,8 @@ package me.despical.whackme.leaderboard;
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.whackme.WhackMe;
 import me.despical.whackme.api.statistics.StatisticType;
-import me.despical.whackme.user.data.UserDatabase;
 import me.despical.whackme.user.data.MySQLManager;
+import me.despical.whackme.user.data.UserDatabase;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.sql.Connection;
@@ -50,9 +50,10 @@ public class LeaderboardManager {
         if (database instanceof MySQLManager) {
             MySQLManager mySQLManager = (MySQLManager) database;
 
-            try (Connection connection = mySQLManager.getDatabase().getConnection()) {
-                Statement statement = connection.createStatement();
-                ResultSet set = statement.executeQuery(String.format("SELECT UUID, %s FROM %s ORDER BY %s", stat.getName(), mySQLManager.getTableName(), stat.getName()));
+            try (Connection connection = mySQLManager.getDatabase().getConnection();
+                 Statement statement = connection.createStatement()
+            ) {
+                ResultSet set = statement.executeQuery(String.format("SELECT UUID, %s FROM %s ORDER BY %s DESC LIMIT 10", stat.getName(), mySQLManager.getTableName(), stat.getName()));
 
                 while (set.next()) {
                     leaderboard.addEntry(UUID.fromString(set.getString("UUID")), set.getInt(stat.getName()));

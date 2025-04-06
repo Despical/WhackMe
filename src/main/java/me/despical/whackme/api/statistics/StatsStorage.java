@@ -12,7 +12,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -30,10 +30,11 @@ public class StatsStorage {
         if (plugin.getUserManager().getUserDatabase() instanceof MySQLManager) {
             MySQLManager mysqlManager = (MySQLManager) plugin.getUserManager().getUserDatabase();
 
-            try (Connection connection = mysqlManager.getDatabase().getConnection()) {
-                Statement statement = connection.createStatement();
-                ResultSet set = statement.executeQuery(String.format("SELECT UUID, %s FROM %s ORDER BY %s", stat.getName(), mysqlManager.getTableName(), stat.getName()));
-                Map<UUID, Integer> column = new LinkedHashMap<>();
+            try (Connection connection = mysqlManager.getDatabase().getConnection();
+                 Statement statement = connection.createStatement()
+            ) {
+                ResultSet set = statement.executeQuery(String.format("SELECT UUID, %s FROM %s ORDER BY %s DESC LIMIT 10", stat.getName(), mysqlManager.getTableName(), stat.getName()));
+                Map<UUID, Integer> column = new HashMap<>();
 
                 while (set.next()) {
                     column.put(UUID.fromString(set.getString("UUID")), set.getInt(stat.getName()));
@@ -42,12 +43,12 @@ public class StatsStorage {
                 return column;
             } catch (SQLException e) {
                 plugin.getLogger().warning("SQLException occurred during getting statistics from database!");
-                return new LinkedHashMap<>();
+                return new HashMap<>();
             }
         }
 
         FileConfiguration config = ConfigUtils.getConfig(plugin, "stats");
-        Map<UUID, Integer> stats = new LinkedHashMap<>();
+        Map<UUID, Integer> stats = new HashMap<>();
 
         for (String string : config.getKeys(false)) {
             stats.put(UUID.fromString(string), config.getInt(string + "." + stat.getName()));

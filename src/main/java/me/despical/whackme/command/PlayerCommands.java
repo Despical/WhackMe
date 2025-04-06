@@ -18,7 +18,10 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static me.despical.whackme.api.statistics.StatisticType.*;
@@ -183,8 +186,9 @@ public class PlayerCommands extends CommandHandler {
                     MySQLManager mysqlManager = (MySQLManager) plugin.getUserManager().getUserDatabase();
                     String table = mysqlManager.getTableName();
 
-                    try (Connection connection = mysqlManager.getDatabase().getConnection()) {
-                        Statement statement = connection.createStatement();
+                    try (Connection connection = mysqlManager.getDatabase().getConnection();
+                         Statement statement = connection.createStatement()
+                    ) {
                         ResultSet set = statement.executeQuery(String.format("SELECT name FROM %s WHERE UUID='%s'", table, current.toString()));
 
                         if (set.next()) {

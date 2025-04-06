@@ -26,9 +26,9 @@ public class MySQLManager extends UserDatabase {
         this.database = new MySQLDatabase(plugin, "mysql");
 
         plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
-            try (Connection connection = database.getConnection()) {
-                Statement statement = connection.createStatement();
-
+            try (Connection connection = database.getConnection();
+                 Statement statement = connection.createStatement()
+            ) {
                 statement.executeUpdate(String.format(
                     "CREATE TABLE IF NOT EXISTS `%s` (\n" +
                         "`UUID` char(36) NOT NULL PRIMARY KEY,\n" +
@@ -52,7 +52,7 @@ public class MySQLManager extends UserDatabase {
 
     @Override
     public void saveStatistics(@NotNull User user) {
-        String update = this.getUpdateStatement(user);
+        String update = getUpdateStatement(user);
 
         plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> database.executeUpdate(String.format("UPDATE %s%s WHERE UUID='%s';", tableName, update, user.getUniqueId().toString())));
     }
@@ -60,9 +60,9 @@ public class MySQLManager extends UserDatabase {
     @Override
     public void saveAllStatistics() {
         for (User user : plugin.getUserManager().getUsers()) {
-            String update = this.getUpdateStatement(user);
+            String update = getUpdateStatement(user);
 
-            database.executeUpdate(String.format("UPDATE %s%s WHERE UUID='%s';", tableName, update, user.getUniqueId().toString()));
+            database.executeUpdate(String.format("UPDATE %s%s WHERE UUID = '%s';", tableName, update, user.getUniqueId().toString()));
         }
     }
 
@@ -71,9 +71,10 @@ public class MySQLManager extends UserDatabase {
         String uuid = user.getUniqueId().toString();
 
         plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
-            try (Connection connection = database.getConnection()) {
-                Statement statement = connection.createStatement();
-                ResultSet result = statement.executeQuery(String.format("SELECT * from %s WHERE UUID='%s';", tableName, uuid));
+            try (Connection connection = database.getConnection();
+                 Statement statement = connection.createStatement()
+            ) {
+                ResultSet result = statement.executeQuery(String.format("SELECT * from %s WHERE UUID = '%s';", tableName, uuid));
 
                 if (result.next()) {
                     for (StatisticType stat : StatisticType.PERSISTENT_STATS) {
@@ -82,7 +83,7 @@ public class MySQLManager extends UserDatabase {
 
                     return;
                 }
-                statement.executeUpdate(String.format("INSERT INTO %s (UUID,name) VALUES ('%s','%s');", tableName, uuid, user.getName()));
+                statement.executeUpdate(String.format("INSERT INTO %s (UUID, name) VALUES ('%s', '%s');", tableName, uuid, user.getName()));
 
                 for (StatisticType stat : StatisticType.PERSISTENT_STATS) {
                     user.setStat(stat, 0);
