@@ -71,7 +71,7 @@ public class PlaceholderManager extends PlaceholderExpansion {
             }
 
             int position = NumberUtils.getInt(split[2], 1);
-            Map.Entry<UUID, Integer> entry = plugin.getLeaderboardManager().getEntry(statisticType, position);
+            Map.Entry<UUID, Integer> entry = plugin.getLeaderboardManager().orElseThrow(NullPointerException::new).getEntry(statisticType, position);
 
             boolean isName = "name".equals(split[3]);
 

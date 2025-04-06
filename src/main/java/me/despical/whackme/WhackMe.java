@@ -2,7 +2,6 @@ package me.despical.whackme;
 
 import me.despical.commandframework.CommandFramework;
 import me.despical.commons.serializer.InventorySerializer;
-import me.despical.commons.util.Collections;
 import me.despical.commons.util.UpdateChecker;
 import me.despical.whackme.api.event.WMEvent;
 import me.despical.whackme.api.statistics.StatisticType;
@@ -32,6 +31,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.util.Optional;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 /**
  * @author Despical
@@ -113,22 +113,22 @@ public class WhackMe extends JavaPlugin {
     private void initializeClasses() {
         instance = this;
 
-        this.setupConfigurationFiles();
+        createFiles();
 
-        this.configPreferences = new ConfigPreferences(this);
-        this.chatManager = new ChatManager(this);
-        this.commandFramework = new CommandFramework(this);
-        this.userManager = new UserManager(this);
-        this.soundManager = new SoundManager(this);
-        this.rewardsFactory = new RewardsFactory(this);
-        this.arenaRegistry = new ArenaRegistry(this);
-        this.signManager = new SignManager();
-        this.arenaManager = new ArenaManager(this);
-        this.reloadManager = new ReloadManager(this);
-        this.skullManager = new SkullManager(this);
+        configPreferences = new ConfigPreferences(this);
+        chatManager = new ChatManager(this);
+        commandFramework = new CommandFramework(this);
+        userManager = new UserManager(this);
+        soundManager = new SoundManager(this);
+        rewardsFactory = new RewardsFactory(this);
+        arenaRegistry = new ArenaRegistry(this);
+        signManager = new SignManager();
+        arenaManager = new ArenaManager(this);
+        reloadManager = new ReloadManager(this);
+        skullManager = new SkullManager(this);
 
         if (chatManager.isPapiEnabled()) {
-            this.leaderboardManager = new LeaderboardManager(this);
+            leaderboardManager = new LeaderboardManager(this);
 
             new PlaceholderManager(this);
         }
@@ -143,14 +143,17 @@ public class WhackMe extends JavaPlugin {
         metrics.addCustomChart(new SimplePie("database_enabled", () -> getOption(ConfigPreferences.Option.DATABASE_ENABLED) ? "Enabled" : "Disabled"));
         metrics.addCustomChart(new SimplePie("update_notifier", () -> getOption(ConfigPreferences.Option.UPDATE_NOTIFIER_ENABLED) ? "Enabled" : "Disabled"));
 
-        this.handleAutoDataSaving();
-        this.initialized = true;
+        handleAutoDataSaving();
+        initialized = true;
     }
 
-    private void setupConfigurationFiles() {
+    private void createFiles() {
         saveDefaultConfig();
 
-        Collections.streamOf("arenas", "stats", "mysql", "messages", "rewards").filter(name -> !new File(getDataFolder(), name + ".yml").exists()).forEach(name -> saveResource(name + ".yml", false));
+        Stream.of("arenas", "stats", "mysql", "messages", "rewards")
+            .map(fileName -> new File(getDataFolder(), fileName + ".yml"))
+            .filter(file -> !file.exists())
+            .forEach(file -> saveResource(file.getName(), false));
     }
 
     private void handleAutoDataSaving() {
@@ -160,7 +163,7 @@ public class WhackMe extends JavaPlugin {
             getServer().getScheduler().runTaskTimerAsynchronously(this, () -> {
                 userManager.getUserDatabase().saveAllStatistics();
 
-                Optional.ofNullable(leaderboardManager).ifPresent(LeaderboardManager::updateLeaderboards);
+                getLeaderboardManager().ifPresent(LeaderboardManager::updateLeaderboards);
             }, period, period);
         }
     }
@@ -234,7 +237,7 @@ public class WhackMe extends JavaPlugin {
         return reloadManager;
     }
 
-    public LeaderboardManager getLeaderboardManager() {
-        return leaderboardManager;
+    public Optional<LeaderboardManager> getLeaderboardManager() {
+        return Optional.ofNullable(leaderboardManager);
     }
 }
