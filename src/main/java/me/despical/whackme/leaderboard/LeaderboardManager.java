@@ -11,9 +11,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.EnumMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author Despical
@@ -28,7 +27,8 @@ public class LeaderboardManager {
     public LeaderboardManager(WhackMe plugin) {
         this.plugin = plugin;
         this.leaderboards = new EnumMap<>(StatisticType.class);
-        this.updateLeaderboards();
+
+        updateLeaderboards();
     }
 
     public Map.Entry<UUID, Integer> getEntry(StatisticType type, int placement) {
@@ -37,10 +37,8 @@ public class LeaderboardManager {
 
     public void updateLeaderboards() {
         for (StatisticType type : StatisticType.values()) {
-            this.leaderboards.put(type, this.getLeaderboard(type));
+            leaderboards.put(type, getLeaderboard(type));
         }
-
-        this.leaderboards.values().forEach(Leaderboard::sort);
     }
 
     private Leaderboard getLeaderboard(StatisticType stat) {
@@ -67,8 +65,13 @@ public class LeaderboardManager {
         }
 
         FileConfiguration config = ConfigUtils.getConfig(plugin, "stats");
+        List<String> stats = config.getKeys(false)
+            .stream()
+            .sorted(Comparator.comparingInt(uuid -> config.getInt(uuid + "." + stat.getName())).reversed())
+            .limit(10)
+            .collect(Collectors.toList());
 
-        for (String uuid : config.getKeys(false)) {
+        for (String uuid : stats) {
             leaderboard.addEntry(UUID.fromString(uuid), config.getInt(uuid + "." + stat.getName()));
         }
 
