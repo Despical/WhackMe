@@ -4,12 +4,16 @@ import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.database.MySQLDatabase;
 import me.despical.whackme.api.statistics.StatisticType;
 import me.despical.whackme.user.User;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.logging.Level;
 
 /**
  * @author Despical
@@ -20,19 +24,23 @@ public class MySQLManager extends UserDatabase {
 
     private final String tableName;
     private final MySQLDatabase database;
+    private final ExecutorService executor;
 
     public MySQLManager() {
-        this.tableName = ConfigUtils.getConfig(plugin, "mysql").getString("table", "wm_stats");
-        this.database = new MySQLDatabase(plugin, "mysql");
+        FileConfiguration config = ConfigUtils.getConfig(plugin, "mysql");
 
-        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
+        this.tableName = config.getString("table", "wm_stats");
+        this.database = new MySQLDatabase(config);
+        this.database.setLogger(plugin.getLogger());
+        this.executor = Executors.newSingleThreadExecutor();
+        
+        executor.submit(() -> {
             try (Connection connection = database.getConnection();
-                 Statement statement = connection.createStatement()
-            ) {
+                Statement statement = connection.createStatement()            ) {
                 statement.executeUpdate(String.format(
                     "CREATE TABLE IF NOT EXISTS `%s` (\n" +
-                        "`UUID` char(36) NOT NULL PRIMARY KEY,\n" +
-                        "`name` varchar(32) NOT NULL,\n" +
+                        "`UUID` CHAR(36) PRIMARY KEY,\n" +
+                        "`name` VARCHAR(32) NOT NULL,\n" +
                         "`recordscore` int(11) NOT NULL DEFAULT 0,\n" +
                         "`toursplayed` int(11) NOT NULL DEFAULT 0,\n" +
                         "`whackedpluspointblocks` int(11) NOT NULL DEFAULT 0,\n" +
@@ -41,20 +49,21 @@ public class MySQLManager extends UserDatabase {
                     tableName));
             } catch (SQLException exception) {
                 exception.printStackTrace();
+                plugin.getLogger().log(Level.SEVERE, "Could not create the stats table!", exception);
             }
         });
     }
 
     @Override
     public void saveStatistic(@NotNull User user, StatisticType statisticType) {
-        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> database.executeUpdate(String.format("UPDATE %s SET %s=%d WHERE UUID='%s';", tableName, statisticType.getName(), user.getStat(statisticType), user.getUniqueId().toString())));
+        executor.submit(() -> database.executeUpdate(String.format("UPDATE `%s` SET %s=%d WHERE `UUID` = '%s';", tableName, statisticType.getName(), user.getStat(statisticType), user.getUniqueId().toString())));
     }
 
     @Override
     public void saveStatistics(@NotNull User user) {
         String update = getUpdateStatement(user);
 
-        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> database.executeUpdate(String.format("UPDATE %s%s WHERE UUID='%s';", tableName, update, user.getUniqueId().toString())));
+        executor.submit(() -> database.executeUpdate(String.format("UPDATE %s%s WHERE `UUID` = '%s';", tableName, update, user.getUniqueId().toString())));
     }
 
     @Override
@@ -62,7 +71,7 @@ public class MySQLManager extends UserDatabase {
         for (User user : plugin.getUserManager().getUsers()) {
             String update = getUpdateStatement(user);
 
-            database.executeUpdate(String.format("UPDATE %s%s WHERE UUID = '%s';", tableName, update, user.getUniqueId().toString()));
+            database.executeUpdate(String.format("UPDATE %s%s WHERE `UUID` = '%s';", tableName, update, user.getUniqueId().toString()));
         }
     }
 
@@ -70,11 +79,11 @@ public class MySQLManager extends UserDatabase {
     public void loadStatistics(@NotNull User user) {
         String uuid = user.getUniqueId().toString();
 
-        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
+        executor.submit(() -> {
             try (Connection connection = database.getConnection();
                  Statement statement = connection.createStatement()
             ) {
-                ResultSet result = statement.executeQuery(String.format("SELECT * from %s WHERE UUID = '%s';", tableName, uuid));
+                ResultSet result = statement.executeQuery(String.format("SELECT * FROM `%s` WHERE `UUID` = '%s';", tableName, uuid));
 
                 if (result.next()) {
                     for (StatisticType stat : StatisticType.PERSISTENT_STATS) {
@@ -83,7 +92,7 @@ public class MySQLManager extends UserDatabase {
 
                     return;
                 }
-                statement.executeUpdate(String.format("INSERT INTO %s (UUID, name) VALUES ('%s', '%s');", tableName, uuid, user.getName()));
+                statement.executeUpdate(String.format("INSERT INTO `%s` (`UUID`, `name`) VALUES ('%s', '%s');", tableName, uuid, user.getName()));
 
                 for (StatisticType stat : StatisticType.PERSISTENT_STATS) {
                     user.setStat(stat, 0);
@@ -98,6 +107,7 @@ public class MySQLManager extends UserDatabase {
     public void shutdown() {
         saveAllStatistics();
 
+        executor.shutdown();
         database.shutdownConnPool();
     }
 

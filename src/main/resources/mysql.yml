@@ -7,7 +7,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 # Replace <databaseName> with your database address.
-address: jdbc:mysql://localhost:3306/<databaseName>?useSSL=false&autoReConnect=true
+address: jdbc:mysql://localhost:3306/<database_name>?useSSL=false&autoReConnect=true
 
 # Replace <user> with your MySQL username.
 user: <user>
