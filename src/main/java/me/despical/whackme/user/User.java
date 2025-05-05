@@ -21,6 +21,10 @@ public class User {
     private static final WhackMe plugin = WhackMe.getInstance();
     private static long cooldownCounter;
 
+    static {
+        plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, () -> cooldownCounter++, 20, 20);
+    }
+
     private final UUID uuid;
     private final String playerName;
     private final Map<String, Double> cooldowns;
@@ -34,10 +38,6 @@ public class User {
         this.playerName = player.getName();
         this.cooldowns = new HashMap<>();
         this.stats = new EnumMap<>(StatisticType.class);
-    }
-
-    public static void cooldownHandlerTask() {
-        plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, () -> cooldownCounter++, 20, 20);
     }
 
     public Arena getArena() {

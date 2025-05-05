@@ -137,8 +137,6 @@ public class WhackMe extends JavaPlugin {
         new PlayerCommands();
         new AdminCommands();
 
-        User.cooldownHandlerTask();
-
         Metrics metrics = new Metrics(this, 15722);
         metrics.addCustomChart(new SimplePie("database_enabled", () -> getOption(ConfigPreferences.Option.DATABASE_ENABLED) ? "Enabled" : "Disabled"));
         metrics.addCustomChart(new SimplePie("update_notifier", () -> getOption(ConfigPreferences.Option.UPDATE_NOTIFIER_ENABLED) ? "Enabled" : "Disabled"));
