@@ -20,18 +20,17 @@ import java.util.logging.Level;
  * <p>
  * Created at 20.06.2022
  */
-public class MySQLManager extends UserDatabase {
+public class MySQLStatistics extends UserDatabase {
 
     private final String tableName;
     private final MySQLDatabase database;
     private final ExecutorService executor;
 
-    public MySQLManager() {
+    public MySQLStatistics() {
         FileConfiguration config = ConfigUtils.getConfig(plugin, "mysql");
 
         this.tableName = config.getString("table", "wm_stats");
-        this.database = new MySQLDatabase(config);
-        this.database.setLogger(plugin.getLogger());
+        this.database = new MySQLDatabase(plugin, config);
         this.executor = Executors.newSingleThreadExecutor();
         
         executor.submit(() -> {
@@ -41,15 +40,14 @@ public class MySQLManager extends UserDatabase {
                     "CREATE TABLE IF NOT EXISTS `%s` (\n" +
                         "`UUID` CHAR(36) PRIMARY KEY,\n" +
                         "`name` VARCHAR(32) NOT NULL,\n" +
-                        "`recordscore` int(11) NOT NULL DEFAULT 0,\n" +
-                        "`toursplayed` int(11) NOT NULL DEFAULT 0,\n" +
-                        "`whackedpluspointblocks` int(11) NOT NULL DEFAULT 0,\n" +
-                        "`whackedminuspointblocks` int(11) NOT NULL DEFAULT 0,\n" +
-                        "`longeststreak` int(11) NOT NULL DEFAULT 0);",
+                        "`recordscore` INT NOT NULL DEFAULT 0,\n" +
+                        "`toursplayed` INT NOT NULL DEFAULT 0,\n" +
+                        "`whackedpluspointblocks` INT NOT NULL DEFAULT 0,\n" +
+                        "`whackedminuspointblocks` INT NOT NULL DEFAULT 0,\n" +
+                        "`longeststreak` INT NOT NULL DEFAULT 0);",
                     tableName));
             } catch (SQLException exception) {
-                exception.printStackTrace();
-                plugin.getLogger().log(Level.SEVERE, "Could not create the stats table!", exception);
+                plugin.getLogger().log(Level.SEVERE, "Could not create the statistics table!", exception);
             }
         });
     }
@@ -61,9 +59,11 @@ public class MySQLManager extends UserDatabase {
 
     @Override
     public void saveStatistics(@NotNull User user) {
-        String update = getUpdateStatement(user);
+        executor.submit(() -> {
+            String update = getUpdateStatement(user);
 
-        executor.submit(() -> database.executeUpdate(String.format("UPDATE %s%s WHERE `UUID` = '%s';", tableName, update, user.getUniqueId().toString())));
+            database.executeUpdate(String.format("UPDATE %s%s WHERE `UUID` = '%s';", tableName, update, user.getUniqueId().toString()));
+        });
     }
 
     @Override
@@ -77,12 +77,11 @@ public class MySQLManager extends UserDatabase {
 
     @Override
     public void loadStatistics(@NotNull User user) {
-        String uuid = user.getUniqueId().toString();
-
         executor.submit(() -> {
             try (Connection connection = database.getConnection();
                  Statement statement = connection.createStatement()
             ) {
+                String uuid = user.getUniqueId().toString();
                 ResultSet result = statement.executeQuery(String.format("SELECT * FROM `%s` WHERE `UUID` = '%s';", tableName, uuid));
 
                 if (result.next()) {
@@ -92,11 +91,8 @@ public class MySQLManager extends UserDatabase {
 
                     return;
                 }
-                statement.executeUpdate(String.format("INSERT INTO `%s` (`UUID`, `name`) VALUES ('%s', '%s');", tableName, uuid, user.getName()));
 
-                for (StatisticType stat : StatisticType.PERSISTENT_STATS) {
-                    user.setStat(stat, 0);
-                }
+                statement.executeUpdate(String.format("INSERT INTO `%s` (`UUID`, `name`) VALUES ('%s', '%s');", tableName, uuid, user.getName()));
             } catch (SQLException exception) {
                 exception.printStackTrace();
             }

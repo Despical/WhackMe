@@ -4,7 +4,7 @@ import me.despical.whackme.ConfigPreferences;
 import me.despical.whackme.WhackMe;
 import me.despical.whackme.user.data.UserDatabase;
 import me.despical.whackme.user.data.FileStatistics;
-import me.despical.whackme.user.data.MySQLManager;
+import me.despical.whackme.user.data.MySQLStatistics;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,7 +22,7 @@ public class UserManager {
 
     public UserManager(WhackMe plugin) {
         this.users = new HashMap<>();
-        this.userDatabase = plugin.getOption(ConfigPreferences.Option.DATABASE_ENABLED) ? new MySQLManager() : new FileStatistics();
+        this.userDatabase = plugin.getOption(ConfigPreferences.Option.DATABASE_ENABLED) ? new MySQLStatistics() : new FileStatistics();
     }
 
     @NotNull

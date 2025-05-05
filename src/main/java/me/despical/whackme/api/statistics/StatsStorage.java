@@ -3,7 +3,7 @@ package me.despical.whackme.api.statistics;
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.sorter.SortUtils;
 import me.despical.whackme.WhackMe;
-import me.despical.whackme.user.data.MySQLManager;
+import me.despical.whackme.user.data.MySQLStatistics;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -27,8 +27,8 @@ public class StatsStorage {
 
     @NotNull
     public static Map<UUID, Integer> getStats(StatisticType stat) {
-        if (plugin.getUserManager().getUserDatabase() instanceof MySQLManager) {
-            MySQLManager mysqlManager = (MySQLManager) plugin.getUserManager().getUserDatabase();
+        if (plugin.getUserManager().getUserDatabase() instanceof MySQLStatistics) {
+            MySQLStatistics mysqlManager = (MySQLStatistics) plugin.getUserManager().getUserDatabase();
 
             try (Connection connection = mysqlManager.getDatabase().getConnection();
                  Statement statement = connection.createStatement()

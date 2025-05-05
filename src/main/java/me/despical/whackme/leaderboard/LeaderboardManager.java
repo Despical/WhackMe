@@ -3,7 +3,7 @@ package me.despical.whackme.leaderboard;
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.whackme.WhackMe;
 import me.despical.whackme.api.statistics.StatisticType;
-import me.despical.whackme.user.data.MySQLManager;
+import me.despical.whackme.user.data.MySQLStatistics;
 import me.despical.whackme.user.data.UserDatabase;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -45,8 +45,8 @@ public class LeaderboardManager {
         Leaderboard leaderboard = new Leaderboard();
         UserDatabase database = plugin.getUserManager().getUserDatabase();
 
-        if (database instanceof MySQLManager) {
-            MySQLManager mySQLManager = (MySQLManager) database;
+        if (database instanceof MySQLStatistics) {
+            MySQLStatistics mySQLManager = (MySQLStatistics) database;
 
             try (Connection connection = mySQLManager.getDatabase().getConnection();
                  Statement statement = connection.createStatement()

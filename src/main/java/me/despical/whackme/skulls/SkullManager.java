@@ -30,10 +30,10 @@ public class SkullManager {
     }
 
     public ItemStack getPointBlock(Arena arena, PointBlockType type) {
-        PointBlockData data = this.blockData.get(arena.getId());
+        PointBlockData data = blockData.get(arena.getId());
 
         if (data == null) {
-            return this.blockData.get(null).getPointBlock(type);
+            return blockData.get(null).getPointBlock(type);
         }
 
         return data.getPointBlock(type);
@@ -53,7 +53,7 @@ public class SkullManager {
             data.addPointBlock(type, pointBlock);
         }
 
-        this.blockData.put(null, data);
+        blockData.put(null, data);
     }
 
     private void registerCustomBlocks() {
@@ -83,7 +83,7 @@ public class SkullManager {
                 data.addPointBlock(type, pointBlock);
             }
 
-            this.blockData.put(id, data);
+            blockData.put(id, data);
         }
     }
 }

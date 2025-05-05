@@ -9,7 +9,7 @@ import me.despical.whackme.api.statistics.StatisticType;
 import me.despical.whackme.api.statistics.StatsStorage;
 import me.despical.whackme.arena.Arena;
 import me.despical.whackme.user.User;
-import me.despical.whackme.user.data.MySQLManager;
+import me.despical.whackme.user.data.MySQLStatistics;
 import me.despical.whackme.utils.Utils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -183,7 +183,7 @@ public class PlayerCommands extends CommandHandler {
                 UUID current = (UUID) stats.keySet().toArray()[stats.keySet().toArray().length - 1];
 
                 if (plugin.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-                    MySQLManager mysqlManager = (MySQLManager) plugin.getUserManager().getUserDatabase();
+                    MySQLStatistics mysqlManager = (MySQLStatistics) plugin.getUserManager().getUserDatabase();
                     String table = mysqlManager.getTableName();
 
                     try (Connection connection = mysqlManager.getDatabase().getConnection();
