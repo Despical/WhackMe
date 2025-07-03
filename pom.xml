@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>me.despical</groupId>
     <artifactId>whack-me</artifactId>
-    <version>1.8.1</version>
+    <version>1.8.2</version>
 
     <name>Whack Me</name>
     <inceptionYear>2022</inceptionYear>
@@ -39,7 +39,7 @@
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-jar-plugin</artifactId>
                         <configuration>
-                            <outputDirectory>C:/Users/berke/OneDrive/Masaüstü/1.9.9/plugins/</outputDirectory>
+                            <outputDirectory>C:/Users/berke/OneDrive/Masaüstü/1.21.6/plugins/</outputDirectory>
                         </configuration>
                     </plugin>
                 </plugins>
@@ -77,17 +77,17 @@
         <dependency>
             <groupId>com.github.Despical</groupId>
             <artifactId>Commons</artifactId>
-            <version>1.9.5</version>
+            <version>1.9.6</version>
         </dependency>
         <dependency>
             <groupId>com.github.Despical</groupId>
             <artifactId>CommandFramework</artifactId>
-            <version>1.5.13</version>
+            <version>1.5.2</version>
         </dependency>
         <dependency>
             <groupId>com.github.Despical</groupId>
             <artifactId>InventoryFramework</artifactId>
-            <version>2.3.8</version>
+            <version>2.3.9</version>
         </dependency>
         <dependency>
             <groupId>org.bstats</groupId>
