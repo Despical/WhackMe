@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>me.despical</groupId>
     <artifactId>whack-me</artifactId>
-    <version>1.8.2</version>
+    <version>1.8.3</version>
 
     <name>Whack Me</name>
     <inceptionYear>2022</inceptionYear>
@@ -24,28 +24,6 @@
             <url>https://www.spigotmc.org/members/615094/</url>
         </developer>
     </developers>
-    <profiles>
-        <profile>
-            <id>Despical</id>
-            <activation>
-                <property>
-                    <name>user.name</name>
-                    <value>berke</value>
-                </property>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-jar-plugin</artifactId>
-                        <configuration>
-                            <outputDirectory>C:/Users/berke/OneDrive/Masaüstü/1.21.6/plugins/</outputDirectory>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 
     <issueManagement>
         <system>GitHub Issue Tracker</system>
@@ -77,7 +55,7 @@
         <dependency>
             <groupId>com.github.Despical</groupId>
             <artifactId>Commons</artifactId>
-            <version>1.9.6</version>
+            <version>1.9.8</version>
         </dependency>
         <dependency>
             <groupId>com.github.Despical</groupId>
@@ -87,7 +65,7 @@
         <dependency>
             <groupId>com.github.Despical</groupId>
             <artifactId>InventoryFramework</artifactId>
-            <version>2.3.9</version>
+            <version>2.4.0</version>
         </dependency>
         <dependency>
             <groupId>org.bstats</groupId>
