@@ -194,8 +194,11 @@ public class PointBlock extends BukkitRunnable {
 
                 cancel();
                 handleEntityRemoval();
+
                 arena.getPointBlocks().remove(this);
                 arena.getLocations().add(availableLocation);
+
+                HandlerList.unregisterAll(listener);
                 return;
             }
 
