@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 
 import static dev.despical.whackme.api.statistics.StatisticType.*;
 
-public class PlayerCommands extends CommandHandler {
+public class PlayerCommands extends CommandCategory {
 
     @Command(
         name = "wm",

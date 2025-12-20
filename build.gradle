@@ -60,5 +60,6 @@ tasks.shadowJar {
     exclude 'META-INF/**'
     exclude 'fonts/**'
 
-    archiveFileName = "easter-eggs-${version}.jar"
+    destinationDirectory  = file("C:\\Users\\berke\\OneDrive\\Masaüstü\\1.21.4 Server\\plugins")
+    archiveFileName = "whack-me-${version}.jar"
 }

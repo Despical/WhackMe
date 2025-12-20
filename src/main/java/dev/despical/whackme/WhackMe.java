@@ -1,5 +1,6 @@
 package dev.despical.whackme;
 
+import dev.despical.commandframework.CommandArguments;
 import dev.despical.commandframework.CommandFramework;
 import dev.despical.commons.serializer.InventorySerializer;
 import dev.despical.commons.util.UpdateChecker;
@@ -118,6 +119,9 @@ public class WhackMe extends JavaPlugin {
         configPreferences = new ConfigPreferences(this);
         chatManager = new ChatManager(this);
         commandFramework = new CommandFramework(this);
+        commandFramework.addCustomParameter(Player.class, CommandArguments::getSender);
+        commandFramework.addCustomParameter(Arena.class, arguments -> arenaRegistry.getArena(arguments.getArgument(0)));
+        commandFramework.addCustomParameter("pArena", arguments -> arenaRegistry.getArena(arguments.<Player>getSender()));
         userManager = new UserManager(this);
         soundManager = new SoundManager(this);
         rewardsFactory = new RewardsFactory(this);

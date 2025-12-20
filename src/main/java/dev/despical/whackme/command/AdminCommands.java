@@ -22,7 +22,7 @@ import org.bukkit.util.StringUtil;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class AdminCommands extends CommandHandler {
+public class AdminCommands extends CommandCategory {
 
     @Command(
         name = "wm.create",

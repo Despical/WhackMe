@@ -5,55 +5,39 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b8515adf-e50a-4dad-ba7d-74c6b4b9a566" name="Changes" comment="MC 1.21.8 support">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/despical/whackme/ConfigPreferences.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/despical/whackme/ConfigPreferences.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/despical/whackme/WhackMe.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/despical/whackme/WhackMe.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/despical/whackme/api/Reloadable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/despical/whackme/api/Reloadable.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/despical/whackme/api/event/WMEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/despical/whackme/api/event/WMEvent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/despical/whackme/api/event/arena/WMJoinEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/despical/whackme/api/event/arena/WMJoinEvent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/despical/whackme/api/event/arena/WMLeaveEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/despical/whackme/api/event/arena/WMLeaveEvent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/despical/whackme/api/event/player/WMPlayerStatisticChangeEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/despical/whackme/api/event/player/WMPlayerStatisticChangeEvent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/despical/whackme/api/statistics/StatisticType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/despical/whackme/api/statistics/StatisticType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/despical/whackme/api/statistics/StatsStorage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/despical/whackme/api/statistics/StatsStorage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/despical/whackme/arena/Arena.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/despical/whackme/arena/Arena.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/despical/whackme/arena/ArenaRegistry.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/despical/whackme/arena/ArenaRegistry.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/despical/whackme/arena/blocks/PointBlock.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/despical/whackme/arena/blocks/PointBlock.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/despical/whackme/arena/blocks/PointBlockType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/despical/whackme/arena/blocks/PointBlockType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/despical/whackme/arena/blocks/PointHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/despical/whackme/arena/blocks/PointHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/despical/whackme/arena/managers/ArenaManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/despical/whackme/arena/managers/ArenaManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/despical/whackme/arena/managers/BossBarManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/despical/whackme/arena/managers/BossBarManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/despical/whackme/arena/options/ArenaOption.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/despical/whackme/arena/options/ArenaOption.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/despical/whackme/command/AdminCommands.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/despical/whackme/command/AdminCommands.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/despical/whackme/command/CommandHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/despical/whackme/command/CommandHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/despical/whackme/command/PlayerCommands.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/despical/whackme/command/PlayerCommands.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/despical/whackme/event/AbstractEventHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/despical/whackme/event/AbstractEventHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/despical/whackme/event/GameEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/despical/whackme/event/GameEvents.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/despical/whackme/handlers/ChatManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/despical/whackme/handler/ChatManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/despical/whackme/handlers/PlaceholderManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/despical/whackme/handler/PlaceholderManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/despical/whackme/handlers/ReloadManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/despical/whackme/handler/ReloadManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/despical/whackme/handlers/SoundManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/despical/whackme/handler/SoundManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/despical/whackme/handlers/rewards/Reward.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/despical/whackme/handler/rewards/Reward.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/despical/whackme/handlers/rewards/RewardsFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/despical/whackme/handler/rewards/RewardsFactory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/despical/whackme/handlers/setup/SetupInventory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/despical/whackme/handler/setup/SetupInventory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/despical/whackme/handlers/setup/components/MainComponents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/despical/whackme/handler/setup/components/MainComponents.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/despical/whackme/handlers/setup/components/PointBlockAmountComponents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/despical/whackme/handler/setup/components/PointBlockAmountComponents.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/despical/whackme/handlers/setup/components/SetupComponent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/despical/whackme/handler/setup/components/SetupComponent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/despical/whackme/handlers/sign/ArenaSign.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/despical/whackme/handler/sign/ArenaSign.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/despical/whackme/handlers/sign/SignManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/despical/whackme/handler/sign/SignManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/despical/whackme/leaderboard/Leaderboard.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/despical/whackme/leaderboard/Leaderboard.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/despical/whackme/leaderboard/LeaderboardManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/despical/whackme/leaderboard/LeaderboardManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/despical/whackme/skulls/PointBlockData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/despical/whackme/skull/PointBlockData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/despical/whackme/skulls/SkullManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/despical/whackme/skull/SkullManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/despical/whackme/user/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/despical/whackme/user/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/despical/whackme/user/UserManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/despical/whackme/user/UserManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/despical/whackme/user/data/FileStatistics.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/despical/whackme/user/data/FileStatistics.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/despical/whackme/user/data/MySQLStatistics.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/despical/whackme/user/data/MySQLStatistics.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/despical/whackme/user/data/UserDatabase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/despical/whackme/user/data/UserDatabase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/me/despical/whackme/utils/Utils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/despical/whackme/util/Utils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/plugin.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/dev/despical/whackme/command/CommandCategory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/9.2.1/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/9.2.1/executionHistory/executionHistory.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/9.2.1/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/9.2.1/executionHistory/executionHistory.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/9.2.1/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/9.2.1/fileHashes/fileHashes.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/9.2.1/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/9.2.1/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/9.2.1/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/9.2.1/fileHashes/resourceHashesCache.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/configuration-cache/1q6gebwsqzyqhowikwmuuhh7r/candidates.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/configuration-cache/1q6gebwsqzyqhowikwmuuhh7r/candidates.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/configuration-cache/dc8c0e9a-cd72-431b-b795-0fdb5733e0d5/.globals.work.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/configuration-cache/dc8c0e9a-cd72-431b-b795-0fdb5733e0d5/.strings.work.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/configuration-cache/dc8c0e9a-cd72-431b-b795-0fdb5733e0d5/_.work.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/configuration-cache/dc8c0e9a-cd72-431b-b795-0fdb5733e0d5/buildfingerprint.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/configuration-cache/dc8c0e9a-cd72-431b-b795-0fdb5733e0d5/classloaderscopes.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/configuration-cache/dc8c0e9a-cd72-431b-b795-0fdb5733e0d5/entry.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/configuration-cache/dc8c0e9a-cd72-431b-b795-0fdb5733e0d5/projectfingerprint.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/configuration-cache/dc8c0e9a-cd72-431b-b795-0fdb5733e0d5/work.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/dev/despical/whackme/WhackMe.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/dev/despical/whackme/WhackMe.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/dev/despical/whackme/command/AdminCommands.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/dev/despical/whackme/command/AdminCommands.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/dev/despical/whackme/command/CommandHandler.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/dev/despical/whackme/command/PlayerCommands.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/dev/despical/whackme/command/PlayerCommands.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/libs/easter-eggs-2.1.6.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/reports/problems/problems-report.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/problems/problems-report.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/despical/whackme/WhackMe.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/despical/whackme/WhackMe.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/despical/whackme/arena/blocks/PointBlock.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/despical/whackme/arena/blocks/PointBlock.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/despical/whackme/command/AdminCommands.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/despical/whackme/command/AdminCommands.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/despical/whackme/command/CommandHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dev/despical/whackme/command/PlayerCommands.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dev/despical/whackme/command/PlayerCommands.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,6 +52,9 @@
   <component name="ExternalProjectsManager">
     <system id="GRADLE">
       <state>
+        <task path="$PROJECT_DIR$">
+          <activation />
+        </task>
         <projects_view>
           <tree_state>
             <expand>
@@ -331,7 +318,9 @@
       <workItem from="1755507660603" duration="185000" />
       <workItem from="1766238745107" duration="102000" />
       <workItem from="1766238985669" duration="73000" />
-      <workItem from="1766239104882" duration="210000" />
+      <workItem from="1766239104882" duration="268000" />
+      <workItem from="1766243433552" duration="6000" />
+      <workItem from="1766245606435" duration="2196000" />
     </task>
     <task id="LOCAL-00124" summary="Added version command">
       <option name="closed" value="true" />
