@@ -1,0 +1,29 @@
+name: WhackMe
+author: Despical
+version: 2.1.6
+api-version: 1.13
+main: dev.despical.whackme.WhackMe
+website: https://www.spigotmc.org/resources/104912
+
+softdepend:
+  - Multiverse-Core
+  - SlimeWorldManager
+  - SlimeWorldPlugin
+  - MultiWorld
+  - My_Worlds
+  - PlaceholderAPI
+
+permissions:
+  wm.admin.*:
+    default: op
+    children:
+      wm.admin: true
+      wm.admin.create: true
+      wm.admin.delete: true
+      wm.admin.edit: true
+      wm.admin.list: true
+      wm.admin.help: true
+      wm.admin.reload: true
+      wm.admin.kick: true
+      wm.admin.sign.create: true
+      wm.admin.sign.break: true

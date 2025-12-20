@@ -1,0 +1,88 @@
+Commands:
+  Did-You-Mean: "&cDid you mean &7%command%&c?"
+  Correct-Usage: "&cCorrect usage: %usage%"
+  Removed-Game-Instance: "&aGame instance has been removed successfully."
+  No-Arena-Like-That: "&cWe couldn't find any arena with that name matching!"
+  No-Free-Arenas: "&cThere aren't any available arena to play!"
+  Not-Playing: "&cYou must be in an arena to leave!"
+  Type-Arena-Name: "&cPlease type an arena name!"
+  Arena-Not-Configured: "&cThis arena is not configured yet. If you think this is an issue contact staff!"
+  Only-By-Player: "&cYou can execute this command only as player!"
+  No-Permission: "&cYou don't have enough permission to use this command!"
+  No-One-Playing: "&cNo one playing Whack Me in this arena at the moment!"
+  Kicked-Player: "&aPlayer has kicked successfully from the game."
+  Wait-For-Cooldown: "&cPlease wait a bit before playing again!"
+  Reload-Command:
+    Initialized: "&aPlugin reload initialized by {0}."
+    Finished: "&aPlugin reload finished successfully."
+    Error-Occurred: "&cException occurred during the plugin reload!"
+  Player-Not-Found: "&cWe couldn't find any player with that name matching!"
+  Statistics:
+    Type-Name: "&cPlease type statistic name to view!"
+    Invalid-Name: "&cName of statistic is invalid! Type: record_score or tours_played"
+    Header: "&8&m-------------------[&6 Top 10 &8&m]-------------------"
+    Format: "&e#%position% %name% - %value% &7%statistic%"
+    Unknown-Player: "Unknown Player"
+  Stats-Command:
+    Header: "&l[-----YOUR STATS-----]"
+    Header-Other: "&l[-----STATS FOR %player%-----]"
+    Messages:
+      - "%header%"
+      - "&8 * &aRecord Score: &e%record_score%"
+      - "&8 * &aTours Played: &e%tours_played%"
+      - "&8 * &aWhacked Plus Points: &e%whacked_point_blocks%"
+      - "&8 * &aWhacked Minus Points: &e%whacked_minus_point_blocks%"
+      - "&8 * &aWhacked Block Rate: &e%whacked_block_rate%%"
+      - "&8 * &aLongest Point Streak: &e%longest_point_streak%"
+      - "&l[--------------------]"
+  List-Command:
+    No-Arenas-Created: "&cThere aren't any game instances to show! What about creating one?"
+    Format: "&aExisting arenas: &7%list%"
+  Time-Command:
+    Usage: "&cCorrect usage: /wm time <arena> <add | remove | set> <value>"
+    Arena-Is-Empty: "&cNo one is playing in this arena at the moment!"
+
+In-Game:
+  Plugin-Prefix: "&8[&6Whack Me&8] "
+  Start-Message: "&a&lYou started playing Whack Me game!\n&a&lYou have 30s to punch as many whackies as possible!"
+  Finish-Message: "&a&lThe game has ended! You finished with &6&l%points% &a&lPoints!"
+  Finish-Record-Message: "&a&lThe game has ended! You have a new record with &6&l%points% &a&lPoints!"
+  Already-Playing: "&cYou are already playing Whack Me!"
+  Someone-Is-Already-Playing: "&cSomeone is already playing at the moment!"
+  Chat-Format: "&7%player%: &f%message%"
+  Only-Command-Is-Leave: "&cYou have to leave the game first to perform commands."
+  # Leave the actionbar message empty, if you do not want it.
+  Action-Bar: "&a&l%timer% &6- &a&l%score%"
+  Timer-Format: "%02d:%02d"
+
+Point-Blocks:
+  Punch-Me: "&aPunch Me!"
+  Dont-Punch-Me: "&cDont hit me!"
+  Ouch: "&cOuch!"
+
+# Has usage only when boss bar is enabled in config.
+# Only compatible with the versions Minecraft 1.9+
+Boss-Bar:
+  Color: BLUE
+  Style: SOLID
+  Interval: 120 # 20 ticks = 1 second
+  Messages:
+    - "&e&lPLAYING &f&lWhack Me &e&lby &b&lDESPICAL"
+    - "&e&lYOU LIKE THE PLUGIN? RATE US ON SPIGOT!"
+
+Signs:
+  States:
+    Waiting: "&eWaiting"
+    Playing: "&cIn-Game"
+    Inactive: "&0Inactive"
+  Lines:
+    - "&4&lWhack Me"
+    - "%state%"
+    - "%arena%"
+    - "&5[%player%]"
+
+Placeholders:
+  Empty-Position: "No Player"
+  Empty-Value: "NaN"
+  # %wm_{arena}_player_name% -> This placeholder returns the text below if arena player is null.
+  Unknown-Player: "Unknown"

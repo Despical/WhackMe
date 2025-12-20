@@ -1,0 +1,66 @@
+package dev.despical.whackme.user.data;
+
+import dev.despical.commons.configuration.ConfigUtils;
+import dev.despical.whackme.api.statistics.StatisticType;
+import dev.despical.whackme.user.User;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.jetbrains.annotations.NotNull;
+
+/**
+ * @author Despical
+ * <p>
+ * Created at 20.06.2022
+ */
+public class FileStatistics extends UserDatabase {
+
+    private final FileConfiguration config;
+
+    public FileStatistics() {
+        this.config = ConfigUtils.getConfig(plugin, "stats");
+    }
+
+    @Override
+    public void saveStatistic(@NotNull User user, StatisticType statisticType) {
+        config.set(user.getUniqueId().toString() + "." + statisticType.getName(), user.getStat(statisticType));
+
+        ConfigUtils.saveConfig(plugin, config, "stats");
+    }
+
+    @Override
+    public void saveStatistics(@NotNull User user) {
+        String uuid = user.getUniqueId().toString();
+
+        for (StatisticType stat : StatisticType.PERSISTENT_STATS) {
+            config.set(uuid + "." + stat.getName(), user.getStat(stat));
+        }
+
+        ConfigUtils.saveConfig(plugin, config, "stats");
+    }
+
+    @Override
+    public void saveAllStatistics() {
+        for (User user : plugin.getUserManager().getUsers()) {
+            String uuid = user.getUniqueId().toString();
+
+            for (StatisticType stat : StatisticType.PERSISTENT_STATS) {
+                config.set(uuid + "." + stat.getName(), user.getStat(stat));
+            }
+        }
+
+        ConfigUtils.saveConfig(plugin, config, "stats");
+    }
+
+    @Override
+    public void loadStatistics(@NotNull User user) {
+        String uuid = user.getUniqueId().toString();
+
+        for (StatisticType stat : StatisticType.PERSISTENT_STATS) {
+            user.setStat(stat, config.getInt(uuid + "." + stat.getName()));
+        }
+    }
+
+    @Override
+    public void shutdown() {
+        this.saveAllStatistics();
+    }
+}
