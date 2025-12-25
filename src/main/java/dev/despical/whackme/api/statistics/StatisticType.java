@@ -1,6 +1,7 @@
 package dev.despical.whackme.api.statistics;
 
 import dev.despical.whackme.user.User;
+import lombok.Getter;
 
 import java.util.stream.Stream;
 
@@ -9,6 +10,7 @@ import java.util.stream.Stream;
  * <p>
  * Created at 8.11.2024
  */
+@Getter
 public enum StatisticType {
 
     TOURS_PLAYED("toursplayed"),
@@ -36,14 +38,6 @@ public enum StatisticType {
 
     public static StatisticType match(String name) {
         return Stream.of(values()).filter(statisticType -> statisticType.name.equals(name)).findFirst().orElse(null);
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public boolean isPersistent() {
-        return persistent;
     }
 
     public String from(User user) {
