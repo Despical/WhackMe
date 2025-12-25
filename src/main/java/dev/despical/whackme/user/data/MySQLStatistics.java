@@ -38,7 +38,7 @@ public class MySQLStatistics extends UserDatabase {
                  Statement statement = connection.createStatement()
             ) {
                 statement.executeUpdate("""
-                    CREATE TABLE IF NOT EXISTS `%s`
+                    CREATE TABLE IF NOT EXISTS `%s` (
                     `UUID` CHAR(36) PRIMARY KEY,
                     `name` VARCHAR(32) NOT NULL,
                     `recordscore` INT NOT NULL DEFAULT 0,
