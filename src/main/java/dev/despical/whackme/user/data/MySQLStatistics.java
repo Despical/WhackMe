@@ -2,7 +2,7 @@ package dev.despical.whackme.user.data;
 
 import dev.despical.commons.configuration.ConfigUtils;
 import dev.despical.commons.database.MySQLDatabase;
-import dev.despical.whackme.api.statistics.StatisticType;
+import dev.despical.whackme.stat.Statistic;
 import dev.despical.whackme.user.User;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
@@ -32,20 +32,22 @@ public class MySQLStatistics extends UserDatabase {
         this.tableName = config.getString("table", "wm_stats");
         this.database = new MySQLDatabase(plugin, config);
         this.executor = Executors.newSingleThreadExecutor();
-        
+
         executor.submit(() -> {
             try (Connection connection = database.getConnection();
-                Statement statement = connection.createStatement()            ) {
-                statement.executeUpdate(String.format(
-                    "CREATE TABLE IF NOT EXISTS `%s` (\n" +
-                        "`UUID` CHAR(36) PRIMARY KEY,\n" +
-                        "`name` VARCHAR(32) NOT NULL,\n" +
-                        "`recordscore` INT NOT NULL DEFAULT 0,\n" +
-                        "`toursplayed` INT NOT NULL DEFAULT 0,\n" +
-                        "`whackedpluspointblocks` INT NOT NULL DEFAULT 0,\n" +
-                        "`whackedminuspointblocks` INT NOT NULL DEFAULT 0,\n" +
-                        "`longeststreak` INT NOT NULL DEFAULT 0);",
-                    tableName));
+                 Statement statement = connection.createStatement()
+            ) {
+                statement.executeUpdate("""
+                    CREATE TABLE IF NOT EXISTS `%s`
+                    `UUID` CHAR(36) PRIMARY KEY,
+                    `name` VARCHAR(32) NOT NULL,
+                    `recordscore` INT NOT NULL DEFAULT 0,
+                    `toursplayed` INT NOT NULL DEFAULT 0,
+                    `whackedpluspointblocks` INT NOT NULL DEFAULT 0,
+                    `whackedminuspointblocks` INT NOT NULL DEFAULT 0,
+                    `longeststreak` INT NOT NULL DEFAULT 0);
+                    """
+                    .formatted(tableName));
             } catch (SQLException exception) {
                 plugin.getLogger().log(Level.SEVERE, "Could not create the statistics table!", exception);
             }
@@ -53,8 +55,8 @@ public class MySQLStatistics extends UserDatabase {
     }
 
     @Override
-    public void saveStatistic(@NotNull User user, StatisticType statisticType) {
-        executor.submit(() -> database.executeUpdate(String.format("UPDATE `%s` SET %s=%d WHERE `UUID` = '%s';", tableName, statisticType.getName(), user.getStat(statisticType), user.getUniqueId().toString())));
+    public void saveStatistic(@NotNull User user, Statistic stat) {
+        executor.submit(() -> database.executeUpdate(String.format("UPDATE `%s` SET %s=%d WHERE `UUID` = '%s';", tableName, stat.getName(), user.getStat(stat), user.getUniqueId().toString())));
     }
 
     @Override
@@ -85,7 +87,7 @@ public class MySQLStatistics extends UserDatabase {
                 ResultSet result = statement.executeQuery(String.format("SELECT * FROM `%s` WHERE `UUID` = '%s';", tableName, uuid));
 
                 if (result.next()) {
-                    for (StatisticType stat : StatisticType.PERSISTENT_STATS) {
+                    for (Statistic stat : Statistic.values()) {
                         user.setStat(stat, result.getInt(stat.getName()));
                     }
 
@@ -120,7 +122,7 @@ public class MySQLStatistics extends UserDatabase {
     private String getUpdateStatement(User user) {
         StringBuilder builder = new StringBuilder(" SET ");
 
-        for (StatisticType stat : StatisticType.PERSISTENT_STATS) {
+        for (Statistic stat : Statistic.values()) {
             String name = stat.getName();
             int value = user.getStat(stat);
 

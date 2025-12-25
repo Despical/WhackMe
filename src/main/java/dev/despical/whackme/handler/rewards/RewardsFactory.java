@@ -3,7 +3,7 @@ package dev.despical.whackme.handler.rewards;
 import dev.despical.commons.configuration.ConfigUtils;
 import dev.despical.whackme.WhackMe;
 import dev.despical.whackme.api.Reloadable;
-import dev.despical.whackme.api.statistics.StatisticType;
+import dev.despical.whackme.stat.LocalStatistic;
 import dev.despical.whackme.arena.Arena;
 import dev.despical.whackme.user.User;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -13,7 +13,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
 
 /**
  * @author Despical
@@ -32,13 +31,13 @@ public class RewardsFactory implements Reloadable {
     }
 
     public void performReward(Arena arena, Reward.RewardType type) {
-        List<Reward> rewardList = rewards.stream().filter(rew -> rew.getType() == type).collect(Collectors.toList());
+        List<Reward> rewardList = rewards.stream().filter(rew -> rew.getType() == type).toList();
 
         if (rewardList.isEmpty()) return;
 
         Player player = arena.getPlayer();
         User user = plugin.getUserManager().getUser(player);
-        int points = user.getStat(StatisticType.LOCAL_SCORE);
+        int points = user.getStat(LocalStatistic.SCORE);
 
         for (Reward mainRewards : rewardList) {
             for (Reward.SubReward reward : mainRewards.getRewards()) {
@@ -48,9 +47,9 @@ public class RewardsFactory implements Reloadable {
                 String command = reward.getExecutableCode();
                 command = command.replace("%arena%", arena.getId());
                 command = command.replace("%player%", player.getName());
-                command = command.replace("%points%", StatisticType.LOCAL_SCORE.from(user));
-                command = command.replace("%point_streak%", StatisticType.LOCAL_STREAK.from(user));
-                command = command.replace("%longest_point_streak%", StatisticType.LOCAL_LONGEST_STREAK.from(user));
+                command = command.replace("%points%", Integer.toString(user.getStat(LocalStatistic.SCORE)));
+                command = command.replace("%point_streak%", Integer.toString(user.getStat(LocalStatistic.STREAK)));
+                command = command.replace("%longest_point_streak%", Integer.toString(user.getStat(LocalStatistic.LONGEST_STREAK)));
 
                 int executor = reward.getExecutor();
 

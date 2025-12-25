@@ -2,7 +2,7 @@ package dev.despical.whackme.leaderboard;
 
 import dev.despical.commons.configuration.ConfigUtils;
 import dev.despical.whackme.WhackMe;
-import dev.despical.whackme.api.statistics.StatisticType;
+import dev.despical.whackme.stat.Statistic;
 import dev.despical.whackme.user.data.MySQLStatistics;
 import dev.despical.whackme.user.data.UserDatabase;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -22,32 +22,30 @@ import java.util.stream.Collectors;
 public class LeaderboardManager {
 
     private final WhackMe plugin;
-    private final Map<StatisticType, Leaderboard> leaderboards;
+    private final Map<Statistic, Leaderboard> leaderboards;
 
     public LeaderboardManager(WhackMe plugin) {
         this.plugin = plugin;
-        this.leaderboards = new EnumMap<>(StatisticType.class);
+        this.leaderboards = new HashMap<>();
 
         updateLeaderboards();
     }
 
-    public Map.Entry<UUID, Integer> getEntry(StatisticType type, int placement) {
+    public Map.Entry<UUID, Integer> getEntry(Statistic type, int placement) {
         return leaderboards.get(type).getEntry(placement);
     }
 
     public void updateLeaderboards() {
-        for (StatisticType type : StatisticType.values()) {
+        for (var type : Statistic.values()) {
             leaderboards.put(type, getLeaderboard(type));
         }
     }
 
-    private Leaderboard getLeaderboard(StatisticType stat) {
+    private Leaderboard getLeaderboard(Statistic stat) {
         Leaderboard leaderboard = new Leaderboard();
         UserDatabase database = plugin.getUserManager().getUserDatabase();
 
-        if (database instanceof MySQLStatistics) {
-            MySQLStatistics mySQLManager = (MySQLStatistics) database;
-
+        if (database instanceof MySQLStatistics mySQLManager) {
             try (Connection connection = mySQLManager.getDatabase().getConnection();
                  Statement statement = connection.createStatement()
             ) {

@@ -5,7 +5,8 @@ import dev.despical.commandframework.CommandFramework;
 import dev.despical.commons.serializer.InventorySerializer;
 import dev.despical.commons.util.UpdateChecker;
 import dev.despical.whackme.api.event.WMEvent;
-import dev.despical.whackme.api.statistics.StatisticType;
+import dev.despical.whackme.stat.LocalStatistic;
+import dev.despical.whackme.stat.Statistic;
 import dev.despical.whackme.arena.Arena;
 import dev.despical.whackme.arena.ArenaRegistry;
 import dev.despical.whackme.arena.managers.ArenaManager;
@@ -84,24 +85,28 @@ public class WhackMe extends JavaPlugin {
             if (player == null) continue;
 
             User user = userManager.getUser(player);
-            user.addStat(StatisticType.TOURS_PLAYED, 1);
+            user.addStat(Statistic.TOURS_PLAYED, 1);
             user.resetAttackCooldown();
 
-            int score = user.getStat(StatisticType.LOCAL_SCORE);
+            int score = user.getStat(LocalStatistic.SCORE);
 
-            if (score > user.getStat(StatisticType.RECORD_SCORE)) {
-                user.setStat(StatisticType.RECORD_SCORE, score);
+            if (score > user.getStat(Statistic.RECORD_SCORE)) {
+                user.setStat(Statistic.RECORD_SCORE, score);
 
                 rewardsFactory.performReward(arena, Reward.RewardType.NEW_RECORD);
 
-                player.sendMessage(chatManager.message("in_game.finish_record_message").replace("%points%", Integer.toString(user.getStat(StatisticType.LOCAL_SCORE))));
+                player.sendMessage(chatManager.message("in_game.finish_record_message").replace("%points%", Integer.toString(score)));
             } else {
-                player.sendMessage(chatManager.message("in_game.finish_message").replace("%points%", Integer.toString(user.getStat(StatisticType.LOCAL_SCORE))));
+                player.sendMessage(chatManager.message("in_game.finish_message").replace("%points%", Integer.toString(score)));
             }
 
-            if (getOption(ConfigPreferences.Option.CLEAR_INVENTORY)) player.getInventory().clear();
-            if (getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED))
+            if (getOption(ConfigPreferences.Option.CLEAR_INVENTORY)) {
+                player.getInventory().clear();
+            }
+
+            if (getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
                 InventorySerializer.loadInventory(this, player);
+            }
 
             arena.getBossBarManager().removePlayer();
             arena.teleportToEndLocation();

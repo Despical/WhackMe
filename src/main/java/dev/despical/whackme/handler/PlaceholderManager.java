@@ -1,9 +1,11 @@
 package dev.despical.whackme.handler;
 
+import dev.despical.whackme.stat.LocalStatistic;
+import dev.despical.whackme.stat.Statistic;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import dev.despical.commons.number.NumberUtils;
 import dev.despical.whackme.WhackMe;
-import dev.despical.whackme.api.statistics.StatisticType;
+import dev.despical.whackme.stat.StatisticType;
 import dev.despical.whackme.arena.Arena;
 import dev.despical.whackme.user.User;
 import org.bukkit.entity.Player;
@@ -11,8 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 import java.util.UUID;
-
-import static dev.despical.whackme.api.statistics.StatisticType.*;
+import java.util.stream.Stream;
 
 /**
  * @author Despical
@@ -64,14 +65,14 @@ public class PlaceholderManager extends PlaceholderExpansion {
             }
 
             String statName = split[1];
-            StatisticType statisticType = StatisticType.match(statName);
+            var statistic = this.matchStatisticType(statName);
 
-            if (statisticType == null) {
+            if (statistic == null) {
                 return "No statistic like that: " + statName;
             }
 
             int position = NumberUtils.getInt(split[2], 1);
-            Map.Entry<UUID, Integer> entry = plugin.getLeaderboardManager().orElseThrow(NullPointerException::new).getEntry(statisticType, position);
+            Map.Entry<UUID, Integer> entry = plugin.getLeaderboardManager().orElseThrow(NullPointerException::new).getEntry(statistic, position);
 
             boolean isName = "name".equals(split[3]);
 
@@ -88,35 +89,31 @@ public class PlaceholderManager extends PlaceholderExpansion {
 
         User user = plugin.getUserManager().getUser(player);
 
-        switch (id.toLowerCase()) {
-            case "all_arenas":
-                return Integer.toString(plugin.getArenaRegistry().getArenas().size());
-            case "ready_arenas":
-                return Long.toString(plugin.getArenaRegistry().getArenas().stream().filter(Arena::isReady).count());
-            case "online_players":
-                return Long.toString(plugin.getArenaRegistry().getArenas().stream().filter(arena -> arena.getPlayer() != null).count());
-            case "whacked_point_blocks":
-                return PLUS_BLOCKS.from(user);
-            case "whacked_minus_point_blocks":
-                return MINUS_BLOCKS.from(user);
-            case "whacked_block_rate":
-                int minusBlocks = user.getStat(MINUS_BLOCKS), plusBlocks = user.getStat(PLUS_BLOCKS);
-                return String.format("%.1f", (minusBlocks + plusBlocks == 0 ? 100 : ((double) plusBlocks / (minusBlocks + plusBlocks)) * 100D));
-            case "record_score":
-                return RECORD_SCORE.from(user);
-            case "tours_played":
-                return TOURS_PLAYED.from(user);
-            case "longest_point_streak":
-                return LONGEST_STREAK.from(user);
-            case "local_score":
-                return LOCAL_SCORE.from(user);
-            case "local_point_streak":
-                return LOCAL_STREAK.from(user);
-            case "local_longest_point_streak":
-                return LOCAL_LONGEST_STREAK.from(user);
-            default:
-                return handleArenaPlaceholderRequest(id);
-        }
+        return switch (id.toLowerCase()) {
+            case "all_arenas" -> Integer.toString(plugin.getArenaRegistry().getArenas().size());
+            case "ready_arenas" ->
+                Long.toString(plugin.getArenaRegistry().getArenas().stream().filter(Arena::isReady).count());
+            case "online_players" ->
+                Long.toString(plugin.getArenaRegistry().getArenas().stream().filter(arena -> arena.getPlayer() != null).count());
+            case "whacked_point_blocks" -> getStat(user, Statistic.PLUS_BLOCKS);
+            case "whacked_minus_point_blocks" -> getStat(user, Statistic.MINUS_BLOCKS);
+            case "whacked_block_rate" -> {
+                int minusBlocks = user.getStat(Statistic.MINUS_BLOCKS), plusBlocks = user.getStat(dev.despical.whackme.stat.Statistic.PLUS_BLOCKS);
+                yield String.format("%.1f", (minusBlocks + plusBlocks == 0 ? 100 : ((double) plusBlocks / (minusBlocks + plusBlocks)) * 100D));
+            }
+            case "record_score" -> getStat(user, Statistic.RECORD_SCORE);
+            case "tours_played" -> getStat(user, Statistic.TOURS_PLAYED);
+            case "longest_point_streak" -> getStat(user, Statistic.LONGEST_STREAK);
+            case "local_score" -> getStat(user, LocalStatistic.SCORE);
+            case "local_point_streak" -> getStat(user, LocalStatistic.STREAK);
+            case "local_longest_point_streak" -> getStat(user, LocalStatistic.LONGEST_STREAK);
+            default -> handleArenaPlaceholderRequest(id);
+        };
+    }
+
+    private String getStat(User user, StatisticType statisticType) {
+        var stat = user.getStat(statisticType);
+        return Integer.toString(stat);
     }
 
     private String handleArenaPlaceholderRequest(String id) {
@@ -125,13 +122,17 @@ public class PlaceholderManager extends PlaceholderExpansion {
 
         if (arena == null) return null;
 
-        switch (data[1].toLowerCase()) {
-            case "player_name":
-                return arena.getPlayerName();
-            case "point_blocks":
-                return Integer.toString(arena.getPointBlocks().size());
-            default:
-                return null;
-        }
+        return switch (data[1].toLowerCase()) {
+            case "player_name" -> arena.getPlayerName();
+            case "point_blocks" -> Integer.toString(arena.getPointBlocks().size());
+            default -> null;
+        };
+    }
+
+    private Statistic matchStatisticType(String name) {
+        return Stream.of(Statistic.values())
+            .filter(statisticType -> statisticType.getName().equals(name))
+            .findFirst()
+            .orElse(null);
     }
 }

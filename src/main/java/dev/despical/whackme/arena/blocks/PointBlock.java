@@ -7,6 +7,8 @@ import dev.despical.whackme.arena.options.ArenaOption;
 import dev.despical.whackme.handler.ChatManager;
 import dev.despical.whackme.handler.SoundManager;
 import dev.despical.whackme.handler.rewards.Reward;
+import dev.despical.whackme.stat.LocalStatistic;
+import dev.despical.whackme.stat.Statistic;
 import dev.despical.whackme.user.User;
 import dev.despical.whackme.util.Utils;
 import org.bukkit.Location;
@@ -19,8 +21,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 import org.bukkit.scheduler.BukkitRunnable;
-
-import static dev.despical.whackme.api.statistics.StatisticType.*;
 
 /**
  * @author Despical
@@ -135,22 +135,22 @@ public class PointBlock extends BukkitRunnable {
                 if (stand.getCustomName().equals(OUCH)) return;
 
                 if (name.equalsIgnoreCase(PUNCH_ME)) {
-                    user.addStat(LOCAL_SCORE, 1);
-                    user.addStat(LOCAL_STREAK, 1);
-                    user.addStat(PLUS_BLOCKS, 1);
+                    user.addStat(LocalStatistic.SCORE, 1);
+                    user.addStat(LocalStatistic.STREAK, 1);
+                    user.addStat(Statistic.PLUS_BLOCKS, 1);
 
-                    int localStreak = user.getStat(LOCAL_STREAK);
+                    int localStreak = user.getStat(LocalStatistic.STREAK);
 
-                    if (localStreak > user.getStat(LOCAL_LONGEST_STREAK)) {
-                        user.setStat(LOCAL_LONGEST_STREAK, localStreak);
+                    if (localStreak > user.getStat(LocalStatistic.LONGEST_STREAK)) {
+                        user.setStat(LocalStatistic.LONGEST_STREAK, localStreak);
                     }
 
                     plugin.getSoundManager().playSound(player, SoundManager.GameSound.POINT_SOUND);
                     plugin.getRewardsFactory().performReward(arena, Reward.RewardType.SUCCESSFUL_POINT);
                 } else if (name.equalsIgnoreCase(DONT_PUNCH_ME)) {
-                    user.addStat(LOCAL_SCORE, -1);
-                    user.addStat(MINUS_BLOCKS, 1);
-                    user.setStat(LOCAL_STREAK, 0);
+                    user.addStat(LocalStatistic.SCORE, -1);
+                    user.addStat(Statistic.MINUS_BLOCKS, 1);
+                    user.setStat(LocalStatistic.STREAK, 0);
 
                     plugin.getSoundManager().playSound(player, SoundManager.GameSound.MINUS_POINT_SOUND);
                     plugin.getRewardsFactory().performReward(arena, Reward.RewardType.WRONG_POINT);

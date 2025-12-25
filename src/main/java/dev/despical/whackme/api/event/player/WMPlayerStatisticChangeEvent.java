@@ -1,7 +1,7 @@
 package dev.despical.whackme.api.event.player;
 
 import dev.despical.whackme.api.event.WMEvent;
-import dev.despical.whackme.api.statistics.StatisticType;
+import dev.despical.whackme.stat.StatisticType;
 import dev.despical.whackme.arena.Arena;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;

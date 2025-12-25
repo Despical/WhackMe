@@ -3,13 +3,14 @@ package dev.despical.whackme.user;
 import dev.despical.commons.reflection.XReflection;
 import dev.despical.whackme.WhackMe;
 import dev.despical.whackme.api.event.player.WMPlayerStatisticChangeEvent;
-import dev.despical.whackme.api.statistics.StatisticType;
+import dev.despical.whackme.stat.LocalStatistic;
+import dev.despical.whackme.stat.StatisticType;
 import dev.despical.whackme.arena.Arena;
+import lombok.Setter;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 
 import java.util.*;
-import java.util.stream.Stream;
 
 /**
  * @author Despical
@@ -30,6 +31,7 @@ public class User {
     private final Map<String, Double> cooldowns;
     private final Map<StatisticType, Integer> stats;
 
+    @Setter
     private boolean editingMode;
     private double attackCooldown;
 
@@ -37,7 +39,7 @@ public class User {
         this.uuid = player.getUniqueId();
         this.playerName = player.getName();
         this.cooldowns = new HashMap<>();
-        this.stats = new EnumMap<>(StatisticType.class);
+        this.stats = new HashMap<>();
     }
 
     public Arena getArena() {
@@ -60,10 +62,6 @@ public class User {
         return editingMode;
     }
 
-    public void setEditingMode(boolean editingMode) {
-        this.editingMode = editingMode;
-    }
-
     public void sendRawMessage(final String message) {
         getPlayer().sendMessage(plugin.getChatManager().coloredRawMessage(message));
     }
@@ -83,7 +81,9 @@ public class User {
     }
 
     public void resetStats() {
-        Stream.of(StatisticType.values()).filter(stat -> !stat.isPersistent()).forEach(stat -> this.setStat(stat, 0));
+        for (var stat : LocalStatistic.values()) {
+            stats.put(stat, 0);
+        }
     }
 
     public void updateAttackCooldown() {

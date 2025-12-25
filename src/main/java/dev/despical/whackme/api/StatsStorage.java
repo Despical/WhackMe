@@ -1,8 +1,9 @@
-package dev.despical.whackme.api.statistics;
+package dev.despical.whackme.api;
 
 import dev.despical.commons.configuration.ConfigUtils;
 import dev.despical.commons.sorter.SortUtils;
 import dev.despical.whackme.WhackMe;
+import dev.despical.whackme.stat.StatisticType;
 import dev.despical.whackme.user.data.MySQLStatistics;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -27,9 +28,7 @@ public class StatsStorage {
 
     @NotNull
     public static Map<UUID, Integer> getStats(StatisticType stat) {
-        if (plugin.getUserManager().getUserDatabase() instanceof MySQLStatistics) {
-            MySQLStatistics mysqlManager = (MySQLStatistics) plugin.getUserManager().getUserDatabase();
-
+        if (plugin.getUserManager().getUserDatabase() instanceof MySQLStatistics mysqlManager) {
             try (Connection connection = mysqlManager.getDatabase().getConnection();
                  Statement statement = connection.createStatement()
             ) {

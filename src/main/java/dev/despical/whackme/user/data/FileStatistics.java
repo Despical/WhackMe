@@ -1,7 +1,7 @@
 package dev.despical.whackme.user.data;
 
 import dev.despical.commons.configuration.ConfigUtils;
-import dev.despical.whackme.api.statistics.StatisticType;
+import dev.despical.whackme.stat.Statistic;
 import dev.despical.whackme.user.User;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
@@ -20,8 +20,8 @@ public class FileStatistics extends UserDatabase {
     }
 
     @Override
-    public void saveStatistic(@NotNull User user, StatisticType statisticType) {
-        config.set(user.getUniqueId().toString() + "." + statisticType.getName(), user.getStat(statisticType));
+    public void saveStatistic(@NotNull User user, Statistic stat) {
+        config.set(user.getUniqueId().toString() + "." + stat.getName(), user.getStat(stat));
 
         ConfigUtils.saveConfig(plugin, config, "stats");
     }
@@ -30,7 +30,7 @@ public class FileStatistics extends UserDatabase {
     public void saveStatistics(@NotNull User user) {
         String uuid = user.getUniqueId().toString();
 
-        for (StatisticType stat : StatisticType.PERSISTENT_STATS) {
+        for (Statistic stat : Statistic.values()) {
             config.set(uuid + "." + stat.getName(), user.getStat(stat));
         }
 
@@ -42,7 +42,7 @@ public class FileStatistics extends UserDatabase {
         for (User user : plugin.getUserManager().getUsers()) {
             String uuid = user.getUniqueId().toString();
 
-            for (StatisticType stat : StatisticType.PERSISTENT_STATS) {
+            for (Statistic stat : Statistic.values()) {
                 config.set(uuid + "." + stat.getName(), user.getStat(stat));
             }
         }
@@ -54,7 +54,7 @@ public class FileStatistics extends UserDatabase {
     public void loadStatistics(@NotNull User user) {
         String uuid = user.getUniqueId().toString();
 
-        for (StatisticType stat : StatisticType.PERSISTENT_STATS) {
+        for (Statistic stat : Statistic.values()) {
             user.setStat(stat, config.getInt(uuid + "." + stat.getName()));
         }
     }

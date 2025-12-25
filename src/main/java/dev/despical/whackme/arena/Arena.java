@@ -5,7 +5,8 @@ import dev.despical.whackme.ConfigPreferences;
 import dev.despical.whackme.WhackMe;
 import dev.despical.whackme.api.event.arena.WMJoinEvent;
 import dev.despical.whackme.api.event.arena.WMLeaveEvent;
-import dev.despical.whackme.api.statistics.StatisticType;
+import dev.despical.whackme.stat.LocalStatistic;
+import dev.despical.whackme.stat.Statistic;
 import dev.despical.whackme.arena.blocks.PointBlock;
 import dev.despical.whackme.arena.blocks.PointHandler;
 import dev.despical.whackme.arena.managers.BossBarManager;
@@ -14,6 +15,8 @@ import dev.despical.whackme.handler.ChatManager;
 import dev.despical.whackme.handler.rewards.Reward;
 import dev.despical.whackme.user.User;
 import dev.despical.whackme.util.Utils;
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -35,14 +38,33 @@ import java.util.stream.Collectors;
 public class Arena extends BukkitRunnable {
 
     private static final WhackMe plugin = WhackMe.getInstance();
+
+    @Getter
     private final String id;
     private final PointHandler pointHandler;
+
+    @Getter
     private final BossBarManager bossBarManager;
+
+    @Getter
     private final List<PointBlock> pointBlocks;
     private final Map<ArenaOption, Object> arenaOptions;
     private final Map<GameLocation, Location> gameLocations;
+
+    @Getter
     private Player player;
-    private boolean ready, custom, started;
+
+    @Getter
+    @Setter
+    private boolean ready;
+
+    @Getter
+    @Setter
+    private boolean custom;
+    private boolean started;
+
+    @Getter
+    @Setter
     private List<Location> locations;
 
     public Arena(String id) {
@@ -57,30 +79,6 @@ public class Arena extends BukkitRunnable {
         for (ArenaOption option : ArenaOption.values()) {
             arenaOptions.put(option, option.getDefault());
         }
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public boolean isReady() {
-        return ready;
-    }
-
-    public void setReady(boolean ready) {
-        this.ready = ready;
-    }
-
-    public boolean isCustom() {
-        return custom;
-    }
-
-    public void setCustom(boolean custom) {
-        this.custom = custom;
-    }
-
-    public Player getPlayer() {
-        return player;
     }
 
     public String getPlayerName() {
@@ -134,27 +132,28 @@ public class Arena extends BukkitRunnable {
 
         User user = plugin.getUserManager().getUser(player);
         ChatManager chatManager = plugin.getChatManager();
-        int score = user.getStat(StatisticType.LOCAL_SCORE);
+        int score = user.getStat(LocalStatistic.SCORE);
 
-        if (score > user.getStat(StatisticType.RECORD_SCORE)) {
-            user.setStat(StatisticType.RECORD_SCORE, score);
+        if (score > user.getStat(Statistic.RECORD_SCORE)) {
+            user.setStat(Statistic.RECORD_SCORE, score);
 
             plugin.getRewardsFactory().performReward(this, Reward.RewardType.NEW_RECORD);
 
             if (teleportToEnd)
-                player.sendMessage(chatManager.message("in_game.finish_record_message").replace("%points%", Integer.toString(user.getStat(StatisticType.LOCAL_SCORE))));
+                player.sendMessage(chatManager.message("in_game.finish_record_message").replace("%points%", Integer.toString(score)));
         } else {
-            if (teleportToEnd)
-                player.sendMessage(chatManager.message("in_game.finish_message").replace("%points%", Integer.toString(user.getStat(StatisticType.LOCAL_SCORE))));
+            if (teleportToEnd) {
+                player.sendMessage(chatManager.message("in_game.finish_message").replace("%points%", Integer.toString(score)));
+            }
         }
 
-        int localStreak = user.getStat(StatisticType.LOCAL_LONGEST_STREAK);
+        int localStreak = user.getStat(LocalStatistic.LONGEST_STREAK);
 
-        if (localStreak > user.getStat(StatisticType.LONGEST_STREAK)) {
-            user.setStat(StatisticType.LONGEST_STREAK, localStreak);
+        if (localStreak > user.getStat(Statistic.LONGEST_STREAK)) {
+            user.setStat(Statistic.LONGEST_STREAK, localStreak);
         }
 
-        user.addStat(StatisticType.TOURS_PLAYED, 1);
+        user.addStat(Statistic.TOURS_PLAYED, 1);
         user.resetAttackCooldown();
         user.resetStats();
         user.setCooldown("play_again", plugin.getConfig().getInt("Game-Cooldown"));
@@ -184,10 +183,6 @@ public class Arena extends BukkitRunnable {
     public void cleanGameArea() {
         this.pointBlocks.forEach(PointBlock::clear);
         this.pointBlocks.clear();
-    }
-
-    public BossBarManager getBossBarManager() {
-        return bossBarManager;
     }
 
     public boolean containPlayer(Player player) {
@@ -249,18 +244,6 @@ public class Arena extends BukkitRunnable {
         if (player != null) {
             player.teleport(getEndLocation());
         }
-    }
-
-    public List<PointBlock> getPointBlocks() {
-        return pointBlocks;
-    }
-
-    public List<Location> getLocations() {
-        return locations;
-    }
-
-    public void setLocations(List<Location> locations) {
-        this.locations = locations;
     }
 
     public void start() {

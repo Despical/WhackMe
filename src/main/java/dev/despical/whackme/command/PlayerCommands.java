@@ -5,8 +5,8 @@ import dev.despical.commandframework.annotations.Command;
 import dev.despical.commandframework.annotations.Param;
 import dev.despical.commons.string.StringUtils;
 import dev.despical.whackme.ConfigPreferences;
-import dev.despical.whackme.api.statistics.StatisticType;
-import dev.despical.whackme.api.statistics.StatsStorage;
+import dev.despical.whackme.stat.Statistic;
+import dev.despical.whackme.api.StatsStorage;
 import dev.despical.whackme.arena.Arena;
 import dev.despical.whackme.user.User;
 import dev.despical.whackme.user.data.MySQLStatistics;
@@ -18,13 +18,9 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
-
-import static dev.despical.whackme.api.statistics.StatisticType.*;
 
 public class PlayerCommands extends CommandCategory {
 
@@ -96,10 +92,10 @@ public class PlayerCommands extends CommandCategory {
             .stream()
             .filter(arena -> arena.getPlayer() == null && arena.isReady())
             .sorted()
-            .collect(Collectors.toList());
+            .toList();
 
         if (!arenas.isEmpty()) {
-            Arena arena = arenas.get(0);
+            Arena arena = arenas.getFirst();
 
             if (!Utils.hasJoinPermission(player)) {
                 player.sendMessage(chatManager.prefixedMessage("commands.no_permission"));
@@ -119,7 +115,7 @@ public class PlayerCommands extends CommandCategory {
         senderType = Command.SenderType.PLAYER
     )
     public void statsCommand(Player player, CommandArguments argument) {
-        Player target = argument.isArgumentsEmpty() ? player : plugin.getServer().getPlayer(argument.getArgument(0));
+        Player target = argument.isArgumentsEmpty() ? player : plugin.getServer().getPlayer(argument.getFirst());
 
         if (target == null) {
             player.sendMessage(chatManager.prefixedMessage("commands.player_not_found"));
@@ -135,16 +131,16 @@ public class PlayerCommands extends CommandCategory {
     }
 
     private String formatStats(String message, String header, User user) {
-        int minusBlocks = user.getStat(MINUS_BLOCKS), plusBlocks = user.getStat(PLUS_BLOCKS);
+        int minusBlocks = user.getStat(Statistic.MINUS_BLOCKS), plusBlocks = user.getStat(Statistic.PLUS_BLOCKS);
 
         message = message.replace("%player%", user.getName());
         message = message.replace("%header%", chatManager.message("commands.stats_command." + header, user.getPlayer()));
-        message = message.replace("%tours_played%", TOURS_PLAYED.from(user));
-        message = message.replace("%record_score%", RECORD_SCORE.from(user));
+        message = message.replace("%tours_played%", Integer.toString(user.getStat(Statistic.TOURS_PLAYED)));
+        message = message.replace("%record_score%", Integer.toString(user.getStat(Statistic.RECORD_SCORE)));
         message = message.replace("%whacked_point_blocks%", Integer.toString(plusBlocks));
         message = message.replace("%whacked_minus_point_blocks%", Integer.toString(minusBlocks));
         message = message.replace("%whacked_block_rate%", String.format("%.1f", (minusBlocks + plusBlocks == 0 ? 100 : ((double) plusBlocks / (minusBlocks + plusBlocks)) * 100D)));
-        message = message.replace("%longest_point_streak%", LONGEST_STREAK.from(user));
+        message = message.replace("%longest_point_streak%", Integer.toString(user.getStat(Statistic.LONGEST_STREAK)));
         return chatManager.coloredRawMessage(message);
     }
 
@@ -160,13 +156,13 @@ public class PlayerCommands extends CommandCategory {
         }
 
         try {
-            printLeaderboard(arguments.getSender(), StatisticType.valueOf(arguments.getArgument(0).toUpperCase(java.util.Locale.ENGLISH)));
+            printLeaderboard(arguments.getSender(), Statistic.valueOf(arguments.getArgument(0).toUpperCase(java.util.Locale.ENGLISH)));
         } catch (IllegalArgumentException exception) {
             arguments.sendMessage(chatManager.prefixedMessage("commands.statistics.invalid_name"));
         }
     }
 
-    private void printLeaderboard(CommandSender sender, StatisticType statisticType) {
+    private void printLeaderboard(CommandSender sender, Statistic statisticType) {
         sender.sendMessage(chatManager.message("commands.statistics.header"));
 
         Map<UUID, Integer> stats = StatsStorage.getStats(statisticType);
@@ -212,19 +208,5 @@ public class PlayerCommands extends CommandCategory {
         message = message.replace("%value%", Integer.toString(value));
         message = message.replace("%statistic%", statisticName);
         return message;
-    }
-
-    private String getMatchingParts(String matched, String current) {
-        String[] matchedArray = matched.split("\\."), currentArray = current.split("\\.");
-        int max = Math.min(matchedArray.length, currentArray.length);
-        List<String> matchingParts = new ArrayList<>();
-
-        for (int i = 0; i < max; i++) {
-            if (matchedArray[i].equals(currentArray[i])) {
-                matchingParts.add(matchedArray[i]);
-            }
-        }
-
-        return String.join(".", matchingParts);
     }
 }
