@@ -5,6 +5,7 @@ import dev.despical.whackme.WhackMe;
 import dev.despical.whackme.user.data.UserDatabase;
 import dev.despical.whackme.user.data.FileStatistics;
 import dev.despical.whackme.user.data.MySQLStatistics;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,6 +24,8 @@ public class UserManager {
     public UserManager(WhackMe plugin) {
         this.users = new HashMap<>();
         this.userDatabase = plugin.getOption(ConfigPreferences.Option.DATABASE_ENABLED) ? new MySQLStatistics() : new FileStatistics();
+
+        Bukkit.getOnlinePlayers().forEach(this::addUser);
     }
 
     @NotNull
