@@ -123,10 +123,6 @@ public class WhackMe extends JavaPlugin {
 
         configPreferences = new ConfigPreferences(this);
         chatManager = new ChatManager(this);
-        commandFramework = new CommandFramework(this);
-        commandFramework.addCustomParameter(Player.class, CommandArguments::getSender);
-        commandFramework.addCustomParameter(Arena.class, arguments -> arenaRegistry.getArena(arguments.getArgument(0)));
-        commandFramework.addCustomParameter("pArena", arguments -> arenaRegistry.getArena(arguments.<Player>getSender()));
         userManager = new UserManager(this);
         soundManager = new SoundManager(this);
         rewardsFactory = new RewardsFactory(this);
@@ -143,8 +139,8 @@ public class WhackMe extends JavaPlugin {
         }
 
         new GameEvents();
-        new PlayerCommands();
-        new AdminCommands();
+
+        registerCommands();
 
         Metrics metrics = new Metrics(this, 15722);
         metrics.addCustomChart(new SimplePie("database_enabled", () -> getOption(ConfigPreferences.Option.DATABASE_ENABLED) ? "Enabled" : "Disabled"));
@@ -152,6 +148,14 @@ public class WhackMe extends JavaPlugin {
 
         handleAutoDataSaving();
         initialized = true;
+    }
+
+    private void registerCommands() {
+        commandFramework = new CommandFramework(this);
+        commandFramework.addCustomParameter(Player.class, CommandArguments::getSender);
+        commandFramework.addCustomParameter(Arena.class, arguments -> arenaRegistry.getArena(arguments.getFirst()));
+        commandFramework.addCustomParameter("pArena", arguments -> arenaRegistry.getArena(arguments.<Player>getSender()));
+        commandFramework.registerAllInPackage("dev.despical.whackme.command");
     }
 
     private void createFiles() {

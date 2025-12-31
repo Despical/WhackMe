@@ -37,7 +37,7 @@ public class AdminCommands extends CommandCategory {
             return;
         }
 
-        String id = arguments.getArgument(0);
+        String id = arguments.getFirst();
 
         if (plugin.getArenaRegistry().isArena(id)) {
             arguments.sendMessage(chatManager.prefixedRawMessage("&cArena with that ID already contains!"));
@@ -104,7 +104,7 @@ public class AdminCommands extends CommandCategory {
 
         FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
 
-        config.set("instances." + arguments.getArgument(0), null);
+        config.set("instances." + arguments.getFirst(), null);
         ConfigUtils.saveConfig(plugin, config, "arenas");
 
         arguments.sendMessage(chatManager.prefixedMessage("Commands.Removed-Game-Instance"));

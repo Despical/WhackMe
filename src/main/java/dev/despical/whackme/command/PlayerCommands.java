@@ -156,7 +156,7 @@ public class PlayerCommands extends CommandCategory {
         }
 
         try {
-            printLeaderboard(arguments.getSender(), Statistic.valueOf(arguments.getArgument(0).toUpperCase(java.util.Locale.ENGLISH)));
+            printLeaderboard(arguments.getSender(), Statistic.valueOf(arguments.getFirst().toUpperCase(java.util.Locale.ENGLISH)));
         } catch (IllegalArgumentException exception) {
             arguments.sendMessage(chatManager.prefixedMessage("commands.statistics.invalid_name"));
         }
