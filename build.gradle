@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'dev.despical'
-version = '1.8.6'
+version = '1.8.7'
 
 java {
     toolchain {
@@ -22,15 +22,15 @@ repositories {
 dependencies {
     compileOnly 'com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT'
     compileOnly 'me.clip:placeholderapi:2.11.7'
+    compileOnly 'org.projectlombok:lombok:1.18.30'
 
     implementation('dev.despical:commons:2.0.6') {
         exclude group: 'org.slf4j'
     }
-    implementation 'dev.despical:command-framework:1.5.7'
+    implementation 'dev.despical:command-framework:1.5.8'
     implementation 'dev.despical:inventory-framework:2.4.5'
     implementation 'org.bstats:bstats-bukkit:3.1.0'
 
-    compileOnly 'org.projectlombok:lombok:1.18.30'
     annotationProcessor 'org.projectlombok:lombok:1.18.30'
 }
 
