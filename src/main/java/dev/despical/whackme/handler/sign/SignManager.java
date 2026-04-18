@@ -20,9 +20,10 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author Despical
@@ -34,14 +35,14 @@ public class SignManager implements Reloadable {
     private static final WhackMe plugin = WhackMe.getInstance();
     private static final ChatManager chatManager = plugin.getChatManager();
 
-    private final Set<ArenaSign> arenaSigns;
+    private final Map<String, ArenaSign> arenaSigns;
     private final List<String> signLines;
     private final Listener creationListener;
     private final Listener activeSignListener;
     private boolean activeSignListenerRegistered;
 
     public SignManager() {
-        this.arenaSigns = new HashSet<>();
+        this.arenaSigns = new HashMap<>();
         this.signLines = plugin.getChatManager().getStringList("Signs.Lines");
         this.creationListener = new Listener() {
             @EventHandler
@@ -89,8 +90,7 @@ public class SignManager implements Reloadable {
 
         final Block block = event.getBlock();
 
-        arenaSigns.add(new ArenaSign((Sign) block.getState(), arena));
-        syncActiveSignListener();
+        addArenaSign(block, arena);
 
         for (int i = 0; i < signLines.size(); i++) {
             event.setLine(i, formatSign(signLines.get(i), arena));
@@ -123,7 +123,7 @@ public class SignManager implements Reloadable {
             return;
         }
 
-        arenaSigns.remove(arenaSign);
+        arenaSigns.remove(toBlockKey(block));
         syncActiveSignListener();
 
         final String location = LocationSerializer.toString(block.getLocation());
@@ -131,16 +131,12 @@ public class SignManager implements Reloadable {
         final FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
         final List<String> signs = config.getStringList(path);
 
-        for (final String loc : signs) {
-            if (loc.equals(location)) {
-                signs.remove(location);
+        if (signs.remove(location)) {
+            config.set(path, signs);
+            ConfigUtils.saveConfig(plugin, config, "arenas");
 
-                config.set(path, signs);
-                ConfigUtils.saveConfig(plugin, config, "arenas");
-
-                user.sendRawMessage("&aSign removed successfully!");
-                return;
-            }
+            user.sendRawMessage("&aSign removed successfully!");
+            return;
         }
 
         user.sendRawMessage("&cCouldn't remove arena sign! Please do manually!");
@@ -183,21 +179,22 @@ public class SignManager implements Reloadable {
         boolean removed = false;
 
         for (final String arenaId : config.getConfigurationSection("instances").getKeys(false)) {
-            List<String> signs = config.getStringList("instances." + arenaId + ".signs");
-            int size = signs.size();
+            final List<String> signs = config.getStringList("instances." + arenaId + ".signs");
+            final Arena arena = plugin.getArenaRegistry().getArena(arenaId);
+            final List<String> validSigns = new java.util.ArrayList<>(signs.size());
 
             for (final String location : signs) {
                 final BlockState blockState = LocationSerializer.fromString(location).getBlock().getState();
 
-                if (blockState instanceof Sign) {
-                    arenaSigns.add(new ArenaSign((Sign) blockState, plugin.getArenaRegistry().getArena(arenaId)));
-                } else {
-                    signs.remove(location);
+                if (blockState instanceof Sign && arena != null) {
+                    final Sign sign = (Sign) blockState;
+                    arenaSigns.put(toBlockKey(sign.getBlock()), new ArenaSign(sign, arena));
+                    validSigns.add(location);
                 }
             }
 
-            if (removed |= size != signs.size()) {
-                config.set("instances." + arenaId + ".signs", signs);
+            if (removed |= signs.size() != validSigns.size()) {
+                config.set("instances." + arenaId + ".signs", validSigns);
             }
         }
 
@@ -210,7 +207,7 @@ public class SignManager implements Reloadable {
     }
 
     public void updateSign(final Arena arena) {
-        this.arenaSigns.stream().filter(arenaSign -> arenaSign.getArena().equals(arena)).forEach(this::updateSign);
+        this.arenaSigns.values().stream().filter(arenaSign -> arenaSign.getArena().equals(arena)).forEach(this::updateSign);
     }
 
     private void updateSign(final ArenaSign arenaSign) {
@@ -224,28 +221,24 @@ public class SignManager implements Reloadable {
     }
 
     public void updateSigns() {
-        for (final ArenaSign arenaSign : arenaSigns) {
-            final Sign sign = arenaSign.getSign();
-
-            for (int i = 0; i < signLines.size(); i++) {
-                sign.setLine(i, formatSign(signLines.get(i), arenaSign.getArena()));
-            }
-
-            sign.update();
-        }
+        arenaSigns.values().forEach(this::updateSign);
     }
 
     public boolean isGameSign(Block block) {
-        return this.arenaSigns.stream().anyMatch(sign -> sign.getSign().getLocation().equals(block.getLocation()));
+        return getArenaSignByBlock(block) != null;
     }
 
     public void addArenaSign(Block block, Arena arena) {
-        arenaSigns.add(new ArenaSign((Sign) block.getState(), arena));
+        if (!(block.getState() instanceof Sign)) {
+            return;
+        }
+
+        arenaSigns.put(toBlockKey(block), new ArenaSign((Sign) block.getState(), arena));
         syncActiveSignListener();
     }
 
     public void removeSigns(Arena arena) {
-        this.arenaSigns.removeIf(sign -> sign.getArena().equals(arena));
+        this.arenaSigns.values().removeIf(sign -> sign.getArena().equals(arena));
         syncActiveSignListener();
     }
 
@@ -269,7 +262,11 @@ public class SignManager implements Reloadable {
     }
 
     private ArenaSign getArenaSignByBlock(Block block) {
-        return block == null || !(block.getState() instanceof Sign) ? null : arenaSigns.stream().filter(sign -> sign.getSign().getLocation().equals(block.getLocation())).findFirst().orElse(null);
+        if (block == null || !(block.getState() instanceof Sign)) {
+            return null;
+        }
+
+        return arenaSigns.get(toBlockKey(block));
     }
 
     private void syncActiveSignListener() {
@@ -286,6 +283,11 @@ public class SignManager implements Reloadable {
             plugin.getServer().getPluginManager().registerEvents(activeSignListener, plugin);
             activeSignListenerRegistered = true;
         }
+    }
+
+    private String toBlockKey(Block block) {
+        final org.bukkit.Location location = block.getLocation();
+        return Objects.requireNonNull(location.getWorld()).getUID() + ":" + location.getBlockX() + ':' + location.getBlockY() + ':' + location.getBlockZ();
     }
 
     @Override
