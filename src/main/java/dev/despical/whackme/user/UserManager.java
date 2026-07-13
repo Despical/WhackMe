@@ -1,15 +1,13 @@
 package dev.despical.whackme.user;
 
-import dev.despical.whackme.ConfigPreferences;
 import dev.despical.whackme.WhackMe;
-import dev.despical.whackme.user.data.UserDatabase;
-import dev.despical.whackme.user.data.FileStatistics;
-import dev.despical.whackme.user.data.MySQLStatistics;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * @author Despical
@@ -18,30 +16,20 @@ import java.util.*;
  */
 public class UserManager {
 
+    private final WhackMe plugin;
     private final Map<UUID, User> users;
-    private final UserDatabase userDatabase;
 
     public UserManager(WhackMe plugin) {
+        this.plugin = plugin;
         this.users = new HashMap<>();
-        this.userDatabase = plugin.getOption(ConfigPreferences.Option.DATABASE_ENABLED) ? new MySQLStatistics() : new FileStatistics();
-
-        Bukkit.getOnlinePlayers().forEach(this::addUser);
+        this.loadDataOfOnlinePlayers();
     }
 
-    @NotNull
-    public User addUser(Player player) {
-        User user = new User(player);
-        users.put(player.getUniqueId(), user);
-
-        userDatabase.loadStatistics(user);
-        return user;
+    public User getUser(UUID uuid) {
+        Player player = Bukkit.getPlayer(uuid);
+        return player == null ? null : this.getUser(player);
     }
 
-    public void removeUser(Player player) {
-        users.remove(player.getUniqueId());
-    }
-
-    @NotNull
     public User getUser(Player player) {
         User user = users.get(player.getUniqueId());
 
@@ -49,15 +37,26 @@ public class UserManager {
             return user;
         }
 
-        return addUser(player);
+        return createNewUser(player);
+    }
+
+    public void removeUser(User user) {
+        users.remove(user.getUUID());
     }
 
     public Set<User> getUsers() {
-        return new HashSet<>(users.values());
+        return Set.copyOf(users.values());
     }
 
-    @NotNull
-    public UserDatabase getUserDatabase() {
-        return userDatabase;
+    public User createNewUser(Player player) {
+        User user = new User(player);
+        users.put(player.getUniqueId(), user);
+
+        plugin.getDatabase().loadData(user);
+        return user;
+    }
+
+    private void loadDataOfOnlinePlayers() {
+        plugin.getServer().getOnlinePlayers().forEach(this::createNewUser);
     }
 }

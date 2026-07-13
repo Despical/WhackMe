@@ -1,31 +1,24 @@
 package dev.despical.whackme.leaderboard;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.UUID;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 /**
  * @author Despical
  * <p>
- * Created at 8.11.2024
+ * Created at 08.11.2024
  */
-public class Leaderboard {
+public record Leaderboard<T extends Comparable<T>>(String id, List<LeaderboardEntry<T>> sortedEntries, T fallbackValue) {
 
-    private final Map<UUID, Integer> entries;
+    @NotNull
+    public LeaderboardEntry<T> getEntryAtPosition(int pos) {
+        pos -= 1;
 
-    public Leaderboard() {
-        this.entries = new LinkedHashMap<>();
-    }
+        if (pos < 0 || pos >= sortedEntries.size()) {
+            return LeaderboardEntry.empty(fallbackValue);
+        }
 
-    public void addEntry(UUID uniqueId, int value) {
-        entries.put(uniqueId, value);
-    }
-
-    public Map.Entry<UUID, Integer> getEntry(int placement) {
-        return entries.entrySet()
-            .stream()
-            .skip(placement - 1)
-            .findFirst()
-            .orElse(null);
+        return sortedEntries.get(pos);
     }
 }

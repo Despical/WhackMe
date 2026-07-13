@@ -1,16 +1,22 @@
 package dev.despical.whackme.user;
 
-import dev.despical.commons.reflection.XReflection;
 import dev.despical.whackme.WhackMe;
-import dev.despical.whackme.api.event.player.WMPlayerStatisticChangeEvent;
-import dev.despical.whackme.stat.LocalStatistic;
-import dev.despical.whackme.stat.StatisticType;
+import dev.despical.whackme.api.event.player.PlayerStatisticChangeEvent;
 import dev.despical.whackme.arena.Arena;
+import dev.despical.whackme.stats.StatisticType;
+import dev.despical.whackme.stats.Statistics;
+import dev.despical.whackme.util.Var;
+import lombok.Getter;
 import lombok.Setter;
-import org.bukkit.attribute.Attribute;
+import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.function.Consumer;
 
 /**
  * @author Despical
@@ -19,110 +25,162 @@ import java.util.*;
  */
 public class User {
 
-    private static final WhackMe plugin = WhackMe.getInstance();
+    private static final WhackMe plugin;
     private static long cooldownCounter;
 
     static {
+        plugin = WhackMe.getInstance();
         plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, () -> cooldownCounter++, 20, 20);
     }
 
-    private final UUID uuid;
-    private final String playerName;
-    private final Map<String, Double> cooldowns;
-    private final Map<StatisticType, Integer> stats;
-
+    @Getter
     @Setter
-    private boolean editingMode;
-    private double attackCooldown;
+    private boolean inEditingMode;
+    private final UUID uuid;
+
+    @Getter
+    private final String name;
+
+    private final Map<String, Double> cooldowns;
+    private final Map<StatisticType<?>, Object> stats;
 
     public User(Player player) {
         this.uuid = player.getUniqueId();
-        this.playerName = player.getName();
+        this.name = player.getName();
         this.cooldowns = new HashMap<>();
         this.stats = new HashMap<>();
     }
 
-    public Arena getArena() {
-        return plugin.getArenaRegistry().getArena(getPlayer());
-    }
-
-    public Player getPlayer() {
-        return plugin.getServer().getPlayer(uuid);
-    }
-
-    public UUID getUniqueId() {
+    public UUID getUUID() {
         return uuid;
     }
 
-    public String getName() {
-        return playerName;
+    public Player getPlayer() {
+        return Bukkit.getPlayer(uuid);
     }
 
-    public boolean isInEditingMode() {
-        return editingMode;
+    public void ifPlayerPresent(Consumer<Player> playerConsumer) {
+        Optional.ofNullable(getPlayer()).ifPresent(playerConsumer);
     }
 
-    public void sendRawMessage(final String message) {
-        getPlayer().sendMessage(plugin.getChatManager().coloredRawMessage(message));
+    public void sendMessage(String path, Var... variables) {
+        ifPlayerPresent(player -> plugin.getChatManager().sendMessage(player, path, variables));
     }
 
-    public int getStat(StatisticType statisticType) {
-        return stats.computeIfAbsent(statisticType, stat -> 0);
+    public void sendRawMessage(String msg, Var... variables) {
+        ifPlayerPresent(player -> {
+            Component message = plugin.getChatManager().parseMessage(msg, variables);
+            player.sendMessage(message);
+        });
     }
 
-    public void setStat(StatisticType stat, int value) {
-        stats.put(stat, value);
-
-        plugin.callEvent(() -> new WMPlayerStatisticChangeEvent(getArena(), getPlayer(), stat, value));
+    public void sendRawActionBarComponent(Component message) {
+        ifPlayerPresent(player -> player.sendActionBar(message));
     }
 
-    public void addStat(StatisticType stat, int value) {
-        setStat(stat, getStat(stat) + value);
+    public void sendRawComponent(Component component, Var... vars) {
+        ifPlayerPresent(player -> plugin.getChatManager().sendRawComponent(player, component, vars));
     }
 
-    public void resetStats() {
-        for (var stat : LocalStatistic.values()) {
-            stats.put(stat, 0);
+    public void sendActionBar(String path, Var... variables) {
+        ifPlayerPresent(player -> plugin.getChatManager().sendActionBar(player, path, variables));
+    }
+
+    public void sendRawActionBar(String msg, Var... variables) {
+        ifPlayerPresent(player -> plugin.getChatManager().sendRawActionBar(player, msg, variables));
+    }
+
+    public Arena getArena() {
+        return plugin.getArenaRegistry().getArena(this);
+    }
+
+    public boolean isInArena() {
+        return getArena() != null;
+    }
+
+    public boolean hasCooldown(String cooldownName) {
+        return getCooldown(cooldownName) > 0D;
+    }
+
+    public void setCooldown(String cooldownName, double seconds) {
+        cooldowns.put(cooldownName, seconds + cooldownCounter);
+    }
+
+    public void removeCooldown(String cooldownName) {
+        cooldowns.remove(cooldownName);
+    }
+
+    public double getCooldown(String cooldownName) {
+        return Math.max(0D, cooldowns.getOrDefault(cooldownName, 0D) - cooldownCounter);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T getStatistic(StatisticType<T> type) {
+        return (T) stats.computeIfAbsent(type, stat -> {
+            if (stat.getDefaultValue() instanceof Map) {
+                return new HashMap<>();
+            }
+
+            return stat.getDefaultValue();
+        });
+    }
+
+    public <T> void setStatistic(StatisticType<T> type, T newValue) {
+        setStatisticInternal(type, newValue, true);
+    }
+
+    public <T> void loadStatistic(StatisticType<T> type, T newValue) {
+        setStatisticInternal(type, newValue, false);
+    }
+
+    private <T> void setStatisticInternal(StatisticType<T> type, T newValue, boolean callEvent) {
+        T oldValue = getStatistic(type);
+        if (oldValue != null && oldValue.equals(newValue)) {
+            return;
+        }
+
+        T finalValue = newValue;
+
+        if (callEvent) {
+            PlayerStatisticChangeEvent<T> event =
+                plugin.getEventManager().statChange(getPlayer(), type, oldValue, newValue);
+
+            if (event.isCancelled()) {
+                return;
+            }
+
+            finalValue = event.getNewValue();
+        }
+
+        if (oldValue != null && oldValue.equals(finalValue)) {
+            return;
+        }
+
+        stats.put(type, finalValue);
+    }
+
+    public void addStat(StatisticType<Integer> type, int amount) {
+        setStatistic(type, getStatistic(type) + amount);
+    }
+
+    @SafeVarargs
+    public final void addStat(StatisticType<Integer> type, StatisticType<Integer>... types) {
+        addStat(type, 1);
+
+        for (StatisticType<Integer> statisticType : types) {
+            addStat(statisticType, 1);
         }
     }
 
-    public void updateAttackCooldown() {
-        if (!XReflection.supports(9)) return;
-
-        Player player = this.getPlayer();
-
-        if (player == null) return;
-
-        Optional.ofNullable(player.getAttribute(Attribute.GENERIC_ATTACK_SPEED)).ifPresent(attribute -> {
-            this.attackCooldown = attribute.getBaseValue();
-
-            attribute.setBaseValue(plugin.getConfig().getDouble("Hit-Cooldown-Delay", 20));
-        });
+    public void setStatisticIfHigher(StatisticType<Integer> type, int amount) {
+        setStatistic(type, Math.max(getStatistic(type), amount));
     }
 
-    public void resetAttackCooldown() {
-        if (!XReflection.supports(9)) return;
+    public void resetTemporaryStats() {
+        cooldowns.clear();
 
-        Player player = this.getPlayer();
-
-        if (player == null) return;
-
-        Optional.ofNullable(player.getAttribute(Attribute.GENERIC_ATTACK_SPEED)).ifPresent(attribute -> {
-            if (attackCooldown == 0) {
-                attackCooldown = attribute.getDefaultValue();
-            }
-
-            attribute.setBaseValue(attackCooldown);
-        });
-    }
-
-    public void setCooldown(String cooldown, double seconds) {
-        cooldowns.put(cooldown, seconds + cooldownCounter);
-    }
-
-    public double getCooldown(String cooldown) {
-        final Double remainingTime = cooldowns.get(cooldown);
-
-        return (remainingTime == null || remainingTime <= cooldownCounter) ? 0 : remainingTime - cooldownCounter;
+        for (StatisticType<?> stat : Statistics.getPersistentStats()) {
+            stats.put(stat, stat.getDefaultValue());
+        }
     }
 }
