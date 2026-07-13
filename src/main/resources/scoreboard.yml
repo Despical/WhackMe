@@ -1,0 +1,31 @@
+# =============================================================== #
+#                 Whack Me - Scoreboard Configuration             #
+# =============================================================== #
+#                                                                 #
+# SUPPORTED PLACEHOLDERS:                                         #
+#   %player%            : Name of the player                      #
+#   %date%              : Current date                            #
+#   %arena%             : ID of the arena being played            #
+#   %timer%             : Time remaining in seconds (e.g., 30)    #
+#   %formatted_timer%   : Time remaining in MM:SS (e.g., 00:30)   #
+#   %score%             : Current score in this game              #
+#   %hit_streak%        : Current consecutive correct-hit streak  #
+#   %record_score%      : Highest score recorded in this arena    #
+#   %record_holder%     : Name of the arena record holder         #
+#   %success_rate%      : Correct-hit percentage (e.g., 100.0)    #
+#                                                                 #
+# =============================================================== #
+
+title: "<gradient:#00E676:#29B6F6><bold>WHACK ME</bold></gradient>"
+lines:
+  - "<#B0C4DE>%date%"
+  - ""
+  - "<#E6E6E6>Arena: <#29B6F6>%arena%"
+  - "<#E6E6E6>Time: <#FFCA28>%formatted_timer%"
+  - ""
+  - "<#E6E6E6>Score: <#00E676>%score%"
+  - "<#E6E6E6>Hit Streak: <#00E676>%hit_streak%"
+  - ""
+  - "<#E6E6E6>Record: <#FFD54F>%record_score%"
+  - ""
+  - "<#FFC800>www.despical.dev"
