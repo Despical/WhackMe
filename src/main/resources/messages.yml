@@ -1,88 +1,217 @@
-Commands:
-  Did-You-Mean: "&cDid you mean &7%command%&c?"
-  Correct-Usage: "&cCorrect usage: %usage%"
-  Removed-Game-Instance: "&aGame instance has been removed successfully."
-  No-Arena-Like-That: "&cWe couldn't find any arena with that name matching!"
-  No-Free-Arenas: "&cThere aren't any available arena to play!"
-  Not-Playing: "&cYou must be in an arena to leave!"
-  Type-Arena-Name: "&cPlease type an arena name!"
-  Arena-Not-Configured: "&cThis arena is not configured yet. If you think this is an issue contact staff!"
-  Only-By-Player: "&cYou can execute this command only as player!"
-  No-Permission: "&cYou don't have enough permission to use this command!"
-  No-One-Playing: "&cNo one playing Whack Me in this arena at the moment!"
-  Kicked-Player: "&aPlayer has kicked successfully from the game."
-  Wait-For-Cooldown: "&cPlease wait a bit before playing again!"
-  Reload-Command:
-    Initialized: "&aPlugin reload initialized by {0}."
-    Finished: "&aPlugin reload finished successfully."
-    Error-Occurred: "&cException occurred during the plugin reload!"
-  Player-Not-Found: "&cWe couldn't find any player with that name matching!"
-  Statistics:
-    Type-Name: "&cPlease type statistic name to view!"
-    Invalid-Name: "&cName of statistic is invalid! Type: record_score or tours_played"
-    Header: "&8&m-------------------[&6 Top 10 &8&m]-------------------"
-    Format: "&e#%position% %name% - %value% &7%statistic%"
-    Unknown-Player: "Unknown Player"
-  Stats-Command:
-    Header: "&l[-----YOUR STATS-----]"
-    Header-Other: "&l[-----STATS FOR %player%-----]"
-    Messages:
-      - "%header%"
-      - "&8 * &aRecord Score: &e%record_score%"
-      - "&8 * &aTours Played: &e%tours_played%"
-      - "&8 * &aWhacked Plus Points: &e%whacked_point_blocks%"
-      - "&8 * &aWhacked Minus Points: &e%whacked_minus_point_blocks%"
-      - "&8 * &aWhacked Block Rate: &e%whacked_block_rate%%"
-      - "&8 * &aLongest Point Streak: &e%longest_point_streak%"
-      - "&l[--------------------]"
-  List-Command:
-    No-Arenas-Created: "&cThere aren't any game instances to show! What about creating one?"
-    Format: "&aExisting arenas: &7%list%"
-  Time-Command:
-    Usage: "&cCorrect usage: /wm time <arena> <add | remove | set> <value>"
-    Arena-Is-Empty: "&cNo one is playing in this arena at the moment!"
+﻿point-blocks:
+  punch-me: "<#00E676>Punch Me!"
+  dont-punch-me: "<#FF5252>Don't hit me!"
+  ouch: "<#FF5252>Ouch!"
 
-In-Game:
-  Plugin-Prefix: "&8[&6Whack Me&8] "
-  Start-Message: "&a&lYou started playing Whack Me game!\n&a&lYou have 30s to punch as many whackies as possible!"
-  Finish-Message: "&a&lThe game has ended! You finished with &6&l%points% &a&lPoints!"
-  Finish-Record-Message: "&a&lThe game has ended! You have a new record with &6&l%points% &a&lPoints!"
-  Already-Playing: "&cYou are already playing Whack Me!"
-  Someone-Is-Already-Playing: "&cSomeone is already playing at the moment!"
-  Chat-Format: "&7%player%: &f%message%"
-  Only-Command-Is-Leave: "&cYou have to leave the game first to perform commands."
-  # Leave the actionbar message empty, if you do not want it.
-  Action-Bar: "&a&l%timer% &6- &a&l%score%"
-  Timer-Format: "%02d:%02d"
+game:
+  action-bar: "<gray>Score: <#00E676>%score% <dark_gray>| <gray>Time: <#FFCA28>%timer% <dark_gray>| <gray>Streak: <#00E676>%hit_streak%"
+  start-message:
+    - ""
+    - "<#00E676>You started playing the <u>Whack Me</u> game!"
+    - "<#00E676>You have 30s to punch as many whackies as possible!"
+    - ""
 
-Point-Blocks:
-  Punch-Me: "&aPunch Me!"
-  Dont-Punch-Me: "&cDont hit me!"
-  Ouch: "&cOuch!"
+  finished:
+    - "%no_center%<green><bold>▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"
+    - ""
+    - "<gradient:#00E676:#2979FF><bold>GAME FINISHED!</bold></gradient>"
+    - ""
+    - "<gray>Score: <#00E676><bold>%points%</bold> <dark_gray>• <gray>Personal Best: <#FFD54F><bold>%personal_record%</bold>"
+    - "<gray>Max Streak: <#29B6F6><bold>%max_streak%</bold> <dark_gray>• <gray>Success Rate: <#AB47BC><bold>%success_rate%%</bold>"
+    - "<#00E676><bold>%green_blocks% Green</bold> <dark_gray>• <#FF5252><bold>%red_blocks% Red</bold>"
+    - "%miss_status%"
+    - ""
+    - "%no_center%<green><bold>▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"
 
-# Has usage only when boss bar is enabled in config.
-# Only compatible with the versions Minecraft 1.9+
-Boss-Bar:
-  Color: BLUE
-  Style: SOLID
-  Interval: 120 # 20 ticks = 1 second
-  Messages:
-    - "&e&lPLAYING &f&lWhack Me &e&lby &b&lDESPICAL"
-    - "&e&lYOU LIKE THE PLUGIN? RATE US ON SPIGOT!"
+  new-record:
+    - "%no_center%<green><bold>▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"
+    - ""
+    - "<gradient:#FFD700:#FFFF00><bold>♕ NEW PERSONAL BEST! ♕</bold></gradient>"
+    - ""
+    - "<gray>Score: <#00E676><bold>%points%</bold> <dark_gray>• <gray>Previous Best: <#FFD54F><bold>%previous_record%</bold>"
+    - "<gray>Max Streak: <#29B6F6><bold>%max_streak%</bold> <dark_gray>• <gray>Success Rate: <#AB47BC><bold>%success_rate%%</bold>"
+    - "<#00E676><bold>%green_blocks% Green</bold> <dark_gray>• <#FF5252><bold>%red_blocks% Red</bold>"
+    - "%miss_status%"
+    - ""
+    - "%no_center%<green><bold>▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"
 
-Signs:
-  States:
-    Waiting: "&eWaiting"
-    Playing: "&cIn-Game"
-    Inactive: "&0Inactive"
-  Lines:
-    - "&4&lWhack Me"
-    - "%state%"
-    - "%arena%"
-    - "&5[%player%]"
+  global-record-broken:
+    - "%no_center%<green><bold>▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"
+    - ""
+    - "<gradient:#FFD700:#FFFF00><bold>♕ ARENA RECORD BROKEN! ♕</bold></gradient>"
+    - ""
+    - "<gray>Score: <#FFD54F><bold>%points%</bold> <dark_gray>• <gray>Personal Best: <#00E676><bold>%personal_record%</bold>"
+    - "<gray>Max Streak: <#29B6F6><bold>%max_streak%</bold> <dark_gray>• <gray>Success Rate: <#AB47BC><bold>%success_rate%%</bold>"
+    - "<#00E676><bold>%green_blocks% Green</bold> <dark_gray>• <#FF5252><bold>%red_blocks% Red</bold>"
+    - "%miss_status%"
+    - ""
+    - "%no_center%<green><bold>▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"
 
-Placeholders:
-  Empty-Position: "No Player"
-  Empty-Value: "NaN"
-  # %wm_{arena}_player_name% -> This placeholder returns the text below if arena player is null.
-  Unknown-Player: "Unknown"
+  global-record-broken-and-pr:
+    - "%no_center%<green><bold>▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"
+    - ""
+    - "<gradient:#FFD700:#FFFF00><bold>♕ ARENA RECORD BROKEN! ♕</bold></gradient>"
+    - ""
+    - "<gray>Score: <#FFD54F><bold>%points%</bold> <dark_gray>• <gray>Previous Best: <#00E676><bold>%previous_record%</bold>"
+    - "<gray>Max Streak: <#29B6F6><bold>%max_streak%</bold> <dark_gray>• <gray>Success Rate: <#AB47BC><bold>%success_rate%%</bold>"
+    - "<#00E676><bold>%green_blocks% Green</bold> <dark_gray>• <#FF5252><bold>%red_blocks% Red</bold>"
+    - "%miss_status%"
+    - ""
+    - "%no_center%<green><bold>▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"
+  chat-disabled-in-game: "<#FF5252>⚠ <#BDBDBD>You cannot send chat messages while in a game!"
+  only-command-is-leave: "<#FF5252>The only command you can use is /wm leave."
+
+# Help Messages
+help-message:
+  - "<#424242>▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"
+  - "<#29B6F6>✦ <#E0E0E0>Whack Me <white>Player Commands <#29B6F6>✦"
+  - ""
+  - "<!i><#29B6F6>• <#FFCA28>/%label% help <gray>» <#BDBDBD>Show the available player commands."
+  - "<!i><#29B6F6>• <#FFCA28>/%label% join <white><arena> <gray>» <#BDBDBD>Join an arena and start the game."
+  - "<!i><#29B6F6>• <#FFCA28>/%label% leave <gray>» <#BDBDBD>Leave your current Whack Me game."
+  - "<!i><#29B6F6>• <#FFCA28>/%label% stats <white>[player] <gray>» <#BDBDBD>Open your stats or inspect another player's stats."
+  - "<#424242>▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"
+
+admin-help-message:
+  - "<#424242>▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"
+  - "<#00E676>✦ <#E0E0E0>Whack Me <white>Admin Commands <#00E676>✦"
+  - ""
+  - "<!i><#00E676>• <#81C784>/%label% reload <gray>» <#BDBDBD>Reload plugin configuration files."
+  - "<!i><#00E676>• <#81C784>/%label% stop <white>[arena] <gray>» <#BDBDBD>Stop your current game or a specific arena game."
+  - "<!i><#00E676>• <#81C784>/%label% kick <white><player> <gray>» <#BDBDBD>Kick a player out of their active Whack Me game."
+  - "<!i><#00E676>• <#81C784>/%label% create <white><arena id> <gray>» <#BDBDBD>Create a new arena."
+  - "<!i><#00E676>• <#81C784>/%label% delete <white><arena id> <gray>» <#BDBDBD>Delete an arena, with confirm or cancel flags."
+  - "<!i><#00E676>• <#81C784>/%label% edit <white><arena id> <gray>» <#BDBDBD>Open the setup menu for an arena."
+  - "<!i><#00E676>• <#81C784>/%label% list <gray>» <#BDBDBD>List all arenas and their readiness state."
+  - "<#424242>▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"
+
+debug-help-message:
+  - "<#424242>▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"
+  - "<#FFCA28>✦ <#E0E0E0>Whack Me <white>Debug Commands <#FFCA28>✦"
+  - ""
+  - "<!i><#FFCA28>• <#FFD54F>/%label% debug component <white><message> <gray>» <#BDBDBD>Parse and preview MiniMessage components."
+  - "<!i><#FFCA28>• <#FFD54F>/%label% debug dump <gray>» <#BDBDBD>Send the current timings report to the sender."
+  - "<#424242>▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"
+
+# Command & System Messages
+correct-usage: "<#FF5252>⚠ <#BDBDBD>Correct usage: <#FFCA28>%usage%"
+
+stop-command:
+  correct-usage: "<#FF1744>⚠ <#BDBDBD>Correct usage: <#FF5252>/%label% stop <arena>"
+  not-playing: "<#FF1744>⚠ <#BDBDBD>The game is <#FF5252>not running <#BDBDBD>at the moment."
+  stopped: "<#57C5F7>ℹ <#BDBDBD>The game has been <gradient:#FF1744:#D50000>forcibly stopped.</gradient>"
+
+kick-command:
+  not-playing: "<#FF1744>⚠ <#BDBDBD>Player <#FF5252>%player% <#BDBDBD>is <#FF5252>not playing<#BDBDBD>."
+  kicked: "<#57C5F7>ℹ <#BDBDBD>Player <#FF5252>%player% <#BDBDBD>has been kicked from <#00B0FF>%arena%<#BDBDBD>."
+
+reloaded-configuration: "<#57C5F7>ℹ <#BDBDBD>Configuration files have been <#00E676>successfully reloaded<#BDBDBD>."
+
+server-reload-detected:
+  - " "
+  - "<#FF5252><bold>Game cancelled due to reload. Stats were not affected."
+  - " "
+server-shutdown-detected:
+  - " "
+  - "<#FF5252><bold>Game cancelled due to shutdown. Stats were not affected."
+  - " "
+game-stopped-by-command:
+  - " "
+  - "<#FF5252><bold>Game cancelled by an administrator. Stats were not affected."
+  - " "
+
+game-stopped-due-to-arena-deletion:
+  - ""
+  - "<#FF5252><bold>The arena you were playing in was deleted by an admin. Stats were not affected."
+  - ""
+
+unrecognized-arguments: "<#FF1744>⚠ <#BDBDBD>Unrecognized argument: <#FF5252>/%label% %arguments%"
+no-player-with-that-name: "<#FF1744>⚠ <#BDBDBD>No player found with <#FF5252>that name<#BDBDBD>."
+
+created-arena:
+  - "<#37474F><st>                                                                                 </st>"
+  - ""
+  - "<gradient:#00E676:#1DE9B6><bold>CREATION SUCCESSFUL</bold></gradient>"
+  - ""
+  - "<#CFD8DC>The arena '<#00B0FF>%id%<#CFD8DC>' has been successfully registered."
+  - "<#CFD8DC>You can now configure the settings."
+  - ""
+  - "<click:run_command:/wm edit %id%><hover:show_text:'<#69F0AE>Click to configure this arena.'><#FFD740><bold><underlined>CLICK HERE TO SETUP</underlined></bold></hover></click>"
+  - ""
+  - "<#37474F><st>                                                                                 </st>"
+
+arena-already-exists:
+  - "<#37474F><st>                                                                                 </st>"
+  - "<gradient:#FF1744:#D50000><bold>OPERATION FAILED</bold></gradient>"
+  - ""
+  - "<#CFD8DC>An arena with the ID '<#FF5252>%id%<#CFD8DC>' already exists."
+  - "<#CFD8DC>Please choose a different name."
+  - ""
+  - "<#37474F><st>                                                                                 </st>"
+
+delete-confirmation:
+  - "<#37474F><st>                                                                                 </st>"
+  - ""
+  - "<gradient:#FFCA28:#FF6F00><bold>FORCE DELETE</bold></gradient>"
+  - ""
+  - "<#CFD8DC>Are you sure you want to delete '<#FFAB40>%id%<#CFD8DC>'?"
+  - ""
+  - "<#B0BEC5><italic>Any active players will be kicked immediately.</italic>"
+  - "<#B0BEC5><italic>All data will be lost forever.</italic>"
+  - ""
+  - "   <click:run_command:/wm delete %id% --confirm><hover:show_text:'<#FF5252>Click to confirm.'><#FF5252><bold>[ ✔ CONFIRM ]</bold></hover></click>    <click:run_command:/wm delete %id% --cancel><hover:show_text:'<#B9F6CA>Click to cancel.'><#B0BEC5><bold>[ ✖ CANCEL ]</bold></hover></click>"
+  - ""
+  - "<#37474F><st>                                                                                </st>"
+
+delete-cancelled:
+  - "<#37474F><st>                                                                                 </st>"
+  - ""
+  - "<gradient:#B9F6CA:#00C853><bold>ACTION CANCELLED</bold></gradient>"
+  - ""
+  - "<#CFD8DC>The arena '<#B9F6CA>%id%<#CFD8DC>' was <bold>not</bold> deleted."
+  - "<#CFD8DC>It is safe and sound."
+  - ""
+  - "<#37474F><st>                                                                                 </st>"
+
+deleted-arena:
+  - "<#37474F><st>                                                                                 </st>"
+  - ""
+  - "<gradient:#FF5252:#D32F2F><bold>DELETION SUCCESSFUL</bold></gradient>"
+  - ""
+  - "<#CFD8DC>The arena '<#FF8A80>%id%<#CFD8DC>' has been deleted permanently."
+  - ""
+  - "<#37474F><st>                                                                                 </st>"
+
+no-arena-found:
+  - "<#37474F><st>                                                                                 </st>"
+  - ""
+  - "<gradient:#FF1744:#D50000><bold>ARENA NOT FOUND</bold></gradient>"
+  - ""
+  - "<#CFD8DC>No arena found with the ID '<#FF8A80>%id%<#CFD8DC>'."
+  - "<#CFD8DC>Please check the ID and try again."
+  - ""
+  - "<#37474F><st>                                                                                 </st>"
+
+created-arenas:
+  - ""
+  - "<#BDBDBD>Here is the list of <#00E676><hover:show_text:'<#00E676>Playable arenas'>ready</hover><#BDBDBD> and <#FF5252><hover:show_text:'<#FF5252>Requires setup'>not ready</hover><#BDBDBD> arenas:"
+  - "<dark_gray>➥ <white>%arenas%"
+  - ""
+
+can-not-unregister-now: "<#FFCA28>⚠ <#BDBDBD>Cannot unregister this arena while <#FFD54F>players are inside<#BDBDBD>."
+no-arena-found-with-that-name: "<#FF1744>⚠ <#BDBDBD>No arena found with <#FF5252>that ID<#BDBDBD>."
+arena-not-ready-yet: "<#FFCA28>⚠ <#BDBDBD>This arena is <gradient:#FFA000:#FFCA28><bold>NOT READY</bold></gradient> <#BDBDBD>to be played yet."
+no-arenas-registered: "<#FFCA28>⚠ <#BDBDBD>There are <#FFD54F>no arenas <#BDBDBD>registered yet!"
+already-playing: "<#FF1744>⚠ <#BDBDBD>You are already in this arena! Use <#FFCA28>/wm leave <#BDBDBD>to leave first."
+already-playing-other-arena: "<#FF1744>⚠ <#BDBDBD>You are already playing in <#FFCA28>another arena<#BDBDBD>. Use <#FFCA28>/wm leave <#BDBDBD>first."
+someone-is-already-playing: "<#FF1744>⚠ <#BDBDBD>Someone is <#FF5252>already playing <#BDBDBD>in this arena!"
+not-playing: "<#FF1744>⚠ <#BDBDBD>You are not playing <#D50000><bold>Whack Me</bold> <#BDBDBD>right now."
+only-for-players: "<#FF1744>⚠ <#BDBDBD>Only <#FF5252>players <#BDBDBD>can perform this command."
+player-not-found: "<#FF1744>⚠ <#BDBDBD>That player was <#FF5252>not found<#BDBDBD>."
+cannot-join-now: "<#FF1744>⚠ <#BDBDBD>You <#FF5252>cannot join <#BDBDBD>the game right now."
+chat-format: "<gray>%sender%<dark_gray>: <white>%message%"
+none: "<#FF5252>None"
+unknown-player: "Unknown"
+
+stats-menu:
+  no-arenas: "<#FF5252>⚠ <gray>There are no Whack Me arenas available to show statistics for."
