@@ -14,3 +14,15 @@ sounds:
     sound: BLOCK_NOTE_BLOCK_BASS
     volume: 1.0
     pitch: 1.0
+
+  game-finished:
+    enabled: true
+    sound: ENTITY_PLAYER_LEVELUP
+    volume: 1.0
+    pitch: 1.35
+
+  record-broken:
+    enabled: true
+    sound: UI_TOAST_CHALLENGE_COMPLETE
+    volume: 1.0
+    pitch: 1.0

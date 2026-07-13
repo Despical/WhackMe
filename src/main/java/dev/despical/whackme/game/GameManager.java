@@ -6,11 +6,11 @@ import dev.despical.whackme.arena.Arena;
 import dev.despical.whackme.arena.options.ArenaKeys;
 import dev.despical.whackme.chat.ChatManager;
 import dev.despical.whackme.option.IntOption;
+import dev.despical.whackme.sound.GameSound;
 import dev.despical.whackme.stats.Statistics;
 import dev.despical.whackme.user.User;
 import dev.despical.whackme.util.Utils;
 import dev.despical.whackme.util.Var;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -136,7 +136,7 @@ public final class GameManager {
                 personalBest ? "game.global-record-broken-and-pr" : "game.global-record-broken",
                 resultVars
             );
-            player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1f, 1f);
+            plugin.getSoundManager().play(player, GameSound.RECORD_BROKEN);
         }
 
         if (personalBest) {
@@ -147,7 +147,7 @@ public final class GameManager {
             }
         } else if (sendFinishMessage && !globalRecord) {
             chatManager.sendCenteredMessage(player, "game.finished", resultVars);
-            player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1f, 1.35f);
+            plugin.getSoundManager().play(player, GameSound.GAME_FINISHED);
         }
 
         int localStreak = user.getStatistic(Statistics.LOCAL_LONGEST_HIT_STREAK);

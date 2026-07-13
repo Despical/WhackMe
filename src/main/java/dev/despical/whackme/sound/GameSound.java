@@ -13,7 +13,9 @@ import lombok.Getter;
 public enum GameSound {
 
     POINT("point"),
-    MINUS_POINT("minus-point");
+    MINUS_POINT("minus-point"),
+    GAME_FINISHED("game-finished"),
+    RECORD_BROKEN("record-broken");
 
     private final String path;
 }
