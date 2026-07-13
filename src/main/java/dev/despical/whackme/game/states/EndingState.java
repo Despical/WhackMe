@@ -20,12 +20,13 @@ public final class EndingState extends GameStateHandler {
     public void firstTick() {
         game.getPointHandler().stop();
 
+        var eventManager = plugin.getEventManager();
         if (game.getPlayer() != null) {
             eventManager.playerLeave(game.getPlayer(), game, PlayerLeaveGameEvent.LeaveReason.FINISH);
         }
 
         eventManager.gameEnd(game);
-        gameManager.finishGame(game, true, true, true);
+        plugin.getGameManager().finishGame(game, true, true, true);
 
         game.setState(GameState.RESTARTING);
     }

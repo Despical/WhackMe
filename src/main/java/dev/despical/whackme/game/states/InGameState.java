@@ -22,7 +22,7 @@ public final class InGameState extends GameStateHandler {
         game.getBossBarManager().setProgress(1F);
         game.getPointHandler().start();
 
-        eventManager.gameStart(game);
+        plugin.getEventManager().gameStart(game);
     }
 
     @Override
@@ -45,7 +45,7 @@ public final class InGameState extends GameStateHandler {
 
     @Override
     public void leave(User user) {
-        gameManager.finishGame(game, true, true, true);
+        plugin.getGameManager().finishGame(game, true, true, true);
         game.setState(GameState.RESTARTING);
     }
 }

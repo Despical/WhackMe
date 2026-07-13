@@ -21,7 +21,7 @@ public final class WaitingState extends GameStateHandler {
 
     @Override
     public void join(User user) {
-        gameManager.preparePlayer(game, user);
+        plugin.getGameManager().preparePlayer(game, user);
 
         user.ifPlayerPresent(player -> player.teleport(arena.getOption(ArenaKeys.START_LOCATION)));
     }

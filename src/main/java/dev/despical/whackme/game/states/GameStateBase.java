@@ -18,15 +18,9 @@ abstract sealed class GameStateBase permits GameStateHandler {
 
     protected final Game game;
     protected final Arena arena;
-    protected final GameManager gameManager;
-    protected final EventManager eventManager;
-    protected final ChatManager chatManager;
 
     protected GameStateBase(Game game) {
         this.game = game;
         this.arena = game.getArena();
-        this.gameManager = plugin.getGameManager();
-        this.eventManager = plugin.getEventManager();
-        this.chatManager = plugin.getChatManager();
     }
 }
