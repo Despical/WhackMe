@@ -1,7 +1,6 @@
 package dev.despical.whackme.user;
 
 import dev.despical.whackme.WhackMe;
-import dev.despical.whackme.api.event.player.PlayerStatisticChangeEvent;
 import dev.despical.whackme.arena.Arena;
 import dev.despical.whackme.stats.StatisticType;
 import dev.despical.whackme.stats.Statistics;
@@ -142,8 +141,7 @@ public class User {
         T finalValue = newValue;
 
         if (callEvent) {
-            PlayerStatisticChangeEvent<T> event =
-                plugin.getEventManager().statChange(getPlayer(), type, oldValue, newValue);
+            var event = plugin.getEventManager().statChange(getPlayer(), type, oldValue, newValue);
 
             if (event.isCancelled()) {
                 return;
@@ -179,7 +177,7 @@ public class User {
     public void resetTemporaryStats() {
         cooldowns.clear();
 
-        for (StatisticType<?> stat : Statistics.getPersistentStats()) {
+        for (StatisticType<?> stat : Statistics.getTemporaryStats()) {
             stats.put(stat, stat.getDefaultValue());
         }
     }
