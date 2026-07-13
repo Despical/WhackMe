@@ -1,23 +1,30 @@
 package dev.despical.whackme.event;
 
-import dev.despical.commons.XMaterial;
-import dev.despical.commons.serializer.InventorySerializer;
-import dev.despical.whackme.ConfigPreferences;
 import dev.despical.whackme.arena.Arena;
+import dev.despical.whackme.arena.options.ArenaKeys;
+import dev.despical.whackme.option.BooleanOption;
+import dev.despical.whackme.radio.impl.NBAPIRadio;
+import dev.despical.whackme.util.Schedulers;
 import dev.despical.whackme.util.Utils;
-import org.bukkit.block.Block;
+import dev.despical.whackme.util.Var;
+import net.kyori.adventure.text.Component;
+import dev.despical.whackme.user.User;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.block.Action;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
-
+import org.bukkit.inventory.PlayerInventory;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -25,43 +32,105 @@ import java.util.UUID;
  * <p>
  * Created at 21.06.2022
  */
-public class GameEvents extends AbstractEventHandler {
+public class GameEvents extends ListenerAdapter {
 
-    private final Map<UUID, Arena> teleportToEnd = new HashMap<>();
+    private final Map<UUID, Arena> quitPlayers = new HashMap<>();
 
-    @EventHandler
-    public void onCommandExecute(PlayerCommandPreprocessEvent event) {
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
-        if (!plugin.getArenaRegistry().isInArena(player)) {
+        userManager.createNewUser(player);
+
+        Arena arena = quitPlayers.remove(player.getUniqueId());
+        if (arena == null) {
             return;
         }
 
-        if (!plugin.getOption(ConfigPreferences.Option.BLOCK_COMMANDS)) {
+        Schedulers.runInTheNextTick(() -> {
+            player.teleport(arena.getOption(ArenaKeys.END_LOCATION));
+
+            PlayerInventory inventory = player.getInventory();
+            inventory.clear();
+            inventory.setArmorContents(new ItemStack[4]);
+
+            Utils.restoreSavedPlayerState(player);
+        });
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onQuit(PlayerQuitEvent event) {
+        Player player = event.getPlayer();
+
+        if (plugin.getRadio() instanceof NBAPIRadio nbapiRadio) {
+            nbapiRadio.stopPreview(player);
+        }
+
+        User user = userManager.getUser(player);
+        UUID uuid = user.getUUID();
+
+        Arena arena = user.getArena();
+        if (arena != null) {
+            quitPlayers.put(uuid, arena);
+            arenaManager.quitPlayer(user, arena);
+        }
+
+        userManager.removeUser(user);
+
+        plugin.getStatsCacheManager().invalidate(uuid);
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onChat(AsyncPlayerChatEvent event) {
+        Player player = event.getPlayer();
+        Arena arena = arenaRegistry.getArena(player);
+        Set<Player> recipients = event.getRecipients();
+
+        boolean blockOutsideChat = BooleanOption.BLOCK_OUTSIDE_CHAT.value();
+
+        if (arena == null) {
+            if (blockOutsideChat) {
+                arenaRegistry.getArenas().stream()
+                    .filter(other -> other.getPlayer() != null)
+                    .forEach(recipients::remove);
+            }
+
             return;
         }
 
-        String message = event.getMessage();
-
-        if (plugin.getConfig().getStringList("Whitelisted-Commands").contains(message)) {
+        boolean disableChatInGame = BooleanOption.DISABLE_CHAT_IN_GAME.value();
+        if (disableChatInGame) {
+            event.setCancelled(true);
+            chatManager.sendMessage(player, "game.chat-disabled-in-game");
             return;
         }
 
-        if (player.hasPermission("wm.admin")) {
-            return;
-        }
-
-        if (message.startsWith("/wm") || message.startsWith("/whackme") || message.contains("top") || message.contains("stats")) {
+        boolean separateChat = BooleanOption.BLOCK_OUTSIDE_CHAT.value();
+        boolean enableFormatting = BooleanOption.ENABLE_CHAT_FORMATTING.value();
+        if (!enableFormatting && !separateChat) {
             return;
         }
 
         event.setCancelled(true);
-        player.sendMessage(chatManager.prefixedMessage("in_game.only_command_is_leave"));
+
+        Component formattedMessage = enableFormatting
+            ? chatManager.getMessageComponent(
+                "chat-format",
+                Var.of("%sender%", player.getName()),
+                Var.of("%message%", event.getMessage())
+            )
+            : Component.text("<%s> %s".formatted(player.getName(), event.getMessage()));
+
+        if (separateChat) {
+            player.sendMessage(formattedMessage);
+        } else {
+            plugin.getServer().broadcast(formattedMessage);
+        }
     }
 
     @EventHandler
     public void onFoodLevelChange(FoodLevelChangeEvent event) {
-        if (event.getEntity() instanceof Player && plugin.getArenaRegistry().isInArena((Player) event.getEntity())) {
+        if (event.getEntity() instanceof Player player && arenaRegistry.isInArena(player)) {
             event.setFoodLevel(20);
             event.setCancelled(true);
         }
@@ -69,83 +138,59 @@ public class GameEvents extends AbstractEventHandler {
 
     @EventHandler
     public void onBreak(BlockBreakEvent event) {
-        if (plugin.getArenaRegistry().isInArena(event.getPlayer())) {
+        if (arenaRegistry.isInArena(event.getPlayer())) {
             event.setCancelled(true);
         }
     }
 
     @EventHandler
     public void onPlace(BlockPlaceEvent event) {
-        if (plugin.getArenaRegistry().isInArena(event.getPlayer())) {
+        if (arenaRegistry.isInArena(event.getPlayer())) {
             event.setCancelled(true);
         }
     }
 
     @EventHandler
     public void onDrop(PlayerDropItemEvent event) {
-        if (plugin.getArenaRegistry().isInArena(event.getPlayer())) {
+        if (arenaRegistry.isInArena(event.getPlayer())) {
             event.setCancelled(true);
         }
     }
 
     @EventHandler
-    public void onInteract(PlayerInteractEvent event) {
-        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
-
-        Block block = event.getClickedBlock();
-
-        if (block == null || block.getType() != Utils.END_PORTAL_FRAME.getType()) {
-            return;
+    public void onSwap(PlayerSwapHandItemsEvent event) {
+        if (arenaRegistry.isInArena(event.getPlayer())) {
+            event.setCancelled(true);
         }
+    }
 
-        ItemStack item = event.getItem();
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onInventoryClick(InventoryClickEvent event) {
+        if (event.getWhoClicked() instanceof Player player && arenaRegistry.isInArena(player)) {
+            event.setCancelled(true);
+        }
+    }
 
-        if (item == null || item.getType() != XMaterial.ENDER_EYE.parseMaterial()) return;
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPickup(EntityPickupItemEvent event) {
+        if (event.getEntity() instanceof Player player && arenaRegistry.isInArena(player)) {
+            event.setCancelled(true);
+        }
+    }
 
-        if (plugin.getArenaRegistry().getArenas().stream().map(Arena::getLocations).anyMatch(location -> location.contains(block.getLocation()))) {
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onGeneralDamage(EntityDamageEvent event) {
+        if (event.getEntity() instanceof Player player && arenaRegistry.isInArena(player)) {
             event.setCancelled(true);
         }
     }
 
     @EventHandler
     public void onDamage(EntityDamageByEntityEvent event) {
-        if (!(event.getEntity() instanceof Player)) return;
+        if (!(event.getEntity() instanceof Player player)) return;
 
-        Player player = (Player) event.getEntity();
-
-        if (plugin.getArenaRegistry().isInArena(player)) {
+        if (arenaRegistry.isInArena(player)) {
             event.setCancelled(true);
         }
-    }
-
-    @EventHandler
-    public void onJoin(PlayerJoinEvent event) {
-        Player player = event.getPlayer();
-
-        plugin.getUserManager().addUser(player);
-
-        if (plugin.getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
-            InventorySerializer.loadInventory(plugin, player);
-        }
-
-        Arena arena = teleportToEnd.get(player.getUniqueId());
-
-        if (arena != null) {
-            plugin.getServer().getScheduler().runTask(plugin, () -> player.teleport(arena.getEndLocation()));
-        }
-    }
-
-    @EventHandler
-    public void onQuit(PlayerQuitEvent event) {
-        Player player = event.getPlayer();
-        Arena arena = plugin.getArenaRegistry().getArena(player);
-
-        if (arena != null) {
-            arena.removePlayer();
-
-            teleportToEnd.put(player.getUniqueId(), arena);
-        }
-
-        plugin.getUserManager().removeUser(player);
     }
 }

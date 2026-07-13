@@ -2,366 +2,168 @@ package dev.despical.whackme.command;
 
 import dev.despical.commandframework.CommandArguments;
 import dev.despical.commandframework.annotations.Command;
-import dev.despical.commandframework.annotations.Completer;
-import dev.despical.commons.configuration.ConfigUtils;
-import dev.despical.commons.miscellaneous.MiscUtils;
-import dev.despical.commons.serializer.LocationSerializer;
-import dev.despical.commons.util.Strings;
+import dev.despical.whackme.api.event.player.PlayerLeaveGameEvent;
 import dev.despical.whackme.arena.Arena;
-import dev.despical.whackme.handler.setup.SetupInventory;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
+import dev.despical.whackme.game.StopReason;
+import dev.despical.whackme.option.BooleanOption;
+import dev.despical.whackme.user.User;
+import dev.despical.whackme.util.Var;
 import org.bukkit.entity.Player;
-import org.bukkit.util.StringUtil;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
-public class AdminCommands extends CommandCategory {
+/**
+ * @author Despical
+ * <p>
+ * Created at 6.12.2025
+ */
+public final class AdminCommands extends CommandCategory {
 
     @Command(
-        name = "wm.create",
-        usage = "/wm create <arena name>",
-        desc = "Creates a new arena with default configuration.",
-        permission = "wm.admin.create",
-        senderType = Command.SenderType.PLAYER
+        name = "whackme",
+        aliases = "wm",
+        fallbackPrefix = "thewhackme",
+        permission = "whackme.command.help",
+        usage = "/%label% help",
+        desc = "Main command of the Whack Me."
     )
-    public void createCommand(CommandArguments arguments) {
+    public void mainCommand(CommandArguments arguments) {
         if (arguments.isArgumentsEmpty()) {
-            arguments.sendMessage(chatManager.prefixedRawMessage("&cPlease enter an name to create an arena!"));
-            return;
-        }
+            arguments.sendMessage("&3This server is running &bWhackMe v{0} &3by &bDespical&3.", plugin.getDescription().getVersion());
 
-        String id = arguments.getFirst();
-
-        if (plugin.getArenaRegistry().isArena(id)) {
-            arguments.sendMessage(chatManager.prefixedRawMessage("&cArena with that ID already contains!"));
-            arguments.sendMessage(chatManager.prefixedRawMessage("&cTo check existing arenas use: /wm list"));
-            return;
-        }
-
-        Player player = arguments.getSender();
-
-        arguments.sendMessage("&l--------------------------------------------");
-        MiscUtils.sendCenteredMessage(player, "&eInstance &a&l" + id + " &ecreated!");
-        arguments.sendMessage("");
-        MiscUtils.sendCenteredMessage(player, "&aEdit this arena via /wm edit &6" + id + "&a!");
-        arguments.sendMessage("");
-        MiscUtils.sendCenteredMessage(player, "&6Don't know where to start? Check out our video:");
-        MiscUtils.sendCenteredMessage(player, "&7https://www.youtube.com/watch?v=fOw5AQ8A-Jk");
-        arguments.sendMessage("&l--------------------------------------------");
-
-        Arena arena = new Arena(id);
-        arena.setEndLocation(LocationSerializer.DEFAULT_LOCATION);
-        arena.setStartLocation(LocationSerializer.DEFAULT_LOCATION);
-
-        saveArenaData(arena);
-
-        plugin.getArenaRegistry().registerArena(arena);
-    }
-
-    private void saveArenaData(Arena arena) {
-        String path = String.format("instances.%s.", arena.getId());
-        FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-
-        config.set(path + "ready", false);
-        config.set(path + "custom", false);
-        config.set(path + "startLocation", LocationSerializer.SERIALIZED_LOCATION);
-        config.set(path + "endLocation", LocationSerializer.SERIALIZED_LOCATION);
-        config.set(path + "minPoints", 4);
-        config.set(path + "maxPoints", 8);
-        config.set(path + "portalLocations", Collections.EMPTY_LIST);
-        config.set(path + "signs", Collections.EMPTY_LIST);
-
-        ConfigUtils.saveConfig(plugin, config, "arenas");
-    }
-
-    @Command(
-        name = "wm.delete",
-        usage = "/wm delete <arena name>",
-        desc = "Deletes arena with the current configuration.",
-        permission = "wm.admin.delete",
-        min = 1
-    )
-    public void deleteCommand(Arena arena, CommandArguments arguments) {
-        if (arena == null) {
-            arguments.sendMessage(chatManager.prefixedMessage("Commands.No-Arena-Like-That"));
-            return;
-        }
-
-        if (arena.getPlayer() != null) {
-            arena.removePlayer();
-            arena.teleportToEndLocation();
-        }
-
-        plugin.getSignManager().removeSigns(arena);
-        plugin.getArenaRegistry().unregisterArena(arena);
-
-        FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-
-        config.set("instances." + arguments.getFirst(), null);
-        ConfigUtils.saveConfig(plugin, config, "arenas");
-
-        arguments.sendMessage(chatManager.prefixedMessage("Commands.Removed-Game-Instance"));
-    }
-
-    @Command(
-        name = "wm.edit",
-        usage = "/wm edit <arena name>",
-        desc = "Opens the arena editor.",
-        permission = "wm.admin.edit",
-        min = 1,
-        senderType = Command.SenderType.PLAYER
-    )
-    public void editCommand(Arena arena, CommandArguments arguments) {
-        if (arena == null) {
-            arguments.sendMessage(chatManager.prefixedMessage("Commands.No-Arena-Like-That"));
-            return;
-        }
-
-        new SetupInventory(plugin, arena, arguments.getSender());
-    }
-
-    @SuppressWarnings("all")
-    @Command(
-        name = "wm.help",
-        usage = "/wm help",
-        permission = "wm.admin.help"
-    )
-    public void helpCommand(CommandArguments arguments) {
-        boolean isPlayer = arguments.isSenderPlayer();
-        CommandSender sender = arguments.getSender();
-
-        arguments.sendMessage("");
-        MiscUtils.sendCenteredMessage(sender, "&3&lWhack Me");
-        MiscUtils.sendCenteredMessage(arguments.getSender(), "&3[&boptional argument&3] &b- &3<&brequired argument&3>");
-        arguments.sendMessage("");
-
-        for (Command command : plugin.getCommandFramework().getSubCommands()) {
-            String usage = formatCommandUsage("&3" + command.usage()), desc = command.desc();
-
-            if (desc.isEmpty()) continue;
-
-            if (isPlayer) {
-                ((Player) sender).spigot().sendMessage(
-                    new ComponentBuilder(ChatColor.DARK_GRAY + " • ")
-                        .append(usage)
-                        .color(ChatColor.AQUA)
-                        .event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, command.usage()))
-                        .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(desc)))
-                        .create());
-            } else {
-                arguments.sendMessage(" &8• &b" + usage + " &3- &b" + desc);
+            if (arguments.hasPermission("whackme.admin")) {
+                arguments.sendMessage("&3Commands: &b/{0} help", arguments.getLabel());
             }
-        }
 
-        if (isPlayer) {
-            Player player = arguments.getSender();
-
-            player.sendMessage("");
-            player.spigot().sendMessage(new ComponentBuilder("TIP:").color(ChatColor.YELLOW).bold(true)
-                .append(" Try to ", ComponentBuilder.FormatRetention.NONE).color(ChatColor.GRAY)
-                .append("hover").color(ChatColor.WHITE).underlined(true)
-                .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(ChatColor.LIGHT_PURPLE + "Hover on the commands to get info about them.")))
-                .append(" or ", ComponentBuilder.FormatRetention.NONE).color(ChatColor.GRAY)
-                .append("click").color(ChatColor.WHITE).underlined(true)
-                .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(ChatColor.LIGHT_PURPLE + "Click on the commands to insert them in the chat.")))
-                .append(" on the commands!", ComponentBuilder.FormatRetention.NONE).color(ChatColor.GRAY)
-                .create());
-        }
-    }
-
-    @Command(
-        name = "wm.list",
-        usage = "/wm list",
-        desc = "Shows all of the existing arenas.",
-        permission = "wm.admin.list"
-    )
-    public void listCommand(CommandArguments arguments) {
-        Set<Arena> arenas = plugin.getArenaRegistry().getArenas();
-
-        if (arenas.isEmpty()) {
-            arguments.sendMessage(chatManager.prefixedMessage("commands.list_command.no_arenas_created"));
             return;
         }
 
-        arguments.sendMessage(chatManager.prefixedMessage("commands.list_command.format").replace("%list%", arenas.stream().map(Arena::getId).collect(Collectors.joining(", "))));
+        chatManager.sendMessage(arguments, "unrecognized-arguments", Var.of("%label%", arguments.getLabel()), Var.of("%arguments%", arguments.concatArguments()));
     }
 
     @Command(
-        name = "wm.kick",
-        usage = "/wm kick <arena name>",
-        desc = "Kicks specified player if they're playing.",
-        permission = "wm.admin.kick",
-        min = 1
-    )
-    public void kickCommand(Arena arena, CommandArguments arguments) {
-        if (arena == null) {
-            arguments.sendMessage(chatManager.prefixedMessage("commands.no_arena_like_that"));
-            return;
-        }
-
-        if (arena.getPlayer() != null) {
-            arena.removePlayer();
-
-            arguments.sendMessage(chatManager.prefixedMessage("commands.kicked_player"));
-            return;
-        }
-
-        arguments.sendMessage(chatManager.prefixedMessage("commands.no_one_playing"));
-    }
-
-    @Command(
-        name = "wm.reload",
-        usage = "/wm reload",
-        desc = "Reloads arenas and configuration files",
-        permission = "wm.admin.reload"
+        name = "whackme",
+        aliases = "wm.reload",
+        permission = "whackme.admin.reload",
+        usage = "/%label% reload",
+        desc = "Reloads configuration files."
     )
     public void reloadCommand(CommandArguments arguments) {
-        plugin.getReloadManager().initializeReload(arguments.getSender());
+        chatManager.loadFile();
+        plugin.getOptions().reloadOptions();
+        plugin.getPlayingCommandPolicy().reload();
+        plugin.registerItems();
+        plugin.getEventManager().reload();
+        plugin.getSignManager().reload();
+        plugin.getBossBarConfig().reload();
+        plugin.getSoundManager().reload();
+        plugin.getGameManager().reload();
 
-        for (Arena arena : plugin.getArenaRegistry().getArenas()) {
-            Player player = arena.getPlayer();
-
-            if (player != null) {
-                player.setFlySpeed(.1F);
-                player.setWalkSpeed(.2F);
-
-                arena.removePlayer();
-                arena.teleportToEndLocation();
-            }
-        }
-
-        plugin.getArenaRegistry().registerArenas();
+        chatManager.sendMessage(arguments, "reloaded-configuration");
     }
 
     @Command(
-        name = "wm.time",
-        usage = "/wm time <arena> <add | remove | set> <value>",
-        desc = "Manipulates the timer of target arena.",
-        onlyOp = true
+        name = "whackme.stop",
+        aliases = "wm.stop",
+        permission = "whackme.admin.stop",
+        usage = "/%label% stop [arena]",
+        desc = "Stops the current or specified arena game.",
+        max = 1
     )
-    public void timeCommand(Arena arena, CommandArguments arguments) {
-        String usage = chatManager.prefixedMessage("commands.time_command.usage");
+    public void stopCommand(CommandArguments arguments) {
+        boolean isConsoleSender = arguments.isSenderConsole();
 
-        if (arguments.getLength() < 3) {
-            arguments.sendMessage(usage);
+        if (arguments.isArgumentsEmpty()) {
+            if (isConsoleSender) {
+                chatManager.sendMessage(arguments, "stop-command.correct-usage", Var.of("%label%", arguments.getLabel()));
+                return;
+            }
+
+            Player player = arguments.getSender();
+            Arena arena = arenaRegistry.getArena(player);
+
+            if (arena == null) {
+                chatManager.sendMessage(player, "not-playing");
+                return;
+            }
+
+            arenaManager.stopArena(arena, StopReason.STOP_COMMAND);
             return;
         }
 
+        Arena arena = arenaRegistry.getArena(arguments.getFirst());
+
         if (arena == null) {
-            arguments.sendMessage(chatManager.prefixedMessage("commands.no_arena_like_that"));
+            chatManager.sendMessage(arguments, "no-arena-found-with-that-name");
             return;
         }
 
         if (arena.getPlayer() == null) {
-            arguments.sendMessage(chatManager.prefixedMessage("commands.time_command.arena_is_empty"));
+            chatManager.sendMessage(arguments, "stop-command.not-playing");
             return;
         }
 
-        String argument = arguments.getArgument(1, "invalid_args");
-        int value = Math.abs(arguments.getArgumentAsInt(2));
-        int current = arena.getTimer();
 
-        switch (argument) {
-            case "add":
-                arena.setTimer(current + value);
-                break;
-            case "remove":
-                arena.setTimer(Math.max(0, current - value));
-                break;
-            case "set":
-                arena.setTimer(Math.max(0, value));
-                break;
-            default:
-                arguments.sendMessage(usage);
+        arenaManager.stopArena(arena, StopReason.STOP_COMMAND);
+
+        if (!isConsoleSender && arena.isPlaying(arguments.<Player>getSender())) {
+            return;
+        }
+
+        chatManager.sendMessage(arguments, "stop-command.stopped");
+    }
+
+    @Command(
+        name = "whackme.help",
+        aliases = "wm.help",
+        permission = "whackme.command.help",
+        usage = "/%label% help"
+    )
+    public void helpCommand(User user, CommandArguments arguments) {
+        Var var = Var.of("%label%", arguments.getLabel());
+        chatManager.sendMessage(arguments, "help-message", var);
+
+        if (arguments.hasPermission("whackme.admin.help")) {
+            arguments.sendMessage("");
+            chatManager.sendMessage(arguments, "admin-help-message", var);
+            arguments.sendMessage("");
+
+            if (BooleanOption.DEBUG.value()) {
+                chatManager.sendMessage(arguments, "debug-help-message", var);
+            }
         }
     }
 
     @Command(
-        name = "wm.version",
-        usage = "/wm version",
-        desc = "Displays detailed information about the plugin and server environment.",
-        permission = "wm.admin.version"
+        name = "whackme.kick",
+        aliases = "wm.kick",
+        permission = "whackme.admin.kick",
+        usage = "/%label% kick <player>",
+        desc = "Removes a player from their active Whack Me game and teleports them to the arena's end location.",
+        min = 1,
+        max = 1,
+        senderType = Command.SenderType.PLAYER
     )
-    public void infoCommand(CommandArguments arguments) {
-        CommandSender sender = arguments.getSender();
+    public void kickCommand(User user, CommandArguments arguments) {
+        Player targetPlayer = arguments.getPlayer(0).orElseGet(() -> {
+            chatManager.sendMessage(arguments, "no-player-with-that-name");
+            return null;
+        });
 
-        arguments.sendMessage("");
-        MiscUtils.sendCenteredMessage(sender, "&b&l==== [ &3&lWhack Me &b&l] ==== ");
-        arguments.sendMessage("");
-        arguments.sendMessage(" &8• &3Plugin Version: &b{0}", plugin.getDescription().getVersion());
-        arguments.sendMessage(" &8• &3Server Version: &b{0}", plugin.getServer().getVersion());
-        arguments.sendMessage(" &8• &3Bukkit Version: &b{0}", plugin.getServer().getBukkitVersion());
-        arguments.sendMessage(" &8• &3Loaded Plugins: &b{0}", plugin.getServer().getPluginManager().getPlugins().length);
-        arguments.sendMessage("");
-        arguments.sendMessage(" &8• &3Java Version: &b{0}", System.getProperty("java.version"));
-        arguments.sendMessage(" &8• &3Java Vendor: &b{0}", System.getProperty("java.vendor"));
-        arguments.sendMessage(" &8• &3JVM Version: &b{0}", System.getProperty("java.vm.version"));
-        arguments.sendMessage(" &8• &3JVM Name: &b{0}", System.getProperty("java.vm.name"));
-        arguments.sendMessage("");
-        arguments.sendMessage(" &8• &3OS Name: &b{0} ({1})", System.getProperty("os.name"), System.getProperty("os.arch"));
-        arguments.sendMessage("");
-    }
-
-    @Completer(
-        name = "wm"
-    )
-    public List<String> onTabComplete(CommandArguments arguments) {
-        List<String> completions = new ArrayList<>(), commands = plugin.getCommandFramework().getSubCommands().stream().map(cmd -> cmd.name().replace(arguments.getLabel() + '.', "")).collect(Collectors.toList());
-        String[] args = arguments.getArguments();
-
-        if (args.length > 0) {
-            if (Arrays.asList("create", "list", "help", "reload", "leave", "randomjoin").contains(args[0])) {
-                return completions;
-            }
+        if (targetPlayer == null) {
+            return;
         }
 
-        if (args.length == 1) {
-            return StringUtil.copyPartialMatches(args[0], arguments.hasPermission("wm.admin") ? commands : Arrays.asList("join", "randomjoin", "leave", "top", "stats"), completions);
+        User targetUser = plugin.getUserManager().getUser(targetPlayer);
+        Arena playerArena = targetUser.getArena();
+
+        if (playerArena == null) {
+            chatManager.sendMessage(arguments, "kick-command.not-playing", Var.ofPlayer(targetPlayer));
+            return;
         }
 
-        String arg = args[0];
+        arenaManager.leaveAttempt(targetUser, PlayerLeaveGameEvent.LeaveReason.KICK);
 
-        if (args.length == 2) {
-            if (arg.equalsIgnoreCase("top")) {
-                return StringUtil.copyPartialMatches(args[1], Arrays.asList("tours_played", "record_score"), completions);
-            }
-
-            if (arg.equalsIgnoreCase("stats")) {
-                return plugin.getServer().getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList());
-            }
-
-            if (!commands.contains(arg)) {
-                return completions;
-            }
-
-            if (arg.equalsIgnoreCase("create")) return null;
-            if (!arguments.hasPermission("wm.admin") && !arg.equalsIgnoreCase("join")) return null;
-
-            List<String> arenas = plugin.getArenaRegistry().getArenas().stream().map(Arena::getId).collect(Collectors.toList());
-            return StringUtil.copyPartialMatches(args[1], arenas, completions);
-        }
-
-        return completions;
-    }
-
-    private String formatCommandUsage(String usage) {
-        char[] array = usage.toCharArray();
-        StringBuilder buffer = new StringBuilder(usage);
-
-        for (int i = 0; i < array.length; i++) {
-            if (array[i] == '[' || array[i] == '<') {
-                buffer.insert(i, "&b");
-                return Strings.format(buffer.toString());
-            }
-        }
-
-        return Strings.format(usage);
+        chatManager.sendMessage(arguments, "kick-command.kicked",
+            Var.of("%player%", targetPlayer.getName()),
+            Var.of("%arena%", playerArena.getId()));
     }
 }

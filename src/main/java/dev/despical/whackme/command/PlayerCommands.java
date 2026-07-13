@@ -2,211 +2,76 @@ package dev.despical.whackme.command;
 
 import dev.despical.commandframework.CommandArguments;
 import dev.despical.commandframework.annotations.Command;
-import dev.despical.commandframework.annotations.Param;
-import dev.despical.commons.string.StringUtils;
-import dev.despical.whackme.ConfigPreferences;
-import dev.despical.whackme.stat.Statistic;
-import dev.despical.whackme.api.StatsStorage;
+import dev.despical.whackme.api.event.player.PlayerLeaveGameEvent;
 import dev.despical.whackme.arena.Arena;
+import dev.despical.whackme.menu.stats.StatsMenu;
 import dev.despical.whackme.user.User;
-import dev.despical.whackme.user.data.MySQLStatistics;
-import dev.despical.whackme.util.Utils;
-import org.bukkit.command.CommandSender;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-public class PlayerCommands extends CommandCategory {
+/**
+ * @author Despical
+ * <p>
+ * Created at 6.12.2025
+ */
+public final class PlayerCommands extends CommandCategory {
 
     @Command(
-        name = "wm",
-        fallbackPrefix = "whackme",
-        usage = "/wm",
-        desc = "Main command of the plugin."
-    )
-    public void mainCommand(CommandArguments arguments) {
-        if (arguments.isArgumentsEmpty()) {
-            arguments.sendMessage("&3This server is running &bWhack Me {0} &3by &bDespical&3.", plugin.getDescription().getVersion());
-
-            if (arguments.hasPermission("wm.admin")) {
-                arguments.sendMessage("&3Commands: &b/" + arguments.getLabel() + " help");
-            }
-
-            return;
-        }
-
-        arguments.sendMessage("&cUnrecognized arguments: /{0} {1}", arguments.getLabel(), arguments.concatArguments());
-    }
-
-    @Command(
-        name = "wm.join",
-        usage = "/wm join <arena>",
+        name = "whackme.join",
+        aliases = "wm.join",
+        usage = "/%label% join <arena>",
+        min = 1,
         senderType = Command.SenderType.PLAYER
     )
-    public void joinCommand(Arena arena, CommandArguments arguments) {
-        if (arguments.isArgumentsEmpty()) {
-            arguments.sendMessage(chatManager.prefixedMessage("commands.type_arena_name"));
-            return;
-        }
+    public void joinCommand(User user, CommandArguments arguments) {
+        String arenaId = arguments.getArgument(0);
+        Arena arena = arenaRegistry.getArena(arenaId);
 
         if (arena == null) {
-            arguments.sendMessage(chatManager.prefixedMessage("commands.no_arena_like_that"));
+            chatManager.sendMessage(arguments, "no-arena-found-with-that-name");
             return;
         }
 
-        plugin.getArenaManager().joinAttempt(arguments.getSender(), arena);
+        arenaManager.joinAttempt(user, arena);
     }
 
     @Command(
-        name = "wm.leave",
-        usage = "/wm leave",
+        name = "whackme.leave",
+        aliases = "wm.leave",
+        usage = "/%label% leave",
         senderType = Command.SenderType.PLAYER
     )
-    public void leaveCommand(Player player, @Param("pArena") Arena arena, CommandArguments arguments) {
-        if (arena == null) {
-            player.sendMessage(chatManager.prefixedMessage("commands.not_playing"));
-            return;
-        }
-
-        arena.removePlayer();
+    public void leaveCommand(User user) {
+        arenaManager.leaveAttempt(user, PlayerLeaveGameEvent.LeaveReason.LEAVE_COMMAND);
     }
 
     @Command(
-        name = "wm.randomjoin",
-        usage = "/wm randomjoin",
+        name = "whackme.stats",
+        aliases = "wm.stats",
+        usage = "/%label% stats [player]",
         senderType = Command.SenderType.PLAYER
     )
-    public void randomJoinCommand(Player player, CommandArguments arguments) {
-        if (plugin.getArenaRegistry().isInArena(player)) {
-            player.sendMessage(chatManager.prefixedMessage("in_game.already_playing"));
-            return;
-        }
-
-        List<Arena> arenas = plugin.getArenaRegistry().getArenas()
-            .stream()
-            .filter(arena -> arena.getPlayer() == null && arena.isReady())
-            .sorted()
-            .toList();
-
-        if (!arenas.isEmpty()) {
-            Arena arena = arenas.getFirst();
-
-            if (!Utils.hasJoinPermission(player)) {
-                player.sendMessage(chatManager.prefixedMessage("commands.no_permission"));
-                return;
-            }
-
-            plugin.getArenaManager().joinAttempt(player, arena);
-            return;
-        }
-
-        player.sendMessage(chatManager.prefixedMessage("commands.no_free_arenas"));
-    }
-
-    @Command(
-        name = "wm.stats",
-        usage = "/wm stats [player]",
-        senderType = Command.SenderType.PLAYER
-    )
-    public void statsCommand(Player player, CommandArguments argument) {
-        Player target = argument.isArgumentsEmpty() ? player : plugin.getServer().getPlayer(argument.getFirst());
-
-        if (target == null) {
-            player.sendMessage(chatManager.prefixedMessage("commands.player_not_found"));
-            return;
-        }
-
-        User user = plugin.getUserManager().getUser(target);
-
-        chatManager.getStringList("commands.stats_command.messages")
-            .stream()
-            .map(message -> formatStats(message, player.equals(target) ? "header" : "header_other", user))
-            .forEach(player::sendMessage);
-    }
-
-    private String formatStats(String message, String header, User user) {
-        int minusBlocks = user.getStat(Statistic.MINUS_BLOCKS), plusBlocks = user.getStat(Statistic.PLUS_BLOCKS);
-
-        message = message.replace("%player%", user.getName());
-        message = message.replace("%header%", chatManager.message("commands.stats_command." + header, user.getPlayer()));
-        message = message.replace("%tours_played%", Integer.toString(user.getStat(Statistic.TOURS_PLAYED)));
-        message = message.replace("%record_score%", Integer.toString(user.getStat(Statistic.RECORD_SCORE)));
-        message = message.replace("%whacked_point_blocks%", Integer.toString(plusBlocks));
-        message = message.replace("%whacked_minus_point_blocks%", Integer.toString(minusBlocks));
-        message = message.replace("%whacked_block_rate%", String.format("%.1f", (minusBlocks + plusBlocks == 0 ? 100 : ((double) plusBlocks / (minusBlocks + plusBlocks)) * 100D)));
-        message = message.replace("%longest_point_streak%", Integer.toString(user.getStat(Statistic.LONGEST_STREAK)));
-        return chatManager.coloredRawMessage(message);
-    }
-
-    @Command(
-        name = "wm.top",
-        usage = "/wm top <statistic>",
-        senderType = Command.SenderType.PLAYER
-    )
-    public void leaderboardCommand(CommandArguments arguments) {
+    public void statsCommand(User user, CommandArguments arguments) {
         if (arguments.isArgumentsEmpty()) {
-            arguments.sendMessage(chatManager.prefixedMessage("commands.statistics.type_name"));
+            new StatsMenu(user).open();
             return;
         }
 
-        try {
-            printLeaderboard(arguments.getSender(), Statistic.valueOf(arguments.getFirst().toUpperCase(java.util.Locale.ENGLISH)));
-        } catch (IllegalArgumentException exception) {
-            arguments.sendMessage(chatManager.prefixedMessage("commands.statistics.invalid_name"));
+        Player target = arguments.getPlayer(0).orElse(null);
+
+        if (target != null) {
+            new StatsMenu(user, target).open();
+            return;
         }
-    }
 
-    private void printLeaderboard(CommandSender sender, Statistic statisticType) {
-        sender.sendMessage(chatManager.message("commands.statistics.header"));
+        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayerIfCached(arguments.getFirst());
 
-        Map<UUID, Integer> stats = StatsStorage.getStats(statisticType);
-        String statistic = StringUtils.capitalize(statisticType.name().toLowerCase(java.util.Locale.ENGLISH).replace("_", " "));
-
-        for (int i = 0; i < 10; i++) {
-            try {
-                UUID current = (UUID) stats.keySet().toArray()[stats.keySet().toArray().length - 1];
-                sender.sendMessage(formatMessage(statistic, plugin.getServer().getOfflinePlayer(current).getName(), i + 1, stats.get(current)));
-                stats.remove(current);
-            } catch (IndexOutOfBoundsException ex) {
-                sender.sendMessage(formatMessage(statistic, "Empty", i + 1, 0));
-            } catch (NullPointerException ex) {
-                UUID current = (UUID) stats.keySet().toArray()[stats.keySet().toArray().length - 1];
-
-                if (plugin.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-                    MySQLStatistics mysqlManager = (MySQLStatistics) plugin.getUserManager().getUserDatabase();
-                    String table = mysqlManager.getTableName();
-
-                    try (Connection connection = mysqlManager.getDatabase().getConnection();
-                         Statement statement = connection.createStatement()
-                    ) {
-                        ResultSet set = statement.executeQuery(String.format("SELECT name FROM %s WHERE UUID='%s'", table, current.toString()));
-
-                        if (set.next()) {
-                            sender.sendMessage(formatMessage(statistic, set.getString(1), i + 1, stats.get(current)));
-                            continue;
-                        }
-                    } catch (SQLException ignored) {
-                    }
-                }
-
-                sender.sendMessage(formatMessage(statistic, chatManager.message("commands.statistics.unknown_player"), i + 1, stats.get(current)));
-            }
+        if (offlinePlayer == null) {
+            chatManager.sendMessage(arguments, "no-player-with-that-name");
+            return;
         }
-    }
 
-    private String formatMessage(String statisticName, String playerName, int position, int value) {
-        String message = chatManager.message("commands.statistics.format");
-
-        message = message.replace("%position%", Integer.toString(position));
-        message = message.replace("%name%", playerName);
-        message = message.replace("%value%", Integer.toString(value));
-        message = message.replace("%statistic%", statisticName);
-        return message;
+        new StatsMenu(user, offlinePlayer).open();
     }
 }

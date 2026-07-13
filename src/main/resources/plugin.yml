@@ -3,7 +3,9 @@ author: Despical
 version: ${version}
 api-version: 1.13
 main: dev.despical.whackme.WhackMe
-website: https://www.spigotmc.org/resources/104912
+website: https://docs.despical.dev/whack-me
+prefix: WhackMe
+description: "A fast-paced single-player whack-a-block minigame"
 
 softdepend:
   - Multiverse-Core
@@ -12,18 +14,83 @@ softdepend:
   - MultiWorld
   - My_Worlds
   - PlaceholderAPI
+  - NoteBlockAPI
 
 permissions:
-  wm.admin.*:
+  whackme.*:
+    description: Grants access to all Whack Me commands and features.
     default: op
     children:
-      wm.admin: true
-      wm.admin.create: true
-      wm.admin.delete: true
-      wm.admin.edit: true
-      wm.admin.list: true
-      wm.admin.help: true
-      wm.admin.reload: true
-      wm.admin.kick: true
-      wm.admin.sign.create: true
-      wm.admin.sign.break: true
+      whackme.command.help: true
+      whackme.command.tabcompleter: true
+      whackme.admin: true
+      whackme.arena.*: true
+      whackme.debug: true
+      whackme.sign.break: true
+      whackme.cooldown.bypass: true
+      whackme.commandblock.bypass: true
+
+  whackme.command.help:
+    description: Allows viewing Whack Me command information.
+    default: true
+  whackme.command.tabcompleter:
+    description: Allows receiving standard Whack Me tab completions.
+    default: true
+
+  whackme.admin:
+    description: Grants access to all administrative commands.
+    default: op
+    children:
+      whackme.admin.help: true
+      whackme.admin.kick: true
+      whackme.admin.reload: true
+      whackme.admin.stop: true
+      whackme.arena.*: true
+      whackme.sign.break: true
+
+  whackme.admin.help:
+    default: op
+  whackme.admin.kick:
+    default: op
+  whackme.admin.reload:
+    default: op
+  whackme.admin.stop:
+    default: op
+
+  whackme.arena.*:
+    description: Grants access to all arena management commands.
+    default: op
+    children:
+      whackme.arena.create: true
+      whackme.arena.delete: true
+      whackme.arena.list: true
+      whackme.arena.edit: true
+  whackme.arena.create:
+    default: op
+  whackme.arena.delete:
+    default: op
+  whackme.arena.list:
+    default: op
+  whackme.arena.edit:
+    default: op
+
+  whackme.sign.break:
+    default: op
+  whackme.cooldown.bypass:
+    default: op
+  whackme.commandblock.bypass:
+    default: op
+
+  whackme.debug:
+    description: Grants access to all debug commands.
+    default: op
+    children:
+      whackme.debug.component: true
+      whackme.debug.dump: true
+      whackme.debug.tabcompleter: true
+  whackme.debug.component:
+    default: op
+  whackme.debug.dump:
+    default: op
+  whackme.debug.tabcompleter:
+    default: op
