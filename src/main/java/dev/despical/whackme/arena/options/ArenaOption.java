@@ -1,37 +1,47 @@
 package dev.despical.whackme.arena.options;
 
-import dev.despical.whackme.WhackMe;
-import org.bukkit.configuration.file.FileConfiguration;
-
-import java.util.function.Function;
+import lombok.Getter;
 
 /**
  * @author Despical
  * <p>
- * Created at 20.06.2022
+ * Created at 12.12.2025
  */
-public enum ArenaOption {
+@Getter
+public abstract class ArenaOption<T> {
 
-    TIMER(config -> config.getInt("Gameplay-Time", 30)),
+    private final String key;
+    private final T defaultValue;
+    private final Class<T> type;
 
-    MINIMUM_POINTS(4),
-
-    MAXIMUM_POINTS(8),
-
-    WAIT_MILLISECONDS(config -> config.getInt("Point-Blocks.Wait-Ms", 12));
-
-    private final Object value;
-
-    ArenaOption(int defaultValue) {
-        this.value = defaultValue;
+    public ArenaOption(String key, T defaultValue, Class<T> type) {
+        this.key = key;
+        this.defaultValue = defaultValue;
+        this.type = type;
     }
 
-    ArenaOption(Function<FileConfiguration, Object> function) {
-        this.value = function.apply(WhackMe.getInstance().getConfig());
+    public Object serialize(T value) {
+        return value;
     }
 
-    @SuppressWarnings("unchecked")
-    public <T> T getDefault() {
-        return (T) this.value;
+    public T deserialize(Object value) {
+        try {
+            if (type.isInstance(value)) {
+                return type.cast(value);
+            }
+
+            return parse(String.valueOf(value));
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return defaultValue;
+        }
+    }
+
+    protected T parse(String value) {
+        throw new UnsupportedOperationException("Parse method not implemented for option: " + key);
+    }
+
+    public boolean isPersistent() {
+        return key != null && !key.isEmpty();
     }
 }

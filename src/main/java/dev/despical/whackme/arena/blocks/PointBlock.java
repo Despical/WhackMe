@@ -1,16 +1,17 @@
 package dev.despical.whackme.arena.blocks;
 
-import dev.despical.commons.reflection.XReflection;
 import dev.despical.whackme.WhackMe;
 import dev.despical.whackme.arena.Arena;
-import dev.despical.whackme.arena.options.ArenaOption;
-import dev.despical.whackme.handler.ChatManager;
-import dev.despical.whackme.handler.SoundManager;
-import dev.despical.whackme.handler.rewards.Reward;
-import dev.despical.whackme.stat.LocalStatistic;
-import dev.despical.whackme.stat.Statistic;
+import dev.despical.whackme.arena.options.ArenaKeys;
+import dev.despical.whackme.chat.ChatManager;
+import dev.despical.whackme.sound.GameSound;
+import dev.despical.whackme.option.BooleanOption;
+import dev.despical.whackme.option.DoubleOption;
+import dev.despical.whackme.option.IntOption;
+import dev.despical.whackme.stats.Statistics;
 import dev.despical.whackme.user.User;
 import dev.despical.whackme.util.Utils;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
@@ -20,6 +21,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**
@@ -31,39 +33,45 @@ public class PointBlock extends BukkitRunnable {
 
     private static final WhackMe plugin = WhackMe.getInstance();
     private static final ChatManager chatManager = plugin.getChatManager();
-    private static final String PUNCH_ME = chatManager.message("point_blocks.punch_me"), DONT_PUNCH_ME = chatManager.message("point_blocks.dont_punch_me"), OUCH = chatManager.message("point_blocks.ouch");
-    private static final boolean async = plugin.getConfigPreferences().isAsync();
+    private static final Component PUNCH_ME = chatManager.getMessageComponent("point-blocks.punch-me");
+    private static final Component DONT_PUNCH_ME = chatManager.getMessageComponent("point-blocks.dont-punch-me");
+    private static final Component OUCH = chatManager.getMessageComponent("point-blocks.ouch");
+    private static final boolean async = plugin.getOptions().isEnabled(BooleanOption.POINT_BLOCKS_RUN_ASYNC);
     final ArmorStand stand;
+    private final PointHandler pointHandler;
     private final Arena arena;
     private final Location availableLocation;
+    private final PointBlockType pointBlockType;
     private final double multiplier;
     private double y;
-    private int waitedMs = ArenaOption.WAIT_MILLISECONDS.getDefault();
+    private int waitedMs = plugin.getOptions().get(IntOption.POINT_BLOCK_WAIT_MILLISECONDS);
     private boolean forward = true, waitedAbove = true;
     private Listener listener;
 
-    public PointBlock(Arena arena) {
-        this.arena = arena;
-        this.multiplier = plugin.getConfigPreferences().getPointBlockMultiplier();
-        this.availableLocation = arena.getAvailableLocation();
+    public PointBlock(PointHandler pointHandler) {
+        this.pointHandler = pointHandler;
+        this.arena = pointHandler.game().getArena();
+        this.multiplier = Math.min(plugin.getOptions().get(DoubleOption.POINT_BLOCK_Y_MULTIPLIER), plugin.getOptions().get(DoubleOption.POINT_BLOCK_MAX_Y_MULTIPLIER));
+        this.availableLocation = pointHandler.reserveAvailableLocation();
+        if (availableLocation == null) {
+            throw new IllegalStateException("No available point block location for arena " + arena.getId());
+        }
+
+        this.pointBlockType = decidePointBlockType();
 
         stand = (ArmorStand) availableLocation.getWorld().spawnEntity(availableLocation.clone().add(.5, -1.2, .5), EntityType.ARMOR_STAND);
-        stand.setHelmet(plugin.getSkullManager().getPointBlock(arena, this.getPointBlockType()));
-        stand.setCustomName(getCustomName());
+        stand.getEquipment().setHelmet(getArenaItem(pointBlockType));
+        stand.customName(getCustomName());
         stand.setCustomNameVisible(true);
         stand.setGravity(false);
         stand.setVisible(false);
 
-        Utils.rotateGameBlocks(stand, availableLocation, arena.getStartLocation(), PUNCH_ME.equals(stand.getCustomName()) ? "Punch-Me" : "Dont-Punch-Me");
+        Utils.rotateGameBlocks(stand, availableLocation, arena.getOption(ArenaKeys.START_LOCATION), PUNCH_ME.equals(stand.customName()) ? "Punch-Me" : "Dont-Punch-Me");
 
-        Utils.trySilently(
-            () -> stand.setShieldBlockingDelay(1),
-            () -> stand.setSilent(true),
-            () -> stand.setPersistent(false)
-        );
+        stand.setSilent(true);
+        stand.setPersistent(false);
 
-        arena.getPointBlocks().add(this);
-        arena.getLocations().remove(availableLocation);
+        pointHandler.getPointBlocks().add(this);
 
         registerEvents();
     }
@@ -71,7 +79,7 @@ public class PointBlock extends BukkitRunnable {
     public void clear() {
         this.cancel();
         this.stand.remove();
-        this.arena.getLocations().add(availableLocation);
+        this.pointHandler.releaseAvailableLocation(availableLocation);
 
         HandlerList.unregisterAll(listener);
     }
@@ -84,9 +92,9 @@ public class PointBlock extends BukkitRunnable {
         }
     }
 
-    private PointBlockType getPointBlockType() {
-        int greenSize = (int) arena.getPointBlocks().stream().filter(pointBlock -> pointBlock.stand.getCustomName().equalsIgnoreCase(PUNCH_ME)).count(),
-            redSize = (int) arena.getPointBlocks().stream().filter(pointBlock -> pointBlock.stand.getCustomName().equalsIgnoreCase(DONT_PUNCH_ME)).count();
+    private PointBlockType decidePointBlockType() {
+        int greenSize = (int) pointHandler.getPointBlocks().stream().filter(pointBlock -> PUNCH_ME.equals(pointBlock.stand.customName())).count(),
+            redSize = (int) pointHandler.getPointBlocks().stream().filter(pointBlock -> DONT_PUNCH_ME.equals(pointBlock.stand.customName())).count();
 
         if (greenSize > redSize) {
             return PointBlockType.RED_BLOCK;
@@ -97,8 +105,12 @@ public class PointBlock extends BukkitRunnable {
         return PointBlockType.GREEN_BLOCK;
     }
 
-    private String getCustomName() {
-        return stand.getHelmet().getItemMeta().getLore().contains("greenBlock") ? PUNCH_ME : DONT_PUNCH_ME;
+    private Component getCustomName() {
+        return pointBlockType == PointBlockType.GREEN_BLOCK ? PUNCH_ME : DONT_PUNCH_ME;
+    }
+
+    private ItemStack getArenaItem(PointBlockType type) {
+        return arena.getOption(type.getArenaOption()).clone();
     }
 
     private void registerEvents() {
@@ -108,7 +120,7 @@ public class PointBlock extends BukkitRunnable {
             public void onArmorStandManipulate(PlayerArmorStandManipulateEvent event) {
                 Player player = event.getPlayer();
 
-                if (!arena.containPlayer(player)) return;
+                if (!arena.isPlaying(player)) return;
 
                 ArmorStand armorStand = event.getRightClicked();
 
@@ -119,49 +131,47 @@ public class PointBlock extends BukkitRunnable {
 
             @EventHandler
             public void onArmorStandDamage(EntityDamageByEntityEvent event) {
-                if (!(event.getDamager() instanceof Player)) return;
-                if (!(event.getEntity() instanceof ArmorStand)) return;
-
-                Player player = (Player) event.getDamager();
-                ArmorStand armorStand = (ArmorStand) event.getEntity();
-
-                if (!arena.containPlayer(player)) return;
+                if (!(event.getDamager() instanceof Player player)) return;
+                if (!(event.getEntity() instanceof ArmorStand armorStand)) return;
+                if (!arena.isPlaying(player)) return;
                 if (!armorStand.equals(stand)) return;
 
                 User user = plugin.getUserManager().getUser(player);
-                String name = stand.getCustomName();
+                Component name = stand.customName();
 
                 if (name == null) return;
-                if (stand.getCustomName().equals(OUCH)) return;
+                if (name.equals(OUCH)) return;
 
-                if (name.equalsIgnoreCase(PUNCH_ME)) {
-                    user.addStat(LocalStatistic.SCORE, 1);
-                    user.addStat(LocalStatistic.STREAK, 1);
-                    user.addStat(Statistic.PLUS_BLOCKS, 1);
+                if (name.equals(PUNCH_ME)) {
+                    user.addStat(Statistics.LOCAL_SCORE, 1);
+                    user.addStat(Statistics.LOCAL_HIT_STREAK, 1);
+                    user.addStat(Statistics.LOCAL_CORRECT_BLOCKS, 1);
+                    user.addStat(Statistics.PLUS_BLOCKS, 1);
 
-                    int localStreak = user.getStat(LocalStatistic.STREAK);
+                    int localStreak = user.getStatistic(Statistics.LOCAL_HIT_STREAK);
 
-                    if (localStreak > user.getStat(LocalStatistic.LONGEST_STREAK)) {
-                        user.setStat(LocalStatistic.LONGEST_STREAK, localStreak);
+                    if (localStreak > user.getStatistic(Statistics.LOCAL_LONGEST_HIT_STREAK)) {
+                        user.setStatistic(Statistics.LOCAL_LONGEST_HIT_STREAK, localStreak);
                     }
 
-                    plugin.getSoundManager().playSound(player, SoundManager.GameSound.POINT_SOUND);
-                    plugin.getRewardsFactory().performReward(arena, Reward.RewardType.SUCCESSFUL_POINT);
-                } else if (name.equalsIgnoreCase(DONT_PUNCH_ME)) {
-                    user.addStat(LocalStatistic.SCORE, -1);
-                    user.addStat(Statistic.MINUS_BLOCKS, 1);
-                    user.setStat(LocalStatistic.STREAK, 0);
+                    plugin.getSoundManager().play(player, GameSound.POINT);
+                } else if (name.equals(DONT_PUNCH_ME)) {
+                    user.setStatistic(Statistics.LOCAL_SCORE, Math.max(0, user.getStatistic(Statistics.LOCAL_SCORE) - 1));
+                    user.addStat(Statistics.MINUS_BLOCKS, 1);
+                    user.addStat(Statistics.LOCAL_WRONG_BLOCKS, 1);
+                    user.setStatistic(Statistics.LOCAL_HIT_STREAK, 0);
 
-                    plugin.getSoundManager().playSound(player, SoundManager.GameSound.MINUS_POINT_SOUND);
-                    plugin.getRewardsFactory().performReward(arena, Reward.RewardType.WRONG_POINT);
+                    plugin.getSoundManager().play(player, GameSound.MINUS_POINT);
                 }
+
+                pointHandler.game().getScoreboardManager().update();
 
                 event.setCancelled(true);
 
-                stand.setHelmet(plugin.getSkullManager().getPointBlock(arena, PointBlockType.CYAN_BLOCK));
-                stand.setCustomName(OUCH);
+                stand.getEquipment().setHelmet(getArenaItem(PointBlockType.GRAY_BLOCK));
+                stand.customName(OUCH);
 
-                Utils.rotateGameBlocks(stand, availableLocation, arena.getStartLocation(), "Ouch");
+                Utils.rotateGameBlocks(stand, availableLocation, arena.getOption(ArenaKeys.START_LOCATION), "Ouch");
             }
         }, plugin);
     }
@@ -195,8 +205,8 @@ public class PointBlock extends BukkitRunnable {
                 cancel();
                 handleEntityRemoval();
 
-                arena.getPointBlocks().remove(this);
-                arena.getLocations().add(availableLocation);
+                pointHandler.getPointBlocks().remove(this);
+                pointHandler.releaseAvailableLocation(availableLocation);
 
                 HandlerList.unregisterAll(listener);
                 return;
@@ -216,11 +226,7 @@ public class PointBlock extends BukkitRunnable {
 
     private void handleEntityTeleportation(Location destination) {
         if (async) {
-            if (XReflection.supports(16)) {
-                stand.teleportAsync(destination);
-            } else {
-                plugin.getServer().getScheduler().runTask(plugin, () -> stand.teleport(destination));
-            }
+            stand.teleportAsync(destination);
         } else {
             stand.teleport(destination);
         }
