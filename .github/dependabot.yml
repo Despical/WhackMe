@@ -1,0 +1,34 @@
+version: 2
+updates:
+  - package-ecosystem: gradle
+    directory: /
+    schedule:
+      interval: daily
+    reviewers:
+      - "Despical"
+    groups:
+      despical-libraries:
+        patterns:
+          - "dev.despical:commons"
+          - "dev.despical:command-framework"
+          - "dev.despical:inventory-framework"
+          - "dev.despical:file-items"
+      gradle-build-tooling:
+        patterns:
+          - "gradle"
+          - "com.gradleup.shadow*"
+    ignore:
+      - dependency-name: "*"
+        update-types:
+          - "version-update:semver-major"
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: daily
+    reviewers:
+      - "Despical"
+    ignore:
+      - dependency-name: "*"
+        update-types:
+          - "version-update:semver-major"
