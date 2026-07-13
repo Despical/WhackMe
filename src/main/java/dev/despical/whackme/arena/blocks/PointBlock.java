@@ -48,15 +48,11 @@ public class PointBlock extends BukkitRunnable {
     private boolean forward = true, waitedAbove = true;
     private Listener listener;
 
-    public PointBlock(PointHandler pointHandler) {
+    public PointBlock(PointHandler pointHandler, Location availableLocation) {
         this.pointHandler = pointHandler;
         this.arena = pointHandler.game().getArena();
         this.multiplier = Math.min(plugin.getOptions().get(DoubleOption.POINT_BLOCK_Y_MULTIPLIER), plugin.getOptions().get(DoubleOption.POINT_BLOCK_MAX_Y_MULTIPLIER));
-        this.availableLocation = pointHandler.reserveAvailableLocation();
-        if (availableLocation == null) {
-            throw new IllegalStateException("No available point block location for arena " + arena.getId());
-        }
-
+        this.availableLocation = availableLocation;
         this.pointBlockType = decidePointBlockType();
 
         stand = (ArmorStand) availableLocation.getWorld().spawnEntity(availableLocation.clone().add(.5, -1.2, .5), EntityType.ARMOR_STAND);

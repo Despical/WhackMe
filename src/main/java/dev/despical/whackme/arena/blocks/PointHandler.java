@@ -49,17 +49,24 @@ public class PointHandler {
         sendActionBar(player);
 
         int size = getPointBlocks().size();
-        int maximumPoints = arena.getOption(ArenaKeys.MAXIMUM_POINTS);
+        int maximumPoints = Math.min(arena.getOption(ArenaKeys.MAXIMUM_POINTS), getLocationCapacity());
 
-        if (size < maximumPoints && size < random(maximumPoints + 1)) {
-            new PointBlock(this).handleItself();
+        if (maximumPoints > 0 && size < maximumPoints && size < random(maximumPoints + 1)) {
+            spawnPointBlock();
         }
     }
 
     private int random(int max) {
-        int min = arena.getOption(ArenaKeys.MINIMUM_POINTS);
+        int min = Math.clamp(arena.getOption(ArenaKeys.MINIMUM_POINTS), 0, max);
 
         return min == max ? min : ThreadLocalRandom.current().nextInt(min, max);
+    }
+
+    private void spawnPointBlock() {
+        Location location = reserveAvailableLocation();
+        if (location != null) {
+            new PointBlock(this, location).handleItself();
+        }
     }
 
     private void sendActionBar(Player player) {
@@ -130,6 +137,12 @@ public class PointHandler {
 
     private synchronized void resetAvailableLocations() {
         availableLocations.clear();
-        availableLocations.addAll(arena.getOption(ArenaKeys.PORTAL_LOCATIONS));
+        arena.getOption(ArenaKeys.PORTAL_LOCATIONS).stream()
+            .distinct()
+            .forEach(availableLocations::add);
+    }
+
+    private synchronized int getLocationCapacity() {
+        return availableLocations.size() + getPointBlocks().size();
     }
 }
