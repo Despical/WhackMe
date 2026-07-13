@@ -25,7 +25,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 # Should rewards be enabled?
-rewards-enabled: true
+rewards-enabled: false
 
 rewards:
 
