@@ -12,7 +12,6 @@ public enum BooleanOption implements ConfigOption<Boolean> {
     DISABLE_CHAT_IN_GAME("chat-settings.disable-chat-in-game", false),
     ENABLE_CHAT_FORMATTING("chat-settings.enable-formatting", true),
     BLOCK_LEAVE_COMMAND("game-settings.block-leave-command", false),
-    CLEAR_INVENTORY("player-settings.clear-inventory-on-join", true),
     DATABASE_ENABLED("database.enabled", false),
     POINT_BLOCKS_RUN_ASYNC("point-blocks.run-async", false),
     SCOREBOARD_ENABLED("scoreboard-enabled", true),

@@ -5,7 +5,6 @@ import dev.despical.whackme.WhackMe;
 import dev.despical.whackme.arena.Arena;
 import dev.despical.whackme.arena.options.ArenaKeys;
 import dev.despical.whackme.chat.ChatManager;
-import dev.despical.whackme.option.BooleanOption;
 import dev.despical.whackme.option.IntOption;
 import dev.despical.whackme.stats.Statistics;
 import dev.despical.whackme.user.User;
@@ -44,10 +43,7 @@ public final class GameManager {
         }
 
         InventorySerializer.saveInventoryToFile(plugin, player);
-
-        if (BooleanOption.CLEAR_INVENTORY.value()) {
-            player.getInventory().clear();
-        }
+        player.getInventory().clear();
 
         user.resetTemporaryStats();
         Utils.resetPlayerAttributes(player);
@@ -83,11 +79,13 @@ public final class GameManager {
 
         User user = game.getUser();
         Player player = user.getPlayer();
+
         if (player != null) {
             plugin.getEventManager().playerLeave(player, game, reason.getLeaveReason());
         }
 
         forceStop(game, reason);
+
         plugin.getEventManager().gameStop(game, reason, List.of(user.getUUID()));
         game.setState(GameState.RESTARTING);
     }
@@ -99,6 +97,7 @@ public final class GameManager {
     public void finishGame(Game game, boolean affectStats, boolean teleportToEnd, boolean sendFinishMessage) {
         User user = game.getUser();
         Player player = game.getPlayer();
+
         if (user == null) {
             return;
         }
@@ -110,9 +109,12 @@ public final class GameManager {
 
         plugin.getDatabase().saveData(user);
         plugin.getLeaderboardManager().refreshAllLeaderboards(List.of(user));
+
         cleanupPlayer(game, player, teleportToEnd);
+
         user.resetTemporaryStats();
         game.clearUser();
+
         plugin.getSignManager().updateSigns(arena);
     }
 
@@ -120,16 +122,20 @@ public final class GameManager {
         int score = user.getStatistic(Statistics.LOCAL_SCORE);
         int arenaRecord = arena.getOption(ArenaKeys.RECORD_SCORE);
         int previousPersonalRecord = user.getStatistic(Statistics.RECORD_SCORE);
+
         boolean globalRecord = arenaRecord == -1 || score > arenaRecord;
         boolean personalBest = score > previousPersonalRecord;
+
         Var[] resultVars = createResultVars(user, score, previousPersonalRecord);
 
         if (globalRecord) {
             arena.setOption(ArenaKeys.RECORD_HOLDER, player.getName());
             arena.setOption(ArenaKeys.RECORD_SCORE, score);
+
             chatManager.sendCenteredMessage(player,
                 personalBest ? "game.global-record-broken-and-pr" : "game.global-record-broken",
-                resultVars);
+                resultVars
+            );
             player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1f, 1f);
         }
 
@@ -147,9 +153,11 @@ public final class GameManager {
         int localStreak = user.getStatistic(Statistics.LOCAL_LONGEST_HIT_STREAK);
         user.setStatisticIfHigher(Statistics.LONGEST_HIT_STREAK, localStreak);
         user.addStat(Statistics.GAMES_PLAYED, 1);
+
         if (score > 0 && user.getStatistic(Statistics.LOCAL_WRONG_BLOCKS) == 0) {
             user.addStat(Statistics.PERFECT_RUNS, 1);
         }
+
         user.setCooldown("play_again", plugin.getOptions().get(IntOption.GAME_COOLDOWN));
     }
 
@@ -157,16 +165,16 @@ public final class GameManager {
         int correctBlocks = user.getStatistic(Statistics.LOCAL_CORRECT_BLOCKS);
         int wrongBlocks = user.getStatistic(Statistics.LOCAL_WRONG_BLOCKS);
         int totalBlocks = correctBlocks + wrongBlocks;
-        double successRate = totalBlocks == 0 ? 0D : (correctBlocks * 100D) / totalBlocks;
 
+        double successRate = totalBlocks == 0 ? 0D : (correctBlocks * 100D) / totalBlocks;
         String missStatus;
+
         if (totalBlocks == 0) {
             missStatus = "<#B0BEC5>No blocks were hit this round.";
         } else if (wrongBlocks == 0) {
             missStatus = "<#00E676><bold>PERFECT RUN</bold> <gray>— No misses!";
         } else {
-            missStatus = "<#FF5252><bold>%d MISS%s</bold> <gray>— Keep an eye on the red blocks."
-                .formatted(wrongBlocks, wrongBlocks == 1 ? "" : "ES");
+            missStatus = "<#FF5252><bold>%d MISS%s</bold> <gray>— Keep an eye on the red blocks.".formatted(wrongBlocks, wrongBlocks == 1 ? "" : "ES");
         }
 
         return new Var[]{
@@ -183,6 +191,7 @@ public final class GameManager {
 
     private void forceStop(Game game, StopReason reason) {
         Player player = game.getPlayer();
+
         if (player != null) {
             cleanupPlayer(game, player, true);
             chatManager.sendCenteredMessage(player, reason.getMessagePath());
@@ -192,22 +201,23 @@ public final class GameManager {
         if (user != null) {
             user.resetTemporaryStats();
         }
+
         game.clearUser();
     }
 
     private void cleanupPlayer(Game game, Player player, boolean teleportToEnd) {
         Arena arena = game.getArena();
+
         game.getPointHandler().clear();
         game.getScoreboardManager().removeScoreboard();
         game.getBossBarManager().removePlayer();
+
         if (player == null) {
             plugin.getRadio().removeArena(arena);
             return;
         }
 
-        if (plugin.getOptions().isEnabled(BooleanOption.CLEAR_INVENTORY)) {
-            player.getInventory().clear();
-        }
+        player.getInventory().clear();
         Utils.restoreSavedPlayerState(player);
 
         if (teleportToEnd && arena.getOption(ArenaKeys.END_LOCATION) != null) {
