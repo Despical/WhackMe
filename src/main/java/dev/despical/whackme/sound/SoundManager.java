@@ -35,6 +35,10 @@ public class SoundManager {
             }
 
             String name = config.getString(path + "sound");
+            if (name == null || name.isBlank()) {
+                continue;
+            }
+
             Sound sound = SoundResolver.resolve(name);
             if (sound == null) {
                 plugin.getLogger().warning("Could not register sound '" + gameSound.getPath() + "': invalid sound '" + name + "'.");

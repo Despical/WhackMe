@@ -14,6 +14,7 @@ public enum GameSound {
 
     POINT("point"),
     MINUS_POINT("minus-point"),
+    OUCH("ouch"),
     GAME_FINISHED("game-finished"),
     RECORD_BROKEN("record-broken");
 

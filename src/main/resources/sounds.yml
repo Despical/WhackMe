@@ -15,6 +15,12 @@ sounds:
     volume: 1.0
     pitch: 1.0
 
+  ouch:
+    enabled: true
+    sound: ""
+    volume: 1.0
+    pitch: 1.0
+
   game-finished:
     enabled: true
     sound: ENTITY_PLAYER_LEVELUP

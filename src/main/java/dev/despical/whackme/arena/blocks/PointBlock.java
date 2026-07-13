@@ -136,7 +136,11 @@ public class PointBlock extends BukkitRunnable {
                 Component name = stand.customName();
 
                 if (name == null) return;
-                if (name.equals(OUCH)) return;
+                if (name.equals(OUCH)) {
+                    plugin.getSoundManager().play(player, GameSound.OUCH);
+                    event.setCancelled(true);
+                    return;
+                }
 
                 if (name.equals(PUNCH_ME)) {
                     user.addStat(Statistics.LOCAL_SCORE, 1);
