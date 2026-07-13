@@ -7,8 +7,8 @@ game:
   action-bar: "<gray>Score: <#00E676>%score% <dark_gray>| <gray>Time: <#FFCA28>%timer% <dark_gray>| <gray>Streak: <#00E676>%hit_streak%"
   start-message:
     - ""
-    - "<#00E676>You started playing the <u>Whack Me</u> game!"
-    - "<#00E676>You have 30s to punch as many whackies as possible!"
+    - "<#00E676><bold>You started playing the <u>Whack Me</u> game!"
+    - "<#00E676><bold>You have 30s to punch as many whackies as possible!"
     - ""
 
   finished:
