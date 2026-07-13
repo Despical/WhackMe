@@ -1,0 +1,22 @@
+# =============================================================== #
+#                    Whack Me - Sign Configuration                #
+# =============================================================== #
+
+created: "<#57C5F7>ℹ <#BDBDBD>Arena sign created. <dark_gray>[ <#81D4FA>X: %x%, Y: %y%, Z: %z% <dark_gray>] <#BDBDBD>facing <#29B6F6><bold>%direction%<#BDBDBD>."
+removed: "<#57C5F7>ℹ <#BDBDBD>Arena sign removed. <dark_gray>[ <#EF9A9A>X: %x%, Y: %y%, Z: %z% <dark_gray>]<#BDBDBD>."
+no-perm-to-break: "<#FF5252>✖ You do not have permission to break this sign."
+look-at-a-sign: "<#FF5252>⚠ <#FF5252>No sign detected! <#BDBDBD>Please look directly at a <#FFB74D>Sign block <#BDBDBD>and try again."
+already-game-sign: "<#FF5252>⚠ <#BDBDBD>This sign is already registered as an <#FFCA28>arena sign<#BDBDBD>."
+
+game-states:
+  waiting: "<#00E676><bold>WAITING"
+  in-game: "<#FF5252><bold>IN GAME"
+  ending: "<#FFAB00><bold>ENDING"
+  restarting: "<#607D8B><bold>REBOOTING"
+  inactive: "<#B0BEC5><bold>MAINTENANCE"
+
+lines:
+  - "<gradient:#00E676:#29B6F6><bold>WHACK ME</bold></gradient>"
+  - "<#FFFFFF><bold>%arena%</bold>"
+  - ""
+  - "%state%"

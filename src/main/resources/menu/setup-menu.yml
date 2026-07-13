@@ -1,0 +1,196 @@
+title: "<gradient:#FF5252:#D50000><bold>GAME SETUP</bold></gradient> <dark_gray><bold>></bold></dark_gray> <gold><bold>%arena_id%</bold>"
+point-blocks-title: "<gradient:#FFCA28:#FF7043><bold>POINT BLOCK SETTINGS</bold></gradient> <dark_gray><bold>></bold></dark_gray> <gold><bold>%arena_id%</bold>"
+
+items:
+  game-locations:
+    name: "<#4DD0E1><bold>Manage Arena Locations"
+    material: FILLED_MAP
+    lore:
+      - "<#2F2F2F>• <#26C6DA>CLICK <#BDBDBD>to open location settings"
+      - ""
+      - "<#2F2F2F>• <#B0BEC5>Configure the start and end"
+      - "<#B0BEC5>  positions used by this arena."
+
+  portal-layout:
+    name: "<#BA68C8><bold>Manage Portal Layout"
+    material: ENDER_PEARL
+    enter-editing-message: "<#57C5F7>ℹ <#BDBDBD>You entered <#BA68C8>Portal Editing Mode<#BDBDBD>."
+    leave-editing-message: "<#57C5F7>ℹ <#BDBDBD>You left <#BA68C8>Portal Editing Mode<#BDBDBD>."
+    lore:
+      - "<#2F2F2F>• <#AB47BC>CLICK <#BDBDBD>to toggle editor mode"
+      - ""
+      - "<#2F2F2F>• <#B0BEC5>Place or break portal frames to"
+      - "<#B0BEC5>  define the active play ring."
+
+  start:
+    name: "<#00E676><bold>Set Start Location"
+    material: BEACON
+    message: "<#57C5F7>ℹ <#00E676>Start Location <#BDBDBD>has been set successfully."
+    invalid-message: "<#FF5252>⚠ <#FF5252>Invalid start location! <#BDBDBD>Ensure you are surrounded by <#FFB74D>End Portal Frames <#BDBDBD>or enable <#BA68C8>Portal Layout Mode<#BDBDBD> via setup menu."
+    lore:
+      - "<#2F2F2F>• <#43A047>CLICK <#BDBDBD>to set at <#66BB6A>your pos"
+      - "<#2F2F2F>• <#2E7D32>SHIFT-CLICK <#BDBDBD>to auto-place <#A5D6A7>portal frames"
+      - ""
+      - "<#2F2F2F>• <#B0BEC5>Defines where the active round starts"
+      - "<#B0BEC5>  for the player."
+
+  end:
+    name: "<#E040FB><bold>Set End Location"
+    material: END_PORTAL_FRAME
+    message: "<#57C5F7>ℹ <#E040FB>End Location <#BDBDBD>has been set successfully."
+    lore:
+      - "<#2F2F2F>• <#D500F9>CLICK <#BDBDBD>to set at <#EA80FC>your pos"
+      - "<#2F2F2F>• <#B388FF>SHIFT-CLICK <#BDBDBD>to <#F8BBD0>center block"
+      - ""
+      - "<#2F2F2F>• <#B0BEC5>Used as the exit point after"
+      - "<#B0BEC5>  the game has been completed."
+
+  point-blocks:
+    name: "<#FFAB00><bold>Configure Point Blocks"
+    material: GLOWSTONE_DUST
+    lore:
+      - "<#2F2F2F>• <#FFA726>CLICK <#BDBDBD>to open amount settings"
+      - ""
+      - "<#2F2F2F>• <#B0BEC5>Controls how many scoring blocks"
+      - "<#B0BEC5>  can appear during the round."
+
+  point-blocks-locked:
+    name: "<#FF5252><bold>Configure Point Blocks"
+    material: BARRIER
+    message: "<#FF5252>⚠ <#BDBDBD>You need to set <#BA68C8>portal locations <#BDBDBD>before editing point block amounts."
+    lore:
+      - "<#2F2F2F>• <#EF5350>CLICK <#BDBDBD>after portal locations are ready"
+      - ""
+      - "<#2F2F2F>• <#B0BEC5>First define the playable portal layout"
+      - "<#B0BEC5>  for this arena."
+
+  point-block-appearance:
+    name: "<#90CAF9><bold>Customize Point Block Looks"
+    material: PLAYER_HEAD
+    use-offline-mode-reset-head: true
+    green-name: "<!i><#00E676><bold>Green Block"
+    red-name: "<!i><#FF5252><bold>Red Block"
+    gray-name: "<!i><#B0BEC5><bold>Gray Block"
+    missing-cursor: "<#FF5252>⚠ <#FF5252>No item detected! <#BDBDBD>Hold an item on your cursor <#BDBDBD>and click this slot again."
+    updated-message: "<#57C5F7>ℹ <#BDBDBD>Updated %block_name% <#BDBDBD>for arena <#90CAF9>%arena_id%<#BDBDBD>."
+    preview-lore:
+      - "<!i><#2F2F2F>• <#64B5F6>CLICK <#BDBDBD>with an item on your cursor"
+      - "<!i><#BDBDBD>  to save it for this arena"
+      - ""
+      - "<!i><#2F2F2F>• <#B0BEC5>Supports blocks, skulls and custom"
+      - "<!i><#B0BEC5>  custom item meta."
+    lore:
+      - "<!i><#2F2F2F>• <#64B5F6>CLICK <#BDBDBD>to edit arena visuals"
+      - ""
+      - "<!i><#2F2F2F>• <#B0BEC5>Assign custom items for the green,"
+      - "<!i><#B0BEC5>  red, and gray point block states."
+
+  song-selector:
+    name: "<#9C27B0><bold>Select Arena Music"
+    material: MUSIC_DISC_BLOCKS
+    lore:
+      - "<#2F2F2F>• <#AB47BC>CLICK <#BDBDBD>to open song selector"
+      - ""
+      - "<#2F2F2F>• <#B0BEC5>Choose a song to play when"
+      - "<#B0BEC5>  players join the arena."
+      - ""
+      - "<#2F2F2F>• <#B0BEC5>Currently Selected: <#CE93D8>%selected_song%"
+    item-flags:
+      - HIDE_ADDITIONAL_TOOLTIP
+
+  song-no-selection:
+    name: "<#FF5252>No Song"
+    material: BARRIER
+    lore:
+      - "<#B0BEC5>• <#00E676>LEFT <white>click to select"
+      - ""
+      - "<#B0BEC5>• <#B0BEC5>Arena will play no music."
+    item-flags:
+      - HIDE_ADDITIONAL_TOOLTIP
+
+  song-item:
+    name: "<bold><#FFB300>♪ <#76FF03>%song_name%</bold>"
+    material: MUSIC_DISC_BLOCKS
+    lore:
+      - "<#81C784>• <#64B5F6>LEFT <#FFFFFF>click to select"
+      - "<#81C784>• <#FFB300>RIGHT <#FFFFFF>click to preview"
+      - ""
+      - "<#90CAF9>• <#90CAF9>This song will play when players"
+      - "<#90CAF9>join the arena."
+    item-flags:
+      - HIDE_ADDITIONAL_TOOLTIP
+
+  song-nbs-not-installed:
+    name: "<#FF5252><bold>NoteBlockAPI Not Installed"
+    material: BARRIER
+    lore:
+      - ""
+      - "<#FF9800>⚠ <bold><#FFFFFF>NoteBlockAPI not found!"
+      - ""
+      - "<#90CAF9><bold>To enable music selection:"
+      - "<#81C784>    1. <#B0BEC5>Install <#76FF03>NoteBlockAPI <#B0BEC5>plugin"
+      - "<#81C784>    2. <#B0BEC5>Place <#FFD54F>.nbs <#B0BEC5>files in <#FFD54F>musics/ <#B0BEC5>folder"
+      - "<#81C784>    3. <#B0BEC5>Restart the server"
+      - ""
+      - "<#FFC107><underlined>github.com/xxmicloxx/NoteBlockAPI</underlined>"
+    item-flags:
+      - HIDE_ADDITIONAL_TOOLTIP
+
+  arena-sign:
+    name: "<#8D6E63><bold>Create Arena Sign"
+    material: OAK_SIGN
+    lore: []
+
+  register-arena:
+    name: "<#00E676><bold>Register the Arena"
+    material: FIREWORK
+    hide-tooltip: true
+    missing-option:
+      - "<#37474F><st>                                                                                 </st>"
+      - "<#FF5252><bold>REGISTRATION FAILED"
+      - ""
+      - "<gray>The arena configuration integrity check has failed."
+      - "<gray>A mandatory configuration value is missing."
+      - ""
+      - "<gray>Missing arena option: <#FFD54F>%option%"
+      - ""
+      - "<#37474F><st>                                                                                 </st>"
+    registered-successfully:
+      - "<#37474F><st>                                                                                 </st>"
+      - "<gradient:#00E676:#1DE9B6><bold>REGISTRATION COMPLETE</gradient>"
+      - ""
+      - "<#CFD8DC>The arena '<#00B0FF>%arena_id%<#CFD8DC>' has been successfully registered."
+      - ""
+      - "<click:run_command:%command%><hover:show_text:'<#69F0AE>Click to join instantly.'><#FFD740><bold><underlined>CLICK HERE TO JOIN & PLAY</underlined></bold></hover></click>"
+      - ""
+      - "<#37474F><st>                                                                                </st>"
+
+  go-back:
+    name: "<#FF5252><bold>Return to Last Page"
+    material: ARROW
+
+  minimum-point-blocks:
+    name: "<#FFB300><bold>Minimum Point Blocks"
+    material: GLOWSTONE_DUST
+    minimum-above-portals: "<#FF5252>⚠ <#BDBDBD>Point block amount exceeded the available <#FFCA28>portal count<#BDBDBD>, so both values were adjusted."
+    lore:
+      - "<#2F2F2F>• <#64B5F6>LEFT  <#BDBDBD>click to increase"
+      - "<#2F2F2F>• <#EF5350>RIGHT <#BDBDBD>click to decrease"
+      - ""
+      - "<#2F2F2F>• <#B0BEC5>Minimum number of point blocks"
+      - "<#B0BEC5>  that can spawn around the player."
+      - ""
+      - "<#2F2F2F>• <#B0BEC5>Current Value: <#FFB300>%current_value%"
+
+  maximum-point-blocks:
+    name: "<#FF7043><bold>Maximum Point Blocks"
+    material: GLOWSTONE_DUST
+    maximum-above-portals: "<#FF5252>⚠ <#BDBDBD>Point block amount exceeded the available <#FFCA28>portal count<#BDBDBD>, so the maximum value was adjusted."
+    lore:
+      - "<#2F2F2F>• <#64B5F6>LEFT  <#BDBDBD>click to increase"
+      - "<#2F2F2F>• <#EF5350>RIGHT <#BDBDBD>click to decrease"
+      - ""
+      - "<#2F2F2F>• <#B0BEC5>Maximum number of point blocks"
+      - "<#B0BEC5>  that can spawn around the player."
+      - ""
+      - "<#2F2F2F>• <#B0BEC5>Current Value: <#FF7043>%current_value%"
