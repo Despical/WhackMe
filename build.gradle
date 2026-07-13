@@ -1,43 +1,45 @@
 plugins {
     id 'java'
-    id 'com.gradleup.shadow' version '9.3.0'
+    id 'com.gradleup.shadow' version '9.5.1'
 }
 
 group = 'dev.despical'
-version = '1.8.10'
+version = '1.9.0'
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
+        languageVersion = JavaLanguageVersion.of(25)
     }
 }
 
 repositories {
+    mavenLocal()
     mavenCentral()
     maven { url = 'https://repo.papermc.io/repository/maven-public' }
-    maven { url = 'https://repo.extendedclip.com/releases' }
+    maven { url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
     maven { url = 'https://jitpack.io' }
 }
 
 dependencies {
-    compileOnly 'com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT'
-    compileOnly 'me.clip:placeholderapi:2.11.7'
-    compileOnly 'org.projectlombok:lombok:1.18.40'
+    compileOnly 'io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT'
+    compileOnly 'me.clip:placeholderapi:2.12.3'
+    compileOnly 'org.projectlombok:lombok:1.18.46'
+    compileOnly 'com.github.koca2000:NoteBlockAPI:1.6.2'
 
     implementation('dev.despical:commons:2.1.2') {
         exclude group: 'org.slf4j'
     }
-    implementation 'dev.despical:command-framework:1.6.2'
+    implementation 'dev.despical:command-framework:1.6.5'
     implementation 'dev.despical:inventory-framework:2.4.7'
-    implementation 'org.bstats:bstats-bukkit:3.1.0'
+    implementation 'dev.despical:file-items:1.2.5'
+    implementation 'org.bstats:bstats-bukkit:3.2.1'
 
-    annotationProcessor 'org.projectlombok:lombok:1.18.40'
+    annotationProcessor 'org.projectlombok:lombok:1.18.46'
 }
 
 tasks.processResources {
     def props = [version: version]
     inputs.properties props
-
     filteringCharset = 'UTF-8'
 
     filesMatching('plugin.yml') {
@@ -49,12 +51,17 @@ tasks.jar {
     enabled = false
 }
 
+tasks.withType(Javadoc).configureEach {
+    options.addStringOption('tag', 'apiNote:a:API Note:')
+}
+
 tasks.shadowJar {
     minimize()
 
     relocate 'dev.despical.commons', 'dev.despical.whackme.lib.commons'
     relocate 'dev.despical.commandframework', 'dev.despical.whackme.lib.commandframework'
     relocate 'dev.despical.inventoryframework', 'dev.despical.whackme.lib.inventoryframework'
+    relocate 'dev.despical.fileitems', 'dev.despical.whackme.lib.fileitems'
     relocate 'dev.despical.particle', 'dev.despical.whackme.lib.particlelib'
     relocate 'org.bstats', 'dev.despical.whackme.lib.bstats'
 
@@ -65,6 +72,6 @@ tasks.shadowJar {
 
     def hostName = InetAddress.getLocalHost().getHostName()
     if (hostName == "DESKTOP-RD26J35") {
-        destinationDirectory = file("C:\\Users\\berke\\OneDrive\\Masaüstü\\Paper 1.21.11\\plugins")
+        destinationDirectory = file("C:\\Users\\berke\\OneDrive\\Masaüstü\\Paper 26.1.2\\plugins")
     }
 }
