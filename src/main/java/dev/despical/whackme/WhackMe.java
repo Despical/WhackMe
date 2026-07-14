@@ -107,6 +107,7 @@ public class WhackMe extends JavaPlugin {
     private void createConfigFiles() {
         saveDefaultConfig();
         saveResourceIfMissing("mysql.yml");
+        saveResourceIfMissing("signs.yml");
         seedDefaultSongsOnce();
     }
 
@@ -124,8 +125,8 @@ public class WhackMe extends JavaPlugin {
         gameManager = new GameManager(this);
         playingCommandPolicy = new PlayingCommandPolicy(this);
         soundManager = new SoundManager(this);
-        signManager = new SignManager(this);
         arenaManager = new ArenaManager(this);
+        signManager = new SignManager(this);
         leaderboardManager = new LeaderboardManager(this);
         radio = createRadio();
         arenaDataSaver = new ArenaDataSaver(this);
