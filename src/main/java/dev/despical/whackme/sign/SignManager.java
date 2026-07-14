@@ -4,9 +4,11 @@ import dev.despical.commons.configuration.ConfigUtils;
 import dev.despical.commons.serializer.LocationSerializer;
 import dev.despical.whackme.WhackMe;
 import dev.despical.whackme.arena.Arena;
-import dev.despical.whackme.arena.options.ArenaKeys;
+import dev.despical.whackme.arena.ArenaRegistry;
 import dev.despical.whackme.chat.ChatManager;
+import dev.despical.whackme.game.Game;
 import dev.despical.whackme.game.GameState;
+import dev.despical.whackme.util.Utils;
 import dev.despical.whackme.util.Var;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
@@ -30,15 +32,15 @@ import java.util.*;
  */
 public class SignManager {
 
-    private ArenaSignEvents signEvents;
-    private FileConfiguration signConfig;
-    private List<Component> signLines;
+    private FileConfiguration config;
+    private ArenaSignEvents arenaSignEvents;
+    private List<String> signLines;
 
     private final WhackMe plugin;
     private final ChatManager chatManager;
-    private final Map<GameState, String> stateNames;
-    private final Map<SignBlockKey, ArenaSign> signsByBlock;
+    private final Map<BlockKey, ArenaSign> signsByBlock;
     private final Map<Arena, Set<ArenaSign>> signsByArena;
+    private final Map<GameState, String> gameStateToString;
 
     public SignManager(WhackMe plugin) {
         this.plugin = plugin;
@@ -46,34 +48,32 @@ public class SignManager {
         this.signsByBlock = new HashMap<>();
         this.signsByArena = new HashMap<>();
         this.signLines = List.of();
-        this.stateNames = new EnumMap<>(GameState.class);
+        this.gameStateToString = new EnumMap<>(GameState.class);
         this.loadSigns();
     }
 
     private void loadSigns() {
-        signConfig = ConfigUtils.getConfig(plugin, "signs");
-        signLines = signConfig.getStringList("lines").stream().map(chatManager::parseMessage).toList();
-        stateNames.clear();
+        this.loadConfig();
 
-        for (GameState state : GameState.values()) {
-            stateNames.put(state, signConfig.getString("game-states." + state.getPath(), state.getPath()));
-        }
+        ArenaRegistry arenaRegistry = plugin.getArenaRegistry();
+        FileConfiguration config = arenaRegistry.getConfig();
 
-        signsByBlock.clear();
-        signsByArena.clear();
-
-        FileConfiguration config = plugin.getArenaRegistry().getConfig();
         boolean updateConfig = false;
 
-        for (String arenaId : config.getKeys(false)) {
-            List<String> locations = config.getStringList(arenaId + ".signs");
+        for (Arena arena : arenaRegistry.getArenas()) {
+            String path = arena.getId() + ".signs";
+
+            List<String> locations = config.getStringList(path);
             Iterator<String> iterator = locations.iterator();
 
             while (iterator.hasNext()) {
                 Block block = LocationSerializer.fromString(iterator.next()).getBlock();
 
                 if (block.getState() instanceof Sign) {
-                    addArenaSign(plugin.getArenaRegistry().getArena(arenaId), block);
+                    ArenaSign arenaSign = new ArenaSign(arena, block);
+
+                    trackArenaSign(arenaSign);
+                    updateSign(arenaSign);
                     continue;
                 }
 
@@ -82,90 +82,121 @@ public class SignManager {
             }
 
             if (updateConfig) {
-                config.set(arenaId + ".signs", locations);
+                config.set(path, locations);
                 updateConfig = false;
             }
         }
 
-        updateListenerRegistration();
+        refreshListenerRegistration();
     }
 
     public void reload() {
-        this.loadSigns();
+        this.loadConfig();
+        this.signsByArena.keySet().forEach(this::updateSigns);
+    }
+
+    public void sendMessage(CommandSender recipient, String path, Var... vars) {
+        recipient.sendMessage(getMessageComponent(path, vars));
     }
 
     public void updateSigns(Arena arena) {
         getSigns(arena).forEach(this::updateSign);
     }
 
-    public void sendMessage(CommandSender recipient, String path, Var... vars) {
-        recipient.sendMessage(chatManager.parseMessage(signConfig.getString(path, ""), vars));
-    }
-
     private void updateSign(ArenaSign arenaSign) {
         Sign sign = arenaSign.sign();
-        SignSide side = sign.getSide(Side.FRONT);
 
-        for (int i = 0; i < signLines.size(); i++) {
-            side.line(i, formatSign(signLines.get(i), arenaSign.arena()));
+        Arena arena = arenaSign.arena();
+        Game game = arena.getGame();
+
+        String state = game == null
+            ? gameStateToString.get(GameState.INACTIVE)
+            : gameStateToString.get(game.getState());
+
+        SignSide side = sign.getSide(Side.FRONT);
+        boolean changed = false;
+
+        for (int i = 0; i < 4; i++) {
+            String configuredLine = i < signLines.size() ? signLines.get(i) : "";
+            Component line = formatSign(configuredLine, state, arena);
+
+            if (Objects.equals(side.line(i), line)) {
+                continue;
+            }
+
+            side.line(i, line);
+            changed = true;
         }
 
-        sign.setWaxed(true);
-        sign.update();
+        if (!sign.isWaxed()) {
+            sign.setWaxed(true);
+            changed = true;
+        }
+
+        if (changed) {
+            sign.update();
+        }
     }
 
     public void addArenaSign(Arena arena, Block block) {
-        if (arena == null || !(block.getState() instanceof Sign)) {
+        if (arena == null || block == null || !(block.getState() instanceof Sign)) {
             return;
         }
 
-        SignBlockKey blockKey = SignBlockKey.from(block);
-        ArenaSign existingSign = signsByBlock.remove(blockKey);
+        ArenaSign arenaSign = new ArenaSign(arena, block);
+        ArenaSign existing = getArenaSignByBlock(block);
 
-        if (existingSign != null) {
-            untrack(existingSign);
+        if (existing != null) {
+            untrackArenaSign(existing);
         }
 
-        ArenaSign arenaSign = new ArenaSign(arena, block);
-        track(arenaSign);
+        trackArenaSign(arenaSign);
+        refreshListenerRegistration();
 
-        ensureListenerRegistered();
         updateSign(arenaSign);
     }
 
-    public boolean isArenaSign(Block block) {
-        return getArenaSignByBlock(block) != null;
-    }
-
     public void removeArenaSign(ArenaSign arenaSign) {
-        untrack(arenaSign);
-        updateListenerRegistration();
+        if (arenaSign == null) {
+            return;
+        }
+
+        untrackArenaSign(arenaSign);
+        refreshListenerRegistration();
     }
 
     public void removeArenaSigns(Arena arena) {
-        Set<ArenaSign> signs = signsByArena.remove(arena);
-        if (signs != null) {
-            signs.forEach(sign -> signsByBlock.remove(SignBlockKey.from(sign.block())));
+        Set<ArenaSign> arenaSigns = signsByArena.remove(arena);
+        if (arenaSigns == null || arenaSigns.isEmpty()) {
+            refreshListenerRegistration();
+            return;
         }
 
-        updateListenerRegistration();
+        for (ArenaSign arenaSign : arenaSigns) {
+            signsByBlock.remove(BlockKey.of(arenaSign.block()));
+        }
+
+        refreshListenerRegistration();
     }
 
     public List<ArenaSign> getSigns(Arena arena) {
-        Set<ArenaSign> signs = signsByArena.get(arena);
-        return signs == null ? List.of() : List.copyOf(signs);
+        Set<ArenaSign> arenaSigns = signsByArena.get(arena);
+        return arenaSigns == null ? List.of() : List.copyOf(arenaSigns);
     }
 
     public Var[] getSignVars(Block block) {
         Location location = block.getLocation();
-        String direction = resolveSignDirection(block.getBlockData());
 
         return new Var[]{
             Var.of("%x%", location.getBlockX()),
             Var.of("%y%", location.getBlockY()),
             Var.of("%z%", location.getBlockZ()),
-            Var.of("%direction%", direction),
+            Var.of("%direction%", resolveSignDirection(block.getBlockData())),
         };
+    }
+
+    public boolean isArenaSign(Block block) {
+        return getArenaSignByBlock(block) != null;
     }
 
     private String resolveSignDirection(BlockData blockData) {
@@ -180,93 +211,104 @@ public class SignManager {
         return "UNKNOWN";
     }
 
-    private Component formatSign(Component component, Arena arena) {
-        return chatManager.replaceVarsInComponent(component,
+    private Component formatSign(String line, String state, Arena arena) {
+        return chatManager.parseMessage(Utils.format(line,
             Var.of("%arena%", arena.getId()),
-            Var.of("%state%", formatArenaState(arena))
-        );
-    }
-
-    private String formatArenaState(Arena arena) {
-        if (!arena.getOption(ArenaKeys.READY) || arena.getGame() == null) {
-            return stateNames.get(GameState.INACTIVE);
-        }
-
-        var state = arena.getGame().getState();
-        return stateNames.getOrDefault(state, state.getPath());
+            Var.of("%state%", state)
+        ));
     }
 
     ArenaSign getArenaSignByBlock(Block block) {
-        if (block == null) {
+        BlockKey blockKey = BlockKey.of(block);
+        if (blockKey == null) {
             return null;
         }
 
-        ArenaSign sign = signsByBlock.get(SignBlockKey.from(block));
-        if (sign == null || block.getState() instanceof Sign) {
-            return sign;
+        ArenaSign arenaSign = signsByBlock.get(blockKey);
+        if (arenaSign == null) {
+            return null;
         }
 
-        untrack(sign);
-        updateListenerRegistration();
+        if (block.getState() instanceof Sign) {
+            return arenaSign;
+        }
+
+        untrackArenaSign(arenaSign);
+        refreshListenerRegistration();
         return null;
     }
 
-    private void ensureListenerRegistered() {
-        if (signEvents != null) {
+    private void trackArenaSign(ArenaSign arenaSign) {
+        signsByBlock.put(BlockKey.of(arenaSign.block()), arenaSign);
+        signsByArena.computeIfAbsent(arenaSign.arena(), _ -> new HashSet<>()).add(arenaSign);
+    }
+
+    private void untrackArenaSign(ArenaSign arenaSign) {
+        signsByBlock.remove(BlockKey.of(arenaSign.block()));
+
+        Set<ArenaSign> arenaSigns = signsByArena.get(arenaSign.arena());
+        if (arenaSigns == null) {
             return;
         }
 
-        signEvents = new ArenaSignEvents(plugin, this);
-        plugin.getServer().getPluginManager().registerEvents(signEvents, plugin);
+        arenaSigns.remove(arenaSign);
+
+        if (arenaSigns.isEmpty()) {
+            signsByArena.remove(arenaSign.arena());
+        }
     }
 
-    private void updateListenerRegistration() {
-        if (!signsByBlock.isEmpty()) {
-            ensureListenerRegistered();
+    private void refreshListenerRegistration() {
+        if (signsByBlock.isEmpty()) {
+            unregisterArenaSignEvents();
             return;
         }
 
-        if (signEvents != null) {
-            HandlerList.unregisterAll(signEvents);
-            signEvents = null;
-        }
+        registerArenaSignEvents();
     }
 
-    private void track(ArenaSign sign) {
-        signsByBlock.put(SignBlockKey.from(sign.block()), sign);
-        signsByArena.computeIfAbsent(sign.arena(), _ -> new HashSet<>()).add(sign);
-    }
-
-    private void untrack(ArenaSign sign) {
-        signsByBlock.remove(SignBlockKey.from(sign.block()));
-        Set<ArenaSign> signs = signsByArena.get(sign.arena());
-
-        if (signs == null) {
+    private void registerArenaSignEvents() {
+        if (arenaSignEvents != null) {
             return;
         }
 
-        signs.remove(sign);
+        arenaSignEvents = new ArenaSignEvents(this);
+    }
 
-        if (signs.isEmpty()) {
-            signsByArena.remove(sign.arena());
+    private void unregisterArenaSignEvents() {
+        if (arenaSignEvents == null) {
+            return;
+        }
+
+        HandlerList.unregisterAll(arenaSignEvents);
+        arenaSignEvents = null;
+    }
+
+    private void loadConfig() {
+        config = ConfigUtils.getConfig(plugin, "signs");
+        signLines = config.getStringList("lines");
+
+        for (GameState state : GameState.values()) {
+            gameStateToString.put(state, getRawString("game-states." + state.getPath()));
         }
     }
 
-    /**
-     * @author Despical
-     * <p>
-     * Created at 12.12.2025
-     */
-    private record SignBlockKey(String worldName, int x, int y, int z) {
+    private Component getMessageComponent(String path, Var... vars) {
+        return chatManager.parseMessage(getRawString(path), vars);
+    }
 
-        private static SignBlockKey from(Block block) {
-            Location location = block.getLocation();
-            return new SignBlockKey(
-                location.getWorld().getName(),
-                location.getBlockX(),
-                location.getBlockY(),
-                location.getBlockZ()
-            );
+    private String getRawString(String path) {
+        return config.getString(path, "");
+    }
+
+    private record BlockKey(UUID worldId, int x, int y, int z) {
+
+        private static BlockKey of(Block block) {
+            if (block == null) {
+                return null;
+            }
+
+            return new BlockKey(block.getWorld().getUID(), block.getX(), block.getY(), block.getZ());
         }
     }
 }
