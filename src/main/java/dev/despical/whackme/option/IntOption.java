@@ -9,7 +9,6 @@ public enum IntOption implements ConfigOption<Integer> {
 
     GAMEPLAY_TIME("game-settings.gameplay-time", 30),
     GAME_COOLDOWN("game-settings.cooldown-seconds", 0),
-    HIT_COOLDOWN_DELAY("game-settings.hit-cooldown-delay", 20),
     POINT_BLOCK_TICKS("point-blocks.ticks", 8),
     POINT_BLOCK_WAIT_MILLISECONDS("point-blocks.wait-milliseconds", 12);
 

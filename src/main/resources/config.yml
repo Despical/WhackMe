@@ -41,9 +41,6 @@ game-settings:
   gameplay-time: 30
   # Should players wait a certain amount of time before playing again Whack Me? (in seconds)
   cooldown-seconds: 0
-  # 20 = no hit cooldown, 4 is the default value.
-  # The smaller value the slower hits.
-  hit-cooldown-delay: 20
 
 # Display the config-driven in-game scoreboard from scoreboard.yml.
 scoreboard-enabled: true
@@ -56,35 +53,10 @@ chat-settings:
   # Keep game chat isolated from players outside the arena.
   separate-chat: true
 
-# Player settings
-player-settings:
-  # Should we clear player's active potion effects when player join the arena?
-  clear-effects-on-join: true
-  # Should we clear player's inventory on join and after leaving the game area?
-  # Also disable inventory manager option above before enabling this option.
-  clear-inventory-on-join: true
-
 # Should we enable our MySQL support?
 # See mysql.yml for detailed information.
 database:
   enabled: false
-
-# Enable Inventory Manager for your games? (VERY USEFUL feature for MULTI ARENA)
-# This saves inventory of players and restores it after player leaves arena.
-# Saved elements: max health, health, food, experience, full inventory, armor contents, and more.
-inventory-manager:
-  enabled: true
-  # Usable attributes:
-  #  game-mode, hunger, exp, level
-  #  health, max-health, health-scale
-  #  saturation, allow-flight, fire-ticks
-  do-not-restore:
-    - "max-health"
-    - "health-scale"
-
-# Should we check for updates on plugin start and after any admin join?
-update-notifier:
-  enabled: true
 
 # Commands which can be used in game, remove all of them to disable.
 whitelisted-commands:

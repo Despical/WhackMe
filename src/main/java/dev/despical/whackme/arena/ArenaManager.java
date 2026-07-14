@@ -58,11 +58,9 @@ public class ArenaManager {
             return false;
         }
 
-        if (!player.hasPermission("whackme.cooldown.bypass")) {
-            if (user.getCooldown("play_again") > 0) {
-                chatManager.sendMessage(player, "commands.wait-for-cooldown");
-                return false;
-            }
+        if (!player.hasPermission("whackme.cooldown.bypass") && user.getCooldown("play_again") > 0) {
+            chatManager.sendMessage(player, "commands.wait-for-cooldown");
+            return false;
         }
 
         PlayerJoinAttemptEvent event = plugin.getEventManager().playerJoinAttempt(player, game);

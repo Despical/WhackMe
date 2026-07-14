@@ -51,7 +51,7 @@ public class PointBlock extends BukkitRunnable {
     public PointBlock(PointHandler pointHandler, Location availableLocation) {
         this.pointHandler = pointHandler;
         this.arena = pointHandler.game().getArena();
-        this.multiplier = Math.min(plugin.getOptions().get(DoubleOption.POINT_BLOCK_Y_MULTIPLIER), plugin.getOptions().get(DoubleOption.POINT_BLOCK_MAX_Y_MULTIPLIER));
+        this.multiplier = Math.min(DoubleOption.POINT_BLOCK_Y_MULTIPLIER.value(), DoubleOption.POINT_BLOCK_MAX_Y_MULTIPLIER.value());
         this.availableLocation = availableLocation;
         this.pointBlockType = decidePointBlockType();
 
@@ -187,7 +187,7 @@ public class PointBlock extends BukkitRunnable {
                 return;
             }
 
-            handleEntityTeleportation(stand.getLocation().clone().add(0, multiplier, 0));
+            stand.teleportAsync(stand.getLocation().clone().add(0, multiplier, 0));
         } else {
             if (!waitedAbove) {
                 waitedMs--;
@@ -212,7 +212,7 @@ public class PointBlock extends BukkitRunnable {
                 return;
             }
 
-            handleEntityTeleportation(stand.getLocation().clone().subtract(0, multiplier, 0));
+            stand.teleportAsync(stand.getLocation().clone().subtract(0, multiplier, 0));
         }
     }
 
@@ -221,14 +221,6 @@ public class PointBlock extends BukkitRunnable {
             plugin.getServer().getScheduler().runTask(plugin, stand::remove);
         } else {
             stand.remove();
-        }
-    }
-
-    private void handleEntityTeleportation(Location destination) {
-        if (async) {
-            stand.teleportAsync(destination);
-        } else {
-            stand.teleport(destination);
         }
     }
 }
