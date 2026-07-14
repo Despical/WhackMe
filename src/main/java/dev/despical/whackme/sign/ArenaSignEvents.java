@@ -1,11 +1,12 @@
 package dev.despical.whackme.sign;
 
-import dev.despical.whackme.WhackMe;
 import dev.despical.whackme.arena.Arena;
+import dev.despical.whackme.event.ListenerAdapter;
+import dev.despical.whackme.user.User;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -16,15 +17,10 @@ import org.bukkit.inventory.EquipmentSlot;
  * <p>
  * Created at 12.12.2025
  */
-public class ArenaSignEvents implements Listener {
+@RequiredArgsConstructor
+public class ArenaSignEvents extends ListenerAdapter {
 
-    private final WhackMe plugin;
     private final SignManager signManager;
-
-    public ArenaSignEvents(WhackMe plugin, SignManager signManager) {
-        this.plugin = plugin;
-        this.signManager = signManager;
-    }
 
     @EventHandler
     public void onSignDestroy(BlockBreakEvent event) {
@@ -36,6 +32,7 @@ public class ArenaSignEvents implements Listener {
         }
 
         Player player = event.getPlayer();
+
         if (!player.hasPermission("whackme.sign.break")) {
             event.setCancelled(true);
 
@@ -49,12 +46,17 @@ public class ArenaSignEvents implements Listener {
 
     @EventHandler
     public void onJoinAttempt(PlayerInteractEvent event) {
-        if (event.getHand() != EquipmentSlot.HAND) {
+        if (event.getHand() != EquipmentSlot.HAND || event.getAction() != Action.RIGHT_CLICK_BLOCK) {
             return;
         }
 
-        ArenaSign arenaSign = signManager.getArenaSignByBlock(event.getClickedBlock());
-        if (event.getAction() != Action.RIGHT_CLICK_BLOCK || arenaSign == null) {
+        Block block = event.getClickedBlock();
+        if (block == null) {
+            return;
+        }
+
+        ArenaSign arenaSign = signManager.getArenaSignByBlock(block);
+        if (arenaSign == null) {
             return;
         }
 
@@ -65,6 +67,7 @@ public class ArenaSignEvents implements Listener {
             return;
         }
 
-        plugin.getArenaManager().joinAttempt(plugin.getUserManager().getUser(event.getPlayer()), arena);
+        User user = userManager.getUser(event.getPlayer());
+        arenaManager.joinAttempt(user, arena);
     }
 }
