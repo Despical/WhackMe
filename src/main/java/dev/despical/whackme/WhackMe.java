@@ -83,6 +83,7 @@ public class WhackMe extends JavaPlugin {
     private BossBarConfig bossBarConfig;
     private SoundManager soundManager;
     private Radio radio;
+    private ArenaDataSaver arenaDataSaver;
     private Metrics metrics;
 
     @Override
@@ -97,8 +98,7 @@ public class WhackMe extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        new ArenaDataSaver(this).saveAllArenas();
-
+        arenaDataSaver.saveAllArenas();
         arenaManager.handleDisable();
         database.shutdown();
         metrics.shutdown();
@@ -128,6 +128,7 @@ public class WhackMe extends JavaPlugin {
         arenaManager = new ArenaManager(this);
         leaderboardManager = new LeaderboardManager(this);
         radio = createRadio();
+        arenaDataSaver = new ArenaDataSaver(this);
 
         validateArenasMissingSongs();
 
