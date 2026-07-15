@@ -1,70 +1,71 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #                                                             #
 #                          Whack Me                           #
-#                          Despical                           #
+#                         by Despical                         #
 #                                                             #
-#                https://discord.gg/uXVU8jmtpU                #
-#            https://www.buymeacoffee.com/despical            #
+#             https://github.com/Despical/WhackMe             #
+#             https://docs.despical.dev/whack-me              #
 #                                                             #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-# Point block settings.
-point-blocks:
-  # Entity removal is still going to be executed in main thread.
-  # This option may decrease the amount of lag if there are multiple
-  # instances running at the same time.
-  run-async: false
-  # Period of point handler thread. If you decrease that value the blocks
-  # will move faster and if you increase the period then they'll move slower.
-  # This option should be edited considering Y multiplier.
-  # Best way to make blocks move faster is increasing multiplier below.
-  ticks: 8
-  # Point blocks are maximum raised by total of 0.65 in Y axis.
-  y-multiplier: 0.05
-  # Max Y multiplier for point blocks.
-  max-y-multiplier: 0.64
-  # How many milliseconds should any point block wait in the air?
-  wait-milliseconds: 12
-  # Point blocks can be rotated around the vertical axis.
-  rotations:
-    # Values below are represented to yaw of point blocks in the game.
-    punch-me: "0:0:0:0:0:0:0:0"
-    dont-punch-me: "0:0:0:0:0:0:0:0"
-    ouch: "0:0:0:0:0:0:0:0"
-# Game settings
 game-settings:
-  # Should we block every not Whack Me associated commands in game?
+  # If enabled, players in a game can only use commands permitted below.
   block-commands: true
-  # Should we block the in-game leave command?
+
+  # If enabled, the in-game leave command is blocked by the command policy.
   block-leave-command: false
-  # The gameplay time for each arena. Default is 30 seconds.
+
+  # Duration, in seconds, of each Whack Me game.
   gameplay-time: 30
-  # Should players wait a certain amount of time before playing again Whack Me? (in seconds)
+
+  # Cooldown, in seconds, before a player can join another game.
+  # Set this to 0 to disable the cooldown.
   cooldown-seconds: 0
 
-# Display the config-driven in-game scoreboard from scoreboard.yml.
+# If enabled, players see the config-driven scoreboard while playing.
+# Arenas can still disable their own scoreboard separately.
 scoreboard-enabled: true
 
-# Should we format the chat messages?
-# See messages.yml to change format.
 chat-settings:
-  disable-chat-in-game: false
+  # Whether the plugin should format arena chat using messages.yml formats.
+  # If disabled, Minecraft's standard chat formatting is used.
   enable-formatting: true
-  # Keep game chat isolated from players outside the arena.
+
+  # When enabled, arena chat is isolated from players outside the arena.
   separate-chat: true
 
-# Should we enable our MySQL support?
-# See mysql.yml for detailed information.
+  # When enabled, players who are actively in a game cannot send chat messages.
+  disable-chat-in-game: false
+
 database:
+  # If enabled, player statistics are stored in MySQL instead of flat files.
+  # Configure the connection details in mysql.yml before enabling this option.
   enabled: false
 
-# Commands which can be used in game, remove all of them to disable.
-whitelisted-commands:
-  - me
-  - help
+command-settings:
+  # Commands players may still use while playing when command blocking is enabled.
+  # Use command roots such as "me" to permit the command with any arguments.
+  allowed-commands:
+    - "me"
+    - "help"
 
-# The permission that player needs to join to game.
-# Leave the section empty if you don't want to set.
+# The permission a player must have to join a game.
+# Leave this empty to allow every player to join.
 join-permission: ""
 
-# No way! You've reached the end! But... where's the dragon!?
+update-notifier:
+  # If enabled, the plugin checks for newer releases on startup.
+  enabled: true
+
+# Enabling debug mode gives administrators access to advanced troubleshooting commands.
+# Keep this disabled on production servers unless you are diagnosing an issue.
+debug: false
+
+# Event profiling measures how long Whack Me event listeners take to execute.
+# It is useful for diagnosing lag, but is normally unnecessary during regular gameplay.
+event-profiling:
+  enabled: false
+
+  # If enabled, every profiled event execution is logged with timing details.
+  # This can heavily spam the console, so only enable it for short diagnostics.
+  verbose: false
