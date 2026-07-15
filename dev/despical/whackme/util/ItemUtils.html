@@ -53,8 +53,14 @@ loadScripts(document, 'script');</script>
 <div class="toc-header">Contents&nbsp;<input type="text" class="filter-input" disabled placeholder="Filter contents (type .)" aria-label="Filter table of contents" autocomplete="off" spellcheck="false"><input type="reset" class="reset-filter" disabled tabindex="-1" value="Reset"></div>
 <ol class="toc-list" tabindex="-1">
 <li><a href="#" tabindex="0">Description</a></li>
+<li><a href="#field-summary" tabindex="0">Field Summary</a></li>
 <li><a href="#constructor-summary" tabindex="0">Constructor Summary</a></li>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
+<li><a href="#field-detail" tabindex="0">Field Details</a>
+<ol class="toc-list">
+<li><a href="#EMPTY_ARMORS" tabindex="0">EMPTY_ARMORS</a></li>
+</ol>
+</li>
 <li><a href="#constructor-detail" tabindex="0">Constructor Details</a>
 <ol class="toc-list">
 <li><a href="#%3Cinit%3E()" tabindex="0">ItemUtils()</a></li>
@@ -63,8 +69,8 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
 <li><a href="#applyPlayerProfileIfSkull(org.bukkit.OfflinePlayer,org.bukkit.inventory.ItemStack)" tabindex="0">applyPlayerProfileIfSkull(OfflinePlayer, ItemStack)</a></li>
+<li><a href="#applyArenaRecordResetHead(org.bukkit.inventory.ItemStack,java.lang.String)" tabindex="0">applyArenaRecordResetHead(ItemStack, String)</a></li>
 <li><a href="#applyProfileIfSkull(com.destroystokyo.paper.profile.PlayerProfile,org.bukkit.inventory.ItemStack)" tabindex="0">applyProfileIfSkull(PlayerProfile, ItemStack)</a></li>
-<li><a href="#applyPointBlockLookHead(org.bukkit.inventory.ItemStack)" tabindex="0">applyPointBlockLookHead(ItemStack)</a></li>
 <li><a href="#formatItemStack(dev.despical.fileitems.SpecialItem,dev.despical.whackme.util.Var...)" tabindex="0">formatItemStack(SpecialItem, Var...)</a></li>
 </ol>
 </li>
@@ -87,6 +93,21 @@ loadScripts(document, 'script');</script>
 </section>
 <section class="summary">
 <ul class="summary-list">
+<!-- =========== FIELD SUMMARY =========== -->
+<li>
+<section class="field-summary" id="field-summary">
+<h2>Field Summary</h2>
+<div class="caption"><span>Fields</span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Field</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>static final org.bukkit.inventory.ItemStack[]</code></div>
+<div class="col-second even-row-color"><code><a href="#EMPTY_ARMORS" class="member-name-link">EMPTY_ARMORS</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+</div>
+</section>
+</li>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
 <li>
 <section class="constructor-summary" id="constructor-summary">
@@ -112,11 +133,12 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#applyPlayerProfileIfSkull(org.bukkit.OfflinePlayer,org.bukkit.inventory.ItemStack)" class="member-name-link">applyPlayerProfileIfSkull</a><wbr>(org.bukkit.OfflinePlayer&nbsp;player,
- org.bukkit.inventory.ItemStack&nbsp;item)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#applyArenaRecordResetHead(org.bukkit.inventory.ItemStack,java.lang.String)" class="member-name-link">applyArenaRecordResetHead</a><wbr>(org.bukkit.inventory.ItemStack&nbsp;item,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;recordHolderName)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#applyPointBlockLookHead(org.bukkit.inventory.ItemStack)" class="member-name-link">applyPointBlockLookHead</a><wbr>(org.bukkit.inventory.ItemStack&nbsp;item)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#applyPlayerProfileIfSkull(org.bukkit.OfflinePlayer,org.bukkit.inventory.ItemStack)" class="member-name-link">applyPlayerProfileIfSkull</a><wbr>(org.bukkit.OfflinePlayer&nbsp;player,
+ org.bukkit.inventory.ItemStack&nbsp;item)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#applyProfileIfSkull(com.destroystokyo.paper.profile.PlayerProfile,org.bukkit.inventory.ItemStack)" class="member-name-link">applyProfileIfSkull</a><wbr>(com.destroystokyo.paper.profile.PlayerProfile&nbsp;profile,
@@ -138,6 +160,22 @@ loadScripts(document, 'script');</script>
 </section>
 <section class="details">
 <ul class="details-list">
+<!-- ============ FIELD DETAIL =========== -->
+<li>
+<section class="field-details" id="field-detail">
+<h2>Field Details</h2>
+<ul class="member-list">
+<li>
+<section class="detail" id="EMPTY_ARMORS">
+<h3>EMPTY_ARMORS</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">org.bukkit.inventory.ItemStack[]</span>&nbsp;<span class="element-name">EMPTY_ARMORS</span></div>
+</div>
+</section>
+</li>
+</ul>
+</section>
+</li>
 <!-- ========= CONSTRUCTOR DETAIL ======== -->
 <li>
 <section class="constructor-details" id="constructor-detail">
@@ -169,19 +207,20 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="applyArenaRecordResetHead(org.bukkit.inventory.ItemStack,java.lang.String)">
+<h3>applyArenaRecordResetHead</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">applyArenaRecordResetHead</span><wbr><span class="parameters">(org.bukkit.inventory.ItemStack&nbsp;item,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;recordHolderName)</span></div>
+</div>
+</section>
+</li>
+<li>
 <section class="detail" id="applyProfileIfSkull(com.destroystokyo.paper.profile.PlayerProfile,org.bukkit.inventory.ItemStack)">
 <h3>applyProfileIfSkull</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">applyProfileIfSkull</span><wbr><span class="parameters">(com.destroystokyo.paper.profile.PlayerProfile&nbsp;profile,
  org.bukkit.inventory.ItemStack&nbsp;item)</span></div>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="applyPointBlockLookHead(org.bukkit.inventory.ItemStack)">
-<h3>applyPointBlockLookHead</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">applyPointBlockLookHead</span><wbr><span class="parameters">(org.bukkit.inventory.ItemStack&nbsp;item)</span></div>
 </div>
 </section>
 </li>

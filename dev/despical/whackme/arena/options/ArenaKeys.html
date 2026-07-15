@@ -64,6 +64,13 @@ loadScripts(document, 'script');</script>
 <li><a href="#END_LOCATION" tabindex="0">END_LOCATION</a></li>
 <li><a href="#MINIMUM_POINTS" tabindex="0">MINIMUM_POINTS</a></li>
 <li><a href="#MAXIMUM_POINTS" tabindex="0">MAXIMUM_POINTS</a></li>
+<li><a href="#POINT_BLOCKS_RUN_ASYNC" tabindex="0">POINT_BLOCKS_RUN_ASYNC</a></li>
+<li><a href="#POINT_BLOCK_TICKS" tabindex="0">POINT_BLOCK_TICKS</a></li>
+<li><a href="#POINT_BLOCK_Y_MULTIPLIER" tabindex="0">POINT_BLOCK_Y_MULTIPLIER</a></li>
+<li><a href="#POINT_BLOCK_MAX_Y_MULTIPLIER" tabindex="0">POINT_BLOCK_MAX_Y_MULTIPLIER</a></li>
+<li><a href="#POINT_BLOCK_WAIT_TICKS" tabindex="0">POINT_BLOCK_WAIT_TICKS</a></li>
+<li><a href="#ARENA_SCOREBOARD_ENABLED" tabindex="0">ARENA_SCOREBOARD_ENABLED</a></li>
+<li><a href="#ARENA_BOSS_BAR_ENABLED" tabindex="0">ARENA_BOSS_BAR_ENABLED</a></li>
 <li><a href="#RECORD_HOLDER" tabindex="0">RECORD_HOLDER</a></li>
 <li><a href="#RECORD_SCORE" tabindex="0">RECORD_SCORE</a></li>
 <li><a href="#PORTAL_LOCATIONS" tabindex="0">PORTAL_LOCATIONS</a></li>
@@ -113,6 +120,12 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Field</div>
 <div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>static final <a href="ArenaOption.html" title="class in dev.despical.whackme.arena.options">ArenaOption</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>&gt;</code></div>
+<div class="col-second even-row-color"><code><a href="#ARENA_BOSS_BAR_ENABLED" class="member-name-link">ARENA_BOSS_BAR_ENABLED</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static final <a href="ArenaOption.html" title="class in dev.despical.whackme.arena.options">ArenaOption</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>&gt;</code></div>
+<div class="col-second odd-row-color"><code><a href="#ARENA_SCOREBOARD_ENABLED" class="member-name-link">ARENA_SCOREBOARD_ENABLED</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static final <a href="ArenaOption.html" title="class in dev.despical.whackme.arena.options">ArenaOption</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
 <div class="col-second even-row-color"><code><a href="#ARENA_SONG" class="member-name-link">ARENA_SONG</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
@@ -134,27 +147,42 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code>static final <a href="ArenaOption.html" title="class in dev.despical.whackme.arena.options">ArenaOption</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;</code></div>
 <div class="col-second even-row-color"><code><a href="#MINIMUM_POINTS" class="member-name-link">MINIMUM_POINTS</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static final <a href="ArenaOption.html" title="class in dev.despical.whackme.arena.options">ArenaOption</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&gt;</code></div>
+<div class="col-second odd-row-color"><code><a href="#POINT_BLOCK_MAX_Y_MULTIPLIER" class="member-name-link">POINT_BLOCK_MAX_Y_MULTIPLIER</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>static final <a href="ArenaOption.html" title="class in dev.despical.whackme.arena.options">ArenaOption</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;</code></div>
+<div class="col-second even-row-color"><code><a href="#POINT_BLOCK_TICKS" class="member-name-link">POINT_BLOCK_TICKS</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static final <a href="ArenaOption.html" title="class in dev.despical.whackme.arena.options">ArenaOption</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;</code></div>
+<div class="col-second odd-row-color"><code><a href="#POINT_BLOCK_WAIT_TICKS" class="member-name-link">POINT_BLOCK_WAIT_TICKS</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>static final <a href="ArenaOption.html" title="class in dev.despical.whackme.arena.options">ArenaOption</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&gt;</code></div>
+<div class="col-second even-row-color"><code><a href="#POINT_BLOCK_Y_MULTIPLIER" class="member-name-link">POINT_BLOCK_Y_MULTIPLIER</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>static final <a href="ArenaOption.html" title="class in dev.despical.whackme.arena.options">ArenaOption</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../blocks/PointBlock.html" title="class in dev.despical.whackme.arena.blocks">PointBlock</a>&gt;&gt;</code></div>
 <div class="col-second odd-row-color"><code><a href="#POINT_BLOCKS" class="member-name-link">POINT_BLOCKS</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>static final <a href="ArenaOption.html" title="class in dev.despical.whackme.arena.options">ArenaOption</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;org.bukkit.Location&gt;&gt;</code></div>
-<div class="col-second even-row-color"><code><a href="#PORTAL_LOCATIONS" class="member-name-link">PORTAL_LOCATIONS</a></code></div>
+<div class="col-first even-row-color"><code>static final <a href="ArenaOption.html" title="class in dev.despical.whackme.arena.options">ArenaOption</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>&gt;</code></div>
+<div class="col-second even-row-color"><code><a href="#POINT_BLOCKS_RUN_ASYNC" class="member-name-link">POINT_BLOCKS_RUN_ASYNC</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>static final <a href="ArenaOption.html" title="class in dev.despical.whackme.arena.options">ArenaOption</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>&gt;</code></div>
-<div class="col-second odd-row-color"><code><a href="#READY" class="member-name-link">READY</a></code></div>
+<div class="col-first odd-row-color"><code>static final <a href="ArenaOption.html" title="class in dev.despical.whackme.arena.options">ArenaOption</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;org.bukkit.Location&gt;&gt;</code></div>
+<div class="col-second odd-row-color"><code><a href="#PORTAL_LOCATIONS" class="member-name-link">PORTAL_LOCATIONS</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>static final <a href="ArenaOption.html" title="class in dev.despical.whackme.arena.options">ArenaOption</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second even-row-color"><code><a href="#RECORD_HOLDER" class="member-name-link">RECORD_HOLDER</a></code></div>
+<div class="col-first even-row-color"><code>static final <a href="ArenaOption.html" title="class in dev.despical.whackme.arena.options">ArenaOption</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>&gt;</code></div>
+<div class="col-second even-row-color"><code><a href="#READY" class="member-name-link">READY</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>static final <a href="ArenaOption.html" title="class in dev.despical.whackme.arena.options">ArenaOption</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;</code></div>
-<div class="col-second odd-row-color"><code><a href="#RECORD_SCORE" class="member-name-link">RECORD_SCORE</a></code></div>
+<div class="col-first odd-row-color"><code>static final <a href="ArenaOption.html" title="class in dev.despical.whackme.arena.options">ArenaOption</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second odd-row-color"><code><a href="#RECORD_HOLDER" class="member-name-link">RECORD_HOLDER</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>static final <a href="ArenaOption.html" title="class in dev.despical.whackme.arena.options">ArenaOption</a><wbr>&lt;org.bukkit.inventory.ItemStack&gt;</code></div>
-<div class="col-second even-row-color"><code><a href="#RED_BLOCK_ITEM" class="member-name-link">RED_BLOCK_ITEM</a></code></div>
+<div class="col-first even-row-color"><code>static final <a href="ArenaOption.html" title="class in dev.despical.whackme.arena.options">ArenaOption</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;</code></div>
+<div class="col-second even-row-color"><code><a href="#RECORD_SCORE" class="member-name-link">RECORD_SCORE</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>static final <a href="ArenaOption.html" title="class in dev.despical.whackme.arena.options">ArenaOption</a><wbr>&lt;org.bukkit.Location&gt;</code></div>
-<div class="col-second odd-row-color"><code><a href="#START_LOCATION" class="member-name-link">START_LOCATION</a></code></div>
+<div class="col-first odd-row-color"><code>static final <a href="ArenaOption.html" title="class in dev.despical.whackme.arena.options">ArenaOption</a><wbr>&lt;org.bukkit.inventory.ItemStack&gt;</code></div>
+<div class="col-second odd-row-color"><code><a href="#RED_BLOCK_ITEM" class="member-name-link">RED_BLOCK_ITEM</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>static final <a href="ArenaOption.html" title="class in dev.despical.whackme.arena.options">ArenaOption</a><wbr>&lt;org.bukkit.Location&gt;</code></div>
+<div class="col-second even-row-color"><code><a href="#START_LOCATION" class="member-name-link">START_LOCATION</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -250,6 +278,62 @@ loadScripts(document, 'script');</script>
 <h3>MAXIMUM_POINTS</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="ArenaOption.html" title="class in dev.despical.whackme.arena.options">ArenaOption</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;</span>&nbsp;<span class="element-name">MAXIMUM_POINTS</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="POINT_BLOCKS_RUN_ASYNC">
+<h3>POINT_BLOCKS_RUN_ASYNC</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="ArenaOption.html" title="class in dev.despical.whackme.arena.options">ArenaOption</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>&gt;</span>&nbsp;<span class="element-name">POINT_BLOCKS_RUN_ASYNC</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="POINT_BLOCK_TICKS">
+<h3>POINT_BLOCK_TICKS</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="ArenaOption.html" title="class in dev.despical.whackme.arena.options">ArenaOption</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;</span>&nbsp;<span class="element-name">POINT_BLOCK_TICKS</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="POINT_BLOCK_Y_MULTIPLIER">
+<h3>POINT_BLOCK_Y_MULTIPLIER</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="ArenaOption.html" title="class in dev.despical.whackme.arena.options">ArenaOption</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&gt;</span>&nbsp;<span class="element-name">POINT_BLOCK_Y_MULTIPLIER</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="POINT_BLOCK_MAX_Y_MULTIPLIER">
+<h3>POINT_BLOCK_MAX_Y_MULTIPLIER</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="ArenaOption.html" title="class in dev.despical.whackme.arena.options">ArenaOption</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&gt;</span>&nbsp;<span class="element-name">POINT_BLOCK_MAX_Y_MULTIPLIER</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="POINT_BLOCK_WAIT_TICKS">
+<h3>POINT_BLOCK_WAIT_TICKS</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="ArenaOption.html" title="class in dev.despical.whackme.arena.options">ArenaOption</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;</span>&nbsp;<span class="element-name">POINT_BLOCK_WAIT_TICKS</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="ARENA_SCOREBOARD_ENABLED">
+<h3>ARENA_SCOREBOARD_ENABLED</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="ArenaOption.html" title="class in dev.despical.whackme.arena.options">ArenaOption</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>&gt;</span>&nbsp;<span class="element-name">ARENA_SCOREBOARD_ENABLED</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="ARENA_BOSS_BAR_ENABLED">
+<h3>ARENA_BOSS_BAR_ENABLED</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="ArenaOption.html" title="class in dev.despical.whackme.arena.options">ArenaOption</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>&gt;</span>&nbsp;<span class="element-name">ARENA_BOSS_BAR_ENABLED</span></div>
 </div>
 </section>
 </li>
