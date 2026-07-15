@@ -8,6 +8,10 @@
 #                                                             #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
+# Choose the storage method for player data. Supported values are flat or mysql.
+# Please note that data migration is not supported, and changes will only take effect after a server restart or plugin reload.
+database: flat
+
 game-settings:
   # If enabled, players in a game can only use commands permitted below.
   block-commands: true
@@ -37,35 +41,30 @@ chat-settings:
   # When enabled, players who are actively in a game cannot send chat messages.
   disable-chat-in-game: false
 
-database:
-  # If enabled, player statistics are stored in MySQL instead of flat files.
-  # Configure the connection details in mysql.yml before enabling this option.
-  enabled: false
-
 command-settings:
-  # Commands players may still use while playing when command blocking is enabled.
-  # Use command roots such as "me" to permit the command with any arguments.
+  # When enabled, players who are in an arena can only use commands listed below.
+  disable-commands-while-playing: true
+
+  # Commands players may still use while playing.
+  # Use command roots such as "msg" to allow all arguments, or subcommands such as "tr leave".
   allowed-commands:
-    - "me"
-    - "help"
+    - "tr leave"
+    - "tntrun leave"
+    - "tr stats"
+    - "tntrun stats"
 
-# The permission a player must have to join a game.
-# Leave this empty to allow every player to join.
-join-permission: ""
+# If enabled, the plugin checks for newer releases on startup.
+update-notifier: true
 
-update-notifier:
-  # If enabled, the plugin checks for newer releases on startup.
-  enabled: true
-
-# Enabling debug mode gives administrators access to advanced troubleshooting commands.
-# Keep this disabled on production servers unless you are diagnosing an issue.
+# Enabling debug mode allows administrators to access advanced troubleshooting commands.
+# Keep this disabled on production servers unless you are actively testing or diagnosing an issue.
 debug: false
 
-# Event profiling measures how long Whack Me event listeners take to execute.
-# It is useful for diagnosing lag, but is normally unnecessary during regular gameplay.
+# Event profiling measures how long TNT Run event listeners take to execute.
+# Useful for diagnosing lag or slow integrations, but usually not needed during normal gameplay.
 event-profiling:
   enabled: false
 
   # If enabled, every profiled event execution is logged with timing details.
-  # This can heavily spam the console, so only enable it for short diagnostics.
+  # This can spam the console heavily, so only enable it for short debugging sessions.
   verbose: false

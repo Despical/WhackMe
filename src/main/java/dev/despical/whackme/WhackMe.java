@@ -17,6 +17,7 @@ import dev.despical.whackme.bossbar.BossBarConfig;
 import dev.despical.whackme.chat.ChatManager;
 import dev.despical.whackme.command.PlayingCommandPolicy;
 import dev.despical.whackme.database.Database;
+import dev.despical.whackme.database.DatabaseType;
 import dev.despical.whackme.database.FlatFileStorage;
 import dev.despical.whackme.database.MySQLStorage;
 import dev.despical.whackme.event.GameEvents;
@@ -41,6 +42,7 @@ import dev.despical.whackme.util.Var;
 import lombok.Getter;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
+import org.bstats.charts.SingleLineChart;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -160,11 +162,16 @@ public class WhackMe extends JavaPlugin {
     }
 
     private Database createDatabase() {
-        if (options.isEnabled(BooleanOption.DATABASE_ENABLED)) {
-            return new MySQLStorage();
-        }
+        String databaseType = getConfig().getString("database");
 
-        return new FlatFileStorage();
+        return switch (DatabaseType.getByName(databaseType)) {
+            case FLAT_FILE -> new FlatFileStorage();
+            case MYSQL -> new MySQLStorage();
+            case null -> {
+                getLogger().warning("Invalid database type. Using flat file storage.");
+                yield new FlatFileStorage();
+            }
+        };
     }
 
     private Radio createRadio() {
@@ -227,9 +234,17 @@ public class WhackMe extends JavaPlugin {
 
     private void initializeMetrics() {
         metrics = new Metrics(this, 15722);
-        metrics.addCustomChart(new SimplePie("database_enabled", () -> options.isEnabled(BooleanOption.DATABASE_ENABLED) ? "Enabled" : "Disabled"));
+        metrics.addCustomChart(new SimplePie("database_enabled", this::resolveMetricsDatabaseType));
         metrics.addCustomChart(new SimplePie("update_notifier", () -> options.isEnabled(BooleanOption.UPDATE_NOTIFIER) ? "Enabled" : "Disabled"));
         metrics.addCustomChart(new SimplePie("noteblockapi_enabled", () -> isPluginEnabled("NoteBlockAPI") ? "yes" : "no"));
+        metrics.addCustomChart(new SingleLineChart("arenas_total", () -> arenaRegistry.getArenas().size()));
+        metrics.addCustomChart(new SingleLineChart("arenas_ready", () -> (int) arenaRegistry.getArenas().stream().filter(arena -> arena.getOption(ArenaKeys.READY)).count()));
+    }
+
+    private String resolveMetricsDatabaseType() {
+        String configured = getConfig().getString("database", "flat");
+        DatabaseType type = DatabaseType.getByName(configured);
+        return type != null ? type.name().toLowerCase(Locale.ENGLISH) : configured.toLowerCase(Locale.ENGLISH);
     }
 
     private boolean isPluginEnabled(String pluginName) {

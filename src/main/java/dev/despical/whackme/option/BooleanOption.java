@@ -12,12 +12,11 @@ public enum BooleanOption implements ConfigOption<Boolean> {
     DISABLE_CHAT_IN_GAME("chat-settings.disable-chat-in-game", false),
     ENABLE_CHAT_FORMATTING("chat-settings.enable-formatting", true),
     BLOCK_LEAVE_COMMAND("game-settings.block-leave-command", false),
-    DATABASE_ENABLED("database.enabled", false),
     SCOREBOARD_ENABLED("scoreboard-enabled", true),
     DEBUG("debug", false),
     EVENT_PROFILING_ENABLED("event-profiling.enabled", false),
     EVENT_PROFILING_VERBOSE("event-profiling.verbose", false),
-    UPDATE_NOTIFIER("update-notifier.enabled", true);
+    UPDATE_NOTIFIER("update-notifier", true);
 
     private final String path;
     private final boolean defaultValue;
