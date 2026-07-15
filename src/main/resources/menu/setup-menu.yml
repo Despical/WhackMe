@@ -1,5 +1,60 @@
 title: "<gradient:#FF5252:#D50000><bold>GAME SETUP</bold></gradient> <dark_gray><bold>></bold></dark_gray> <gold><bold>%arena_id%</bold>"
-point-blocks-title: "<gradient:#FFCA28:#FF7043><bold>POINT BLOCK SETTINGS</bold></gradient> <dark_gray><bold>></bold></dark_gray> <gold><bold>%arena_id%</bold>"
+
+point-block-settings-dialog:
+  title: "<gradient:#FFCA28:#FF7043><bold>Point Block Settings</bold></gradient>"
+  external-title: "<gold>Point Blocks <dark_gray>• <yellow>%arena_id%"
+  description: "<#FFCA28><bold>Select a setting</bold> <gray>to edit for <white>%arena_id%</white>.<newline><gray>Every value below is stored separately for this arena."
+  enabled-value: "Enabled"
+  disabled-value: "Disabled"
+  groups:
+    active-blocks:
+      title: "<#FFB300><bold>Active Block Limits"
+      description: "<#FFB300><bold>Minimum</bold><newline><gray>The lowest amount kept visible.<newline><newline><#FF7043><bold>Maximum</bold><newline><gray>The hard limit, capped by portal count."
+    vertical-movement:
+      title: "<#66BB6A><bold>Vertical Movement"
+      description: "<#66BB6A><bold>Movement Step</bold><newline><gray>Controls how quickly blocks move.<newline><newline><#26C6DA><bold>Maximum Step</bold><newline><gray>Sets the safety cap for that speed."
+  options:
+    minimum-points:
+      title: "<#FFB300><bold>Minimum Active Blocks"
+      description: "<gray>The lowest number of point blocks the arena tries to keep visible. This value cannot exceed the arena's portal count."
+      input-label: "<#FFB300><bold>Minimum"
+    maximum-points:
+      title: "<#FF7043><bold>Maximum Active Blocks"
+      description: "<gray>The hard limit for simultaneously active point blocks. This value is capped by the arena's portal count."
+      input-label: "<#FF7043><bold>Maximum"
+    y-multiplier:
+      title: "<#66BB6A><bold>Vertical Movement Step"
+      description: "<gray>Controls how far a point block moves vertically each tick. Higher values make blocks rise and fall faster."
+      input-label: "<#66BB6A><bold>Step"
+    max-y-multiplier:
+      title: "<#26C6DA><bold>Maximum Vertical Step"
+      description: "<gray>Sets the safety cap applied to vertical movement speed. The movement step cannot exceed this value."
+      input-label: "<#26C6DA><bold>Maximum"
+    wait-ticks:
+      title: "<#AB47BC><bold>Peak Wait"
+      description: "<gray>Controls how many <#AB47BC><bold>ticks</bold> <gray>a point block remains <#FFCA28>fully visible <gray>before it starts descending."
+      input-label: "<#AB47BC><bold>Peak Wait"
+    handler-ticks:
+      title: "<#42A5F5><bold>Spawn Check Period"
+      description: "<gray>Sets the <#42A5F5><bold>delay in ticks</bold> <gray>between spawn checks. <#00E676>Lower values <gray>replace missing blocks more frequently."
+      input-label: "<#42A5F5><bold>Period"
+    run-async:
+      title: "<#EF5350><bold>Asynchronous Movement"
+      description: "<gray>Moves point blocks outside the <#EF5350><bold>main thread</bold> <gray>to reduce its workload. <#FFCA28>Entity cleanup <gray>always remains synchronous."
+      input-label: "<#EF5350><bold>Enabled"
+  buttons:
+    save:
+      label: "<#00E676><bold>Save"
+      tooltip: "<gray>Apply this value and return to point block settings."
+    back:
+      label: "<#FFCA28><bold>Back"
+      tooltip: "<gray>Discard this change and return to point block settings."
+    exit:
+      label: "<#FF5252><bold>Back to Setup"
+      tooltip: "<gray>Return to the arena setup menu."
+    appearance:
+      label: "<#90CAF9><bold>Customize Point Block Looks"
+      tooltip: "<gray>Open the inventory menu for green, red, and hit-state block items."
 
 items:
   game-locations:
@@ -46,28 +101,19 @@ items:
       - "<#B0BEC5>  the game has been completed."
 
   point-blocks:
-    name: "<#FFAB00><bold>Configure Point Blocks"
-    material: GLOWSTONE_DUST
-    lore:
-      - "<#2F2F2F>• <#FFA726>CLICK <#BDBDBD>to open amount settings"
-      - ""
-      - "<#2F2F2F>• <#B0BEC5>Controls how many scoring blocks"
-      - "<#B0BEC5>  can appear during the round."
+    name: "<#FFAB00><bold>Point Block Settings"
+    material: LIME_TERRACOTTA
+    lore: []
 
   point-blocks-locked:
-    name: "<#FF5252><bold>Configure Point Blocks"
+    name: "<#FF5252><bold>Point Block Settings"
     material: BARRIER
     message: "<#FF5252>⚠ <#BDBDBD>You need to set <#BA68C8>portal locations <#BDBDBD>before editing point block amounts."
-    lore:
-      - "<#2F2F2F>• <#EF5350>CLICK <#BDBDBD>after portal locations are ready"
-      - ""
-      - "<#2F2F2F>• <#B0BEC5>First define the playable portal layout"
-      - "<#B0BEC5>  for this arena."
+    lore: []
 
   point-block-appearance:
     name: "<#90CAF9><bold>Customize Point Block Looks"
-    material: PLAYER_HEAD
-    use-offline-mode-reset-head: true
+    material: LIME_TERRACOTTA
     green-name: "<!i><#00E676><bold>Green Block"
     red-name: "<!i><#FF5252><bold>Red Block"
     gray-name: "<!i><#B0BEC5><bold>Gray Block"
@@ -84,6 +130,64 @@ items:
       - ""
       - "<!i><#2F2F2F>• <#B0BEC5>Assign custom items for the green,"
       - "<!i><#B0BEC5>  red, and gray point block states."
+
+  other-settings:
+    name: "<#7E57C2><bold>Other Arena Settings"
+    material: BOOK
+    lore:
+      - "<#2F2F2F>• <#9575CD>CLICK <#BDBDBD>to manage display settings"
+      - ""
+      - "<#2F2F2F>• <#B0BEC5>Configure the arena scoreboard"
+      - "<#B0BEC5>  and boss bar separately."
+
+  scoreboard-toggle:
+    name: "<#00BCD4><bold>Arena Scoreboard"
+    material: NAME_TAG
+    lore:
+      - "<#2F2F2F>• <#2196F3>CLICK <#BDBDBD>to toggle"
+      - ""
+      - "<#2F2F2F>• <#B0BEC5>Status: %scoreboard_status%"
+      - ""
+      - "<#B0BEC5>Show the in-game scoreboard"
+      - "<#B0BEC5>for players in this arena."
+
+  bossbar-toggle:
+    name: "<#FF7043><bold>Arena Boss Bar"
+    material: ORANGE_DYE
+    lore:
+      - "<#2F2F2F>• <#2196F3>CLICK <#BDBDBD>to toggle"
+      - ""
+      - "<#2F2F2F>• <#B0BEC5>Status: %bossbar_status%"
+      - ""
+      - "<#B0BEC5>Show the configured boss bar"
+      - "<#B0BEC5>for players in this arena."
+
+  arena-record-reset:
+    name: "<#FF5252><bold>Reset Arena Record"
+    material: PLAYER_HEAD
+    lore:
+      - "<#2F2F2F>• <#FF5252>CLICK <#BDBDBD>to open confirmation"
+      - ""
+      - "<#2F2F2F>• <#B0BEC5>Record Holder: <#81D4FA>%record_holder%"
+      - "<#2F2F2F>• <#B0BEC5>Record Score: <#FFD54F>%record_score%"
+      - ""
+      - "<#EF9A9A>Clears only this arena's"
+      - "<#EF9A9A>record holder and score."
+
+  confirm-arena-record-reset:
+    name: "<#00E676><bold>Confirm Reset"
+    material: LIME_DYE
+    message: "<#00E676>✔ <#BDBDBD>The record for arena <#29B6F6><bold>%arena_id%</bold> <#BDBDBD>has been reset."
+    lore:
+      - "<#2F2F2F>• <#00E676>CLICK <#BDBDBD>to permanently clear"
+      - "<#BDBDBD>  this arena's record."
+
+  cancel-arena-record-reset:
+    name: "<#FF5252><bold>Cancel"
+    material: RED_DYE
+    lore:
+      - "<#2F2F2F>• <#FF5252>CLICK <#BDBDBD>to return without"
+      - "<#BDBDBD>  changing the arena record."
 
   song-selector:
     name: "<#9C27B0><bold>Select Arena Music"
@@ -137,7 +241,7 @@ items:
       - HIDE_ADDITIONAL_TOOLTIP
 
   arena-sign:
-    name: "<#8D6E63><bold>Create Arena Sign"
+    name: "<#FFAB00><bold>Create Arena Sign"
     material: OAK_SIGN
     lore: []
 
@@ -168,29 +272,3 @@ items:
   go-back:
     name: "<#FF5252><bold>Return to Last Page"
     material: ARROW
-
-  minimum-point-blocks:
-    name: "<#FFB300><bold>Minimum Point Blocks"
-    material: GLOWSTONE_DUST
-    minimum-above-portals: "<#FF5252>⚠ <#BDBDBD>Point block amount exceeded the available <#FFCA28>portal count<#BDBDBD>, so both values were adjusted."
-    lore:
-      - "<#2F2F2F>• <#64B5F6>LEFT  <#BDBDBD>click to increase"
-      - "<#2F2F2F>• <#EF5350>RIGHT <#BDBDBD>click to decrease"
-      - ""
-      - "<#2F2F2F>• <#B0BEC5>Minimum number of point blocks"
-      - "<#B0BEC5>  that can spawn around the player."
-      - ""
-      - "<#2F2F2F>• <#B0BEC5>Current Value: <#FFB300>%current_value%"
-
-  maximum-point-blocks:
-    name: "<#FF7043><bold>Maximum Point Blocks"
-    material: GLOWSTONE_DUST
-    maximum-above-portals: "<#FF5252>⚠ <#BDBDBD>Point block amount exceeded the available <#FFCA28>portal count<#BDBDBD>, so the maximum value was adjusted."
-    lore:
-      - "<#2F2F2F>• <#64B5F6>LEFT  <#BDBDBD>click to increase"
-      - "<#2F2F2F>• <#EF5350>RIGHT <#BDBDBD>click to decrease"
-      - ""
-      - "<#2F2F2F>• <#B0BEC5>Maximum number of point blocks"
-      - "<#B0BEC5>  that can spawn around the player."
-      - ""
-      - "<#2F2F2F>• <#B0BEC5>Current Value: <#FF7043>%current_value%"

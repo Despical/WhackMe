@@ -7,8 +7,9 @@ import dev.despical.whackme.WhackMe;
 import dev.despical.whackme.arena.Arena;
 import dev.despical.whackme.menu.Menu;
 import dev.despical.whackme.setup.pages.LocationsPage;
+import dev.despical.whackme.setup.pages.OtherSettingsPage;
 import dev.despical.whackme.setup.pages.PointBlockAppearancePage;
-import dev.despical.whackme.setup.pages.PointBlockSettingsPage;
+import dev.despical.whackme.setup.pages.ResetArenaRecordConfirmationPage;
 import dev.despical.whackme.setup.pages.SongSelectionPage;
 import dev.despical.whackme.setup.pages.SetupHomePage;
 import dev.despical.whackme.user.User;
@@ -31,6 +32,7 @@ import java.util.function.Supplier;
 @Getter
 public class SetupMenu implements Menu {
 
+    private final WhackMe plugin;
     private final Gui gui;
     private final User user;
     private final Arena arena;
@@ -39,6 +41,7 @@ public class SetupMenu implements Menu {
     private PaginatedPane basePane;
 
     public SetupMenu(WhackMe plugin, Arena arena, Player player) {
+        this.plugin = plugin;
         this.user = plugin.getUserManager().getUser(player);
         this.arena = arena;
         this.pages = new HashMap<>();
@@ -50,8 +53,9 @@ public class SetupMenu implements Menu {
 
         pages.put(0, () -> new SetupHomePage(this));
         pages.put(1, () -> new LocationsPage(this));
-        pages.put(2, () -> new PointBlockSettingsPage(this));
         pages.put(3, () -> new PointBlockAppearancePage(this));
+        pages.put(4, () -> new OtherSettingsPage(this));
+        pages.put(5, () -> new ResetArenaRecordConfirmationPage(this));
 
         setPage(0);
         open();
@@ -85,6 +89,11 @@ public class SetupMenu implements Menu {
 
         basePane.setPage(0);
         gui.update();
+    }
+
+    public void openPointBlockSettings(Player player) {
+        close();
+        plugin.getServer().getScheduler().runTask(plugin, () -> new PointBlockSettingsDialog(this).open(player));
     }
 
     @Override

@@ -23,6 +23,7 @@ import dev.despical.whackme.event.GameEvents;
 import dev.despical.whackme.event.CommandBlockEvents;
 import dev.despical.whackme.game.GameManager;
 import dev.despical.whackme.sound.SoundManager;
+import dev.despical.whackme.setup.SetupDialogTracker;
 import dev.despical.whackme.leaderboard.LeaderboardManager;
 import dev.despical.whackme.option.BooleanOption;
 import dev.despical.whackme.option.ConfigOptions;
@@ -84,6 +85,7 @@ public class WhackMe extends JavaPlugin {
     private SoundManager soundManager;
     private Radio radio;
     private ArenaDataSaver arenaDataSaver;
+    private SetupDialogTracker setupDialogTracker;
     private Metrics metrics;
 
     @Override
@@ -98,6 +100,10 @@ public class WhackMe extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        if (setupDialogTracker != null) {
+            setupDialogTracker.closeAll();
+        }
+
         arenaDataSaver.saveAllArenas();
         arenaManager.handleDisable();
         database.shutdown();
@@ -116,6 +122,7 @@ public class WhackMe extends JavaPlugin {
 
         options = new ConfigOptions(this);
         chatManager = new ChatManager(this);
+        setupDialogTracker = new SetupDialogTracker(this);
         eventManager = new EventManager(this);
         bossBarConfig = new BossBarConfig(this);
         arenaRegistry = new ArenaRegistry(this);

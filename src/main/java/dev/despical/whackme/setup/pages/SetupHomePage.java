@@ -61,9 +61,14 @@ public class SetupHomePage extends SetupPage {
         pane.addItem(createArenaLocationsItem(), 1, 1);
         pane.addItem(createPortalLayoutItem(), 3, 1);
         pane.addItem(createArenaSignItem(), 5, 1);
-        pane.addItem(createPointBlocksItem(), 7, 1);
-        pane.addItem(createPointBlockAppearanceItem(), 1, 3);
+        pane.addItem(createPointBlocksItem(), 1, 3);
         pane.addItem(createSongSelectorItem(), 3, 3);
+        pane.addItem(createOtherSettingsItem(), 7, 1);
+
+        GuiItem arenaRecordResetItem = createArenaRecordResetItem();
+        if (arenaRecordResetItem != null) {
+            pane.addItem(arenaRecordResetItem, 5, 3);
+        }
 
         if (!arena.getOption(ArenaKeys.READY)) {
             pane.addItem(createRegisterItem(), 8, 4);
@@ -184,25 +189,43 @@ public class SetupHomePage extends SetupPage {
             }
 
             player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1f, 1f);
-            menu.setPage(2);
+            menu.openPointBlockSettings(player);
         };
 
         return GuiItem.of(item, consumer);
     }
 
-    private GuiItem createPointBlockAppearanceItem() {
-        SpecialItem specialItem = itemManager.getItem("point-block-appearance");
+    private GuiItem createOtherSettingsItem() {
+        ItemStack item = itemManager.getItem("other-settings").getItemStack();
 
-        ItemStack item = specialItem.getItemStack();
-        ItemUtils.applyPointBlockLookHead(item);
-
-        Consumer<InventoryClickEvent> consumer = event -> {
+        return GuiItem.of(item, event -> {
             Player player = (Player) event.getWhoClicked();
             player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1f, 1f);
-            menu.setPage(3);
-        };
+            menu.setPage(4);
+        });
+    }
 
-        return GuiItem.of(item, consumer);
+    private GuiItem createArenaRecordResetItem() {
+        int recordScore = arena.getOption(ArenaKeys.RECORD_SCORE);
+        String recordHolder = arena.getOption(ArenaKeys.RECORD_HOLDER);
+
+        if (recordScore < 0 || recordHolder == null || recordHolder.equalsIgnoreCase("None")) {
+            return null;
+        }
+
+        SpecialItem specialItem = itemManager.getItem("arena-record-reset");
+        ItemStack item = ItemUtils.formatItemStack(
+            specialItem,
+            Var.of("%record_holder%", recordHolder),
+            Var.of("%record_score%", recordScore)
+        );
+        ItemUtils.applyArenaRecordResetHead(item, recordHolder);
+
+        return GuiItem.of(item, event -> {
+            Player player = (Player) event.getWhoClicked();
+            player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1f, 1.15f);
+            menu.setPage(5);
+        });
     }
 
     private GuiItem createSongSelectorItem() {
