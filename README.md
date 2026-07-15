@@ -3,7 +3,7 @@
 [![CI](https://github.com/Despical/WhackMe/actions/workflows/build.yml/badge.svg)](https://github.com/Despical/WhackMe/actions/workflows/build.yml)
 ![Java 25](https://img.shields.io/badge/Java-25-007396.svg)
 ![Gradle](https://img.shields.io/badge/Gradle-9.6.1-079ec0?logo=gradle&logoColor=white)
-![Minecraft](https://img.shields.io/badge/Minecraft-1.21.11-62b47a)
+![Minecraft](https://img.shields.io/badge/Minecraft-26.2-62b47a)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
 
 Whack Me is a fast-paced, single-player whack-a-block minigame for Minecraft
@@ -27,10 +27,10 @@ personal best, longest streak, success rate, and correct and incorrect hits.
   summaries.
 - Player statistics for games played, perfect runs, personal records, hit
   streaks, and positive or negative block hits.
-- Flat-file storage by default, with optional MySQL persistence.
-- Global leaderboard support and PlaceholderAPI placeholders.
-- Optional NoteBlockAPI music with bundled songs and per-arena selection.
-- Public Bukkit API for game lifecycle, player flow, and statistic changes.
+- **Flat-file** storage by default, with optional **MySQL** persistence.
+- Global leaderboard support and **PlaceholderAPI** placeholders.
+- Optional **NoteBlockAPI** music with bundled songs and per-arena selection.
+- Public API for game lifecycle, player flow, and statistic changes.
 
 ---
 
@@ -44,7 +44,7 @@ personal best, longest streak, success rate, and correct and incorrect hits.
 ## Resources
 
 - [Documentation](https://docs.despical.dev/whack-me/)
-- [Javadocs](https://javadoc.despical.dev/WhackMe/)
+- [Javadocs](https://javadoc.despical.dev/whack-me/)
 - [SpigotMC](https://www.spigotmc.org/resources/whack-me.104912/)
 - [BuiltByBit](https://builtbybit.com/resources/whack-me.50294/)
 
@@ -76,13 +76,13 @@ The packaged jar is normally created under `build/libs/`.
 Run the full verification used during development:
 
 ```bash
-./gradlew clean build javadoc
+./gradlew clean build
 ```
 
 On Windows:
 
 ```cmd
-gradlew.bat clean build javadoc
+gradlew.bat clean build
 ```
 
 ---
@@ -161,25 +161,29 @@ Optional integrations declared by the plugin include:
 
 ## Security
 
-Do not open a public issue for a discovered vulnerability. Read
-[SECURITY.md](SECURITY.md) for responsible disclosure instructions.
+We prioritize user privacy and application integrity. Please do not open public issues for discovered vulnerabilities.
+
+Read our [SECURITY.md](SECURITY.md) for responsible disclosure reporting.
 
 ---
 
 ## Contributing
 
-Community pull requests are welcome. Keep changes focused, preserve the
-established code style, and run the full Gradle verification before submitting.
+We welcome Pull Requests from the community. To help us maintain clean project history and formatting, please follow these guidelines:
 
-Read [CONTRIBUTING.md](CONTRIBUTING.md) for the complete contribution process
-and follow [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) when participating in the
-project.
+* **No tabs:** Use spaces exclusively for indentation.
+* **Style consistency:** Respect the established code architecture and style templates.
+* **Version control cleanliness:** Do not increment project version numbers in example configurations within your PR.
+* **Minimal diffs:** Disable automated reformat-on-save settings that affect untouched files.
+
+Learn more via our formal [Contribution Guidelines](CONTRIBUTING.md).
+
+Please also follow our [Code of Conduct](CODE_OF_CONDUCT.md) when participating in the project.
 
 ---
 
 ## License
 
-Whack Me is free software licensed under the
-[GNU General Public License v3.0](https://www.gnu.org/licenses/gpl-3.0.html).
+This project is licensed under the [GPL-3.0 License](http://www.gnu.org/licenses/gpl-3.0.html).
 
-See [LICENSE](LICENSE) for the full license text.
+See the [LICENSE](LICENSE) file for comprehensive copyright notices and third-party attributions.
