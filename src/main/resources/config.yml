@@ -48,10 +48,10 @@ command-settings:
   # Commands players may still use while playing.
   # Use command roots such as "msg" to allow all arguments, or subcommands such as "tr leave".
   allowed-commands:
-    - "tr leave"
-    - "tntrun leave"
-    - "tr stats"
-    - "tntrun stats"
+    - "wm leave"
+    - "whackme leave"
+    - "wm stats"
+    - "whackme stats"
 
 # If enabled, the plugin checks for newer releases on startup.
 update-notifier: true
