@@ -5,6 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import dev.despical.whackme.WhackMe;
+import org.bukkit.scheduler.BukkitTask;
 
 /**
  * @author Despical
@@ -27,5 +28,13 @@ public final class Schedulers {
 
     public static void runTaskAsynchronously(Runnable runnable) {
         scheduler.runTaskAsynchronously(plugin, runnable);
+    }
+
+    public static BukkitTask runTaskTimerAsynchronously(Runnable task, long delay, long period) {
+        return scheduler.runTaskTimerAsynchronously(plugin, task, delay, period);
+    }
+
+    public static BukkitTask runTaskTimer(Runnable task, long delay, long period) {
+        return scheduler.runTaskTimer(plugin, task, delay, period);
     }
 }

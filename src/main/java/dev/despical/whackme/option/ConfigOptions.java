@@ -41,7 +41,7 @@ public class ConfigOptions {
     private void loadOptions() {
         FileConfiguration config = plugin.getConfig();
 
-        Stream.of(BooleanOption.values(), IntOption.values(), DoubleOption.values())
+        Stream.of(BooleanOption.values(), IntOption.values())
             .flatMap(Arrays::stream)
             .forEach(option -> options.put(option, config.get(option.getPath(), option.getDefaultValue())));
     }

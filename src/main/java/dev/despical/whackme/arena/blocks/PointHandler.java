@@ -6,7 +6,6 @@ import dev.despical.whackme.arena.Arena;
 import dev.despical.whackme.arena.options.ArenaKeys;
 import dev.despical.whackme.game.Game;
 import dev.despical.whackme.game.GameState;
-import dev.despical.whackme.option.IntOption;
 import dev.despical.whackme.stats.Statistics;
 import dev.despical.whackme.user.User;
 import dev.despical.whackme.util.Var;
@@ -29,6 +28,7 @@ public class PointHandler {
     private final Arena arena;
     private final WhackMe plugin;
     private final List<Location> availableLocations;
+    private final PointBlockFactory pointBlockFactory;
     private BukkitTask task;
 
     public PointHandler(Game game) {
@@ -36,6 +36,7 @@ public class PointHandler {
         this.arena = game.getArena();
         this.plugin = WhackMe.getInstance();
         this.availableLocations = new ArrayList<>();
+        this.pointBlockFactory = new PointBlockFactory(plugin, arena);
     }
 
     private void tick() {
@@ -65,7 +66,9 @@ public class PointHandler {
     private void spawnPointBlock() {
         Location location = reserveAvailableLocation();
         if (location != null) {
-            new PointBlock(this, location).handleItself();
+            PointBlock pointBlock = pointBlockFactory.create(this, location);
+            getPointBlocks().add(pointBlock);
+            pointBlock.start();
         }
     }
 
@@ -92,7 +95,8 @@ public class PointHandler {
         }
 
         resetAvailableLocations();
-        task = plugin.getServer().getScheduler().runTaskTimer(plugin, this::tick, 8L, IntOption.POINT_BLOCK_TICKS.value());
+        long period = Math.max(1, arena.getOption(ArenaKeys.POINT_BLOCK_TICKS));
+        task = plugin.getServer().getScheduler().runTaskTimer(plugin, this::tick, 8L, period);
     }
 
     public void stop() {
@@ -140,6 +144,11 @@ public class PointHandler {
         arena.getOption(ArenaKeys.PORTAL_LOCATIONS).stream()
             .distinct()
             .forEach(availableLocations::add);
+    }
+
+    void release(PointBlock pointBlock, Location location) {
+        getPointBlocks().remove(pointBlock);
+        releaseAvailableLocation(location);
     }
 
     private synchronized int getLocationCapacity() {

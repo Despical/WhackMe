@@ -13,7 +13,6 @@ public enum BooleanOption implements ConfigOption<Boolean> {
     ENABLE_CHAT_FORMATTING("chat-settings.enable-formatting", true),
     BLOCK_LEAVE_COMMAND("game-settings.block-leave-command", false),
     DATABASE_ENABLED("database.enabled", false),
-    POINT_BLOCKS_RUN_ASYNC("point-blocks.run-async", false),
     SCOREBOARD_ENABLED("scoreboard-enabled", true),
     DEBUG("debug", false),
     EVENT_PROFILING_ENABLED("event-profiling.enabled", false),

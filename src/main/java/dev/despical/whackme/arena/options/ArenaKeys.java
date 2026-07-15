@@ -89,6 +89,14 @@ public final class ArenaKeys {
         }
     };
 
+    public static final ArenaOption<Boolean> POINT_BLOCKS_RUN_ASYNC = booleanOption("pointBlocksRunAsync", false);
+    public static final ArenaOption<Integer> POINT_BLOCK_TICKS = integerOption("pointBlockTicks", 8);
+    public static final ArenaOption<Double> POINT_BLOCK_Y_MULTIPLIER = doubleOption("pointBlockYMultiplier", 0.05);
+    public static final ArenaOption<Double> POINT_BLOCK_MAX_Y_MULTIPLIER = doubleOption("pointBlockMaxYMultiplier", 0.64);
+    public static final ArenaOption<Integer> POINT_BLOCK_WAIT_TICKS = integerOption("pointBlockWaitTicks", 12);
+    public static final ArenaOption<Boolean> ARENA_SCOREBOARD_ENABLED = booleanOption("arenaScoreboardEnabled", true);
+    public static final ArenaOption<Boolean> ARENA_BOSS_BAR_ENABLED = booleanOption("arenaBossBarEnabled", true);
+
     public static final ArenaOption<String> RECORD_HOLDER = new ArenaOption<>("record-holder", "None", String.class) {
 
         @Override
@@ -97,7 +105,7 @@ public final class ArenaKeys {
         }
     };
 
-    public static final ArenaOption<Integer> RECORD_SCORE = new ArenaOption<>("record-score", -1, Integer.class) {
+    public static final ArenaOption<Integer> RECORD_SCORE = new ArenaOption<>("record-score", 0, Integer.class) {
 
         @Override
         protected Integer parse(String value) {
@@ -161,6 +169,44 @@ public final class ArenaKeys {
         };
     }
 
+    private static ArenaOption<Boolean> booleanOption(String key, boolean defaultValue) {
+        return new ArenaOption<>(key, defaultValue, Boolean.class) {
+
+            @Override
+            protected Boolean parse(String value) {
+                return Boolean.parseBoolean(value);
+            }
+        };
+    }
+
+    private static ArenaOption<Integer> integerOption(String key, int defaultValue) {
+        return new ArenaOption<>(key, defaultValue, Integer.class) {
+
+            @Override
+            protected Integer parse(String value) {
+                try {
+                    return Integer.parseInt(value);
+                } catch (NumberFormatException ignored) {
+                    return defaultValue;
+                }
+            }
+        };
+    }
+
+    private static ArenaOption<Double> doubleOption(String key, double defaultValue) {
+        return new ArenaOption<>(key, defaultValue, Double.class) {
+
+            @Override
+            protected Double parse(String value) {
+                try {
+                    return Double.parseDouble(value);
+                } catch (NumberFormatException ignored) {
+                    return defaultValue;
+                }
+            }
+        };
+    }
+
     public static List<ArenaOption<?>> getAllKeys() {
         return List.of(
             READY,
@@ -169,6 +215,13 @@ public final class ArenaKeys {
             END_LOCATION,
             MINIMUM_POINTS,
             MAXIMUM_POINTS,
+            POINT_BLOCKS_RUN_ASYNC,
+            POINT_BLOCK_TICKS,
+            POINT_BLOCK_Y_MULTIPLIER,
+            POINT_BLOCK_MAX_Y_MULTIPLIER,
+            POINT_BLOCK_WAIT_TICKS,
+            ARENA_SCOREBOARD_ENABLED,
+            ARENA_BOSS_BAR_ENABLED,
             RECORD_HOLDER,
             RECORD_SCORE,
             PORTAL_LOCATIONS,
