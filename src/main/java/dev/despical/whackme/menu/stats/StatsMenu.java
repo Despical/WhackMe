@@ -140,9 +140,9 @@ public class StatsMenu implements Menu {
 
             Consumer<InventoryClickEvent> action = event -> event.setCancelled(true);
             if ("open_arenas".equals(specialItem.getCustomKey("action"))) {
-                action = event -> openArenasMenu();
+                action = _ -> openArenasMenu();
             } else if ("close_menu".equals(specialItem.getCustomKey("action"))) {
-                action = event -> player.closeInventory();
+                action = _ -> player.closeInventory();
             }
 
             GuiItem guiItem = new GuiItem(item, action);
@@ -184,13 +184,13 @@ public class StatsMenu implements Menu {
 
                 if (meta != null && meta.hasLore()) {
                     List<Component> lore = new ArrayList<>(meta.lore());
-                    createArenaLore(arena.getId(), template, lore);
+                    createArenaLore(template, lore);
 
                     meta.lore(lore);
                     item.setItemMeta(meta);
                 }
 
-                arenaItems.add(new GuiItem(item, event -> {}));
+                arenaItems.add(new GuiItem(item, _ -> {}));
             }
         }
 
@@ -202,7 +202,7 @@ public class StatsMenu implements Menu {
         gui.update();
     }
 
-    private void createArenaLore(String arenaId, SpecialItem template, List<Component> lore) {
+    private void createArenaLore(SpecialItem template, List<Component> lore) {
         Leaderboard<Integer> board = plugin.getLeaderboardManager().getLeaderboard(Statistics.RECORD_SCORE);
 
         if (board == null || board.sortedEntries().isEmpty()) {
@@ -231,7 +231,7 @@ public class StatsMenu implements Menu {
             }
         }
 
-        if (targetRank == -1) {
+        if (targetRank == 0) {
             for (int i = 3; i < board.sortedEntries().size(); i++) {
                 if (board.sortedEntries().get(i).uuid().equals(target.getUniqueId())) {
                     lore.add(chatManager.parseMessage(getTemplateValue(template, "leaderboard-separator")));
@@ -262,7 +262,7 @@ public class StatsMenu implements Menu {
                     placeItemInPane(pane, specialItem, new GuiItem(item, event -> event.setCancelled(true)));
                 }
                 case "back_button" -> {
-                    Consumer<InventoryClickEvent> action = backAction.equals("openMainMenu") ? e -> openMainMenu() : e -> openArenasMenu();
+                    Consumer<InventoryClickEvent> action = backAction.equals("openMainMenu") ? _ -> openMainMenu() : _ -> openArenasMenu();
                     placeItemInPane(pane, specialItem, new GuiItem(ItemUtils.formatItemStack(specialItem), action));
                 }
             }
@@ -281,7 +281,7 @@ public class StatsMenu implements Menu {
 
         if (next != null) {
             if (pages.getPage() < pages.getPages() - 1) {
-                placeItemInPane(pane, next, new GuiItem(ItemUtils.formatItemStack(next), event -> {
+                placeItemInPane(pane, next, new GuiItem(ItemUtils.formatItemStack(next), _ -> {
                     pages.setPage(pages.getPage() + 1);
                     setupPaginationButtons(pane, pages);
 
@@ -296,7 +296,7 @@ public class StatsMenu implements Menu {
 
         if (prev != null) {
             if (pages.getPage() > 0) {
-                placeItemInPane(pane, prev, new GuiItem(ItemUtils.formatItemStack(prev), event -> {
+                placeItemInPane(pane, prev, new GuiItem(ItemUtils.formatItemStack(prev), _ -> {
                     pages.setPage(pages.getPage() - 1);
                     setupPaginationButtons(pane, pages);
 
@@ -311,7 +311,7 @@ public class StatsMenu implements Menu {
     }
 
     private String getTemplateValue(SpecialItem item, String key) {
-        return item.<String>getCustomKey(key);
+        return item.getCustomKey(key);
     }
 
     private int getIntStat(StatisticType<?> statistic) {
