@@ -122,24 +122,18 @@ public class NBAPIRadio implements Radio {
 
     @Override
     public void addPlayer(Arena arena, Player player) {
-        Map<Player, RadioSongPlayer> playerRadios = arenaRadios.computeIfAbsent(arena, key -> new HashMap<>());
-        
-        if (playerRadios.containsKey(player)) {
+        String arenaSong = arena.getOption(ArenaKeys.ARENA_SONG);
+        if (arenaSong == null || arenaSong.isBlank()) {
             return;
         }
 
-        String arenaSong = arena.getOption(ArenaKeys.ARENA_SONG);
-        Song songToPlay = null;
-
-        if (arenaSong != null && !arenaSong.isEmpty()) {
-            songToPlay = getSong(arenaSong);
+        Song songToPlay = getSong(arenaSong);
+        if (songToPlay == null) {
+            return;
         }
 
-        if (songToPlay == null) {
-            songToPlay = getDefaultSong();
-        }
-
-        if (songToPlay == null) {
+        Map<Player, RadioSongPlayer> playerRadios = arenaRadios.computeIfAbsent(arena, _ -> new HashMap<>());
+        if (playerRadios.containsKey(player)) {
             return;
         }
 
@@ -196,7 +190,4 @@ public class NBAPIRadio implements Radio {
         previewPlayer.setPlaying(false);
     }
 
-    private Song getDefaultSong() {
-        return songs.values().stream().findFirst().orElse(null);
-    }
 }
