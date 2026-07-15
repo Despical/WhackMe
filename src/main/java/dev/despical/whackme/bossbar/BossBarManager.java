@@ -2,6 +2,7 @@ package dev.despical.whackme.bossbar;
 
 import dev.despical.whackme.WhackMe;
 import dev.despical.whackme.arena.Arena;
+import dev.despical.whackme.arena.options.ArenaKeys;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
@@ -73,6 +74,6 @@ public class BossBarManager {
     }
 
     private boolean isEnabled() {
-        return configProvider.isEnabled();
+        return configProvider.isEnabled() && arena.getOption(ArenaKeys.ARENA_BOSS_BAR_ENABLED);
     }
 }

@@ -123,7 +123,7 @@ public final class GameManager {
         int arenaRecord = arena.getOption(ArenaKeys.RECORD_SCORE);
         int previousPersonalRecord = user.getStatistic(Statistics.RECORD_SCORE);
 
-        boolean globalRecord = arenaRecord == -1 || score > arenaRecord;
+        boolean globalRecord = arenaRecord == 0 || score > arenaRecord;
         boolean personalBest = score > previousPersonalRecord;
 
         Var[] resultVars = createResultVars(user, score, previousPersonalRecord);

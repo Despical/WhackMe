@@ -7,6 +7,7 @@ import dev.despical.commons.scoreboard.ScoreboardLib;
 import dev.despical.commons.scoreboard.common.Entry;
 import dev.despical.commons.scoreboard.common.EntryBuilder;
 import dev.despical.whackme.WhackMe;
+import dev.despical.whackme.arena.options.ArenaKeys;
 import dev.despical.whackme.game.Game;
 import dev.despical.whackme.option.BooleanOption;
 import dev.despical.whackme.scoreboard.formatter.GlobalFormatter;
@@ -46,7 +47,7 @@ public final class ScoreboardManager {
 
         removeScoreboard();
 
-        if (!BooleanOption.SCOREBOARD_ENABLED.value()) {
+        if (!isEnabled()) {
             return;
         }
 
@@ -90,6 +91,15 @@ public final class ScoreboardManager {
         }
     }
 
+    public void refresh() {
+        if (!isEnabled()) {
+            removeScoreboard();
+            return;
+        }
+
+        create(game.getPlayer());
+    }
+
     public void removeScoreboard() {
         if (scoreboard == null) {
             return;
@@ -109,5 +119,10 @@ public final class ScoreboardManager {
 
         title = config.getString("title");
         lines = config.getStringList("lines");
+    }
+
+    private boolean isEnabled() {
+        return BooleanOption.SCOREBOARD_ENABLED.value()
+            && game.getArena().getOption(ArenaKeys.ARENA_SCOREBOARD_ENABLED);
     }
 }

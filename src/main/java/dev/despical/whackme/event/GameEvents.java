@@ -4,6 +4,7 @@ import dev.despical.whackme.arena.Arena;
 import dev.despical.whackme.arena.options.ArenaKeys;
 import dev.despical.whackme.option.BooleanOption;
 import dev.despical.whackme.radio.impl.NBAPIRadio;
+import dev.despical.whackme.util.ItemUtils;
 import dev.despical.whackme.util.Schedulers;
 import dev.despical.whackme.util.Utils;
 import dev.despical.whackme.util.Var;
@@ -20,7 +21,6 @@ import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import java.util.HashMap;
 import java.util.Map;
@@ -52,7 +52,7 @@ public class GameEvents extends ListenerAdapter {
 
             PlayerInventory inventory = player.getInventory();
             inventory.clear();
-            inventory.setArmorContents(new ItemStack[4]);
+            inventory.setArmorContents(ItemUtils.EMPTY_ARMORS);
 
             Utils.restoreSavedPlayerState(player);
         });
@@ -90,7 +90,8 @@ public class GameEvents extends ListenerAdapter {
 
         if (arena == null) {
             if (blockOutsideChat) {
-                arenaRegistry.getArenas().stream()
+                arenaRegistry.getArenas()
+                    .stream()
                     .filter(other -> other.getPlayer() != null)
                     .forEach(recipients::remove);
             }

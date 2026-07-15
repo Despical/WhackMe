@@ -1,8 +1,7 @@
 package dev.despical.whackme.util;
 
-import com.cryptomorin.xseries.reflection.XReflection;
-import com.destroystokyo.paper.profile.ProfileProperty;
 import com.destroystokyo.paper.profile.PlayerProfile;
+import com.destroystokyo.paper.profile.ProfileProperty;
 import dev.despical.commons.XMaterial;
 import dev.despical.fileitems.SpecialItem;
 import dev.despical.whackme.WhackMe;
@@ -25,8 +24,9 @@ import java.util.UUID;
  */
 public class ItemUtils {
 
+    public static final ItemStack[] EMPTY_ARMORS = new ItemStack[4];
+
     private static final WhackMe PLUGIN = WhackMe.getInstance();
-    private static final boolean SUPPORTS_1_21_5 = XReflection.of(ItemMeta.class).method("void setHideTooltip(boolean _);").exists();
     private static final UUID OFFLINE_MODE_RESET_HEAD_UUID = UUID.fromString("e57c4a3a-6ec5-4f6b-8bfa-fb287b2a6ed8");
     private static final String OFFLINE_MODE_RESET_HEAD_NAME = "mrdespi.1";
     private static final String OFFLINE_MODE_RESET_HEAD_TEXTURE_VALUE = "ewogICJ0aW1lc3RhbXAiIDogMTc3ODQ5MjA0NDk1NSwKICAicHJvZmlsZUlkIiA6ICJlNTdjNGEzYTZlYzU0ZjZiOGJmYWZiMjg3YjJhNmVkOCIsCiAgInByb2ZpbGVOYW1lIiA6ICJtcmRlc3BpIiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzdjYTg1YzE1NjNiZjU2OWQ4OGJmN2JjMzc1Y2JjODIwZDdkNGE3M2M5MmFhZjdkOTQ3OWFmNWVmNTI1NWQwNDAiCiAgICB9CiAgfQp9";
@@ -41,6 +41,22 @@ public class ItemUtils {
         }
     }
 
+    public static void applyArenaRecordResetHead(ItemStack item, String recordHolderName) {
+        if (item.getType() != XMaterial.PLAYER_HEAD.get()) {
+            return;
+        }
+
+        if (!Bukkit.getOnlineMode()) {
+            applyProfileIfSkull(createOfflineModeResetHeadProfile(), item);
+            return;
+        }
+
+        OfflinePlayer player = Bukkit.getOfflinePlayerIfCached(recordHolderName);
+        if (player != null) {
+            applyPlayerProfileIfSkull(player, item);
+        }
+    }
+
     public static void applyProfileIfSkull(PlayerProfile profile, ItemStack item) {
         if (item.getType() != XMaterial.PLAYER_HEAD.get()) {
             return;
@@ -51,11 +67,7 @@ public class ItemUtils {
         item.setItemMeta(skullMeta);
     }
 
-    public static void applyPointBlockLookHead(ItemStack item) {
-        applyProfileIfSkull(createPointBlockLookProfile(), item);
-    }
-
-    private static PlayerProfile createPointBlockLookProfile() {
+    private static PlayerProfile createOfflineModeResetHeadProfile() {
         PlayerProfile profile = Bukkit.createProfile(OFFLINE_MODE_RESET_HEAD_UUID, OFFLINE_MODE_RESET_HEAD_NAME);
         profile.setProperty(new ProfileProperty("textures", OFFLINE_MODE_RESET_HEAD_TEXTURE_VALUE, OFFLINE_MODE_RESET_HEAD_TEXTURE_SIGNATURE));
         return profile;
@@ -67,15 +79,15 @@ public class ItemUtils {
         ItemMeta meta = item.getItemMeta();
 
         String displayName = specialItem.getCustomKey("name");
-        Component nameComponent = PLUGIN.getChatManager().parseMessage(displayName, vars);
+        Component nameComponent = PLUGIN.getChatManager().parseMessage("<!i>" + displayName, vars);
         meta.displayName(nameComponent);
 
         List<String> lore = specialItem.getCustomKey("lore");
         if (lore != null) {
-            meta.lore(lore.stream().map(line -> PLUGIN.getChatManager().parseMessage(line, vars)).toList());
+            meta.lore(lore.stream().map(line -> PLUGIN.getChatManager().parseMessage("<!i>" + line, vars)).toList());
         }
 
-        boolean decorationOnly = SUPPORTS_1_21_5 && specialItem.getCustomKey("decoration-only") != null;
+        boolean decorationOnly = specialItem.getCustomKey("decoration-only") != null;
         if (decorationOnly) {
             meta.setHideTooltip(true);
         }
