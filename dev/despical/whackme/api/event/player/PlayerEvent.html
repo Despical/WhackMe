@@ -95,13 +95,11 @@ loadScripts(document, 'script');</script>
 <p>
 <a href="#getPlayer()"><code>getPlayer()</code></a> provides the live Bukkit entity, while
 <a href="#getUser()"><code>getUser()</code></a> resolves the plugin-owned user model used for statistics
-and game membership.</div>
-<dl class="notes">
-<dt>API Note:</dt>
-<dd>The player may disconnect between event dispatch and delayed work.
+and game membership.
+<p>
+API Note: The player may disconnect between event dispatch and delayed work.
 Do not retain the Bukkit entity for asynchronous or long-lived operations;
-retain its UUID instead.</dd>
-</dl>
+retain its UUID instead.</div>
 </div>
 </section>
 <section class="summary">

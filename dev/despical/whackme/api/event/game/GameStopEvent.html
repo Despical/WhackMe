@@ -92,23 +92,20 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">GameStopEvent</span>
 <span class="extends-implements">extends <a href="GameEvent.html" title="class in dev.despical.whackme.api.event.game">GameEvent</a></span></div>
 <div class="block">Called after a Whack Me game has been forcefully stopped and cleaned up.
-<p>
-The active user has already been detached from the <a href="../../../game/Game.html" title="class in dev.despical.whackme.game"><code>Game</code></a>. Use
-<a href="#getStoppedPlayers()"><code>getStoppedPlayers()</code></a> to identify the affected player and
-<a href="#getStopReason()"><code>getStopReason()</code></a> to distinguish administrative stops, reloads,
-shutdowns, and arena deletion.
+ <p>
+ The active user has already been detached from the <a href="../../../game/Game.html" title="class in dev.despical.whackme.game"><code>Game</code></a>. Use
+ <a href="#getStoppedPlayers()"><code>getStoppedPlayers()</code></a> to identify the affected player and
+ <a href="#getStopReason()"><code>getStopReason()</code></a> to distinguish administrative stops, reloads,
+ shutdowns, and arena deletion.
 
-<pre><code>@EventHandler
-public void onGameStop(GameStopEvent event) {
-    audit.log(event.getStopReason(), event.getStoppedPlayers());
-}
-</code></pre></div>
-<dl class="notes">
-<dt>API Note:</dt>
-<dd>The stopped-player list is an immutable snapshot captured before
-cleanup. A stop event is not a normal completion and does not apply run
-statistics.</dd>
-</dl>
+ <pre><code> @EventHandler
+ public void onGameStop(GameStopEvent event) {
+     audit.log(event.getStopReason(), event.getStoppedPlayers());
+ }
+ </code></pre>
+API note: The stopped-player list is an immutable snapshot captured before
+ cleanup. A stop event is not a normal completion and does not apply run
+ statistics.</div>
 </div>
 </section>
 <section class="summary">

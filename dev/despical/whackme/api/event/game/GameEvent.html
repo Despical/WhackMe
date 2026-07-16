@@ -98,15 +98,12 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public abstract class </span><span class="element-name type-name-label">GameEvent</span>
 <span class="extends-implements">extends <a href="../WhackMeEvent.html" title="class in dev.despical.whackme.api.event">WhackMeEvent</a></span></div>
 <div class="block">Base class for events associated with one Whack Me game session.
-<p>
-The related <a href="../../../game/Game.html" title="class in dev.despical.whackme.game"><code>Game</code></a> provides access to the player, point handler,
-scoreboard, boss bar, timer, state, and arena configuration. The exact
-lifecycle guarantees depend on the concrete event.</div>
-<dl class="notes">
-<dt>API Note:</dt>
-<dd>A <code>Game</code> is a live runtime object. Do not mutate it from
-asynchronous event handlers.</dd>
-</dl>
+ <p>
+ The related <a href="../../../game/Game.html" title="class in dev.despical.whackme.game"><code>Game</code></a> provides access to the player, point handler,
+ scoreboard, boss bar, timer, state, and arena configuration. The exact
+ lifecycle guarantees depend on the concrete event.
+API note: A <code>Game</code> is a live runtime object. Do not mutate it from
+ asynchronous event handlers.</div>
 </div>
 </section>
 <section class="summary">

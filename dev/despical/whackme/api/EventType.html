@@ -100,13 +100,11 @@ logical event type with its concrete implementation class.
 <p>
 The mapping is used by <a href="EventManager.html#callByType(dev.despical.whackme.api.EventType,java.util.function.Supplier)"><code>EventManager.callByType(EventType, java.util.function.Supplier)</code></a>
 to detect accidental mismatches between an event identifier and the event
-supplied by internal dispatch code.</div>
-<dl class="notes">
-<dt>API Note:</dt>
-<dd>Plugin integrations normally listen to the concrete Bukkit event
+supplied by internal dispatch code.
+<p>
+API Note: Plugin integrations normally listen to the concrete Bukkit event
 class directly. This enum is primarily useful for discovery, diagnostics,
-and generic event tooling.</dd>
-</dl>
+and generic event tooling.</div>
 </div>
 </section>
 <section class="summary">

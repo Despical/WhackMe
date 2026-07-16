@@ -99,24 +99,21 @@ loadScripts(document, 'script');</script>
 <span class="extends-implements">extends <a href="GameEvent.html" title="class in dev.despical.whackme.api.event.game">GameEvent</a>
 implements org.bukkit.event.Cancellable</span></div>
 <div class="block">Called immediately before a Whack Me game changes state.
-<p>
-The game still reports <a href="#getOldState()"><code>getOldState()</code></a> during dispatch. Cancelling the
-event prevents assignment of <a href="#getNewState()"><code>getNewState()</code></a> and prevents the target
-state's first tick from running.
+ <p>
+ The game still reports <a href="#getOldState()"><code>getOldState()</code></a> during dispatch. Cancelling the
+ event prevents assignment of <a href="#getNewState()"><code>getNewState()</code></a> and prevents the target
+ state's first tick from running.
 
-<pre><code>@EventHandler
-public void onStateChange(GameStateChangeEvent event) {
-    if (event.getNewState() == GameState.IN_GAME &amp;&amp; maintenanceMode) {
-        event.setCancelled(true);
-    }
-}
-</code></pre></div>
-<dl class="notes">
-<dt>API Note:</dt>
-<dd>Cancelling internal recovery transitions such as
-<code>RESTARTING</code> may leave a game occupied. Listeners should only cancel a
-transition when they also manage the resulting lifecycle.</dd>
-</dl>
+ <pre><code> @EventHandler
+ public void onStateChange(GameStateChangeEvent event) {
+     if (event.getNewState() == GameState.IN_GAME &amp;&amp; maintenanceMode) {
+         event.setCancelled(true);
+     }
+ }
+ </code></pre>
+API note: Cancelling internal recovery transitions such as
+ <code>RESTARTING</code> may leave a game occupied. Listeners should only cancel a
+ transition when they also manage the resulting lifecycle.</div>
 </div>
 </section>
 <section class="summary">

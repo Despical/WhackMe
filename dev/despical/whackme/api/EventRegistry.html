@@ -80,13 +80,11 @@ loadScripts(document, 'script');</script>
 <p>
 This class deliberately contains no mutable registration state: the event
 catalog is defined by <a href="EventType.html" title="enum class in dev.despical.whackme.api"><code>EventType</code></a>, while actual listener registration
-continues to use Bukkit's standard plugin manager.</div>
-<dl class="notes">
-<dt>API Note:</dt>
-<dd>Use this registry when building generic integrations such as event
+continues to use Bukkit's standard plugin manager.
+<p>
+API Note: Use this registry when building generic integrations such as event
 browsers or profilers. Normal listeners should register against the concrete
-event classes.</dd>
-</dl>
+event classes.</div>
 </div>
 </section>
 <section class="summary">
@@ -177,8 +175,6 @@ Subclasses are accepted through <a href="https://docs.oracle.com/en/java/javase/
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>all currently registered logical event types</dd>
-<dt>API Note:</dt>
-<dd>Mutating the returned set does not change the registry.</dd>
 </dl>
 </div>
 </section>

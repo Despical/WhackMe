@@ -91,23 +91,20 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">GameEndEvent</span>
 <span class="extends-implements">extends <a href="GameEvent.html" title="class in dev.despical.whackme.api.event.game">GameEvent</a></span></div>
 <div class="block">Called when a Whack Me run reaches its normal ending phase.
-<p>
-Point generation has stopped, but result persistence and player cleanup have
-not run yet. The game still contains its user, so temporary run statistics
-and <a href="#getFinalScore()"><code>getFinalScore()</code></a> are available to listeners.
+ <p>
+ Point generation has stopped, but result persistence and player cleanup have
+ not run yet. The game still contains its user, so temporary run statistics
+ and <a href="#getFinalScore()"><code>getFinalScore()</code></a> are available to listeners.
 
-<pre><code>@EventHandler
-public void onGameEnd(GameEndEvent event) {
-    analytics.recordScore(event.getGame().getUser().getUUID(),
-        event.getFinalScore());
-}
-</code></pre></div>
-<dl class="notes">
-<dt>API Note:</dt>
-<dd>This event is fired before personal/arena records are updated and
-before temporary statistics are reset. It is not fired for force-stopped
-games; use <a href="GameStopEvent.html" title="class in dev.despical.whackme.api.event.game"><code>GameStopEvent</code></a> for that lifecycle.</dd>
-</dl>
+ <pre><code> @EventHandler
+ public void onGameEnd(GameEndEvent event) {
+     analytics.recordScore(event.getGame().getUser().getUUID(),
+         event.getFinalScore());
+ }
+ </code></pre>
+API note: This event is fired before personal/arena records are updated and
+ before temporary statistics are reset. It is not fired for force-stopped
+ games; use <a href="GameStopEvent.html" title="class in dev.despical.whackme.api.event.game"><code>GameStopEvent</code></a> for that lifecycle.</div>
 </div>
 </section>
 <section class="summary">

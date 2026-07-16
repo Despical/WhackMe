@@ -90,21 +90,18 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">GameStartEvent</span>
 <span class="extends-implements">extends <a href="GameEvent.html" title="class in dev.despical.whackme.api.event.game">GameEvent</a></span></div>
 <div class="block">Called after a Whack Me game enters active play.
-<p>
-The gameplay timer has been initialized, the boss bar is active, and the
-point-block handler has started before this event is dispatched. The player
-is already attached to the <a href="../../../game/Game.html" title="class in dev.despical.whackme.game"><code>Game</code></a>.
+ <p>
+ The gameplay timer has been initialized, the boss bar is active, and the
+ point-block handler has started before this event is dispatched. The player
+ is already attached to the <a href="../../../game/Game.html" title="class in dev.despical.whackme.game"><code>Game</code></a>.
 
-<pre><code>@EventHandler
-public void onGameStart(GameStartEvent event) {
-    event.getGame().getPlayer().sendMessage("Good luck!");
-}
-</code></pre></div>
-<dl class="notes">
-<dt>API Note:</dt>
-<dd>This event is informational and is not cancellable. To deny a
-player entry, listen to <code>PlayerJoinAttemptEvent</code> instead.</dd>
-</dl>
+ <pre><code> @EventHandler
+ public void onGameStart(GameStartEvent event) {
+     event.getGame().getPlayer().sendMessage("Good luck!");
+ }
+ </code></pre>
+API note: This event is informational and is not cancellable. To deny a
+ player entry, listen to <code>PlayerJoinAttemptEvent</code> instead.</div>
 </div>
 </section>
 <section class="summary">

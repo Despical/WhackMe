@@ -92,7 +92,8 @@ loadScripts(document, 'script');</script>
 <section class="class-description" id="class-description">
 <dl class="notes">
 <dt>Type Parameters:</dt>
-<dd><span id="type-param-T"><code>T</code> - value type of the statistic</span></dd>
+<dd><span id="type-param-T"><code>T</code> - value type of the statistic
+requested through the user statistics API.</span></dd>
 </dl>
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
@@ -116,12 +117,9 @@ public void onStatisticChange(PlayerStatisticChangeEvent&lt;Integer&gt; event) {
         event.setNewValue(Math.max(0, event.getNewValue()));
     }
 }
-</code></pre></div>
-<dl class="notes">
-<dt>API Note:</dt>
-<dd>Database loading bypasses this event; it represents runtime changes
-requested through the user statistics API.</dd>
-</dl>
+</code></pre>
+
+API Note: Database loading bypasses this event; it represents runtime changes</div>
 </div>
 </section>
 <section class="summary">
