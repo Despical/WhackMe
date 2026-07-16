@@ -53,7 +53,6 @@ public final class EventRegistry {
      * Returns a fresh set containing every event type exposed by the API.
      *
      * @return all currently registered logical event types
-     * @apiNote Mutating the returned set does not change the registry.
      */
     public static Set<EventType> getRegisteredTypes() {
         return EnumSet.allOf(EventType.class);

@@ -23,8 +23,9 @@ import org.jetbrains.annotations.NotNull;
  * }
  * }</pre>
  *
+ * API Note: Database loading bypasses this event; it represents runtime changes
+ *
  * @param <T> value type of the statistic
- * @apiNote Database loading bypasses this event; it represents runtime changes
  * requested through the user statistics API.
  * @author Despical
  * <p>
