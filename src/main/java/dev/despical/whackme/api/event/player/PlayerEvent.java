@@ -12,8 +12,8 @@ import org.jetbrains.annotations.NotNull;
  * {@link #getPlayer()} provides the live Bukkit entity, while
  * {@link #getUser()} resolves the plugin-owned user model used for statistics
  * and game membership.
- *
- * @apiNote The player may disconnect between event dispatch and delayed work.
+ * <p>
+ * API Note: The player may disconnect between event dispatch and delayed work.
  * Do not retain the Bukkit entity for asynchronous or long-lived operations;
  * retain its UUID instead.
  * @author Despical

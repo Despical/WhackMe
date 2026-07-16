@@ -19,8 +19,7 @@ import org.jetbrains.annotations.NotNull;
  *         event.getFinalScore());
  * }
  * }</pre>
- *
- * @apiNote This event is fired before personal/arena records are updated and
+API note: This event is fired before personal/arena records are updated and
  * before temporary statistics are reset. It is not fired for force-stopped
  * games; use {@link GameStopEvent} for that lifecycle.
  * @author Despical

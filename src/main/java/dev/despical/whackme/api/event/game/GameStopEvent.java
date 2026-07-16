@@ -22,8 +22,7 @@ import java.util.UUID;
  *     audit.log(event.getStopReason(), event.getStoppedPlayers());
  * }
  * }</pre>
- *
- * @apiNote The stopped-player list is an immutable snapshot captured before
+API note: The stopped-player list is an immutable snapshot captured before
  * cleanup. A stop event is not a normal completion and does not apply run
  * statistics.
  * @author Despical

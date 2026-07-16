@@ -37,8 +37,8 @@ import java.util.UUID;
  *     }
  * }
  * }</pre>
- *
- * @apiNote Event dispatch must occur on a thread accepted by the relevant
+ * <p>
+ * API Note: Event dispatch must occur on a thread accepted by the relevant
  * Bukkit event. Whack Me lifecycle helpers are intended to be called from the
  * server thread.
  * @author Despical

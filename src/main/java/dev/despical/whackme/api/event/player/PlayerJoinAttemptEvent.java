@@ -23,8 +23,8 @@ import org.jetbrains.annotations.NotNull;
  *     }
  * }
  * }</pre>
- *
- * @apiNote Cancellation does not send a message automatically. A listener
+ * <p>
+ * API Note: Cancellation does not send a message automatically. A listener
  * cancelling the attempt should explain the reason to the player when useful.
  * @author Despical
  * <p>

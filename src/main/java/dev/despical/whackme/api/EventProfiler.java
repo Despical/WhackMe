@@ -18,8 +18,8 @@ import java.util.logging.Level;
  * Measurements are aggregated per concrete event class using thread-safe
  * counters. In verbose mode each dispatch is also written to the plugin log;
  * otherwise data remains available for the on-demand timings report.
- *
- * @apiNote Profiling measures the complete Bukkit dispatch call, including all
+ * <p>
+ * API Note: Profiling measures the complete Bukkit dispatch call, including all
  * registered listeners. It does not identify the execution time of an
  * individual listener.
  * @author Despical

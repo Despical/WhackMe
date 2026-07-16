@@ -17,8 +17,7 @@ import org.jetbrains.annotations.NotNull;
  *     event.getGame().getPlayer().sendMessage("Good luck!");
  * }
  * }</pre>
- *
- * @apiNote This event is informational and is not cancellable. To deny a
+API note: This event is informational and is not cancellable. To deny a
  * player entry, listen to {@code PlayerJoinAttemptEvent} instead.
  * @author Despical
  * <p>

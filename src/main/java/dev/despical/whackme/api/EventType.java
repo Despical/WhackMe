@@ -16,8 +16,8 @@ import org.bukkit.event.Event;
  * The mapping is used by {@link EventManager#callByType(EventType, java.util.function.Supplier)}
  * to detect accidental mismatches between an event identifier and the event
  * supplied by internal dispatch code.
- *
- * @apiNote Plugin integrations normally listen to the concrete Bukkit event
+ * <p>
+ * API Note: Plugin integrations normally listen to the concrete Bukkit event
  * class directly. This enum is primarily useful for discovery, diagnostics,
  * and generic event tooling.
  * @author Despical

@@ -20,8 +20,8 @@ import org.jetbrains.annotations.NotNull;
  *         + " left because of " + event.getReason());
  * }
  * }</pre>
- *
- * @apiNote This event is informational and cannot prevent the player from
+ * <p>
+ * API Note: This event is informational and cannot prevent the player from
  * leaving the game.
  * @author Despical
  * <p>

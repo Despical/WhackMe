@@ -11,8 +11,8 @@ import java.util.Set;
  * This class deliberately contains no mutable registration state: the event
  * catalog is defined by {@link EventType}, while actual listener registration
  * continues to use Bukkit's standard plugin manager.
- *
- * @apiNote Use this registry when building generic integrations such as event
+ * <p>
+ * API Note: Use this registry when building generic integrations such as event
  * browsers or profilers. Normal listeners should register against the concrete
  * event classes.
  * @author Despical

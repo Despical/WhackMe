@@ -21,8 +21,7 @@ import org.jetbrains.annotations.NotNull;
  *     }
  * }
  * }</pre>
- *
- * @apiNote Cancelling internal recovery transitions such as
+API note: Cancelling internal recovery transitions such as
  * {@code RESTARTING} may leave a game occupied. Listeners should only cancel a
  * transition when they also manage the resulting lifecycle.
  * @author Despical

@@ -11,8 +11,7 @@ import org.jetbrains.annotations.NotNull;
  * The related {@link Game} provides access to the player, point handler,
  * scoreboard, boss bar, timer, state, and arena configuration. The exact
  * lifecycle guarantees depend on the concrete event.
- *
- * @apiNote A {@code Game} is a live runtime object. Do not mutate it from
+API note: A {@code Game} is a live runtime object. Do not mutate it from
  * asynchronous event handlers.
  * @author Despical
  * <p>
