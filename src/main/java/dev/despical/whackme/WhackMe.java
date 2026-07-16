@@ -234,8 +234,8 @@ public class WhackMe extends JavaPlugin {
 
     private void initializeMetrics() {
         metrics = new Metrics(this, 15722);
-        metrics.addCustomChart(new SimplePie("database_enabled", this::resolveMetricsDatabaseType));
-        metrics.addCustomChart(new SimplePie("update_notifier", () -> options.isEnabled(BooleanOption.UPDATE_NOTIFIER) ? "Enabled" : "Disabled"));
+        metrics.addCustomChart(new SimplePie("database_type", this::resolveMetricsDatabaseType));
+        metrics.addCustomChart(new SimplePie("placeholderapi_enabled", () -> isPluginEnabled("PlaceholderAPI") ? "yes" : "no"));
         metrics.addCustomChart(new SimplePie("noteblockapi_enabled", () -> isPluginEnabled("NoteBlockAPI") ? "yes" : "no"));
         metrics.addCustomChart(new SingleLineChart("arenas_total", () -> arenaRegistry.getArenas().size()));
         metrics.addCustomChart(new SingleLineChart("arenas_ready", () -> (int) arenaRegistry.getArenas().stream().filter(arena -> arena.getOption(ArenaKeys.READY)).count()));
