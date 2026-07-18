@@ -148,8 +148,8 @@ items:
       - ""
       - "<#2F2F2F>• <#B0BEC5>Status: %scoreboard_status%"
       - ""
-      - "<#B0BEC5>Show the in-game scoreboard"
-      - "<#B0BEC5>for players in this arena."
+      - "<#2F2F2F>• <#B0BEC5>Show the in-game scoreboard"
+      - "<#B0BEC5>  for players in this arena."
 
   bossbar-toggle:
     name: "<#FF7043><bold>Arena Boss Bar"
@@ -159,8 +159,8 @@ items:
       - ""
       - "<#2F2F2F>• <#B0BEC5>Status: %bossbar_status%"
       - ""
-      - "<#B0BEC5>Show the configured boss bar"
-      - "<#B0BEC5>for players in this arena."
+      - "<#2F2F2F>• <#B0BEC5>Show the configured boss bar"
+      - "<#B0BEC5>  for players in this arena."
 
   arena-record-reset:
     name: "<#FF5252><bold>Reset Arena Record"
