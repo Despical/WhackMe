@@ -57,6 +57,4 @@ tasks.shadowJar {
     exclude 'fonts/**'
 
     archiveFileName = "whack-me-${version}.jar"
-
-    destinationDirectory = file('C:\\Users\\berke\\OneDrive\\Masaüstü\\Paper 26.1.2\\plugins')
 }
