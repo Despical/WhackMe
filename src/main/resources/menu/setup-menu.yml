@@ -155,7 +155,7 @@ items:
     name: "<#FF7043><bold>Arena Boss Bar"
     material: ORANGE_DYE
     lore:
-      - "<#2F2F2F>• <#2196F3>CLICK <#BDBDBD>to toggle"
+      - "<#2F2F2F>• <#FF5722>CLICK <#BDBDBD>to toggle"
       - ""
       - "<#2F2F2F>• <#B0BEC5>Status: %bossbar_status%"
       - ""
