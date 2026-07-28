@@ -8,7 +8,7 @@ game:
   start-message:
     - ""
     - "<#00E676><bold>You started playing the <u>Whack Me</u> game!"
-    - "<#00E676><bold>You have 30s to punch as many whackies as possible!"
+    - "<#00E676><bold>You have %gameplay_time% seconds to punch as many whackies as possible!"
     - ""
 
   finished:
