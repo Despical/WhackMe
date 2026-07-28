@@ -61,6 +61,9 @@ game:
   chat-disabled-in-game: "<#FF5252>⚠ <#BDBDBD>You cannot send chat messages while in a game!"
   only-command-is-leave: "<#FF5252>The only command you can use is /wm leave."
 
+commands:
+  wait-for-cooldown: "<#FFCA28>⚠ <#BDBDBD>Please wait <#FFD54F>%seconds% seconds <#BDBDBD>before playing again."
+
 # Help Messages
 help-message:
   - "<#424242>▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"

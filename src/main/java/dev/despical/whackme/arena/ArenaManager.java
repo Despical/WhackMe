@@ -9,6 +9,7 @@ import dev.despical.whackme.game.StopReason;
 import dev.despical.whackme.game.Game;
 import dev.despical.whackme.user.User;
 import dev.despical.whackme.util.ShutdownDetector;
+import dev.despical.whackme.util.Var;
 import org.bukkit.entity.Player;
 
 /**
@@ -58,9 +59,13 @@ public class ArenaManager {
             return false;
         }
 
-        if (!player.hasPermission("whackme.cooldown.bypass") && user.getCooldown("play_again") > 0) {
-            chatManager.sendMessage(player, "commands.wait-for-cooldown");
-            return false;
+        if (!player.hasPermission("whackme.cooldown.bypass")) {
+            double cooldown = user.getCooldown("play_again");
+            if (cooldown > 0) {
+                chatManager.sendMessage(player, "commands.wait-for-cooldown",
+                    Var.of("%seconds%", (long) Math.ceil(cooldown)));
+                return false;
+            }
         }
 
         PlayerJoinAttemptEvent event = plugin.getEventManager().playerJoinAttempt(player, game);
