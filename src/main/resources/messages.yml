@@ -4,7 +4,7 @@
   ouch: "<#FF5252>Ouch!"
 
 game:
-  action-bar: "<gray>Score: <#00E676>%score% <dark_gray>| <gray>Time: <#FFCA28>%timer% <dark_gray>| <gray>Streak: <#00E676>%hit_streak%"
+  action-bar: "<gray>Score: <#00E676>%score% <dark_gray>| <gray>Time: <#FFCA28>%timer_formatted% <dark_gray>| <gray>Streak: <#00E676>%hit_streak% <dark_gray>| <gray>Accuracy: <#AB47BC>%success_rate%%"
   start-message:
     - ""
     - "<#00E676><bold>You started playing the <u>Whack Me</u> game!"

@@ -15,6 +15,7 @@ import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -78,12 +79,17 @@ public class PointHandler {
 
         int timer = game.getTimer();
         User user = plugin.getUserManager().getUser(player);
+        int correctBlocks = user.getStatistic(Statistics.LOCAL_CORRECT_BLOCKS);
+        int wrongBlocks = user.getStatistic(Statistics.LOCAL_WRONG_BLOCKS);
+        int totalBlocks = correctBlocks + wrongBlocks;
+        double successRate = totalBlocks == 0 ? 100D : (correctBlocks * 100D) / totalBlocks;
 
         Var[] vars = {
             Var.of("%timer%", timer),
             Var.of("%timer_formatted%", StringFormatUtils.formatIntoMMSS(timer)),
             Var.of("%score%", user.getStatistic(Statistics.LOCAL_SCORE)),
             Var.of("%hit_streak%", user.getStatistic(Statistics.LOCAL_HIT_STREAK)),
+            Var.of("%success_rate%", String.format(Locale.US, "%.1f", successRate)),
         };
 
         plugin.getChatManager().sendRawActionBar(player, message, vars);
