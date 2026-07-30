@@ -216,7 +216,7 @@ public class WhackMe extends JavaPlugin {
             return;
         }
 
-        UpdateChecker.init(this, 133887).onNewUpdate(_ -> {
+        UpdateChecker.init(this, 104912).onNewUpdate(_ -> {
             Logger logger = getLogger();
             logger.log(Level.INFO, "An update for Whack Me ({0}) is available at:", getDescription().getVersion());
             logger.log(Level.INFO, "https://www.spigotmc.org/resources/whack-me.104912/");
