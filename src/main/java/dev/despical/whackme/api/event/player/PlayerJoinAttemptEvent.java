@@ -1,5 +1,6 @@
 package dev.despical.whackme.api.event.player;
 
+import dev.despical.whackme.arena.Arena;
 import dev.despical.whackme.game.Game;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -7,25 +8,15 @@ import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Called after built-in arena checks pass but before a player is added to a
- * Whack Me game.
+ * Called when a player attempts to join a Whack Me game.
  * <p>
- * Cancelling the event prevents the join without modifying the target
- * {@link Game}. This is the extension point for custom permissions, queues,
- * maintenance rules, or third-party cooldowns.
+ * This event is fired after built-in arena checks pass but before the player is
+ * added to the target {@link Game}. Cancelling the event prevents every part
+ * of the game entry.
+ * <p>
+ * Typical use cases include permission checks, queue restrictions, custom
+ * cooldowns, maintenance locks, and external matchmaking integrations.
  *
- * <pre>{@code
- * @EventHandler
- * public void onJoinAttempt(PlayerJoinAttemptEvent event) {
- *     if (maintenanceArenas.contains(event.getGame().getArena().getId())) {
- *         event.setCancelled(true);
- *         event.getPlayer().sendMessage("This arena is under maintenance.");
- *     }
- * }
- * }</pre>
- * <p>
- * API Note: Cancellation does not send a message automatically. A listener
- * cancelling the attempt should explain the reason to the player when useful.
  * @author Despical
  * <p>
  * Created at 18.06.2026
@@ -34,16 +25,24 @@ public final class PlayerJoinAttemptEvent extends PlayerEvent implements Cancell
 
     private static final HandlerList HANDLER_LIST = new HandlerList();
 
+    /**
+     * The game the player is attempting to join.
+     */
+    @NotNull
     private final Game game;
+
+    /**
+     * Whether this game entry has been cancelled.
+     */
     private boolean cancelled;
 
     /**
-     * Creates a join attempt event.
+     * Constructs a new player join attempt event.
      *
-     * @param player player attempting to join
-     * @param game target game
+     * @param player the player attempting to join
+     * @param game the target game
      */
-    public PlayerJoinAttemptEvent(Player player, Game game) {
+    public PlayerJoinAttemptEvent(@NotNull Player player, @NotNull Game game) {
         super(player);
         this.game = game;
     }
@@ -51,10 +50,21 @@ public final class PlayerJoinAttemptEvent extends PlayerEvent implements Cancell
     /**
      * Returns the game the player is attempting to join.
      *
-     * @return target game
+     * @return the target game
      */
+    @NotNull
     public Game getGame() {
         return game;
+    }
+
+    /**
+     * Returns the arena the player is attempting to join.
+     *
+     * @return the target arena
+     */
+    @NotNull
+    public Arena getArena() {
+        return game.getArena();
     }
 
     /**
@@ -77,14 +87,35 @@ public final class PlayerJoinAttemptEvent extends PlayerEvent implements Cancell
         this.cancelled = cancel;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * Returns the Bukkit handler list for this event type.
+     *
+     * @return this event's handler list
+     */
     @NotNull
     @Override
     public HandlerList getHandlers() {
         return HANDLER_LIST;
     }
 
+    /**
+     * Returns the static Bukkit handler list for this event type.
+     *
+     * @return this event's handler list
+     */
+    @NotNull
     public static HandlerList getHandlerList() {
         return HANDLER_LIST;
+    }
+
+    /**
+     * Returns a compact debug representation of the game entry attempt.
+     *
+     * @return a string containing the player, arena, and cancellation state
+     */
+    @Override
+    public String toString() {
+        return "player=%s, arena=%s, cancelled=%s"
+            .formatted(getPlayer().getName(), getArena().getId(), cancelled);
     }
 }
