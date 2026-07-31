@@ -134,7 +134,7 @@ public class ArenaRegistry {
 
             arena.setOption(option, value);
         } else {
-            arena.setOption(option, cloneDefaultValue(option.getDefaultValue()));
+            arena.setOption(option, option.getDefaultValue());
         }
     }
 
@@ -155,12 +155,4 @@ public class ArenaRegistry {
         config.set(arena.getId() + "." + ArenaKeys.READY.getKey(), false);
     }
 
-    @SuppressWarnings("unchecked")
-    private <T> T cloneDefaultValue(T value) {
-        if (value instanceof java.util.List<?> list) {
-            return (T) new java.util.ArrayList<>(list);
-        }
-
-        return value;
-    }
 }
