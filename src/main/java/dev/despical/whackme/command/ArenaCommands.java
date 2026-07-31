@@ -3,6 +3,7 @@ package dev.despical.whackme.command;
 import dev.despical.commandframework.annotations.Command;
 import dev.despical.commandframework.annotations.Flag;
 import dev.despical.whackme.arena.Arena;
+import dev.despical.whackme.arena.ArenaIdValidator;
 import dev.despical.whackme.arena.options.ArenaKeys;
 import dev.despical.whackme.game.StopReason;
 import dev.despical.whackme.setup.SetupMenu;
@@ -32,6 +33,12 @@ public final class ArenaCommands extends CommandCategory {
     public void createArenaCommand(Arguments arguments) {
         String arenaId = arguments.getFirst();
         Var var = Var.of("%id%", arenaId);
+
+        if (!ArenaIdValidator.isValid(arenaId)) {
+            arguments.sendCenteredMessage("invalid-arena-id", var);
+            arguments.playSound(Sound.ENTITY_VILLAGER_NO, 1f, 1f);
+            return;
+        }
 
         if (arenaRegistry.isArenaExists(arenaId)) {
             arguments.sendCenteredMessage("arena-already-exists", var);
