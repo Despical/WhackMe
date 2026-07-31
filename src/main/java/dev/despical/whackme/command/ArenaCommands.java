@@ -26,7 +26,8 @@ public final class ArenaCommands extends CommandCategory {
         permission = "whackme.arena.create",
         usage = "/%label% create <arena id>",
         min = 1,
-        max = 1
+        max = 1,
+        senderType = Command.SenderType.PLAYER
     )
     public void createArenaCommand(Arguments arguments) {
         String arenaId = arguments.getFirst();
@@ -95,7 +96,7 @@ public final class ArenaCommands extends CommandCategory {
         Set<Arena> arenas = arenaRegistry.getArenas();
 
         if (arenas.isEmpty()) {
-            arguments.sendMessage("no-arenas-registered");
+            arguments.sendConfiguredMessage("no-arenas-registered");
             arguments.playSound(Sound.ENTITY_VILLAGER_NO, 1f, 1f);
             return;
         }
@@ -116,7 +117,7 @@ public final class ArenaCommands extends CommandCategory {
             }
         }
 
-        arguments.sendMessage("created-arenas", Var.of("%arenas%", arenasJoiner.toString()));
+        arguments.sendConfiguredMessage("created-arenas", Var.of("%arenas%", arenasJoiner.toString()));
         arguments.playSound(Sound.UI_BUTTON_CLICK, 1f, 1f);
     }
 
@@ -130,7 +131,7 @@ public final class ArenaCommands extends CommandCategory {
     )
     public void editArenaCommand(Arena arena, Arguments arguments) {
         if (arena == null) {
-            arguments.sendMessage("no-arena-found-with-that-name");
+            arguments.sendConfiguredMessage("no-arena-found-with-that-name");
             return;
         }
 

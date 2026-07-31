@@ -27,13 +27,8 @@ public final class Arguments extends CommandArguments {
         return plugin.getUserManager().getUser(arguments.<Player>getSender());
     }
 
-    public void sendMessage(String messageKey, Var... vars) {
+    public void sendConfiguredMessage(String messageKey, Var... vars) {
         plugin.getChatManager().sendMessage(this, messageKey, vars);
-    }
-
-    @Override
-    public void sendMessage(String messageKey) {
-        plugin.getChatManager().sendMessage(this, messageKey);
     }
 
     public void sendBlankMessage() {

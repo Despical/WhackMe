@@ -28,7 +28,7 @@ public final class PlayerCommands extends CommandCategory {
         Arena arena = arenaRegistry.getArena(arenaId);
 
         if (arena == null) {
-            arguments.sendMessage("no-arena-found-with-that-name");
+            arguments.sendConfiguredMessage("no-arena-found-with-that-name");
             return;
         }
 
@@ -67,7 +67,7 @@ public final class PlayerCommands extends CommandCategory {
         OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayerIfCached(arguments.getFirst());
 
         if (offlinePlayer == null) {
-            arguments.sendMessage("no-player-with-that-name");
+            arguments.sendConfiguredMessage("no-player-with-that-name");
             return;
         }
 
