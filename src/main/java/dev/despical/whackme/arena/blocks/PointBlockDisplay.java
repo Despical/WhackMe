@@ -2,10 +2,13 @@ package dev.despical.whackme.arena.blocks;
 
 import dev.despical.whackme.arena.Arena;
 import dev.despical.whackme.arena.options.ArenaKeys;
+import dev.despical.whackme.WhackMe;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.persistence.PersistentDataType;
 
 /**
  * @author Despical
@@ -13,6 +16,8 @@ import org.bukkit.entity.EntityType;
  * Created at 14.07.2026
  */
 final class PointBlockDisplay {
+
+    private static final NamespacedKey MANAGED_KEY = new NamespacedKey(WhackMe.getInstance(), "point_block_display");
 
     private final Arena arena;
     private final PointBlockMessages messages;
@@ -36,7 +41,12 @@ final class PointBlockDisplay {
     }
 
     boolean represents(Entity entity) {
-        return stand.equals(entity);
+        return isManaged(entity) && stand.equals(entity);
+    }
+
+    static boolean isManaged(Entity entity) {
+        return entity != null
+            && entity.getPersistentDataContainer().has(MANAGED_KEY, PersistentDataType.BYTE);
     }
 
     boolean isAlreadyHit() {
@@ -64,5 +74,6 @@ final class PointBlockDisplay {
         stand.setVisible(false);
         stand.setSilent(true);
         stand.setPersistent(false);
+        stand.getPersistentDataContainer().set(MANAGED_KEY, PersistentDataType.BYTE, (byte) 1);
     }
 }

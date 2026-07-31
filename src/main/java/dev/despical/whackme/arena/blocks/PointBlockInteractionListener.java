@@ -9,6 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 
 /**
@@ -58,22 +59,39 @@ final class PointBlockInteractionListener implements Listener {
 
     @EventHandler
     public void onArmorStandManipulate(PlayerArmorStandManipulateEvent event) {
-        if (arena.isPlaying(event.getPlayer()) && display.represents(event.getRightClicked())) {
+        if (display.represents(event.getRightClicked())) {
             event.setCancelled(true);
         }
     }
 
     @EventHandler
-    public void onArmorStandDamage(EntityDamageByEntityEvent event) {
-        if (!(event.getDamager() instanceof Player player)) {
+    public void onArmorStandDamage(EntityDamageEvent event) {
+        if (event instanceof EntityDamageByEntityEvent) {
             return;
         }
 
-        if (!(event.getEntity() instanceof ArmorStand) || !display.represents(event.getEntity()) || !arena.isPlaying(player)) {
+        if (!(event.getEntity() instanceof ArmorStand) || !display.represents(event.getEntity())) {
             return;
         }
 
         event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onArmorStandHit(EntityDamageByEntityEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
+
+        if (!(event.getEntity() instanceof ArmorStand) || !display.represents(event.getEntity())) {
+            return;
+        }
+
+        event.setCancelled(true);
+
+        if (!(event.getDamager() instanceof Player player) || !arena.isPlaying(player)) {
+            return;
+        }
 
         if (display.isAlreadyHit()) {
             plugin.getSoundManager().play(player, GameSound.OUCH);

@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'dev.despical'
-version = '1.9.3'
+version = '1.9.5'
 
 java {
     toolchain {
@@ -57,4 +57,6 @@ tasks.shadowJar {
     exclude 'fonts/**'
 
     archiveFileName = "whack-me-${version}.jar"
+
+    destinationDirectory = file('C:\\Users\\berke\\OneDrive\\Masaüstü\\Paper 26.1.2\\plugins')
 }
