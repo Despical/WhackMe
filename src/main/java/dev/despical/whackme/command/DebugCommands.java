@@ -21,7 +21,7 @@ public final class DebugCommands extends CommandCategory {
         min = 1,
         senderType = Command.SenderType.PLAYER
     )
-    public void debugComponentCommand(CommandArguments arguments) {
+    public void debugComponentCommand(Arguments arguments) {
         Component component = chatManager.parseMessage(arguments.concatArguments());
         arguments.sendMessage(component);
     }
@@ -32,7 +32,7 @@ public final class DebugCommands extends CommandCategory {
         permission = "whackme.debug.dump",
         usage = "/%label% debug dump"
     )
-    public void debugDumpTimingsCommand(CommandArguments arguments) {
+    public void debugDumpTimingsCommand(Arguments arguments) {
         plugin.getEventManager().sendTimingsReport(arguments.getSender());
     }
 }

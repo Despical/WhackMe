@@ -16,6 +16,7 @@ import dev.despical.whackme.arena.options.ArenaKeys;
 import dev.despical.whackme.bossbar.BossBarConfig;
 import dev.despical.whackme.chat.ChatManager;
 import dev.despical.whackme.command.PlayingCommandPolicy;
+import dev.despical.whackme.command.Arguments;
 import dev.despical.whackme.database.Database;
 import dev.despical.whackme.database.DatabaseType;
 import dev.despical.whackme.database.FlatFileStorage;
@@ -196,6 +197,7 @@ public class WhackMe extends JavaPlugin {
         commandFramework.addCustomParameter(Player.class, CommandArguments::getSender);
         commandFramework.addCustomParameter(User.class, args -> userManager.getUser(args.<Player>getSender()));
         commandFramework.addCustomParameter(Arena.class, args -> arenaRegistry.getArena(args.getFirst()));
+        commandFramework.setDefaultArguments(Arguments::new);
         commandFramework.registerAllInPackage("dev.despical.whackme.command");
 
         var messages = Stream.of(CommandErrorMessage.SHORT_ARG_SIZE, CommandErrorMessage.LONG_ARG_SIZE);

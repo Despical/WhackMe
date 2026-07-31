@@ -1,6 +1,5 @@
 package dev.despical.whackme.command;
 
-import dev.despical.commandframework.CommandArguments;
 import dev.despical.commandframework.CompleterHelper;
 import dev.despical.commandframework.annotations.Completer;
 import dev.despical.commandframework.debug.Debug;
@@ -21,7 +20,7 @@ public final class TabCompleters extends CommandCategory {
         aliases = "wm",
         permission = "whackme.command.tabcompleter"
     )
-    public List<String> onTabCompletion(CommandArguments arguments, CompleterHelper helper) {
+    public List<String> onTabCompletion(Arguments arguments, CompleterHelper helper) {
         int length = arguments.getLength();
         List<String> availableCommands = collectAvailableCommands(arguments);
 
@@ -53,7 +52,7 @@ public final class TabCompleters extends CommandCategory {
         aliases = "wm.debug",
         permission = "whackme.debug.tabcompleter"
     )
-    public List<String> debugTabCompleter(CommandArguments arguments, CompleterHelper helper) {
+    public List<String> debugTabCompleter(Arguments arguments, CompleterHelper helper) {
         if (arguments.isSenderConsole()) {
             return helper.empty();
         }
@@ -69,7 +68,7 @@ public final class TabCompleters extends CommandCategory {
         return helper.empty();
     }
 
-    private List<String> collectAvailableCommands(CommandArguments arguments) {
+    private List<String> collectAvailableCommands(Arguments arguments) {
         List<String> availableCommands = new ArrayList<>(List.of("join", "leave", "stats"));
 
         if (arguments.hasPermission("whackme.command.help")) {

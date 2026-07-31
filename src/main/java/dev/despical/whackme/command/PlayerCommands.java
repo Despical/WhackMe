@@ -1,6 +1,5 @@
 package dev.despical.whackme.command;
 
-import dev.despical.commandframework.CommandArguments;
 import dev.despical.commandframework.annotations.Command;
 import dev.despical.whackme.api.event.player.PlayerLeaveGameEvent;
 import dev.despical.whackme.arena.Arena;
@@ -24,12 +23,12 @@ public final class PlayerCommands extends CommandCategory {
         min = 1,
         senderType = Command.SenderType.PLAYER
     )
-    public void joinCommand(User user, CommandArguments arguments) {
-        String arenaId = arguments.getArgument(0);
+    public void joinCommand(User user, Arguments arguments) {
+        String arenaId = arguments.getFirst();
         Arena arena = arenaRegistry.getArena(arenaId);
 
         if (arena == null) {
-            chatManager.sendMessage(arguments, "no-arena-found-with-that-name");
+            arguments.sendMessage("no-arena-found-with-that-name");
             return;
         }
 
@@ -52,7 +51,7 @@ public final class PlayerCommands extends CommandCategory {
         usage = "/%label% stats [player]",
         senderType = Command.SenderType.PLAYER
     )
-    public void statsCommand(User user, CommandArguments arguments) {
+    public void statsCommand(User user, Arguments arguments) {
         if (arguments.isArgumentsEmpty()) {
             new StatsMenu(user).open();
             return;
@@ -68,7 +67,7 @@ public final class PlayerCommands extends CommandCategory {
         OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayerIfCached(arguments.getFirst());
 
         if (offlinePlayer == null) {
-            chatManager.sendMessage(arguments, "no-player-with-that-name");
+            arguments.sendMessage("no-player-with-that-name");
             return;
         }
 

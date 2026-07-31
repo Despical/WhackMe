@@ -1,6 +1,5 @@
 package dev.despical.whackme.command;
 
-import dev.despical.commandframework.CommandArguments;
 import dev.despical.commandframework.annotations.Command;
 import dev.despical.whackme.api.event.player.PlayerLeaveGameEvent;
 import dev.despical.whackme.arena.Arena;
@@ -21,32 +20,31 @@ public final class AdminCommands extends CommandCategory {
         name = "whackme",
         aliases = "wm",
         fallbackPrefix = "thewhackme",
-        permission = "whackme.command.help",
-        usage = "/%label% help",
+        usage = "/whackme help",
         desc = "Main command of the Whack Me."
     )
-    public void mainCommand(CommandArguments arguments) {
+    public void mainCommand(Arguments arguments) {
         if (arguments.isArgumentsEmpty()) {
-            arguments.sendMessage("&3This server is running &bWhackMe v{0} &3by &bDespical&3.", plugin.getDescription().getVersion());
+            arguments.sendMessage("<#00aaaa>This server is running <#55ffff>Whack Me v{0} <#00aaaa>by <#55ffff>Despical<#00aaaa>.", plugin.getDescription().getVersion());
 
-            if (arguments.hasPermission("whackme.admin")) {
-                arguments.sendMessage("&3Commands: &b/{0} help", arguments.getLabel());
+            if (arguments.hasPermission("tntrun.admin.help")) {
+                arguments.sendMessage("<#00aaaa>Commands: <#55ffff>/{0} help", arguments.getLabel());
             }
 
             return;
         }
 
-        chatManager.sendMessage(arguments, "unrecognized-arguments", Var.of("%label%", arguments.getLabel()), Var.of("%arguments%", arguments.concatArguments()));
+        arguments.sendMessage("unrecognized-arguments", Var.of("%label%", arguments.getLabel()), Var.of("%arguments%", arguments.concatArguments()));
     }
 
     @Command(
-        name = "whackme",
+        name = "whackme.reload",
         aliases = "wm.reload",
         permission = "whackme.admin.reload",
         usage = "/%label% reload",
         desc = "Reloads configuration files."
     )
-    public void reloadCommand(CommandArguments arguments) {
+    public void reloadCommand(Arguments arguments) {
         chatManager.loadFile();
         plugin.getOptions().reloadOptions();
         plugin.getPlayingCommandPolicy().reload();
@@ -57,7 +55,7 @@ public final class AdminCommands extends CommandCategory {
         plugin.getSoundManager().reload();
         plugin.getGameManager().reload();
 
-        chatManager.sendMessage(arguments, "reloaded-configuration");
+        arguments.sendMessage("reloaded-configuration");
     }
 
     @Command(
@@ -68,12 +66,12 @@ public final class AdminCommands extends CommandCategory {
         desc = "Stops the current or specified arena game.",
         max = 1
     )
-    public void stopCommand(CommandArguments arguments) {
+    public void stopCommand(Arguments arguments) {
         boolean isConsoleSender = arguments.isSenderConsole();
 
         if (arguments.isArgumentsEmpty()) {
             if (isConsoleSender) {
-                chatManager.sendMessage(arguments, "stop-command.correct-usage", Var.of("%label%", arguments.getLabel()));
+                arguments.sendMessage("stop-command.correct-usage", Var.of("%label%", arguments.getLabel()));
                 return;
             }
 
@@ -81,7 +79,7 @@ public final class AdminCommands extends CommandCategory {
             Arena arena = arenaRegistry.getArena(player);
 
             if (arena == null) {
-                chatManager.sendMessage(player, "not-playing");
+                arguments.sendMessage("not-playing");
                 return;
             }
 
@@ -92,15 +90,14 @@ public final class AdminCommands extends CommandCategory {
         Arena arena = arenaRegistry.getArena(arguments.getFirst());
 
         if (arena == null) {
-            chatManager.sendMessage(arguments, "no-arena-found-with-that-name");
+            arguments.sendMessage("no-arena-found-with-that-name");
             return;
         }
 
         if (arena.getPlayer() == null) {
-            chatManager.sendMessage(arguments, "stop-command.not-playing");
+            arguments.sendMessage("stop-command.not-playing");
             return;
         }
-
 
         arenaManager.stopArena(arena, StopReason.STOP_COMMAND);
 
@@ -108,7 +105,7 @@ public final class AdminCommands extends CommandCategory {
             return;
         }
 
-        chatManager.sendMessage(arguments, "stop-command.stopped");
+        arguments.sendMessage("stop-command.stopped");
     }
 
     @Command(
@@ -117,17 +114,17 @@ public final class AdminCommands extends CommandCategory {
         permission = "whackme.command.help",
         usage = "/%label% help"
     )
-    public void helpCommand(User user, CommandArguments arguments) {
+    public void helpCommand(Arguments arguments) {
         Var var = Var.of("%label%", arguments.getLabel());
-        chatManager.sendMessage(arguments, "help-message", var);
+        arguments.sendMessage("help-message", var);
 
-        if (arguments.hasPermission("whackme.admin.help")) {
-            arguments.sendMessage("");
-            chatManager.sendMessage(arguments, "admin-help-message", var);
-            arguments.sendMessage("");
+        if (arguments.hasPermission("tntrun.admin.help")) {
+            arguments.sendBlankMessage();
+            arguments.sendMessage("admin-help-message", var);
+            arguments.sendBlankMessage();
 
             if (BooleanOption.DEBUG.value()) {
-                chatManager.sendMessage(arguments, "debug-help-message", var);
+                arguments.sendMessage("debug-help-message", var);
             }
         }
     }
@@ -142,9 +139,9 @@ public final class AdminCommands extends CommandCategory {
         max = 1,
         senderType = Command.SenderType.PLAYER
     )
-    public void kickCommand(User user, CommandArguments arguments) {
+    public void kickCommand(User user, Arguments arguments) {
         Player targetPlayer = arguments.getPlayer(0).orElseGet(() -> {
-            chatManager.sendMessage(arguments, "no-player-with-that-name");
+            arguments.sendMessage("no-player-with-that-name");
             return null;
         });
 
@@ -156,14 +153,15 @@ public final class AdminCommands extends CommandCategory {
         Arena playerArena = targetUser.getArena();
 
         if (playerArena == null) {
-            chatManager.sendMessage(arguments, "kick-command.not-playing", Var.ofPlayer(targetPlayer));
+            arguments.sendMessage("kick-command.not-playing", Var.ofPlayer(targetPlayer));
             return;
         }
 
         arenaManager.leaveAttempt(targetUser, PlayerLeaveGameEvent.LeaveReason.KICK);
 
-        chatManager.sendMessage(arguments, "kick-command.kicked",
+        arguments.sendMessage("kick-command.kicked",
             Var.of("%player%", targetPlayer.getName()),
-            Var.of("%arena%", playerArena.getId()));
+            Var.of("%arena%", playerArena.getId())
+        );
     }
 }
