@@ -21,6 +21,7 @@ dependencies {
     implementation('dev.despical:commons:2.1.2') {
         exclude group: 'org.slf4j'
     }
+
     implementation 'dev.despical:command-framework:1.6.5'
     implementation 'dev.despical:inventory-framework:2.4.7'
     implementation 'dev.despical:file-items:1.2.5'
@@ -57,6 +58,4 @@ tasks.shadowJar {
     exclude 'fonts/**'
 
     archiveFileName = "whack-me-${version}.jar"
-
-    destinationDirectory = file('C:\\Users\\berke\\OneDrive\\Masaüstü\\Paper 26.1.2\\plugins')
 }
