@@ -40,6 +40,7 @@ public class SignManager {
     private final ChatManager chatManager;
     private final Map<BlockKey, ArenaSign> signsByBlock;
     private final Map<Arena, Set<ArenaSign>> signsByArena;
+    private final Map<Arena, List<String>> unresolvedSignLocations;
     private final Map<GameState, String> gameStateToString;
 
     public SignManager(WhackMe plugin) {
@@ -47,6 +48,7 @@ public class SignManager {
         this.chatManager = plugin.getChatManager();
         this.signsByBlock = new HashMap<>();
         this.signsByArena = new HashMap<>();
+        this.unresolvedSignLocations = new HashMap<>();
         this.signLines = List.of();
         this.gameStateToString = new EnumMap<>(GameState.class);
         this.loadSigns();
@@ -67,7 +69,24 @@ public class SignManager {
             Iterator<String> iterator = locations.iterator();
 
             while (iterator.hasNext()) {
-                Block block = LocationSerializer.fromString(iterator.next()).getBlock();
+                String serializedLocation = iterator.next();
+                Location location;
+
+                try {
+                    location = LocationSerializer.fromString(serializedLocation);
+                } catch (RuntimeException _) {
+                    location = null;
+                }
+
+                if (location == null) {
+                    unresolvedSignLocations.computeIfAbsent(arena, _ -> new ArrayList<>()).add(serializedLocation);
+
+                    plugin.getLogger().warning("Could not load sign for arena '" + arena.getId()
+                        + "': world is missing or location is invalid. Keeping the saved entry.");
+                    continue;
+                }
+
+                Block block = location.getBlock();
 
                 if (block.getState() instanceof Sign) {
                     ArenaSign arenaSign = new ArenaSign(arena, block);
@@ -182,6 +201,15 @@ public class SignManager {
     public List<ArenaSign> getSigns(Arena arena) {
         Set<ArenaSign> arenaSigns = signsByArena.get(arena);
         return arenaSigns == null ? List.of() : List.copyOf(arenaSigns);
+    }
+
+    public List<String> getSerializedLocations(Arena arena) {
+        List<String> locations = new ArrayList<>(getSigns(arena).stream()
+            .map(ArenaSign::serializedLocation)
+            .toList());
+
+        locations.addAll(unresolvedSignLocations.getOrDefault(arena, List.of()));
+        return locations;
     }
 
     public Var[] getSignVars(Block block) {

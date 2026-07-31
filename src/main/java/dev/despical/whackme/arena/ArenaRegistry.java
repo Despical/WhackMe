@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -145,7 +146,9 @@ public class ArenaRegistry {
 
         boolean missingRequiredLocation = arena.getOption(ArenaKeys.START_LOCATION) == null
             || arena.getOption(ArenaKeys.END_LOCATION) == null
-            || arena.getOption(ArenaKeys.PORTAL_LOCATIONS).isEmpty();
+            || arena.getOption(ArenaKeys.PORTAL_LOCATIONS) == null
+            || arena.getOption(ArenaKeys.PORTAL_LOCATIONS).isEmpty()
+            || arena.getOption(ArenaKeys.PORTAL_LOCATIONS).stream().anyMatch(Objects::isNull);
 
         if (!missingRequiredLocation) {
             return;
@@ -153,6 +156,8 @@ public class ArenaRegistry {
 
         arena.setOption(ArenaKeys.READY, false);
         config.set(arena.getId() + "." + ArenaKeys.READY.getKey(), false);
+
+        plugin.getLogger().warning("Arena '" + arena.getId() + "' was marked not ready because one or more required locations are missing or invalid.");
     }
 
 }

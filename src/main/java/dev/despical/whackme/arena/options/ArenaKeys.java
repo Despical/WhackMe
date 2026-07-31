@@ -59,8 +59,8 @@ public final class ArenaKeys {
 
         @Override
         protected List<Location> parse(String value) {
-            return gson.fromJson(value, new TypeToken<List<Location>>() {
-            }.getType());
+            List<Location> locations = gson.fromJson(value, new TypeToken<List<Location>>() {}.getType());
+            return locations == null ? new ArrayList<>() : locations;
         }
     };
 
@@ -108,7 +108,7 @@ public final class ArenaKeys {
             protected Integer parse(String value) {
                 try {
                     return Integer.parseInt(value);
-                } catch (NumberFormatException ignored) {
+                } catch (NumberFormatException _) {
                     return defaultValue;
                 }
             }

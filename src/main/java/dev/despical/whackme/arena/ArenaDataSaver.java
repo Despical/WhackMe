@@ -1,12 +1,9 @@
 package dev.despical.whackme.arena;
 
 import dev.despical.commons.configuration.ConfigUtils;
-import dev.despical.commons.serializer.LocationSerializer;
 import dev.despical.whackme.WhackMe;
 import dev.despical.whackme.arena.options.ArenaKeys;
 import dev.despical.whackme.arena.options.ArenaOption;
-import dev.despical.whackme.sign.ArenaSign;
-import org.bukkit.block.Sign;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.List;
@@ -44,13 +41,7 @@ public class ArenaDataSaver {
             saveSingleOption(arena, config, rootPath, option);
         }
 
-        List<String> signLocations = plugin.getSignManager().getSigns(arena)
-            .stream()
-            .map(ArenaSign::sign)
-            .map(Sign::getLocation)
-            .map(LocationSerializer::toString)
-            .toList();
-
+        List<String> signLocations = plugin.getSignManager().getSerializedLocations(arena);
         config.set(rootPath + "signs", signLocations);
     }
 
