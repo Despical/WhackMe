@@ -7,7 +7,7 @@ package dev.despical.whackme.option;
  */
 public enum BooleanOption implements ConfigOption<Boolean> {
 
-    BLOCK_COMMANDS("game-settings.block-commands", true),
+    DISABLE_COMMANDS_WHILE_PLAYING("command-settings.disable-commands-while-playing", true),
     BLOCK_OUTSIDE_CHAT("chat-settings.separate-chat", true),
     DISABLE_CHAT_IN_GAME("chat-settings.disable-chat-in-game", false),
     ENABLE_CHAT_FORMATTING("chat-settings.enable-formatting", true),

@@ -13,9 +13,6 @@
 database: flat
 
 game-settings:
-  # If enabled, players in a game can only use commands permitted below.
-  block-commands: true
-
   # If enabled, the in-game leave command is blocked by the command policy.
   block-leave-command: false
 

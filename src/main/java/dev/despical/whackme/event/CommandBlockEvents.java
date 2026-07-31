@@ -17,7 +17,7 @@ public final class CommandBlockEvents extends ListenerAdapter {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onCommand(PlayerCommandPreprocessEvent event) {
         Player player = event.getPlayer();
-        if (!BooleanOption.BLOCK_COMMANDS.value()
+        if (!BooleanOption.DISABLE_COMMANDS_WHILE_PLAYING.value()
             || !arenaRegistry.isInArena(player)
             || player.hasPermission(PlayingCommandPolicy.BYPASS_PERMISSION)
             || plugin.getPlayingCommandPolicy().isCommandAllowed(event.getMessage())) {
