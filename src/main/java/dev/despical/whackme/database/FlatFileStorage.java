@@ -115,14 +115,11 @@ public final class FlatFileStorage extends Database {
     @Override
     public void saveAllData() {
         plugin.getUserManager().getUsers().forEach(this::saveData);
+        ConfigUtils.saveConfig(plugin, config, "data/stats");
     }
 
     @Override
     public void shutdown() {
-        for (User user : plugin.getUserManager().getUsers()) {
-            saveData(user);
-        }
-
-        ConfigUtils.saveConfig(plugin, config, "data/stats");
+        saveAllData();
     }
 }
