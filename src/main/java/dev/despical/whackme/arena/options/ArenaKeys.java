@@ -12,6 +12,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * @author Despical
@@ -49,7 +50,7 @@ public final class ArenaKeys {
     public static final ArenaOption<ItemStack> RED_BLOCK_ITEM = createPointBlockOption("redBlockItem", Material.RED_TERRACOTTA);
     public static final ArenaOption<ItemStack> GRAY_BLOCK_ITEM = createPointBlockOption("grayBlockItem", Material.CYAN_TERRACOTTA);
 
-    public static final ArenaOption<List<Location>> PORTAL_LOCATIONS = new ArenaOption<>("portalLocations", new ArrayList<>(), (Class<List<Location>>) (Class<?>) List.class) {
+    public static final ArenaOption<List<Location>> PORTAL_LOCATIONS = new ArenaOption<>("portalLocations", (Class<List<Location>>) (Class<?>) List.class, (Supplier<List<Location>>) ArrayList::new) {
 
         @Override
         public Object serialize(List<Location> value) {
@@ -66,8 +67,8 @@ public final class ArenaKeys {
     @SuppressWarnings("unchecked")
     public static final ArenaOption<List<PointBlock>> POINT_BLOCKS = new ArenaOption<>(
         "pointBlocks",
-        new ArrayList<>(),
-        (Class<List<PointBlock>>) (Class<?>) List.class
+        (Class<List<PointBlock>>) (Class<?>) List.class,
+        (Supplier<List<PointBlock>>) ArrayList::new
     ) {
         @Override
         public boolean isPersistent() {
@@ -76,7 +77,7 @@ public final class ArenaKeys {
     };
 
     private static ArenaOption<ItemStack> createPointBlockOption(String key, Material material) {
-        return new ArenaOption<>(key, new ItemStack(material), ItemStack.class) {
+        return new ArenaOption<>(key, ItemStack.class, (Supplier<ItemStack>) () -> new ItemStack(material)) {
 
             @Override
             public Object serialize(ItemStack value) {
@@ -91,7 +92,7 @@ public final class ArenaKeys {
     }
 
     private static ArenaOption<Boolean> booleanOption(String key, boolean defaultValue) {
-        return new ArenaOption<>(key, defaultValue, Boolean.class) {
+        return new ArenaOption<>(key, Boolean.class, defaultValue) {
 
             @Override
             protected Boolean parse(String value) {
@@ -101,7 +102,7 @@ public final class ArenaKeys {
     }
 
     private static ArenaOption<Integer> integerOption(String key, int defaultValue) {
-        return new ArenaOption<>(key, defaultValue, Integer.class) {
+        return new ArenaOption<>(key, Integer.class, defaultValue) {
 
             @Override
             protected Integer parse(String value) {
@@ -115,7 +116,7 @@ public final class ArenaKeys {
     }
 
     private static ArenaOption<String> stringOption(String key, String defaultValue) {
-        return new ArenaOption<>(key, defaultValue, String.class) {
+        return new ArenaOption<>(key, String.class, defaultValue) {
 
             @Override
             protected String parse(String value) {
@@ -125,7 +126,7 @@ public final class ArenaKeys {
     }
 
     private static ArenaOption<Double> doubleOption(String key, double defaultValue) {
-        return new ArenaOption<>(key, defaultValue, Double.class) {
+        return new ArenaOption<>(key, Double.class, defaultValue) {
 
             @Override
             protected Double parse(String value) {
@@ -139,7 +140,7 @@ public final class ArenaKeys {
     }
 
     private static ArenaOption<Location> locationOption(String key) {
-        return new ArenaOption<>(key, null, Location.class) {
+        return new ArenaOption<>(key, Location.class, (Location) null) {
 
             @Override
             public Object serialize(Location value) {
