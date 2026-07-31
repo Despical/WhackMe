@@ -9,26 +9,25 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Base class for Whack Me events associated with one Bukkit player.
  * <p>
- * {@link #getPlayer()} provides the live Bukkit entity, while
- * {@link #getUser()} resolves the plugin-owned user model used for statistics
- * and game membership.
- * <p>
- * API Note: The player may disconnect between event dispatch and delayed work.
- * Do not retain the Bukkit entity for asynchronous or long-lived operations;
- * retain its UUID instead.
+ * Use {@link #getPlayer()} for Bukkit operations and {@link #getUser()} for
+ * Whack Me-specific state such as statistics and current game membership.
+ *
  * @author Despical
  * <p>
  * Created at 29.01.2026
  */
 public abstract class PlayerEvent extends WhackMeEvent {
 
+    /**
+     * The Bukkit player associated with this event.
+     */
     @NotNull
     private final Player player;
 
     /**
-     * Creates a player-scoped Whack Me event.
+     * Constructs a new player event.
      *
-     * @param player Bukkit player associated with the event
+     * @param player the Bukkit player associated with the event
      */
     protected PlayerEvent(@NotNull Player player) {
         this.player = player;
@@ -37,7 +36,7 @@ public abstract class PlayerEvent extends WhackMeEvent {
     /**
      * Returns the Bukkit player associated with this event.
      *
-     * @return event player
+     * @return the event player
      */
     @NotNull
     public final Player getPlayer() {
@@ -45,9 +44,9 @@ public abstract class PlayerEvent extends WhackMeEvent {
     }
 
     /**
-     * Resolves the Whack Me user model associated with the event player.
+     * Returns the plugin-specific {@link User} for this player.
      *
-     * @return plugin user model for the player
+     * @return the Whack Me user representing the player
      */
     @NotNull
     public final User getUser() {
@@ -55,12 +54,12 @@ public abstract class PlayerEvent extends WhackMeEvent {
     }
 
     /**
-     * Returns a compact representation suitable for profiler output.
+     * Returns a compact debug representation containing the player name.
      *
-     * @return player detail string
+     * @return a string containing the event player
      */
     @Override
     public String toString() {
-        return "[player=%s]".formatted(player.getName());
+        return "player=%s".formatted(player.getName());
     }
 }
