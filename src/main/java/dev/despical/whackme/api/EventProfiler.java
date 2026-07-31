@@ -4,6 +4,8 @@ import dev.despical.whackme.WhackMe;
 import dev.despical.whackme.option.BooleanOption;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.Event;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Locale;
 import java.util.Map;
@@ -12,49 +14,47 @@ import java.util.concurrent.atomic.LongAdder;
 import java.util.logging.Level;
 
 /**
- * Collects listener execution timings for events dispatched by
- * {@link EventManager}.
+ * Collects optional execution timings for Whack Me custom event listeners.
  * <p>
- * Measurements are aggregated per concrete event class using thread-safe
- * counters. In verbose mode each dispatch is also written to the plugin log;
- * otherwise data remains available for the on-demand timings report.
- * <p>
- * API Note: Profiling measures the complete Bukkit dispatch call, including all
- * registered listeners. It does not identify the execution time of an
- * individual listener.
+ * Profiling is disabled by default unless enabled through the plugin
+ * configuration. Recorded data is held in memory for the lifetime of the
+ * plugin and can be rendered to an authorized command sender.
+ *
  * @author Despical
  * <p>
  * Created at 29.01.2026
  */
+@ApiStatus.Internal
 public final class EventProfiler {
 
-    private boolean enabled, verbose;
+    private boolean enabled;
+    private boolean verbose;
 
     private final WhackMe plugin;
     private final Map<Class<? extends Event>, ProfileData> profiles;
 
     /**
-     * Creates a profiler and loads its enabled and verbose flags.
+     * Creates a profiler for the plugin event dispatcher.
      *
-     * @param plugin active Whack Me plugin instance
+     * @param plugin the owning Whack Me instance
      */
-    public EventProfiler(WhackMe plugin) {
+    public EventProfiler(@NotNull WhackMe plugin) {
         this.plugin = plugin;
         this.profiles = new ConcurrentHashMap<>();
         this.reload();
     }
 
     /**
-     * Returns whether event measurements are currently collected.
+     * Returns whether event timing collection is enabled.
      *
-     * @return {@code true} when profiling is enabled
+     * @return {@code true} when event timings are being recorded
      */
     public boolean isEnabled() {
         return enabled;
     }
 
     /**
-     * Returns whether every measured dispatch is logged immediately.
+     * Returns whether every event invocation is logged.
      *
      * @return {@code true} when verbose profiling is enabled
      */
@@ -63,8 +63,7 @@ public final class EventProfiler {
     }
 
     /**
-     * Reloads profiler flags from the current configuration options.
-     * Existing measurements are retained.
+     * Reloads profiler switches from the active configuration.
      */
     public void reload() {
         this.enabled = BooleanOption.EVENT_PROFILING_ENABLED.value();
@@ -72,12 +71,12 @@ public final class EventProfiler {
     }
 
     /**
-     * Records one completed event dispatch.
+     * Records one completed custom event invocation.
      *
-     * @param event dispatched event
-     * @param durationNanos complete dispatch duration in nanoseconds
+     * @param event the event that was dispatched
+     * @param durationNanos listener execution time in nanoseconds
      */
-    public void record(Event event, long durationNanos) {
+    public void record(@NotNull Event event, long durationNanos) {
         if (!enabled) {
             return;
         }
@@ -91,12 +90,11 @@ public final class EventProfiler {
     }
 
     /**
-     * Sends a report ordered by total execution time to the supplied sender.
-     * A configuration hint is sent instead when profiling is disabled.
+     * Sends accumulated timing totals and averages to a command sender.
      *
-     * @param sender report recipient
+     * @param sender the report recipient
      */
-    public void sendReport(CommandSender sender) {
+    public void sendReport(@NotNull CommandSender sender) {
         if (!enabled) {
             plugin.getChatManager().sendRawMessage(sender,
                 "<#FF1744>✖ <#ff5c5c>Event timings system is currently disabled."
