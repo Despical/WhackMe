@@ -8,52 +8,59 @@ import dev.despical.whackme.api.event.player.PlayerJoinAttemptEvent;
 import dev.despical.whackme.api.event.player.PlayerLeaveGameEvent;
 import dev.despical.whackme.api.event.player.PlayerStatisticChangeEvent;
 import org.bukkit.event.Event;
+import org.jetbrains.annotations.NotNull;
 
 /**
- * Lists every Bukkit event exposed by the Whack Me API and associates each
- * logical event type with its concrete implementation class.
+ * Enumerates every custom Bukkit event dispatched through the Whack Me event
+ * API.
  * <p>
- * The mapping is used by {@link EventManager#callByType(EventType, java.util.function.Supplier)}
- * to detect accidental mismatches between an event identifier and the event
- * supplied by internal dispatch code.
- * <p>
- * API Note: Plugin integrations normally listen to the concrete Bukkit event
- * class directly. This enum is primarily useful for discovery, diagnostics,
- * and generic event tooling.
+ * The enum is used by {@link EventManager} to validate event factories and by
+ * {@link EventRegistry} for discovery. Bukkit listeners should still register
+ * against the concrete event classes.
+ *
  * @author Despical
  * <p>
  * Created at 29.01.2026
  */
 public enum EventType {
 
-    /** A game has entered active play. */
+    /**
+     * Fired after a game enters active play.
+     */
     GAME_START(GameStartEvent.class),
 
-    /** A game has reached its normal ending phase. */
+    /**
+     * Fired when a game reaches its normal ending phase.
+     */
     GAME_END(GameEndEvent.class),
 
-    /** A game is about to transition to another state. */
+    /**
+     * Fired before a game changes state.
+     */
     GAME_STATE_CHANGE(GameStateChangeEvent.class),
 
-    /** A game has been forcefully stopped. */
+    /**
+     * Fired after a game is forcefully stopped and cleaned up.
+     */
     GAME_STOP(GameStopEvent.class),
 
-    /** A player is attempting to join a game. */
+    /**
+     * Fired before a player joins a game.
+     */
     PLAYER_JOIN_ATTEMPT(PlayerJoinAttemptEvent.class),
 
-    /** A player is about to leave a game. */
+    /**
+     * Fired before a player leaves a game.
+     */
     PLAYER_LEAVE(PlayerLeaveGameEvent.class),
 
-    /** A player's stored or temporary statistic is about to change. */
+    /**
+     * Fired before a player statistic is stored.
+     */
     PLAYER_STAT_CHANGE(PlayerStatisticChangeEvent.class);
 
     private final Class<? extends Event> eventClass;
 
-    /**
-     * Creates an event type mapping.
-     *
-     * @param eventClass concrete Bukkit event class represented by the type
-     */
     EventType(Class<? extends Event> eventClass) {
         this.eventClass = eventClass;
     }
@@ -61,8 +68,9 @@ public enum EventType {
     /**
      * Returns the concrete Bukkit event class represented by this type.
      *
-     * @return concrete event implementation class
+     * @return the registered event class
      */
+    @NotNull
     public Class<? extends Event> getEventClass() {
         return eventClass;
     }
