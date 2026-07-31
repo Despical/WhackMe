@@ -7,7 +7,6 @@ import dev.despical.whackme.arena.options.ArenaOption;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author Despical
@@ -24,10 +23,9 @@ public class ArenaDataSaver {
 
     public void saveAllArenas() {
         ArenaRegistry arenaRegistry = plugin.getArenaRegistry();
-        Set<Arena> arenas = arenaRegistry.getArenas();
-
         FileConfiguration config = arenaRegistry.getConfig();
-        for (Arena arena : arenas) {
+
+        for (Arena arena : arenaRegistry.getArenas()) {
             saveArenaData(arena, config);
         }
 
