@@ -175,8 +175,6 @@ public class User {
     }
 
     public void resetTemporaryStats() {
-        cooldowns.clear();
-
         for (StatisticType<?> stat : Statistics.getTemporaryStats()) {
             stats.put(stat, stat.getDefaultValue());
         }
