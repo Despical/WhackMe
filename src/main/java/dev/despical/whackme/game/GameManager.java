@@ -1,6 +1,5 @@
 package dev.despical.whackme.game;
 
-import dev.despical.commons.serializer.InventorySerializer;
 import dev.despical.whackme.WhackMe;
 import dev.despical.whackme.arena.Arena;
 import dev.despical.whackme.arena.options.ArenaKeys;
@@ -36,13 +35,17 @@ public final class GameManager {
         return game != null && game.join(user, joinMessagePath);
     }
 
-    public void preparePlayer(Game game, User user) {
+    public boolean preparePlayer(Game game, User user) {
         Player player = user.getPlayer();
         if (player == null) {
-            return;
+            return false;
         }
 
-        InventorySerializer.saveInventoryToFile(plugin, player);
+        if (!plugin.getPlayerInventoryManager().save(player)) {
+            plugin.getLogger().severe("Could not save inventory for " + player.getName() + "; refusing to clear it.");
+            return false;
+        }
+
         player.getInventory().clear();
 
         user.resetTemporaryStats();
@@ -53,6 +56,7 @@ public final class GameManager {
 
         plugin.getRadio().addArena(game.getArena());
         plugin.getSignManager().updateSigns(game.getArena());
+        return true;
     }
 
     public void leaveUser(User user) {
@@ -68,7 +72,7 @@ public final class GameManager {
             return;
         }
 
-        finishGame(game, true, false, false);
+        finishGame(game, true, false, false, false);
         game.setState(GameState.RESTARTING);
     }
 
@@ -95,6 +99,10 @@ public final class GameManager {
     }
 
     public void finishGame(Game game, boolean affectStats, boolean teleportToEnd, boolean sendFinishMessage) {
+        finishGame(game, affectStats, teleportToEnd, sendFinishMessage, true);
+    }
+
+    private void finishGame(Game game, boolean affectStats, boolean teleportToEnd, boolean sendFinishMessage, boolean restoreInventory) {
         User user = game.getUser();
         Player player = game.getPlayer();
 
@@ -110,7 +118,7 @@ public final class GameManager {
         plugin.getDatabase().saveData(user);
         plugin.getLeaderboardManager().refreshAllLeaderboards(List.of(user));
 
-        cleanupPlayer(game, player, teleportToEnd);
+        cleanupPlayer(game, player, teleportToEnd, restoreInventory);
 
         user.resetTemporaryStats();
         game.clearUser();
@@ -193,7 +201,7 @@ public final class GameManager {
         Player player = game.getPlayer();
 
         if (player != null) {
-            cleanupPlayer(game, player, true);
+            cleanupPlayer(game, player, true, true);
             chatManager.sendCenteredMessage(player, reason.getMessagePath());
         }
 
@@ -206,6 +214,10 @@ public final class GameManager {
     }
 
     private void cleanupPlayer(Game game, Player player, boolean teleportToEnd) {
+        cleanupPlayer(game, player, teleportToEnd, true);
+    }
+
+    private void cleanupPlayer(Game game, Player player, boolean teleportToEnd, boolean restoreInventory) {
         Arena arena = game.getArena();
 
         game.getPointHandler().clear();
@@ -217,8 +229,10 @@ public final class GameManager {
             return;
         }
 
-        player.getInventory().clear();
-        Utils.restoreSavedPlayerState(player);
+        if (restoreInventory) {
+            player.getInventory().clear();
+            plugin.getPlayerInventoryManager().restore(player);
+        }
 
         if (teleportToEnd && arena.getOption(ArenaKeys.END_LOCATION) != null) {
             player.teleport(arena.getOption(ArenaKeys.END_LOCATION));

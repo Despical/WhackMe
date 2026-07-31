@@ -1,7 +1,6 @@
 package dev.despical.whackme.setup.pages;
 
 import dev.despical.commons.item.ItemBuilder;
-import dev.despical.commons.serializer.InventorySerializer;
 import dev.despical.fileitems.SpecialItem;
 import dev.despical.inventoryframework.Gui;
 import dev.despical.inventoryframework.GuiItem;
@@ -106,7 +105,7 @@ public class SetupHomePage extends SetupPage {
                 Player player = (Player) event.getWhoClicked();
                 player.getInventory().clear();
 
-                Utils.restoreSavedPlayerState(player);
+                plugin.getPlayerInventoryManager().restore(player);
             };
 
             if (user.isInEditingMode()) {
@@ -115,7 +114,10 @@ public class SetupHomePage extends SetupPage {
             }
 
             Player player = (Player) event.getWhoClicked();
-            InventorySerializer.saveInventoryToFile(plugin, player);
+            if (!plugin.getPlayerInventoryManager().save(player)) {
+                plugin.getLogger().severe("Could not save inventory for " + player.getName() + "; refusing to enter portal editing.");
+                return;
+            }
 
             Inventory inventory = player.getInventory();
             inventory.clear();

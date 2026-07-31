@@ -84,6 +84,11 @@ public final class Game extends BukkitRunnable {
         }
 
         this.user = user;
+        if (!plugin.getGameManager().preparePlayer(this, user)) {
+            this.user = null;
+            return false;
+        }
+
         states.get(GameState.WAITING).join(user);
         user.sendMessage(messagePath, Var.of("%gameplay_time%", IntOption.GAMEPLAY_TIME.value()));
         if (setState(GameState.IN_GAME)) {

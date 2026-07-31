@@ -38,6 +38,7 @@ import dev.despical.whackme.stats.offline.StatsCacheManager;
 import dev.despical.whackme.user.User;
 import dev.despical.whackme.user.UserManager;
 import dev.despical.whackme.util.AutoSaveHandler;
+import dev.despical.whackme.util.PlayerInventoryManager;
 import dev.despical.whackme.util.ShutdownDetector;
 import dev.despical.whackme.util.Var;
 import lombok.Getter;
@@ -90,6 +91,7 @@ public class WhackMe extends JavaPlugin {
     private ArenaDataSaver arenaDataSaver;
     private SetupDialogTracker setupDialogTracker;
     private Metrics metrics;
+    private PlayerInventoryManager playerInventoryManager;
 
     @Override
     public void onEnable() {
@@ -132,6 +134,7 @@ public class WhackMe extends JavaPlugin {
         database = createDatabase();
         statsCacheManager = new StatsCacheManager(this);
         userManager = new UserManager(this);
+        playerInventoryManager = new PlayerInventoryManager(this);
         gameManager = new GameManager(this);
         playingCommandPolicy = new PlayingCommandPolicy(this);
         soundManager = new SoundManager(this);

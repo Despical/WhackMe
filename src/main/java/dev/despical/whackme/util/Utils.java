@@ -1,7 +1,5 @@
 package dev.despical.whackme.util;
 
-import dev.despical.commons.serializer.InventorySerializer;
-import dev.despical.whackme.WhackMe;
 import lombok.experimental.UtilityClass;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -18,7 +16,6 @@ import java.util.*;
 @UtilityClass
 public final class Utils {
 
-    private static final WhackMe PLUGIN = WhackMe.getInstance();
     public static final int[][] DIRECTIONS = {{1, 0}, {-1, 0}, {1, 1}, {-1, 1}, {1, -1}, {-1, -1}, {0, 1}, {0, -1}};
 
     public static boolean isSurroundedBy(Location center) {
@@ -67,8 +64,4 @@ public final class Utils {
         player.setGameMode(GameMode.ADVENTURE);
     }
 
-    public static void restoreSavedPlayerState(Player player) {
-        player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
-        InventorySerializer.loadInventory(PLUGIN, player);
-    }
 }

@@ -22,10 +22,8 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.PlayerInventory;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+
+import java.util.*;
 
 /**
  * @author Despical
@@ -43,18 +41,20 @@ public class GameEvents extends ListenerAdapter {
         userManager.createNewUser(player);
 
         Arena arena = quitPlayers.remove(player.getUniqueId());
-        if (arena == null) {
+        if (!plugin.getPlayerInventoryManager().hasSnapshot(player)) {
             return;
         }
 
         Schedulers.runInTheNextTick(() -> {
-            player.teleport(arena.getOption(ArenaKeys.END_LOCATION));
+            Optional.ofNullable(arena)
+                .map(target -> target.getOption(ArenaKeys.END_LOCATION))
+                .ifPresent(player::teleport);
 
             PlayerInventory inventory = player.getInventory();
             inventory.clear();
             inventory.setArmorContents(ItemUtils.EMPTY_ARMORS);
 
-            Utils.restoreSavedPlayerState(player);
+            plugin.getPlayerInventoryManager().restore(player);
         });
     }
 
