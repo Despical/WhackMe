@@ -11,17 +11,13 @@ import org.jetbrains.annotations.NotNull;
  * Point generation has stopped, but result persistence and player cleanup have
  * not run yet. The game still contains its user, so temporary run statistics
  * and {@link #getFinalScore()} are available to listeners.
- *
- * <pre>{@code
- * @EventHandler
- * public void onGameEnd(GameEndEvent event) {
- *     analytics.recordScore(event.getGame().getUser().getUUID(),
- *         event.getFinalScore());
- * }
- * }</pre>
-API note: This event is fired before personal/arena records are updated and
+ * <p>
+ * This event is fired before personal and arena records are updated and
  * before temporary statistics are reset. It is not fired for force-stopped
  * games; use {@link GameStopEvent} for that lifecycle.
+ * <p>
+ * This event is informational and is not cancellable.
+ *
  * @author Despical
  * <p>
  * Created at 29.01.2026
@@ -31,11 +27,11 @@ public final class GameEndEvent extends GameEvent {
     private static final HandlerList HANDLER_LIST = new HandlerList();
 
     /**
-     * Creates a normal game end event.
+     * Constructs a new normal game end event.
      *
-     * @param game game that reached its ending phase
+     * @param game the game that reached its ending phase
      */
-    public GameEndEvent(Game game) {
+    public GameEndEvent(@NotNull Game game) {
         super(game);
     }
 
@@ -48,13 +44,23 @@ public final class GameEndEvent extends GameEvent {
         return game.getUser() == null ? 0 : game.getUser().getStatistic(Statistics.LOCAL_SCORE);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * Returns the Bukkit handler list for this event type.
+     *
+     * @return this event's handler list
+     */
     @NotNull
     @Override
     public HandlerList getHandlers() {
         return HANDLER_LIST;
     }
 
+    /**
+     * Returns the static Bukkit handler list for this event type.
+     *
+     * @return this event's handler list
+     */
+    @NotNull
     public static HandlerList getHandlerList() {
         return HANDLER_LIST;
     }

@@ -12,18 +12,11 @@ import org.jetbrains.annotations.NotNull;
  * The game still reports {@link #getOldState()} during dispatch. Cancelling the
  * event prevents assignment of {@link #getNewState()} and prevents the target
  * state's first tick from running.
- *
- * <pre>{@code
- * @EventHandler
- * public void onStateChange(GameStateChangeEvent event) {
- *     if (event.getNewState() == GameState.IN_GAME && maintenanceMode) {
- *         event.setCancelled(true);
- *     }
- * }
- * }</pre>
-API note: Cancelling internal recovery transitions such as
+ * <p>
+ * Cancelling internal recovery transitions such as
  * {@code RESTARTING} may leave a game occupied. Listeners should only cancel a
  * transition when they also manage the resulting lifecycle.
+ *
  * @author Despical
  * <p>
  * Created at 18.06.2026
@@ -33,17 +26,27 @@ public final class GameStateChangeEvent extends GameEvent implements Cancellable
     private static final HandlerList HANDLER_LIST = new HandlerList();
 
     private boolean cancelled;
+
+    /**
+     * The state assigned when this event was created.
+     */
+    @NotNull
     private final GameState oldState;
+
+    /**
+     * The requested destination state.
+     */
+    @NotNull
     private final GameState newState;
 
     /**
-     * Creates a state change event.
+     * Constructs a new game state change event.
      *
-     * @param game game whose state is changing
-     * @param oldState currently assigned state
-     * @param newState requested destination state
+     * @param game the game whose state is changing
+     * @param oldState the currently assigned state
+     * @param newState the requested destination state
      */
-    public GameStateChangeEvent(Game game, GameState oldState, GameState newState) {
+    public GameStateChangeEvent(@NotNull Game game, @NotNull GameState oldState, @NotNull GameState newState) {
         super(game);
         this.oldState = oldState;
         this.newState = newState;
@@ -52,8 +55,9 @@ public final class GameStateChangeEvent extends GameEvent implements Cancellable
     /**
      * Returns the state assigned when the event was fired.
      *
-     * @return current state before the transition
+     * @return the current state before the transition
      */
+    @NotNull
     public GameState getOldState() {
         return oldState;
     }
@@ -61,8 +65,9 @@ public final class GameStateChangeEvent extends GameEvent implements Cancellable
     /**
      * Returns the requested destination state.
      *
-     * @return state that will be assigned unless cancelled
+     * @return the state that will be assigned unless cancelled
      */
+    @NotNull
     public GameState getNewState() {
         return newState;
     }
@@ -87,14 +92,35 @@ public final class GameStateChangeEvent extends GameEvent implements Cancellable
         this.cancelled = cancel;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * Returns the Bukkit handler list for this event type.
+     *
+     * @return this event's handler list
+     */
     @NotNull
     @Override
     public HandlerList getHandlers() {
         return HANDLER_LIST;
     }
 
+    /**
+     * Returns the static Bukkit handler list for this event type.
+     *
+     * @return this event's handler list
+     */
+    @NotNull
     public static HandlerList getHandlerList() {
         return HANDLER_LIST;
+    }
+
+    /**
+     * Returns a compact debug representation of the requested state change.
+     *
+     * @return a string containing the arena, states, and cancellation state
+     */
+    @Override
+    public String toString() {
+        return "arena=%s, oldState=%s, newState=%s, cancelled=%s"
+            .formatted(getArena().getId(), oldState, newState, cancelled);
     }
 }
