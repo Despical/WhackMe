@@ -63,8 +63,8 @@ loadScripts(document, 'script');</script>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
-<li><a href="#onTabCompletion(dev.despical.commandframework.CommandArguments,dev.despical.commandframework.CompleterHelper)" tabindex="0">onTabCompletion(CommandArguments, CompleterHelper)</a></li>
-<li><a href="#debugTabCompleter(dev.despical.commandframework.CommandArguments,dev.despical.commandframework.CompleterHelper)" tabindex="0">debugTabCompleter(CommandArguments, CompleterHelper)</a></li>
+<li><a href="#onTabCompletion(dev.despical.whackme.command.Arguments,dev.despical.commandframework.CompleterHelper)" tabindex="0">onTabCompletion(Arguments, CompleterHelper)</a></li>
+<li><a href="#debugTabCompleter(dev.despical.whackme.command.Arguments,dev.despical.commandframework.CompleterHelper)" tabindex="0">debugTabCompleter(Arguments, CompleterHelper)</a></li>
 </ol>
 </li>
 </ol>
@@ -122,11 +122,11 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#debugTabCompleter(dev.despical.commandframework.CommandArguments,dev.despical.commandframework.CompleterHelper)" class="member-name-link">debugTabCompleter</a><wbr>(dev.despical.commandframework.CommandArguments&nbsp;arguments,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#debugTabCompleter(dev.despical.whackme.command.Arguments,dev.despical.commandframework.CompleterHelper)" class="member-name-link">debugTabCompleter</a><wbr>(<a href="Arguments.html" title="class in dev.despical.whackme.command">Arguments</a>&nbsp;arguments,
  dev.despical.commandframework.CompleterHelper&nbsp;helper)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onTabCompletion(dev.despical.commandframework.CommandArguments,dev.despical.commandframework.CompleterHelper)" class="member-name-link">onTabCompletion</a><wbr>(dev.despical.commandframework.CommandArguments&nbsp;arguments,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onTabCompletion(dev.despical.whackme.command.Arguments,dev.despical.commandframework.CompleterHelper)" class="member-name-link">onTabCompletion</a><wbr>(<a href="Arguments.html" title="class in dev.despical.whackme.command">Arguments</a>&nbsp;arguments,
  dev.despical.commandframework.CompleterHelper&nbsp;helper)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
@@ -163,26 +163,26 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="onTabCompletion(dev.despical.commandframework.CommandArguments,dev.despical.commandframework.CompleterHelper)">
+<section class="detail" id="onTabCompletion(dev.despical.whackme.command.Arguments,dev.despical.commandframework.CompleterHelper)">
 <h3>onTabCompletion</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="annotations">@Completer(name="whackme",
            aliases="wm",
            permission="whackme.command.tabcompleter")
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">onTabCompletion</span><wbr><span class="parameters">(dev.despical.commandframework.CommandArguments&nbsp;arguments,
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">onTabCompletion</span><wbr><span class="parameters">(<a href="Arguments.html" title="class in dev.despical.whackme.command">Arguments</a>&nbsp;arguments,
  dev.despical.commandframework.CompleterHelper&nbsp;helper)</span></div>
 </div>
 </section>
 </li>
 <li>
-<section class="detail" id="debugTabCompleter(dev.despical.commandframework.CommandArguments,dev.despical.commandframework.CompleterHelper)">
+<section class="detail" id="debugTabCompleter(dev.despical.whackme.command.Arguments,dev.despical.commandframework.CompleterHelper)">
 <h3>debugTabCompleter</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="annotations">@Debug
 @Completer(name="whackme.debug",
            aliases="wm.debug",
            permission="whackme.debug.tabcompleter")
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">debugTabCompleter</span><wbr><span class="parameters">(dev.despical.commandframework.CommandArguments&nbsp;arguments,
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">debugTabCompleter</span><wbr><span class="parameters">(<a href="Arguments.html" title="class in dev.despical.whackme.command">Arguments</a>&nbsp;arguments,
  dev.despical.commandframework.CompleterHelper&nbsp;helper)</span></div>
 </div>
 </section>
