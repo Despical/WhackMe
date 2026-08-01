@@ -79,10 +79,6 @@ final class PointBlockInteractionListener implements Listener {
 
     @EventHandler
     public void onArmorStandHit(EntityDamageByEntityEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
-
         if (!(event.getEntity() instanceof ArmorStand) || !display.represents(event.getEntity())) {
             return;
         }
