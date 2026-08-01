@@ -231,7 +231,7 @@ public class StatsMenu implements Menu {
             }
         }
 
-        if (targetRank == 0) {
+        if (targetRank == -1) {
             for (int i = 3; i < board.sortedEntries().size(); i++) {
                 if (board.sortedEntries().get(i).uuid().equals(target.getUniqueId())) {
                     lore.add(chatManager.parseMessage(getTemplateValue(template, "leaderboard-separator")));
