@@ -4,6 +4,7 @@ import dev.despical.commons.configuration.ConfigUtils;
 import dev.despical.whackme.WhackMe;
 import dev.despical.whackme.arena.options.ArenaKeys;
 import dev.despical.whackme.arena.options.ArenaOption;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.List;
@@ -13,13 +14,10 @@ import java.util.List;
  * <p>
  * Created at 2.06.2026
  */
+@RequiredArgsConstructor
 public class ArenaDataSaver {
 
     private final WhackMe plugin;
-
-    public ArenaDataSaver(WhackMe plugin) {
-        this.plugin = plugin;
-    }
 
     public void saveAllArenas() {
         ArenaRegistry arenaRegistry = plugin.getArenaRegistry();
