@@ -12,8 +12,10 @@ import dev.despical.whackme.util.Utils;
 import dev.despical.whackme.util.Var;
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * @author Despical
@@ -130,6 +132,13 @@ public final class GameManager {
         int score = user.getStatistic(Statistics.LOCAL_SCORE);
         int arenaRecord = arena.getOption(ArenaKeys.RECORD_SCORE);
         int previousPersonalRecord = user.getStatistic(Statistics.RECORD_SCORE);
+
+        Map<String, Integer> arenaBestScores = new HashMap<>(user.getStatistic(Statistics.ARENA_BEST_SCORES));
+        int previousArenaBest = arenaBestScores.getOrDefault(arena.getId(), 0);
+        if (score > previousArenaBest) {
+            arenaBestScores.put(arena.getId(), score);
+            user.setStatistic(Statistics.ARENA_BEST_SCORES, arenaBestScores);
+        }
 
         boolean globalRecord = score > arenaRecord;
         boolean personalBest = score > previousPersonalRecord;

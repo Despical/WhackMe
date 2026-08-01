@@ -30,6 +30,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -173,10 +174,16 @@ public class StatsMenu implements Menu {
 
         SpecialItem template = itemManager.getItemFromCategory("stats-menu-items", "arena_template");
         if (template != null) {
+            String noRecord = getTemplateValue(template, "no-record");
+
+            @SuppressWarnings("unchecked")
+            Map<String, Integer> bestScores = (Map<String, Integer>) statProvider.apply(Statistics.ARENA_BEST_SCORES);
+
             for (Arena arena : plugin.getArenaRegistry().getArenas()) {
+                int bestScore = bestScores.getOrDefault(arena.getId(), 0);
                 Var[] vars = {
                     Var.of("%arena%", arena.getId()),
-                    Var.of("%record_score%", statProvider.apply(Statistics.RECORD_SCORE))
+                    Var.of("%record_score%", bestScore > 0 ? bestScore : noRecord)
                 };
 
                 ItemStack item = ItemUtils.formatItemStack(template, vars);
@@ -184,7 +191,7 @@ public class StatsMenu implements Menu {
 
                 if (meta != null && meta.hasLore()) {
                     List<Component> lore = new ArrayList<>(meta.lore());
-                    createArenaLore(template, lore);
+                    createArenaLore(arena.getId(), template, lore);
 
                     meta.lore(lore);
                     item.setItemMeta(meta);
@@ -202,8 +209,8 @@ public class StatsMenu implements Menu {
         gui.update();
     }
 
-    private void createArenaLore(SpecialItem template, List<Component> lore) {
-        Leaderboard<Integer> board = plugin.getLeaderboardManager().getLeaderboard(Statistics.RECORD_SCORE);
+    private void createArenaLore(String arenaId, SpecialItem template, List<Component> lore) {
+        Leaderboard<Integer> board = plugin.getLeaderboardManager().getLeaderboard("arena_score_" + arenaId);
 
         if (board == null || board.sortedEntries().isEmpty()) {
             lore.add(chatManager.parseMessage(getTemplateValue(template, "empty-leaderboard")));

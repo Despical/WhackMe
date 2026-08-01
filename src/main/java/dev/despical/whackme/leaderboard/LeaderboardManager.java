@@ -1,6 +1,7 @@
 package dev.despical.whackme.leaderboard;
 
 import dev.despical.whackme.WhackMe;
+import dev.despical.whackme.arena.Arena;
 import dev.despical.whackme.stats.StatisticType;
 import dev.despical.whackme.stats.Statistics;
 import dev.despical.whackme.stats.offline.OfflineStats;
@@ -55,6 +56,18 @@ public class LeaderboardManager {
                     0
                 );
             }
+        }
+
+        for (Arena arena : plugin.getArenaRegistry().getArenas()) {
+            String arenaId = arena.getId();
+
+            createLeaderboard(
+                "arena_score_" + arenaId,
+                allPlayersCache,
+                stats -> stats.getStat(Statistics.ARENA_BEST_SCORES).getOrDefault(arenaId, 0),
+                Comparator.<Integer>naturalOrder().reversed(),
+                0
+            );
         }
     }
 
