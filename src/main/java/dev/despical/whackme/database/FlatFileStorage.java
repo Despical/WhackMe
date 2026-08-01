@@ -5,13 +5,13 @@ import dev.despical.whackme.stats.StatisticType;
 import dev.despical.whackme.stats.Statistics;
 import dev.despical.whackme.stats.offline.OfflineStats;
 import dev.despical.whackme.user.User;
-import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * @author Despical
@@ -96,17 +96,28 @@ public final class FlatFileStorage extends Database {
     public Set<OfflineStats> getAllPlayers() {
         Set<OfflineStats> offlineStats = new HashSet<>();
 
-        for (String uuid : config.getKeys(false)) {
-            String name = config.getString(uuid + ".name");
-            if (name == null) continue;
-
-            OfflinePlayer player = Bukkit.getOfflinePlayerIfCached(name);
-            if (player == null) continue;
-
-            OfflineStats stats = loadOfflineData(player);
-            if (stats != null) {
-                offlineStats.add(stats);
+        for (String uuidKey : config.getKeys(false)) {
+            String path = uuidKey + ".";
+            String name = config.getString(path + "name");
+            if (name == null || name.isBlank()) {
+                plugin.getLogger().warning("Skipping flat-file stats entry without a player name: " + uuidKey);
+                continue;
             }
+
+            UUID uuid;
+            try {
+                uuid = UUID.fromString(uuidKey);
+            } catch (IllegalArgumentException exception) {
+                plugin.getLogger().warning("Skipping flat-file stats entry with malformed UUID: " + uuidKey);
+                continue;
+            }
+
+            OfflineStats stats = new OfflineStats(uuid, name);
+            for (StatisticType<?> type : Statistics.getPersistentStats()) {
+                loadSingleOfflineStat(stats, path, type);
+            }
+
+            offlineStats.add(stats);
         }
 
         return offlineStats;
