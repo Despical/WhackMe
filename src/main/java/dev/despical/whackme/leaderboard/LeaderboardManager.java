@@ -2,6 +2,7 @@ package dev.despical.whackme.leaderboard;
 
 import dev.despical.whackme.WhackMe;
 import dev.despical.whackme.arena.Arena;
+import dev.despical.whackme.option.IntOption;
 import dev.despical.whackme.stats.StatisticType;
 import dev.despical.whackme.stats.Statistics;
 import dev.despical.whackme.stats.offline.OfflineStats;
@@ -86,7 +87,7 @@ public class LeaderboardManager {
                 return true;
             })
             .sorted((e1, e2) -> comparator.compare(e1.value(), e2.value()))
-            .limit(10)
+            .limit(IntOption.LEADERBOARD_SIZE.value())
             .toList();
 
         Leaderboard<T> leaderboard = new Leaderboard<>(id, entries, fallbackValue);

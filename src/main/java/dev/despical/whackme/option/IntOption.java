@@ -8,7 +8,8 @@ package dev.despical.whackme.option;
 public enum IntOption implements ConfigOption<Integer> {
 
     GAMEPLAY_TIME("game-settings.gameplay-time", 30),
-    GAME_COOLDOWN("game-settings.cooldown-seconds", 0);
+    GAME_COOLDOWN("game-settings.cooldown-seconds", 0),
+    LEADERBOARD_SIZE("leaderboard-size", 10);
 
     private final String path;
     private final int defaultValue;
