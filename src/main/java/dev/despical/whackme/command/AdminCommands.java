@@ -28,7 +28,7 @@ public final class AdminCommands extends CommandCategory {
             arguments.sendRawMessage("<#00aaaa>This server is running <#55ffff>Whack Me v%version% <#00aaaa>by <#55ffff>Despical<#00aaaa>.",
                 Var.of("%version%", plugin.getDescription().getVersion()));
 
-            if (arguments.hasPermission("tntrun.admin.help")) {
+            if (arguments.hasPermission("whackme.admin.help")) {
                 arguments.sendRawMessage("<#00aaaa>Commands: <#55ffff>/%label% help",
                     Var.of("%label%", arguments.getLabel()));
             }
@@ -120,7 +120,7 @@ public final class AdminCommands extends CommandCategory {
         Var var = Var.of("%label%", arguments.getLabel());
         arguments.sendConfiguredMessage("help-message", var);
 
-        if (arguments.hasPermission("tntrun.admin.help")) {
+        if (arguments.hasPermission("whackme.admin.help")) {
             arguments.sendBlankMessage();
             arguments.sendConfiguredMessage("admin-help-message", var);
             arguments.sendBlankMessage();
@@ -138,10 +138,9 @@ public final class AdminCommands extends CommandCategory {
         usage = "/%label% kick <player>",
         desc = "Removes a player from their active Whack Me game and teleports them to the arena's end location.",
         min = 1,
-        max = 1,
-        senderType = Command.SenderType.PLAYER
+        max = 1
     )
-    public void kickCommand(User user, Arguments arguments) {
+    public void kickCommand(Arguments arguments) {
         Player targetPlayer = arguments.getPlayer(0).orElseGet(() -> {
             arguments.sendConfiguredMessage("no-player-with-that-name");
             return null;
