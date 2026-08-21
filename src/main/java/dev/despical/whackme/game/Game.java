@@ -11,6 +11,7 @@ import dev.despical.whackme.game.states.InGameState;
 import dev.despical.whackme.game.states.RestartingState;
 import dev.despical.whackme.game.states.WaitingState;
 import dev.despical.whackme.option.IntOption;
+import dev.despical.whackme.rewards.RewardType;
 import dev.despical.whackme.scoreboard.ScoreboardManager;
 import dev.despical.whackme.user.User;
 import dev.despical.whackme.util.Var;
@@ -92,6 +93,7 @@ public final class Game extends BukkitRunnable {
         states.get(GameState.WAITING).join(user);
         user.sendMessage(messagePath, Var.of("%gameplay_time%", IntOption.GAMEPLAY_TIME.value()));
         if (setState(GameState.IN_GAME)) {
+            plugin.getRewardManager().dispatch(RewardType.GAME_JOIN, this);
             return true;
         }
 
