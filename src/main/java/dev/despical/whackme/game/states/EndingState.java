@@ -3,6 +3,7 @@ package dev.despical.whackme.game.states;
 import dev.despical.whackme.game.Game;
 import dev.despical.whackme.game.GameState;
 import dev.despical.whackme.api.event.player.PlayerLeaveGameEvent;
+import dev.despical.whackme.rewards.RewardType;
 import dev.despical.whackme.user.User;
 
 /**
@@ -26,6 +27,7 @@ public final class EndingState extends GameStateHandler {
         }
 
         eventManager.gameEnd(game);
+        plugin.getRewardManager().dispatch(RewardType.GAME_END, game);
         plugin.getGameManager().finishGame(game, true, true, true);
 
         game.setState(GameState.RESTARTING);
