@@ -1,0 +1,57 @@
+# =============================================================== #
+#                   Whack Me - Reward Configuration               #
+# =============================================================== #
+#                                                                 #
+# SUPPORTED PLACEHOLDERS:                                         #
+#   %player%       : Name of the player                           #
+#   %uuid%         : Unique ID of the player                      #
+#   %arena%        : ID of the arena being played                 #
+#   %timer%        : Time remaining in seconds                    #
+#   %score%        : Current score in this game                   #
+#   %hit-streak%   : Current consecutive correct-hit streak       #
+#   %max-streak%   : Highest correct-hit streak in this game      #
+#   %green-blocks% : Number of green blocks hit in this game      #
+#   %red-blocks%   : Number of red blocks hit in this game        #
+#   %block-type%   : Triggering block type, or NONE               #
+#                                                                 #
+# =============================================================== #
+
+# Set to false to disable every reward trigger and command.
+enabled: true
+
+# Commands run as the console by default; use "p:" for player execution.
+# A leading slash is optional. Hex colors such as <#55FF55> are supported.
+
+# Runs after the player successfully joins and enters the active game state.
+# Run statistics have just been reset, so score and streak values start at 0.
+game-join:
+  # - 'say <#00E676>%player% joined Whack Me arena %arena%!'
+  # - 'p:me entered arena %arena%.'
+
+# Runs when the player leaves early by command, kick, or server disconnect.
+# It does not run after normal timer completion; use game-end for that case.
+game-quit:
+  # - 'say <#FFCA28>%player% left %arena% with %score% points.'
+
+# Runs when the game timer expires and the round completes normally.
+# Commands receive the final run values before temporary statistics are reset.
+game-end:
+  # - 'eco give %player% %score%'
+  # - 'p:msg Admin <#00E676>I finished %arena% with %score% points!'
+
+# Runs after a green block awards its point and updates streak statistics.
+# The placeholders therefore contain the score produced by the successful hit.
+green-block-step:
+  # - 'xp add %player% 1 points'
+  # - 'say <#00E676>%player% reached a %hit-streak% hit streak!'
+
+# Runs after a red block applies its penalty and resets the current hit streak.
+# The score placeholder contains the penalized value, which cannot be below 0.
+red-block-step:
+  # - 'effect give %player% slowness 2 0 true'
+  # - 'p:say <#FF5252>My score dropped to %score%!'
+
+# Runs after a gray block is hit; this neutral action does not change the score.
+# The block-type placeholder resolves to GRAY_BLOCK for these commands.
+gray-block-step:
+  # - 'playsound minecraft:block.note_block.hat player %player%'
