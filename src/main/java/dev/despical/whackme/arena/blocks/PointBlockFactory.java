@@ -22,7 +22,7 @@ final class PointBlockFactory {
         this.arena = arena;
         this.messages = PointBlockMessages.from(plugin.getChatManager());
         this.typeSelector = new PointBlockTypeSelector();
-        this.scoreService = new PointBlockScoreService(plugin);
+        this.scoreService = new PointBlockScoreService(plugin, arena);
     }
 
     PointBlock create(PointHandler pointHandler, Location portalLocation) {

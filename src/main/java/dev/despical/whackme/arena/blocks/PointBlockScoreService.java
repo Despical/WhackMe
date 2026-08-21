@@ -1,7 +1,9 @@
 package dev.despical.whackme.arena.blocks;
 
 import dev.despical.whackme.WhackMe;
+import dev.despical.whackme.arena.Arena;
 import dev.despical.whackme.sound.GameSound;
+import dev.despical.whackme.rewards.RewardType;
 import dev.despical.whackme.stats.Statistics;
 import dev.despical.whackme.user.User;
 import org.bukkit.entity.Player;
@@ -14,9 +16,11 @@ import org.bukkit.entity.Player;
 final class PointBlockScoreService {
 
     private final WhackMe plugin;
+    private final Arena arena;
 
-    PointBlockScoreService(WhackMe plugin) {
+    PointBlockScoreService(WhackMe plugin, Arena arena) {
         this.plugin = plugin;
+        this.arena = arena;
     }
 
     void apply(Player player, PointBlockType type) {
@@ -27,6 +31,16 @@ final class PointBlockScoreService {
         } else if (type == PointBlockType.RED_BLOCK) {
             penalizeWrongHit(player, user);
         }
+
+        plugin.getRewardManager().dispatch(toRewardType(type), arena.getGame(), type);
+    }
+
+    private RewardType toRewardType(PointBlockType type) {
+        return switch (type) {
+            case GREEN_BLOCK -> RewardType.GREEN_BLOCK_STEP;
+            case RED_BLOCK -> RewardType.RED_BLOCK_STEP;
+            case GRAY_BLOCK -> RewardType.GRAY_BLOCK_STEP;
+        };
     }
 
     private void rewardCorrectHit(Player player, User user) {
