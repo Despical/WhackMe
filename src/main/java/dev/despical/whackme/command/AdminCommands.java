@@ -55,6 +55,7 @@ public final class AdminCommands extends CommandCategory {
         plugin.getSignManager().reload();
         plugin.getBossBarConfig().reload();
         plugin.getSoundManager().reload();
+        plugin.getRewardManager().reload();
         plugin.getGameManager().reload();
 
         arguments.sendConfiguredMessage("reloaded-configuration");
