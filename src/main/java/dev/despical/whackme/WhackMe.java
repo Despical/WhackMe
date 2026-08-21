@@ -24,6 +24,7 @@ import dev.despical.whackme.database.MySQLStorage;
 import dev.despical.whackme.event.GameEvents;
 import dev.despical.whackme.event.CommandBlockEvents;
 import dev.despical.whackme.game.GameManager;
+import dev.despical.whackme.rewards.RewardManager;
 import dev.despical.whackme.sound.SoundManager;
 import dev.despical.whackme.setup.SetupDialogTracker;
 import dev.despical.whackme.leaderboard.LeaderboardManager;
@@ -92,6 +93,7 @@ public class WhackMe extends JavaPlugin {
     private SetupDialogTracker setupDialogTracker;
     private Metrics metrics;
     private PlayerInventoryManager playerInventoryManager;
+    private RewardManager rewardManager;
 
     @Override
     public void onEnable() {
@@ -119,6 +121,7 @@ public class WhackMe extends JavaPlugin {
         saveDefaultConfig();
         saveResourceIfMissing("mysql.yml");
         saveResourceIfMissing("signs.yml");
+        saveResourceIfMissing("rewards.yml");
         seedDefaultSongsOnce();
     }
 
@@ -135,6 +138,7 @@ public class WhackMe extends JavaPlugin {
         statsCacheManager = new StatsCacheManager(this);
         userManager = new UserManager(this);
         playerInventoryManager = new PlayerInventoryManager(this);
+        rewardManager = new RewardManager(this);
         gameManager = new GameManager(this);
         playingCommandPolicy = new PlayingCommandPolicy(this);
         soundManager = new SoundManager(this);
