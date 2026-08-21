@@ -7,6 +7,7 @@ import dev.despical.whackme.arena.options.ArenaKeys;
 import dev.despical.whackme.chat.ChatManager;
 import dev.despical.whackme.game.StopReason;
 import dev.despical.whackme.game.Game;
+import dev.despical.whackme.rewards.RewardType;
 import dev.despical.whackme.user.User;
 import dev.despical.whackme.util.ShutdownDetector;
 import dev.despical.whackme.util.Var;
@@ -89,6 +90,7 @@ public class ArenaManager {
         }
 
         plugin.getEventManager().playerLeave(player, arena.getGame(), reason);
+        plugin.getRewardManager().dispatch(RewardType.GAME_QUIT, arena.getGame());
         plugin.getGameManager().leaveUser(user);
     }
 
@@ -103,6 +105,7 @@ public class ArenaManager {
         }
 
         plugin.getEventManager().playerLeave(player, arena.getGame(), LeaveReason.QUIT);
+        plugin.getRewardManager().dispatch(RewardType.GAME_QUIT, arena.getGame());
         plugin.getGameManager().quitUser(user);
     }
 
