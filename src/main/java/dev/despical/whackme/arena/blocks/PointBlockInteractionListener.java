@@ -2,6 +2,7 @@ package dev.despical.whackme.arena.blocks;
 
 import dev.despical.whackme.WhackMe;
 import dev.despical.whackme.arena.Arena;
+import dev.despical.whackme.game.GameState;
 import dev.despical.whackme.sound.GameSound;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
@@ -85,7 +86,9 @@ final class PointBlockInteractionListener implements Listener {
 
         event.setCancelled(true);
 
-        if (!(event.getDamager() instanceof Player player) || !arena.isPlaying(player)) {
+        if (!(event.getDamager() instanceof Player player)
+            || !arena.isPlaying(player)
+            || !pointHandler.game().isState(GameState.IN_GAME)) {
             return;
         }
 
