@@ -5,6 +5,7 @@ import dev.despical.commons.util.Strings;
 import dev.despical.whackme.WhackMe;
 import dev.despical.whackme.arena.blocks.PointBlockType;
 import dev.despical.whackme.game.Game;
+import dev.despical.whackme.game.GameState;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -67,7 +68,7 @@ public final class RewardManager {
         RewardConfiguration snapshot = configuration;
         List<String> commands = snapshot.commands().getOrDefault(type, List.of());
 
-        if (!snapshot.enabled() || commands.isEmpty()) {
+        if (!snapshot.enabled() || commands.isEmpty() || !isExpectedGameState(type, game)) {
             return;
         }
 
@@ -84,6 +85,17 @@ public final class RewardManager {
         } else {
             Bukkit.getScheduler().runTask(plugin, execution);
         }
+    }
+
+    private boolean isExpectedGameState(RewardType type, Game game) {
+        if (game == null) {
+            return false;
+        }
+
+        return switch (type) {
+            case GAME_END -> game.isState(GameState.ENDING);
+            case GAME_JOIN, GAME_QUIT, GREEN_BLOCK_STEP, RED_BLOCK_STEP, GRAY_BLOCK_STEP -> game.isState(GameState.IN_GAME);
+        };
     }
 
     private void execute(String configuredCommand, RewardContext context) {
