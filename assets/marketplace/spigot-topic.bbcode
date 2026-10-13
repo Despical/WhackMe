@@ -1,0 +1,512 @@
+[font=Verdana][size=4]
+[center][size=7][b]Whack Me[/b][/size]
+[size=5][b]One arena. Thirty seconds. A new personal best.[/b][/size]
+
+[color=#E0AD52][b]Quick rounds  ·  Custom arenas  ·  Lasting rivalries[/b][/color]
+Give players a reason to stop by your arcade and come back for one more run.
+
+[url=https://docs.despical.dev/whack-me/][b]Explore the documentation[/b][/url]  ·  [url=https://docs.despical.dev/whack-me/arena-setup/][b]Build your first arena[/b][/url][/center]
+
+Turn a corner of your lobby into a score challenge. Add a quick activity between larger games. Let players chase a perfect run and compete for the arena record. [b]Whack Me brings a single-player whack-a-block minigame to your Minecraft server.[/b]
+
+Players enter an arena, hit the green blocks and avoid the red ones before time runs out. The default round lasts thirty seconds; the duration, arena layout, displays and rewards are yours to configure.
+
+[center][img]https://raw.githubusercontent.com/Despical/WhackMe/main/assets/marketplace/whack-me-divider-v1.png[/img][/center]
+
+[center][size=4][color=#E0AD52][b]01  /  PLAY THE NEXT RUN[/b][/color][/size]
+[size=6][b]Easy to start. Hard to put down.[/b][/size][/center]
+
+[b][color=#79C99E]Green means go.[/color][/b] Every correct hit adds a point and builds your streak. [b][color=#ED8C87]Red means rethink.[/color][/b] A wrong hit removes a point without taking the score below zero, and resets your current streak.
+
+Point blocks rise, pause and fall from the arena's portal positions. A hit turns the block into its gray hit state, so the same target cannot award points twice. The block selector balances green and red targets as new blocks appear.
+
+[center][MEDIA=youtube]qqqkKbX1FRM[/MEDIA][/center]
+
+Follow the remaining time, score and streak through configurable [b]scoreboards, boss bars and action bars[/b]. At the end, see your correct and incorrect hits, accuracy, longest streak and personal best, then try to beat the result.
+
+[center][img]https://i.imgur.com/kr1ViGf.png[/img]
+[size=3]The live run: a compact challenge with your score and remaining time in view.[/size]
+
+[img]https://i.imgur.com/VvUVX0U.png[/img]
+[size=3]The result summary brings the score, streak and accuracy together.[/size][/center]
+
+[center][img]https://raw.githubusercontent.com/Despical/WhackMe/main/assets/marketplace/whack-me-divider-v1.png[/img][/center]
+
+[center][size=4][color=#E0AD52][b]02  /  BUILD THE ARENA[/b][/color][/size]
+[size=6][b]Your space. Your layout.[/b][/size][/center]
+
+Create an arena with [b]/wm create arcade_1[/b], then open [b]/wm edit arcade_1[/b]. The in-game setup menu takes you through locations, portal positions, block settings, music, displays and registration.
+
+[center][img]https://i.imgur.com/3M8QRKU.gif[/img]
+[size=3]Set up and manage an arena through the in-game menu.[/size][/center]
+
+[b]Start with a frame ring.[/b] Shift-click the start-location action to center the player position and place eight surrounding portal frames. Save an end location for players returning from the run.
+
+[b]Or make a custom layout.[/b] Use the portal editor to add and remove spawn positions. Build a layout that suits the room and keeps targets visible and reachable from the start position.
+
+[b]Let players walk up and play.[/b] Register an arena join sign or use [b]/wm join <arena>[/b]. Each arena hosts one player at a time; multiple arenas let players take their own runs.
+
+[spoiler=The complete arena setup walkthrough]
+[LEFT]
+[SIZE=5][B]Step 1: Create the Arena[/B][/SIZE]
+Create a new arena with a unique, stable ID:
+[CODE]/wm create <arena_id>[/CODE]
+[IMG]https://i.imgur.com/ggZ0vta.png[/IMG]
+
+Use IDs such as [B]arcade_1[/B] or [B]castle_whack[/B]. The ID is reused by join commands, placeholders, setup output, and saved data.
+
+[SIZE=5][B]Step 2: Open the Setup Menu[/B][/SIZE]
+[CODE]/wm edit <arena_id>[/CODE]
+
+The home page provides access to locations, portal layout editing, point-block settings, music, display toggles, arena records, signs, and final registration.
+
+[SIZE=5][B]Step 3: Set Start and End Locations[/B][/SIZE]
+[IMG]https://i.imgur.com/CUih3YA.gif[/IMG]
+
+Open [B]Manage Arena Locations[/B] ([B]FILLED_MAP[/B]). Both locations are required.
+
+[B]Start Location[/B]
+[LIST]
+[*][B]Click:[/B] Saves your exact position. In the normal layout mode, you must already be surrounded by end portal frames.
+[*][B]Shift-click:[/B] Centers the saved position on the current block and automatically places end portal frames in the eight surrounding positions.
+[/LIST]
+
+When the plugin detects the surrounding frame ring, those eight blocks become the arena's portal locations automatically.
+
+[B]End Location[/B]
+[LIST]
+[*][B]Click:[/B] Saves your exact position.
+[*][B]Shift-click:[/B] Centers the position on the current block.
+[/LIST]
+
+The end location is used after normal finishes, leaves, kicks, cancellations, and reconnect recovery.
+
+[SIZE=5][B]Step 4: Define the Portal Layout[/B][/SIZE]
+[img]https://i.imgur.com/KPTD6p3.gif[/img]
+
+Portal locations are the positions from which point blocks rise. Use the automatic eight-frame ring from the start-location action, or click [B]Manage Portal Layout[/B] ([B]ENDER_PEARL[/B]) to build a custom layout.
+
+[B]In Portal Editing Mode:[/B]
+[list]
+[*]Your inventory is saved and replaced with end portal frames plus a barrier.
+[*]Place frames to add point-block positions.
+[*]Break frames to remove positions.
+[*]Use the barrier to leave editing mode, save the new list, and restore your inventory.
+[/LIST]
+
+[COLOR=#E0AD52][B]Note:[/B][/COLOR] Registration requires at least one portal location. In practice, use several well-spaced frames so multiple blocks can be visible and reachable at once.
+
+[SIZE=5][B]Step 5: Open Point-Block Settings[/B][/SIZE]
+[img]https://i.imgur.com/YcYjZDW.gif[/img]
+
+The [B]Point Block Settings[/B] entry unlocks after portal locations exist. It opens a dialog with arena-specific spawning, movement, and appearance controls.
+
+[LIST]
+[*][B]Minimum active blocks:[/B] Default [B]4[/B], allowed from [B]1[/B] to the portal count. Lowest target number of simultaneously visible blocks.
+[*][B]Maximum active blocks:[/B] Default [B]8[/B], allowed from [B]1[/B] to the portal count. Hard cap on simultaneously visible blocks.
+[*][B]Vertical movement step:[/B] Default [B]0.05[/B], allowed from [B]0.01[/B] to [B]0.20[/B]. Distance moved per tick; higher is faster.
+[*][B]Maximum vertical step:[/B] Default [B]0.64[/B], allowed from [B]0.01[/B] to [B]1.00[/B]. Safety cap applied to the movement step.
+[*][B]Peak wait:[/B] Default [B]12[/B] ticks, allowed from [B]0[/B] to [B]40[/B]. Time the block waits at its highest point.
+[*][B]Spawn check period:[/B] Default [B]8[/B] ticks, allowed from [B]1[/B] to [B]20[/B]. Delay between checks that replace missing point blocks.
+[*][B]Asynchronous movement:[/B] Disabled by default. Moves point-block animation outside the main thread; cleanup remains synchronous.
+[/LIST]
+
+[SIZE=5][B]Step 6: Set Active Block Amounts[/B][/SIZE]
+
+Choose [B]Active Block Limits[/B] to edit the minimum and maximum together. Both are capped by the number of portal locations. If the maximum is set below the minimum, Whack Me raises it to match; changing either value individually also keeps the pair valid.
+
+[COLOR=#00aa00][B]Tip:[/B][/COLOR] More simultaneous blocks increase visual load and decision pressure. Start with [B]4-8[/B], then test the layout from a player's viewing angle.
+
+[B]Customize Block Appearance (Optional)[/B]
+
+Use [B]Customize Point Block Looks[/B] to assign the green, red, and gray hit-state items. Put an item on your cursor and click the corresponding preview slot. Blocks, player heads, and custom item metadata are supported, and the saved stack amount is normalized to one.
+
+[SIZE=5][B]Step 7: Select Arena Music (Optional)[/B][/SIZE]
+[img]https://i.imgur.com/9DiVLTS.gif[/img]
+
+If NoteBlockAPI is installed, [B]Select Arena Music[/B] lists every valid [B].nbs[/B] file in [B]/plugins/WhackMe/musics/[/B].
+
+[LIST]
+[*][B]Left-click:[/B] Select the song for this arena.
+[*][B]Right-click:[/B] Preview the song for yourself.
+[*][B]No Song:[/B] Clear the arena's selection.
+[/LIST]
+
+Whack Me includes five starter songs and repeats the selected song while a player occupies the arena.
+
+[SIZE=5][B]Step 8: Configure Other Settings (Optional)[/B][/SIZE]
+[img]https://i.imgur.com/JzLV5fP.gif[/img]
+
+The [B]Other Arena Settings[/B] page controls two independent per-arena options:
+
+[LIST]
+[*][B]Arena Scoreboard:[/B] Enables the live scoreboard for this arena. The global [B]scoreboard-enabled[/B] option must also be enabled.
+[*][B]Arena Boss Bar:[/B] Enables the configured timer-progress boss bar for this arena. [B]bossbar.yml[/B] must also have [B]enabled: true[/B].
+[/LIST]
+
+Changes apply immediately if that arena currently has a running game.
+
+[SIZE=5][B]Step 9: Reset an Arena Record (Optional)[/B][/SIZE]
+[img]https://i.imgur.com/En3KsZx.gif[/img]
+
+After an arena has a record, [B]Reset Arena Record[/B] shows its holder and score. The confirmation page prevents accidental deletion. Confirming resets only that arena's global holder to [B]None[/B] and score to [B]0[/B]; it does not erase player statistics or personal records.
+
+[SIZE=5][B]Step 10: Create a Join Sign (Optional)[/B][/SIZE]
+[img]https://i.imgur.com/KOX4whx.gif[/img]
+
+Place a sign, look directly at it, and click [B]Create Arena Sign[/B] ([B]OAK_SIGN[/B]). Whack Me registers, formats, and waxes the sign. Its state updates automatically, and players can right-click it to join.
+
+Breaking a registered sign requires [B]whackme.sign.break[/B].
+
+[SIZE=5][B]Step 11: Register the Arena[/B][/SIZE]
+Click [B]Register the Arena[/B] ([B]FIREWORK[/B]) when setup is complete. Whack Me verifies these required values in order:
+
+[list]
+[*]Start location
+[*]End location
+[*]At least one portal location
+[/LIST]
+
+If a value is missing, registration stops and names the missing option. On success, the arena becomes ready, starts its waiting runtime, and the success message includes a clickable [B]/wm join <arena>[/B] action.
+
+[COLOR=#E0AD52][B]Note:[/B][/COLOR] Arena data is saved automatically and during shutdown. If critical saved locations are missing on a later startup, Whack Me automatically marks the arena as not ready instead of starting a broken game.
+
+[B]How to Join:[/B]
+[LIST]
+[*][B]Command:[/B] [B]/wm join <arena_id>[/B]
+[*][B]Sign:[/B] Right-click the registered arena sign.
+[/LIST]
+
+An arena accepts one player at a time. If occupied, other players must use another arena or wait until the run finishes.
+[/LEFT]
+[/SPOILER]
+
+[url=https://docs.despical.dev/whack-me/arena-setup/]Read the arena setup guide[/url]
+
+[center][img]https://raw.githubusercontent.com/Despical/WhackMe/main/assets/marketplace/whack-me-divider-v1.png[/img][/center]
+
+[center][size=4][color=#E0AD52][b]03  /  MAKE IT YOUR GAME[/b][/color][/size]
+[size=6][b]Tune the pace. Keep your style.[/b][/size][/center]
+
+[b]Control the pressure.[/b] Set the minimum and maximum visible blocks, movement speed, peak wait and spawn-check period for each arena. Use a relaxed lobby activity or a busier arcade challenge with the same gameplay rules.
+
+[b]Choose the targets.[/b] Assign block items, player heads or custom items to the green, red and gray hit states. The appearance editor keeps item metadata, letting the targets fit your server's theme.
+
+[b]Bring the atmosphere.[/b] With [b]NoteBlockAPI[/b], select an arena's .nbs song, preview it in game or add your own songs to [b]plugins/WhackMe/musics/[/b]. Five starter songs are bundled with the plugin.
+
+[b]Make the displays yours.[/b] Edit messages, sounds, menus, signs, scoreboards and boss bars through YAML files. Turn the scoreboard and boss bar on or off per arena, and reload presentation changes with [b]/wm reload[/b].
+
+[b]Keep the run focused.[/b] Arena protections block building, item dropping, swapping, pickups and player damage. Configure chat isolation, allowed commands, leave-command blocking and the replay cooldown to suit your server.
+
+[url=https://docs.despical.dev/whack-me/features/point-blocks/]Explore point-block settings[/url]  ·  [url=https://docs.despical.dev/whack-me/configuration/config/]View the main configuration[/url]
+
+[center][img]https://raw.githubusercontent.com/Despical/WhackMe/main/assets/marketplace/whack-me-divider-v1.png[/img][/center]
+
+[center][size=4][color=#E0AD52][b]04  /  EVERY RESULT MATTERS[/b][/color][/size]
+[size=6][b]A personal best today. A server record tomorrow.[/b][/size][/center]
+
+Track [b]games played, perfect runs, personal record scores, longest hit streaks, lifetime green and red hits, and per-arena best scores[/b]. Players can inspect their own progress or another player's statistics with [b]/wm stats [player][/b].
+
+[center][img]https://i.imgur.com/tMIDF5k.png[/img]
+[size=3]Player statistics keep the progress from one run to the next.[/size]
+
+[img]https://i.imgur.com/0KIp8QN.png[/img]
+[size=3]Put your server's strongest results on display.[/size][/center]
+
+The built-in leaderboards rank scores, perfect runs, streaks, games played and lifetime hits. [b]PlaceholderAPI[/b] lets you bring those rankings into compatible holograms, scoreboards and menus. Set [b]leaderboard-size[/b] to choose how many positions are available.
+
+Use [b]flat-file storage[/b] for a simple local setup or [b]MySQL[/b] for database-backed player statistics. Arena records remain part of the saved arena data.
+
+[url=https://docs.despical.dev/whack-me/features/statistics-and-records/]Read about statistics and records[/url]
+
+[center][img]https://raw.githubusercontent.com/Despical/WhackMe/main/assets/marketplace/whack-me-divider-v1.png[/img][/center]
+
+[center][size=4][color=#E0AD52][b]05  /  CONNECT YOUR SERVER[/b][/color][/size]
+[size=6][b]Reward the moment. Show the progress.[/b][/size][/center]
+
+[b]Run the rewards you choose.[/b] Configure console commands or player commands for joining, quitting, finishing a game and hitting green, red or gray blocks. Use player, arena, score, timer, streak and hit-count placeholders in [b]rewards.yml[/b]. Rewards are optional and the command lists start empty.
+
+[spoiler=Reward triggers and a simple example]
+[list]
+[*][b]game-join:[/b] the player starts a run.
+[*][b]game-quit:[/b] the player leaves early or disconnects.
+[*][b]game-end:[/b] the round reaches its normal end.
+[*][b]green-block-step / red-block-step / gray-block-step:[/b] the matching block is hit.
+[/list]
+Commands run as console by default. Prefix a command with [b]p:[/b] to run it as the player.
+[code]game-end:
+  - 'tell %player% You finished %arena% with %score% points!'[/code]
+[b]Supported placeholders:[/b] %player%, %uuid%, %arena%, %timer%, %score%, %hit-streak%, %max-streak%, %green-blocks%, %red-blocks% and %block-type%.
+[/spoiler]
+
+[b]Display the data anywhere.[/b] With PlaceholderAPI installed, show a player's live score, lifetime statistics, arena status and leaderboard positions in other compatible plugins. Whack Me registers its expansion automatically.
+
+[SPOILER="Server, Player & Statistics Placeholders"]
+[LEFT]
+[SIZE=4][B]Global Plugin Data[/B][/SIZE]
+[CODE]
+%wm_arenas_total%                 - Total number of registered arenas
+%wm_arenas_ready%                 - Number of arenas that are ready to play
+%wm_online_players%               - Total players currently inside Whack Me arenas
+[/CODE]
+
+[SIZE=4][B]Live Player Session[/B][/SIZE]
+[I]Outside an active run, these temporary values normally return 0.[/I]
+[CODE]
+%wm_local_score%                  - Current score earned during the active run
+%wm_local_point_streak%           - Current consecutive correct-hit streak
+%wm_local_longest_point_streak%   - Highest streak reached during the current run
+[/CODE]
+
+[SIZE=4][B]Persistent Player Statistics[/B][/SIZE]
+[CODE]
+%wm_whacked_point_blocks%         - Total number of green point blocks hit
+%wm_whacked_minus_point_blocks%   - Total number of red penalty blocks hit
+%wm_whacked_block_rate%           - Positive-hit rate as a percentage value
+%wm_record_score%                 - Highest personal score ever reached
+%wm_perfect_runs%                 - Total number of perfect runs completed
+%wm_games_played%                 - Total number of completed games
+%wm_tours_played%                 - Alias for total completed games
+%wm_longest_point_streak%         - Highest consecutive correct-hit streak
+[/CODE]
+
+[SIZE=4][B]Generic Statistic Lookup[/B][/SIZE]
+[CODE]%wm_stat:<statistic_key>%[/CODE]
+
+[B]Examples[/B]
+[CODE]
+%wm_stat:games_played%
+%wm_stat:longest_hit_streak%
+%wm_stat:local_correct_blocks%
+%wm_stat:local_wrong_blocks%
+[/CODE]
+[/LEFT]
+[/SPOILER]
+
+[SPOILER="Arena Status Placeholders"]
+[LEFT]
+[SIZE=4][B]Arena-Specific Syntax[/B][/SIZE]
+[CODE]%wm_arena:<arena_id>:<stat>%[/CODE]
+
+[I]Replace [COLOR=#ff0000]<id>[/COLOR] with the arena identifier (matching is case-insensitive).[/I]
+
+[B]Arena Settings & Records[/B]
+[CODE]
+%wm_arena:<id>:ready%            - Whether the arena is registered and ready
+%wm_arena:<id>:record_holder%    - Arena record holder
+%wm_arena:<id>:record_score%     - Highest score recorded in the arena
+[/CODE]
+
+[B]Live Game Data[/B]
+[CODE]
+%wm_arena:<id>:player_name%      - Player currently using the arena
+%wm_arena:<id>:point_blocks%     - Number of active point blocks
+%wm_arena:<id>:state%            - Current arena state
+%wm_arena:<id>:timer%            - Remaining game time in seconds
+%wm_arena:<id>:score%            - Current score of the active player
+[/CODE]
+[/LEFT]
+[/SPOILER]
+
+[SPOILER="Leaderboard Placeholders"]
+[LEFT]
+[SIZE=4][B]Leaderboard Syntax[/B][/SIZE]
+[CODE]%wm_leaderboard:<statistic>:<position>:<name|uuid|value>%[/CODE]
+
+[B]1. Parameters[/B]
+[LIST]
+[*][B]<statistic>:[/B] The persistent statistic to rank.
+[*][B]<position>:[/B] The rank position from [B]1[/B] through the configured [B]leaderboard-size[/B] (default: [B]10[/B]).
+[*][B]<type>:[/B] [B]name[/B] (username), [B]uuid[/B] (unique ID), or [B]value[/B] (raw score).
+[/LIST]
+
+[B]2. Available Statistics[/B]
+[CODE]
+games_played
+perfect_runs
+record_score
+longest_hit_streak
+whacked_plus_blocks
+whacked_minus_blocks
+[/CODE]
+
+[B]3. Usage Examples[/B]
+[CODE]
+# Name of the highest-scoring player
+%wm_leaderboard:record_score:1:name%
+
+# Score of the highest-scoring player
+%wm_leaderboard:record_score:1:value%
+
+# UUID of the player in 3rd place
+%wm_leaderboard:record_score:3:uuid%
+
+# Name of the player with the most perfect runs
+%wm_leaderboard:perfect_runs:1:name%
+
+# Value of the 5th longest lifetime streak
+%wm_leaderboard:longest_hit_streak:5:value%
+[/CODE]
+
+Leaderboard entries with a value of [B]0[/B] are excluded. Empty valid positions return [B]No Player[/B] for names and [B]0[/B] for values.
+[/LEFT]
+[/SPOILER]
+
+[b]Build on the public API.[/b] React to game starts and finishes, state changes, join attempts, departures and statistic changes through Bukkit events. Hook your own plugin into the same run without editing Whack Me.
+
+[url=https://docs.despical.dev/whack-me/configuration/rewards/]Reward configuration[/url]  ·  [url=https://docs.despical.dev/whack-me/placeholders/general/]Placeholder reference[/url]  ·  [url=https://javadoc.despical.dev/whack-me/]Javadocs[/url]
+
+[center][img]https://raw.githubusercontent.com/Despical/WhackMe/main/assets/marketplace/whack-me-divider-v1.png[/img][/center]
+
+[center][size=4][color=#E0AD52][b]06  /  COMMANDS & PERMISSIONS[/b][/color][/size]
+[size=6][b]A short player flow. Clear controls for staff.[/b][/size][/center]
+
+Use [b]/wm[/b] or [b]/whackme[/b] for every command. Players can join, leave and open statistics; staff can create, edit, list, stop and manage arenas through the permissions below.
+
+[SPOILER="Player Commands (Everyone)"]
+[SIZE=4][B]Gameplay Commands[/B][/SIZE]
+[I]No permissions required by default.[/I]
+
+[LEFT][LIST]
+[*][B]/wm join <arena>[/B]
+[INDENT]Join a registered, currently unoccupied arena and immediately start a timed run.[/INDENT]
+
+[*][B]/wm leave[/B]
+[INDENT]Leave the current game, restore the saved player state, and return to the arena's end location.[/INDENT]
+
+[*][B]/wm stats [player][/B]
+[INDENT]Open the statistics menu for yourself or another online/cached offline player.[/INDENT]
+[/LIST][/LEFT]
+[IMG]https://i.imgur.com/tPkGzSU.png[/IMG]
+[/SPOILER]
+
+[SPOILER="Arena Management Commands (Click to View)"]
+[SIZE=4][B]Arena Setup & Management[/B][/SIZE]
+[I]Requires [COLOR=#E0AD52]whackme.arena.*[/COLOR] for full access.[/I]
+
+[LEFT][LIST]
+[*][B]/wm create <arena_id>[/B]
+[INDENT][COLOR=#A9BBC9]Permission: whackme.arena.create[/COLOR][/INDENT]
+[INDENT]Create a new, unconfigured arena with the specified unique ID.[/INDENT]
+
+[*][B]/wm delete <arena_id> [--confirm] [--cancel][/B]
+[INDENT][COLOR=#A9BBC9]Permission: whackme.arena.delete[/COLOR][/INDENT]
+[INDENT]Permanently unregister an arena through an explicit confirmation flow.[/INDENT]
+
+[*][B]/wm list[/B]
+[INDENT][COLOR=#A9BBC9]Permission: whackme.arena.list[/COLOR][/INDENT]
+[INDENT]List every arena and show clickable join actions for ready arenas or setup actions for incomplete arenas.[/INDENT]
+
+[*][B]/wm edit <arena_id>[/B]
+[INDENT][COLOR=#A9BBC9]Permission: whackme.arena.edit[/COLOR][/INDENT]
+[INDENT]Open the interactive setup menu for an existing arena.[/INDENT]
+[/LIST][/LEFT]
+[/SPOILER]
+
+[SPOILER="Admin Commands (Click to View)"]
+[SIZE=4][B]Main Administration Commands[/B][/SIZE]
+[I]Requires the listed permission; [COLOR=#E0AD52]whackme.admin[/COLOR] includes the administration commands.[/I]
+
+[LEFT][LIST]
+[*][B]/wm[/B]
+[INDENT][COLOR=#A9BBC9]No permission required.[/COLOR][/INDENT]
+[INDENT]Display the installed Whack Me version and author.[/INDENT]
+
+[*][B]/wm help[/B]
+[INDENT][COLOR=#A9BBC9]Permission: whackme.command.help[/COLOR][/INDENT]
+[INDENT]Display player commands and any administrative commands available to the sender.[/INDENT]
+
+[*][B]/wm reload[/B]
+[INDENT][COLOR=#A9BBC9]Permission: whackme.admin.reload[/COLOR][/INDENT]
+[INDENT]Reload messages, configuration options, menus, command policy, event profiling, signs, boss bars, sounds, rewards, and live game presentation.[/INDENT]
+
+[*][B]/wm stop [arena][/B]
+[INDENT][COLOR=#A9BBC9]Permission: whackme.admin.stop[/COLOR][/INDENT]
+[INDENT]Force-stop the current or specified game without applying its run statistics. The console must provide an arena ID.[/INDENT]
+
+[*][B]/wm kick <player>[/B]
+[INDENT][COLOR=#A9BBC9]Permission: whackme.admin.kick[/COLOR][/INDENT]
+[INDENT]Remove an online player from their current game and follow the normal result and cleanup path.[/INDENT]
+
+[*][B]Break registered arena signs[/B]
+[INDENT][COLOR=#A9BBC9]Permission: whackme.sign.break[/COLOR][/INDENT]
+[INDENT]Allow staff to break signs registered to Whack Me arenas.[/INDENT]
+
+[*][B]Bypass the replay cooldown[/B]
+[INDENT][COLOR=#A9BBC9]Permission: whackme.cooldown.bypass[/COLOR][/INDENT]
+[INDENT]Allow a player to join another game without waiting for the configured cooldown.[/INDENT]
+
+[*][B]Bypass in-game command blocking[/B]
+[INDENT][COLOR=#A9BBC9]Permission: whackme.commandblock.bypass[/COLOR][/INDENT]
+[INDENT]Allow staff to use unrestricted commands while inside a Whack Me arena.[/INDENT]
+[/LIST][/LEFT]
+[IMG]https://i.imgur.com/guNh1oz.png[/IMG]
+[/SPOILER]
+
+[SPOILER="Debug Commands (Advanced Users)"]
+[CENTER][SIZE=4][B]Advanced Troubleshooting[/B][/SIZE]
+[I]Requires [COLOR=#E0AD52]whackme.debug[/COLOR] or the listed node and [B]debug: true[/B] in [B]config.yml[/B].[/I][/CENTER]
+
+[LEFT][COLOR=#ff0000][B]⚠️ Note:[/B][/COLOR] Debug commands are intended for testing and troubleshooting.
+
+[LIST]
+[*][B]/wm debug component <message>[/B]
+[INDENT][COLOR=#A9BBC9]Permission: whackme.debug.component[/COLOR][/INDENT]
+[INDENT]Preview MiniMessage formatting, gradients, hex colors, and components directly in-game.[/INDENT]
+
+[*][B]/wm debug dump[/B]
+[INDENT][COLOR=#A9BBC9]Permission: whackme.debug.dump[/COLOR][/INDENT]
+[INDENT]Generate an event timing report for troubleshooting performance issues. Enable event profiling in [B]config.yml[/B] for meaningful data.[/INDENT]
+[/LIST][/LEFT]
+[IMG]https://i.imgur.com/BZ7YbGQ.png[/IMG]
+[/SPOILER]
+
+[url=https://docs.despical.dev/whack-me/commands/player/]Player command reference[/url]  ·  [url=https://docs.despical.dev/whack-me/commands/admin/]Administration reference[/url]
+
+[center][img]https://raw.githubusercontent.com/Despical/WhackMe/main/assets/marketplace/whack-me-divider-v1.png[/img][/center]
+
+[center][size=4][color=#E0AD52][b]07  /  START YOUR FIRST RUN[/b][/color][/size]
+[size=6][b]Install. Set up. Chase the score.[/b][/size][/center]
+
+[b]Requirements:[/b] [b]Java 25[/b] and a [b]Paper-compatible Minecraft server[/b]. PlaceholderAPI and NoteBlockAPI are optional integrations.
+
+[list]
+[*]Place the Whack Me JAR in your server's [b]plugins[/b] folder and restart.
+[*]Run [b]/wm create arcade_1[/b] and [b]/wm edit arcade_1[/b].
+[*]Save the start and end locations, add portal positions and register the arena.
+[*]Run [b]/wm join arcade_1[/b] or right-click its join sign to play.
+[/list]
+
+Player inventories are saved before the run and restored when it ends. Disconnecting players recover their saved inventory when they return. Arena data is saved automatically and during shutdown; incomplete saved arenas are marked not ready at startup.
+
+[spoiler=Configuration files at a glance]
+[list]
+[*][b]config.yml:[/b] gameplay duration, replay cooldown, storage, chat and command policy.
+[*][b]arenas.yml:[/b] arena locations, portal layouts, settings, signs, songs and records.
+[*][b]rewards.yml:[/b] optional command rewards and their placeholders.
+[*][b]messages.yml / sounds.yml:[/b] messages, formatting and sound choices.
+[*][b]scoreboard.yml / bossbar.yml / signs.yml:[/b] live displays and join-sign formatting.
+[*][b]menu/:[/b] setup and statistics menu layouts.
+[*][b]mysql.yml:[/b] database connection settings when MySQL is selected.
+[*][b]musics/:[/b] bundled and custom NoteBlockAPI songs.
+[/list]
+[/spoiler]
+
+[url=https://docs.despical.dev/whack-me/getting-started/]Open the installation guide[/url]
+
+[center][img]https://raw.githubusercontent.com/Despical/WhackMe/main/assets/marketplace/whack-me-divider-v1.png[/img][/center]
+
+[center][size=4][color=#E0AD52][b]08  /  BSTATS METRICS[/b][/color][/size]
+[size=6][b]Help shape the next update.[/b][/size][/center]
+
+Whack Me collects [b]anonymous usage statistics[/b] through [b]bStats[/b]. These aggregate statistics help show how the plugin is used and guide future development.
+
+[center][url=https://bstats.org/plugin/bukkit/Whack%20Me/15722][img]https://bstats.org/signatures/bukkit/WhackMe.svg[/img][/url][/center]
+
+[center][img]https://raw.githubusercontent.com/Despical/WhackMe/main/assets/marketplace/whack-me-divider-v1.png[/img][/center]
+
+[center][size=5][b]Your next personal best starts with one more run.[/b][/size]
+Created by [b]Despical[/b]. Enjoying Whack Me? Share your experience in a review.
+
+[url=https://docs.despical.dev/whack-me/][b]Documentation[/b][/url]  ·  [url=https://github.com/Despical/WhackMe][b]Source code[/b][/url]  ·  [url=https://discord.gg/uXVU8jmtpU][b]Discord support[/b][/url][/center]
+[/size][/font]
