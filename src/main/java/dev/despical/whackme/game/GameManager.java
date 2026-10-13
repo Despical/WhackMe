@@ -266,6 +266,7 @@ public final class GameManager {
     public void reload() {
         getGames().forEach(game -> {
             game.getScoreboardManager().loadContent();
+            game.getScoreboardManager().refresh();
             game.getBossBarManager().update();
         });
     }
