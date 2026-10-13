@@ -17,7 +17,8 @@ database: flat
 leaderboard-size: 10
 
 game-settings:
-  # If enabled, the in-game leave command is blocked by the command policy.
+  # If enabled, the command policy blocks /wm leave and /whackme leave even when allowed below.
+  # Requires command blocking to be enabled; players with the command bypass permission are exempt.
   block-leave-command: false
 
   # Duration, in seconds, of each Whack Me game.

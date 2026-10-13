@@ -47,12 +47,21 @@ public final class PlayingCommandPolicy {
 
     public boolean isCommandAllowed(String command) {
         String normalized = normalize(command);
+        if (BooleanOption.BLOCK_LEAVE_COMMAND.value() && isLeaveCommand(normalized)) {
+            return false;
+        }
+
         if (normalized.isEmpty() || allowedCommands.contains("*") || allowedCommands.contains(normalized)
             || allowedRootCommands.contains(root(normalized))) {
             return true;
         }
 
         return allowedCommands.stream().anyMatch(allowed -> normalized.startsWith(allowed + " "));
+    }
+
+    private boolean isLeaveCommand(String command) {
+        return command.equals("wm leave") || command.startsWith("wm leave ")
+            || command.equals("whackme leave") || command.startsWith("whackme leave ");
     }
 
     private void addCommand(String command, Set<String> commands, Set<String> roots) {
