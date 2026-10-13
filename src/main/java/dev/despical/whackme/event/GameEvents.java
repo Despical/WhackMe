@@ -92,7 +92,8 @@ public class GameEvents extends ListenerAdapter {
             if (blockOutsideChat) {
                 arenaRegistry.getArenas()
                     .stream()
-                    .filter(other -> other.getPlayer() != null)
+                    .map(Arena::getPlayer)
+                    .filter(Objects::nonNull)
                     .forEach(recipients::remove);
             }
 
