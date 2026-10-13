@@ -36,6 +36,10 @@ public final class InGameState extends GameStateHandler {
 
         game.setTimer(timer - 1);
         game.getBossBarManager().setProgress((float) game.getTimer() / Math.max(1, IntOption.GAMEPLAY_TIME.value()));
+
+        if (game.getTimer() == 0) {
+            game.setState(GameState.ENDING);
+        }
     }
 
     @Override
