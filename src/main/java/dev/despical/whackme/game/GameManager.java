@@ -118,7 +118,7 @@ public final class GameManager {
         }
 
         plugin.getDatabase().saveData(user);
-        plugin.getLeaderboardManager().refreshAllLeaderboards(List.of(user));
+        plugin.getLeaderboardManager().updateLeaderboards(user);
 
         cleanupPlayer(game, player, teleportToEnd, restoreInventory);
 
