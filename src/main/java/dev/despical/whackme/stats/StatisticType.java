@@ -1,6 +1,9 @@
 package dev.despical.whackme.stats;
 
+import dev.despical.whackme.WhackMe;
 import lombok.Getter;
+
+import java.util.logging.Level;
 
 /**
  * @author Despical
@@ -31,7 +34,7 @@ public abstract class StatisticType<T> {
             }
             return parse(String.valueOf(value));
         } catch (Exception exception) {
-            exception.printStackTrace();
+            WhackMe.getInstance().getLogger().log(Level.WARNING, "Could not read stored value for statistic '" + key + "', using the default instead.", exception);
             return defaultValue;
         }
     }

@@ -1,8 +1,10 @@
 package dev.despical.whackme.arena.options;
 
+import dev.despical.whackme.WhackMe;
 import lombok.Getter;
 
 import java.util.function.Supplier;
+import java.util.logging.Level;
 
 /**
  * @author Despical
@@ -46,7 +48,7 @@ public abstract class ArenaOption<T> {
 
             return parse(String.valueOf(value));
         } catch (Exception exception) {
-            exception.printStackTrace();
+            WhackMe.getInstance().getLogger().log(Level.WARNING, "Could not read stored value for option '" + key + "', using the default instead.", exception);
             return getDefaultValue();
         }
     }
