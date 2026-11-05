@@ -1,13 +1,22 @@
-# Whack Me
+<p align="center">
+  <img src="assets/whack-me-icon.svg" width="128" height="128" alt="Whack Me icon">
+</p>
 
-[![CI](https://github.com/Despical/WhackMe/actions/workflows/build.yml/badge.svg)](https://github.com/Despical/WhackMe/actions/workflows/build.yml)
-![Java 25](https://img.shields.io/badge/Java-25-007396.svg)
-![Gradle](https://img.shields.io/badge/Gradle-9.6.1-079ec0?logo=gradle&logoColor=white)
-![Minecraft](https://img.shields.io/badge/Minecraft-26.2-62b47a)
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
+<h1 align="center">Whack Me</h1>
 
-Whack Me is a fast-paced, single-player whack-a-block minigame for Minecraft
-servers.
+<p align="center">A fast-paced, single-player whack-a-block minigame for Minecraft servers.</p>
+
+<p align="center">
+  <a href="https://github.com/Despical/WhackMe/actions/workflows/build.yml"><img src="https://github.com/Despical/WhackMe/actions/workflows/build.yml/badge.svg" alt="CI"></a>
+  <img src="https://img.shields.io/badge/Java-25-007396.svg" alt="Java 25">
+  <img src="https://img.shields.io/badge/Gradle-9.8.2-079ec0?logo=gradle&amp;logoColor=white" alt="Gradle 9.8.2">
+  <img src="https://img.shields.io/badge/Minecraft-26.3-62b47a" alt="Minecraft 26.3">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="GPLv3 license"></a>
+</p>
+
+<p align="center"><a href="https://www.spigotmc.org/resources/whack-me.104912/">SpigotMC</a> · <a href="https://builtbybit.com/resources/whack-me.50294/">BuiltByBit</a> · <a href="https://docs.despical.dev/whack-me/">Documentation</a> · <a href="https://javadoc.despical.dev/whack-me/">Javadocs</a> · <a href="#building">Building</a> · <a href="#api">API</a></p>
+
+---
 
 The player enters a configured arena and tries to hit as many green point
 blocks as possible before the timer expires while avoiding red blocks. Correct
