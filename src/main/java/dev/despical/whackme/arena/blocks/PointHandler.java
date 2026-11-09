@@ -14,8 +14,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -29,7 +31,10 @@ public class PointHandler {
     private final Arena arena;
     private final WhackMe plugin;
     private final List<Location> availableLocations;
+    // Mirrors availableLocations so releasing a location does not scan the whole list.
+    private final Set<Location> availableLocationSet;
     private final PointBlockFactory pointBlockFactory;
+    private final PointBlockTicker ticker;
     private BukkitTask task;
 
     public PointHandler(Game game) {
@@ -37,7 +42,9 @@ public class PointHandler {
         this.arena = game.getArena();
         this.plugin = WhackMe.getInstance();
         this.availableLocations = new ArrayList<>();
+        this.availableLocationSet = new HashSet<>();
         this.pointBlockFactory = new PointBlockFactory(plugin, arena);
+        this.ticker = new PointBlockTicker();
     }
 
     private void tick() {
@@ -131,25 +138,35 @@ public class PointHandler {
         return game;
     }
 
+    PointBlockTicker ticker() {
+        return ticker;
+    }
+
     synchronized Location reserveAvailableLocation() {
         if (availableLocations.isEmpty()) {
             return null;
         }
 
-        return availableLocations.remove(ThreadLocalRandom.current().nextInt(availableLocations.size()));
+        Location location = availableLocations.remove(ThreadLocalRandom.current().nextInt(availableLocations.size()));
+        availableLocationSet.remove(location);
+        return location;
     }
 
     synchronized void releaseAvailableLocation(Location location) {
-        if (location != null && !availableLocations.contains(location)) {
+        if (location != null && availableLocationSet.add(location)) {
             availableLocations.add(location);
         }
     }
 
     private synchronized void resetAvailableLocations() {
         availableLocations.clear();
-        arena.getOption(ArenaKeys.PORTAL_LOCATIONS).stream()
-            .distinct()
-            .forEach(availableLocations::add);
+        availableLocationSet.clear();
+
+        for (Location location : arena.getOption(ArenaKeys.PORTAL_LOCATIONS)) {
+            if (availableLocationSet.add(location)) {
+                availableLocations.add(location);
+            }
+        }
     }
 
     void release(PointBlock pointBlock, Location location) {

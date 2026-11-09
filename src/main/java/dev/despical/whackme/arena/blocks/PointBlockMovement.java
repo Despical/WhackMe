@@ -1,8 +1,5 @@
 package dev.despical.whackme.arena.blocks;
 
-import dev.despical.whackme.util.Schedulers;
-import org.bukkit.scheduler.BukkitTask;
-
 /**
  * @author Despical
  * <p>
@@ -16,43 +13,45 @@ final class PointBlockMovement implements Runnable {
     private final PointBlockDisplay display;
     private final PointBlockSettings settings;
     private final Runnable completion;
+    private final PointBlockTicker ticker;
 
-    private BukkitTask task;
+    private volatile boolean running;
     private Phase phase = Phase.RISING;
     private double verticalOffset;
     private int remainingWaitTicks;
 
-    PointBlockMovement(PointBlockDisplay display, PointBlockSettings settings, Runnable completion) {
+    PointBlockMovement(PointBlockDisplay display, PointBlockSettings settings, PointBlockTicker ticker, Runnable completion) {
         this.display = display;
         this.settings = settings;
+        this.ticker = ticker;
         this.completion = completion;
         this.remainingWaitTicks = settings.normalizedWaitTicks();
     }
 
     void start() {
-        if (task != null) {
+        if (running) {
             return;
         }
 
-        if (settings.runAsync()) {
-            task = Schedulers.runTaskTimerAsynchronously(this, 1L, 1L);
-            return;
-        }
-
-        task = Schedulers.runTaskTimer(this, 1L, 1L);
+        running = true;
+        ticker.add(this, settings.runAsync());
     }
 
     void stop() {
-        if (task == null) {
+        if (!running) {
             return;
         }
 
-        task.cancel();
-        task = null;
+        running = false;
+        ticker.remove(this);
     }
 
     @Override
     public void run() {
+        if (!running) {
+            return;
+        }
+
         switch (phase) {
             case RISING -> rise();
             case WAITING -> waitAtPeak();

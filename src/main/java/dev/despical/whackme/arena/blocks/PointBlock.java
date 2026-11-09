@@ -36,7 +36,7 @@ public final class PointBlock {
         this.pointHandler = pointHandler;
         this.portalLocation = portalLocation;
         this.display = display;
-        this.movement = new PointBlockMovement(display, settings, this::finishOnMainThread);
+        this.movement = new PointBlockMovement(display, settings, pointHandler.ticker(), this::finishOnMainThread);
         this.interactionListener = new PointBlockInteractionListener(plugin, pointHandler, display, scoreService);
         this.cleared = new AtomicBoolean();
     }
