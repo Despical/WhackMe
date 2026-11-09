@@ -10,12 +10,19 @@ import java.util.Collection;
 final class PointBlockTypeSelector {
 
     PointBlockType select(Collection<PointBlock> activeBlocks) {
-        long greenBlocks = activeBlocks.stream()
-            .filter(block -> block.getType() == PointBlockType.GREEN_BLOCK)
-            .count();
-        long redBlocks = activeBlocks.stream()
-            .filter(block -> block.getType() == PointBlockType.RED_BLOCK)
-            .count();
+        int greenBlocks = 0;
+        int redBlocks = 0;
+
+        // One pass counts both colors.
+        for (PointBlock block : activeBlocks) {
+            PointBlockType type = block.getType();
+
+            if (type == PointBlockType.GREEN_BLOCK) {
+                greenBlocks++;
+            } else if (type == PointBlockType.RED_BLOCK) {
+                redBlocks++;
+            }
+        }
 
         return greenBlocks > redBlocks ? PointBlockType.RED_BLOCK : PointBlockType.GREEN_BLOCK;
     }
