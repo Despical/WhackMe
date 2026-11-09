@@ -3,6 +3,7 @@ package dev.despical.whackme.arena.blocks;
 import dev.despical.whackme.arena.Arena;
 import dev.despical.whackme.arena.options.ArenaKeys;
 import dev.despical.whackme.WhackMe;
+import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
@@ -23,15 +24,15 @@ final class PointBlockDisplay {
     private final PointBlockMessages messages;
     private final PointBlockType type;
     private final ArmorStand stand;
+    // Tracked here so moving the stand does not read and copy its location every tick.
+    private final Location position;
 
     PointBlockDisplay(Arena arena, Location portalLocation, PointBlockType type, PointBlockMessages messages) {
         this.arena = arena;
         this.messages = messages;
         this.type = type;
-        this.stand = (ArmorStand) portalLocation.getWorld().spawnEntity(
-            portalLocation.clone().add(.5, -1.2, .5),
-            EntityType.ARMOR_STAND
-        );
+        this.position = portalLocation.clone().add(.5, -1.2, .5);
+        this.stand = (ArmorStand) portalLocation.getWorld().spawnEntity(position.clone(), EntityType.ARMOR_STAND);
 
         configureStand();
     }
@@ -59,7 +60,14 @@ final class PointBlockDisplay {
     }
 
     void moveVertically(double amount) {
-        stand.teleportAsync(stand.getLocation().clone().add(0, amount, 0));
+        position.add(0, amount, 0);
+
+        if (Bukkit.isPrimaryThread()) {
+            // A main-thread teleport copies the coordinates right away, so the tracked location can be reused.
+            stand.teleport(position);
+        } else {
+            stand.teleportAsync(position.clone());
+        }
     }
 
     void remove() {
