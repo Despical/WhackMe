@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/whack-me-icon.svg" width="128" height="128" alt="Whack Me icon">
+  <img src="https://docs.despical.dev/images/whack-me/icon.png" width="128" height="128" alt="Whack Me icon">
 </p>
 
 <h1 align="center">Whack Me</h1>
