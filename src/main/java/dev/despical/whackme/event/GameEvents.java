@@ -125,6 +125,7 @@ public class GameEvents extends ListenerAdapter {
 
         if (separateChat) {
             player.sendMessage(formattedMessage);
+            plugin.getServer().getConsoleSender().sendMessage(formattedMessage);
         } else {
             plugin.getServer().broadcast(formattedMessage);
         }
